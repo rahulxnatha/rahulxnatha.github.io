@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html>
+<html><head>
 <title>Rahul Natha webpage 2.0</title>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -113,8 +113,8 @@ a {
 
 .toprightbutton {
   position: absolute;
-  top: 8px;
-  right: 16px;
+  top: 30px;
+  right: 30px;
   font-size: 70%;
 }
      </style>
@@ -123,16 +123,54 @@ a {
 
 
 
+<style>
+div.scrollmenu {
+  background-color: #123456;
+  overflow: auto;
+  white-space: nowrap;
+}
+
+div.scrollmenu a {
+  display: inline-block;
+  color: white;
+  text-align: center;
+  padding: 14px;
+  text-decoration: none;
+}
+
+div.scrollmenu a:hover {
+  background-color: #706338;
+}
+
+h1 {font-weight:500;}
 
 
+</style>
 
 
+</head>
 
 
 
 
 
 <body class="w3-black" onload=myFunctiondark3()> <div class="padding" >
+
+<div class="scrollmenu">
+  <a href="home.html">Home</a>
+
+  <a href="contact.html">Contact</a>
+  <a href="about.html">About</a>
+
+  <a href="blog.html">Blog</a>
+  <a href="tools.html">Tools</a>  
+
+
+
+  <a href="partners.html">Partners</a>
+  <a href="people.html">People</a>
+
+</div>
 <button id="toprightbutton" class="toprightbutton" onclick="myFunctiondark2()" >Change theme</button>
 <br>
 
