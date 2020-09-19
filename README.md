@@ -1,1 +1,273 @@
+<!DOCTYPE html>
+<html><head>
 
+
+<title>Rahul Natha</title>
+
+<link rel="icon" href="https://drive.google.com/uc?export=download&id=1aG2GW0qkReZgdPeEAP5yqVXtagkY1Bmd" type="image/gif" >
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+
+<style>
+.padding {
+  padding: 20px;
+  border: 0px solid #4CAF50;
+}
+</style>
+
+
+<style>
+
+
+
+.button {   background-color: #073763ff; /* Green */   border: none;   color: white;   padding: 10px 32px;   text-align: center;   text-decoration: none;   display: inline-block;   font-size: 16px;   margin: 0px 0px;   transition-duration: 0.4s;   cursor: pointer; }  .button1 {   background-color: white;    color: black;    border: 2px solid #073763ff; }  .button1:hover {   background-color: #073763ff;   color: white; }  .button2 {   background-color: white;    color: black;    border: 2px solid #073763ff; }  .button2:hover {   background-color: #073763ff;   color: white; }  .button3 {   background-color: white;    color: black;    border: 2px solid #073763ff; }  .button3:hover {   background-color: #073763ff;   color: white; }  .button4 {   background-color: white;   color: black;   border: 2px solid #073763ff; }  .button4:hover {background-color: #073763ff;}  .button5 {   background-color: white;   color: black;   border: 2px solid #073763ff; }  .button5:hover {   background-color: #073763ff;   color: white; } </style>
+
+
+
+<style>
+/* unvisited link */
+
+
+</style>
+
+
+<style>
+        * {
+            margin: 0;
+            padding: 0;
+        }
+        .imgbox {
+            display: grid;
+            height: 100%;
+        }
+        .center-fit {
+            max-width: 100%;
+            max-height: 100vh;
+            margin: auto;
+        }
+
+div {
+  border: 0px solid black;
+  background-color: none;
+  padding-top: 0px;
+  padding-right: 0px;
+  padding-bottom: 0px;
+  padding-left: 0px;
+}</style>
+
+
+
+<style>
+body {
+font-family: "Roboto", sans-serif;
+  padding: 0px;
+  background-color: white;
+  color: black;
+  font-size: 100%;
+  
+  
+  
+
+
+}
+
+.dark-mode { font-family: "Roboto", sans-serif;
+  background-color: black;
+  color: white;
+ 
+ 
+
+  
+}
+
+</style>
+<style>
+
+a:link {
+  color: #4169E9;
+  text-decoration: none; 
+}
+
+/* visited link */
+a:visited {
+  color:  #4169E9;
+  text-decoration: none; 
+}
+
+/* mouse over link */
+a:hover {
+  color:  #4169E9;
+  text-decoration: underline;  
+}
+
+/* selected link */
+a:active {
+  color: #4169E9;
+  text-decoration: none; 
+}
+
+a {
+  font-size: 19px;
+  padding: 0px;
+  border: 0px;
+  margin: 0px;
+}
+
+
+.toprightbutton {
+  position: absolute;
+  top: 30px;
+  right: 30px;
+  font-size: 70%;
+}
+     </style>
+
+
+
+
+
+<style>
+div.scrollmenu {
+  background-color: #123456;
+  overflow: auto;
+  white-space: nowrap;
+}
+
+div.scrollmenu a {
+  display: inline-block;
+  color: white;
+  text-align: center;
+  padding: 14px;
+  text-decoration: none;
+}
+
+div.scrollmenu a:hover {
+  background-color: #706338;
+}
+
+h1 {font-weight:500;}
+
+
+</style>
+
+
+</head>
+
+
+
+
+
+<body class="w3-black" onload=myFunctiondark3()> <div class="padding" >
+
+<div class="scrollmenu">
+  <a href="home.html">Home</a>
+
+
+<a href="rahuldocs_assistant.html">Assistant</a> 
+
+  <a href="contact.html">Contact</a>
+  <a href="about.html">About</a>
+
+  <a href="blog.html">Blog</a>
+   
+
+
+
+  <a href="partners.html">Partners</a>
+  <a href="people.html">People</a>
+
+</div>
+<button id="toprightbutton" class="toprightbutton" onclick="myFunctiondark2()" >Change theme</button>
+<br>
+
+
+
+
+
+
+
+
+<!-- Page Content -->
+<div  id="main">
+  <!-- Header/Home -->
+  <header  id="home">
+    <h1 >Rahul Natha</h1>
+    <p>Engineer and Web Designer.</p>
+    
+   
+    
+    </div>
+  </header>
+
+  <!-- About Section -->
+  
+  <br>
+   
+    <p>I know to design and create websites. You can <a href="https://sites.google.com/view/rahuldocs" target="_blank">see RAHUL DOCS website</a> which I made.</p>
+    
+    <br>
+    
+
+    <button class="button button2" onclick="document.location='https://drive.google.com/uc?export=download&id=16IVN8VDO5brlnyb-PW3oWqNt7oc4aLwM'">
+       Download Resume
+    </button>
+    
+    <br><br>
+  
+  
+
+  <!-- Contact Section -->
+  <div  id="contact">
+    <h2 >Contact Me</h2>
+    <hr style="width:200px" >
+<br>
+    <div >
+      <p><i ></i> Hyderabad, India</p>
+      <p><i ></i> Telegram: <a href="https://t.me/rahulnatha" target="_blank">t.me/rahulnatha</a></p>
+      <p><i > </i> contact.rahulnatha@gmail.com</p>
+    </div><br>
+    
+  <!-- End Contact Section -->
+  </div>
+  
+    <!-- Footer -->
+  <footer >
+  
+  <!-- End footer -->
+  </footer>
+
+<!-- END PAGE CONTENT -->
+</div>
+
+
+
+<script>
+function myFunctiondark2() {
+
+ var element = document.body;
+   element.classList.toggle("dark-mode"); 
+   
+    
+   }
+   
+   function myFunctiondark3() {
+
+
+
+var hour = new Date().getHours(); 
+  if (hour > 17) { var element = document.body;
+   element.classList.toggle("dark-mode"); 
+   
+    
+   
+  } else {
+    
+  }
+}
+   
+   
+</script>
+</div>
+</body>
+</html>
