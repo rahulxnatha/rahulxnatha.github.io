@@ -7,7 +7,7 @@
 
 <style>
 .padding {
-  padding: 40px;
+  padding: 20px;
   border: 0px solid #4CAF50;
 }
 </style>
@@ -132,7 +132,7 @@ a {
 
 
 
-<body class="w3-black"> <div class="padding" >
+<body class="w3-black" onload=myFunctiondark3()> <div class="padding" >
 <button id="toprightbutton" class="toprightbutton" onclick="myFunctiondark2()" >Change theme</button>
 <br>
 
@@ -205,6 +205,23 @@ function myFunctiondark2() {
    
     
    }
+   
+   function myFunctiondark3() {
+
+
+
+var hour = new Date().getHours(); 
+  if (hour > 17) { var element = document.body;
+   element.classList.toggle("dark-mode"); 
+   
+    
+   
+  } else {
+    
+  }
+}
+   
+   
 </script>
 </div>
 </body>
