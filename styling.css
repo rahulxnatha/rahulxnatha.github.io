@@ -193,12 +193,12 @@ p {
 
 .icon {
     margin: 0 20px 20px 0; 
-    width: calc(100%/7); min-width: 69px; 
+    width: calc(100%/7); min-width: 69px; max-width: 100px;
 }
 
 .icon-last {
     margin: 0 0 20px 0;
-    width: calc(100%/7); min-width: 69px;
+    width: calc(100%/7); min-width: 69px; max-width: 100px;
 }
 
 .inside-heading {
