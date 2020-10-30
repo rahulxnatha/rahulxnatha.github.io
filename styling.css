@@ -17,7 +17,7 @@
     background-color: #333333 ;
 }
 .dark-mode .navbar .only-phone {
-  color:#ffffff;
+  color:#ffffff; 
 }
 
 .dark-mode {
@@ -32,6 +32,12 @@ body {
     background-color: #073763; 
   
 }
+
+.a:link {color: #073763}.a:visited {color: #073763}.a:hover {color: #073763}.a:active {color: #073763}
+.dark-mode a:link {color: white}
+.dark-mode a:visited {color: white} 
+.dark-mode a:hover {color: white}
+.dark-mode a:active {color:white}
 
 h1, h2, h3, h4, h5, h6 {
     
@@ -66,12 +72,12 @@ p {
     float: left;
     background-color: #ffffff;
     margin: 0px 0px 20px 0px ;
-    padding: 10px 40px 20px 40px;
+    padding: 20px 40px 20px 40px;
 }
 
 .right-panel {
     width: 30%; background-color: none;
-    float: left;
+    float: left; display: none;
 }
 
 .page {
@@ -80,8 +86,8 @@ p {
 
 .ad-content {
     margin: 0px 10px 20px 20px;
-    background-color:dimgrey;
-    height: 300px;
+    background-color:white;
+    height: auto;
     padding: 10px 10px 10px 10px;
     
 }
@@ -155,7 +161,7 @@ p {
 
 
 @media screen and (max-height: 450px) {
-  .sidenav {padding-top: 15px;}
+  .sidenav {padding-top: 15px; }
   .sidenav a {font-size: 18px;}
 }
 
@@ -220,7 +226,7 @@ p {
 
 .left-panel {
     
-    width: 70%;
+    width: 100%;
     float: left;
     background-color: none;
     margin: 0 0 0 0 ;
@@ -229,7 +235,7 @@ p {
 }
 
 .only-phone { float: left;
-    max-width: 50px; margin-left: 10px;margin-top: 9px; font-size:25px;cursor:pointer;color:#073763;
+    max-width: 50px; margin-left: 10px;margin-top: 9px; font-size:25px;cursor:pointer;color:#073763; 
 }
     @media screen and (max-width: 9750px) {
         .navbar .only-desktop {
@@ -244,7 +250,7 @@ p {
 
     @media screen and (max-width: 750px) {
         .navbar .only-phone {
-            display: block;
+            display: none;
         }
         .navbar .only-desktop {
             display: none;
@@ -267,3 +273,40 @@ p {
     float: left;
 }
 
+
+input[type=text] {
+  min-width:  400px;
+  padding: 12px 20px;
+  margin: 8px 0;
+  box-sizing: border-box;
+  border: 3px solid #073763ff;
+  -webkit-transition: 0.5s;
+  transition: 0.5s;
+  outline: none; font-size: 20px;
+}
+
+.dark-mode input[type=text] {border: 3px solid #eee; background-color: #111;color: white;}
+.dark-mode input[type=text]:focus {border: 3px solid aqua ;background-color: #121212;color: white;}
+input[type=text]:focus {
+  border: 3px solid #073763ff;
+}
+
+
+textarea {
+  width: 100%;
+  height: 50px;
+  padding: 12px 20px;
+  box-sizing: border-box;
+  border: 2px solid #ccc;
+  border-radius: 4px;
+  background-color: #f8f8f8;
+  
+}
+
+
+
+
+.big-font {
+     font-size: 30px; font-weight: 300;
+    
+}
