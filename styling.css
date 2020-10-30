@@ -3,18 +3,21 @@
 }
 
 .dark-mode .content  {
-    background-color: darkslategrey ;
+    background-color: #333333 ;
     color: white;}
 .dark-mode .icon-bar {
     background-color: #121212;
 }
-.dark-mode .navbar {background-color: darkslategrey; }
-.dark-mode .nav-bar-option a {border: 3px solid darkslategrey; color: white;}
+.dark-mode .navbar {background-color: #333333; }
+.dark-mode .nav-bar-option a {border: 3px solid #333333; color: white;}
 .dark-mode .nav-bar-option a:hover {border: 3px solid white; color: white;}
 .dark-mode .navbar a.active  {background-color: white; color:black;border: 3px solid white;}
-.dark-mode .button3 {border: 3px solid #ffffff; background-color: darkslategrey; color: white; }
+.dark-mode .button3 {border: 3px solid #ffffff; background-color: #333333; color: white; }
 .dark-mode .tweets {
-    background-color: darkslategrey ;
+    background-color: #333333 ;
+}
+.dark-mode .navbar .only-phone {
+  color:#ffffff;
 }
 
 .dark-mode {
@@ -34,19 +37,24 @@ h1, h2, h3, h4, h5, h6 {
     
     font-weight: 500; 
 }
-button {
-  
-       
-    
-       background-color: #073763ff; /* Green */   border: none;   color: white;   padding: 5px 14px;   text-align: center;   text-decoration: none;   display: inline-block;   font-size: 100%;   margin: 0px 0px 0 0 ;   transition-duration: 0.4s;   cursor: pointer; }  .button1 {   background-color: white;    color: black;    border: 3px solid #073763ff; }  .button1:hover {   background-color: #073763ff;   color: white; }  .button2 {   background-color: white;    color: black;    border: 3px solid #073763ff; }  .button2:hover {   background-color: #073763ff;   color: white; }  
 
-.button3 {   background-color: white;    color: black;    border: 3px solid #000000; }  .button3:hover {   background-color: #073763ff;   color: white; }  
+.button {outline:none;  }
+.button1 {   background-color: white;    color: black;    border: 3px solid #073763ff; }  .button1:hover {   background-color: #073763ff;   color: white; }  
 
-.button4 {   background-color: white;   color: black;   border: 3px solid #073763ff;  }  
+.button2 {   background-color: white;    color: black;    border: 3px solid #073763ff; }  .button2:hover {   background-color: #073763ff;   color: white; }  
 
-.button4:hover {background-color: #073763ff;}  .button5 {   background-color: white;   color: black;   border: 3px solid #073763ff; }  .button5:hover {   background-color: #073763ff;   color: white; 
+.button3 {  text-align: center;   text-decoration: none;   display: inline-block;   font-size: 100%;      transition-duration: 0.4s;   cursor: pointer; margin: 0px 0px 0 0 ; padding: 5px 14px;  background-color: white;    color: black;    border: 3px solid #000000; outline:none; }  .button3:hover {   background-color: #073763ff;   color: white; outline:none;}  
+
+.button4 {   background-color: white;   color: black;   border: 3px solid #073763ff;  }  .button4:hover {background-color: #073763ff;}  
+
+.button5 {   background-color: #fff;   color: #111;   border: 0;; text-align: center;   text-decoration: none;   display: inline-block;   font-size: 100%;      transition-duration: 0.4s;   cursor: pointer; margin: 0px 0px 0 0 ; padding: 5px 14px; position: absolute;
+  top: 0;
+  right: 25px; text-decoration: none;
+  font-size: 36px;
+  margin-left: 50px;     }    .button5:hover {   background-color: #fff;    color:black;outline:none;
 }
-
+.dark-mode .button5 {    background-color: #111;   color: #eee;    }    .button5:hover {  background-color: #111;    color:white;outline:none;  transition-duration: 0.5s;
+}
 
 p {
     font-size: 17px;
@@ -92,25 +100,17 @@ p {
   padding: 0px 0px 5px 10px;
   overflow:auto; background-color: #ffffff;
   
-  
+ 
 }
 
 @media screen and (max-width: 900px) {
     
-    
-    .right-panel{
-        display: none; 
+    .navbar .nav-logo {
+    float: left;
     }
-    .page .left-panel {
-        width:100%  ;display: block; 
-    }
-    
-}
-
-@media screen and (max-width: 500px) {
     
     .page {
-    margin: 78px 10px 10px 10px;
+    margin: 68px 0px 10px 0px;
     }
     .right-panel{
         display: none; 
@@ -120,11 +120,12 @@ p {
     }
     
     .page .left-panel .content {
-    padding: 10px 10px 10px 10px;
+    padding: 10px 20px 10px 20px; margin: 0px 0px 10px 0px ; 
     }
 }
-
-
+.dark-mode .sidenav {background-color: #111;}
+.dark-mode .sidenav a { color: #eee}
+.dark-mode .sidenav a:hover { color:white; text-decoration: underline;}
 .sidenav {
   height: 100%; 
   width: 0;
@@ -132,7 +133,7 @@ p {
   z-index: 1;
   top: 0;
   left: 0;
-  background-color: #111;
+  background-color: #ffffff;
   overflow-x: hidden;
   transition: 0.5s;
   padding-top: 60px;
@@ -142,22 +143,16 @@ p {
   padding: 8px 8px 8px 32px;
   text-decoration: none;
   font-size: 25px;
-  color: #818181;
+  color: #073763;
   display: block;
   transition: 0.3s;
 }
 
 .sidenav a:hover {
-  color: #f1f1f1;
+  color: #073763; text-decoration: underline;
 }
 
-.sidenav .closebtn {
-  position: absolute;
-  top: 0;
-  right: 25px;
-  font-size: 36px;
-  margin-left: 50px;
-}
+
 
 @media screen and (max-height: 450px) {
   .sidenav {padding-top: 15px;}
@@ -204,7 +199,7 @@ p {
 
 .nav-bar-option {
   margin: 10px 10px 5px 0px;
-  float: left;
+  float: right;
 }
 
 .nav-bar-option a {
@@ -233,8 +228,8 @@ p {
 
 }
 
-.only-phone {
-    max-width: 50px; margin: 5px;
+.only-phone { float: left;
+    max-width: 50px; margin-left: 10px;margin-top: 9px; font-size:25px;cursor:pointer;color:#073763;
 }
     @media screen and (max-width: 9750px) {
         .navbar .only-desktop {
@@ -243,6 +238,8 @@ p {
         .navbar .only-phone {
             display: none;
         }
+        
+        
     }
 
     @media screen and (max-width: 750px) {
@@ -256,4 +253,17 @@ p {
 
 
 
+
+
+.logo-on-navbar {
+    float:left; width:40px; margin-top: 6px; margin-left: 20px;
+}
+.text-logo-on-navbar {float:left;  display: flex;
+  justify-content: center;
+  align-items: center; margin: 9px 0px 0px 10px; padding:0; font-size: 30px; font-weight: 400;}
+.dark-mode .navbar .text-logo-on-navbar {color: white;}
+
+.nav-logo {
+    float: left;
+}
 
