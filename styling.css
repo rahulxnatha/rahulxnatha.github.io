@@ -26,7 +26,8 @@
 body {
      font-family: 'Roboto', sans-serif;
     margin: 0; padding: 0; 
-    background-color: #073763;
+    background-color: #073763; 
+  
 }
 
 .sticky {
@@ -185,7 +186,7 @@ p {
 
 .icon-bar {
     background-color: #073763;
-    height:auto;
+    height:auto; display:none;
     padding: 30px;
 }
 
@@ -271,6 +272,7 @@ p {
             display: none;
         }
     }
+
 
 
 
