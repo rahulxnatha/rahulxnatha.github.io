@@ -2,6 +2,8 @@
     box-sizing: border-box;
 }
 
+li {padding: 10px;}
+
 .dark-mode .content  {
     background-color: #333333 ;
     color: white;}
@@ -51,7 +53,9 @@ h1, h2, h3, h4, h5, h6 {
 
 .button3 {  text-align: center;   text-decoration: none;   display: inline-block;   font-size: 100%;      transition-duration: 0.4s;   cursor: pointer; margin: 0px 0px 0 0 ; padding: 5px 14px;  background-color: white;    color: black;    border: 3px solid #000000; outline:none; }  .button3:hover {   background-color: #073763ff;   color: white; outline:none;}  
 
-.button4 {   background-color: white;   color: black;   border: 3px solid #073763ff;  }  .button4:hover {background-color: #073763ff;}  
+
+
+
 
 .button5 {   background-color: #fff;   color: #111;   border: 0;; text-align: center;   text-decoration: none;   display: inline-block;   font-size: 100%;      transition-duration: 0.4s;   cursor: pointer; margin: 0px 0px 0 0 ; padding: 5px 14px; position: absolute;
   top: 0;
@@ -81,7 +85,7 @@ p {
 }
 
 .page {
-    margin: 78px 20px 20px 20px; background-color: crimson; 
+    margin: 78px 20px 20px 20px; 
 }
 
 .ad-content {
@@ -101,7 +105,7 @@ p {
 
 .navbar {
     
-  position: fixed;
+  position: fixed; height: 58px;
   top: 0; width: 100%;
   padding: 0px 0px 5px 10px;
   overflow:auto; background-color: #ffffff;
@@ -115,9 +119,7 @@ p {
     float: left;
     }
     
-    .page {
-    margin: 68px 0px 10px 0px;
-    }
+    
     .right-panel{
         display: none; 
     }
@@ -309,4 +311,28 @@ textarea {
 .big-font {
      font-size: 30px; font-weight: 300;
     
+}
+
+.footer {
+    background-color: none; 
+    width: 100%;
+    float: left;
+    color: aliceblue;
+    margin: 0px 0px 20px 0px ; text-align: center;
+    padding: 20px 40px 20px 40px;
+}
+
+
+
+
+
+
+
+
+.after-btech-display {
+    float: left;
+}
+
+.after-btech-options {
+    float: left;
 }
