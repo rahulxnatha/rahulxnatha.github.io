@@ -30,14 +30,6 @@ body {
   
 }
 
-.sticky {
-  position: fixed;
-  top: 0;
-  width: 100%;
-}
-
-
-
 h1, h2, h3, h4, h5, h6 {
     
     font-weight: 500; 
@@ -61,10 +53,6 @@ p {
     font-weight: 400;
 }
 
-
-
-
-
 .content {
     width: 100%;
     float: left;
@@ -86,7 +74,7 @@ p {
     margin: 0px 10px 20px 20px;
     background-color:dimgrey;
     height: 300px;
-    padding: 10px 10px 10px 20px;
+    padding: 10px 10px 10px 10px;
     
 }
 
@@ -100,23 +88,18 @@ p {
 .navbar {
     
   position: fixed;
-  top: 0;
-  width: 100%; 
-  max-height: 58px;
+  top: 0; width: 100%;
   padding: 0px 0px 5px 10px;
-  overflow:auto; background-color: white;
+  overflow:auto; background-color: #ffffff;
   
   
 }
 
 @media screen and (max-width: 900px) {
-    .navbar {
-        min-height: 58px;
-        max-height: none;
-    }
+    
     
     .right-panel{
-        display: none; width: 0%;
+        display: none; 
     }
     .page .left-panel {
         width:100%  ;display: block; 
@@ -125,21 +108,19 @@ p {
 }
 
 @media screen and (max-width: 500px) {
-    .navbar {
-        max-height: none;
-    }
+    
     .page {
-    margin: 178px 20px 10px 20px;
+    margin: 78px 10px 10px 10px;
     }
     .right-panel{
-        display: none; width: 0%;
+        display: none; 
     }
     .page .left-panel {
         width:100%  ;display: block; 
     }
     
     .page .left-panel .content {
-    padding: 10px 10px 20px 10px;
+    padding: 10px 10px 10px 10px;
     }
 }
 
@@ -186,19 +167,19 @@ p {
 
 .icon-bar {
     background-color: #073763;
-    height:auto; display:none;
-    padding: 30px;
+    height:auto; 
+    padding: 20px;
 }
 
 
 
 .icon {
-    margin: 0 20px 20px 0; 
+    margin: 0px 20px 20px 0px; 
     width: calc(100%/7); min-width: 69px; max-width: 100px;
 }
 
 .icon-last {
-    margin: 0 0 20px 0;
+    margin: 0px 0px 20px 0px;
     width: calc(100%/7); min-width: 69px; max-width: 100px;
 }
 
