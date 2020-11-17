@@ -7,10 +7,14 @@ li {padding: 10px;}
 .dark-mode .content  {
     background-color: #333333 ;
     color: white;}
+.dark-mode .add-content  {
+    background-color: #333333 ;
+    color: white;}
+
 .dark-mode .icon-bar {
-    background-color: #121212;
+    background-color: #121212; 
 }
-.dark-mode .navbar {background-color: #333333; }
+.dark-mode .navbar {background-color: #333; }
 .dark-mode .nav-bar-option a {border: 3px solid #333333; color: white;}
 .dark-mode .nav-bar-option a:hover {border: 3px solid white; color: white;}
 .dark-mode .navbar a.active  {background-color: white; color:black;border: 3px solid white;}
@@ -41,6 +45,47 @@ body {
 .dark-mode a:hover {color: white}
 .dark-mode a:active {color:white}
 
+table {
+  width:100%;
+}
+table, th, td {
+  border: 3px solid black;
+  border-collapse: collapse;
+}
+.dark-mode th, .dark-mode td {
+  border: 3px solid white;
+}
+
+th, td {
+  padding: 15px;
+  text-align: left;
+}
+#t01 tr:nth-child(even) {
+  background-color: none;
+}
+#t01 tr:nth-child(odd) {
+ background-color: none;
+}
+.dark-mode #t01 th {background-color:darkslategray; color: white;}
+#t01 th {
+  background-color:coral;  color: black;
+  font-weight: 400;
+}
+
+
+.icon-link {
+  background-color: none; 
+  width: 16px;
+  border: 0px solid green;
+  padding: 0px;
+  margin: 0px;
+}
+
+path {
+    fill: black;
+}
+.dark-mode path {fill: white;}
+
 h1, h2, h3, h4, h5, h6 {
     
     font-weight: 500; 
@@ -51,7 +96,7 @@ h1, h2, h3, h4, h5, h6 {
 
 .button2 {   background-color: white;    color: black;    border: 3px solid #073763ff; }  .button2:hover {   background-color: #073763ff;   color: white; }  
 
-.button3 {  text-align: center;   text-decoration: none;   display: inline-block;   font-size: 100%;      transition-duration: 0.4s;   cursor: pointer; margin: 0px 0px 0 0 ; padding: 5px 14px;  background-color: white;    color: black;    border: 3px solid #000000; outline:none; }  .button3:hover {   background-color: #073763ff;   color: white; outline:none;}  
+.button3 {  text-align: center;   text-decoration: none;   display: inline-block;   font-size: 100%;      transition-duration: 0.4s;   cursor: pointer; margin: 0px 0px 0 0 ; padding: 5px 14px;  background-color: white;    color: black;    border: 3px solid #000000; outline:none; }  .button3:hover {    outline:none;}  
 
 
 
@@ -72,27 +117,27 @@ p {
 }
 
 .content {
-    width: 100%;
+    width: 100%; border-radius: 25px; 
     float: left;
     background-color: #ffffff;
-    margin: 0px 0px 20px 0px ;
+    margin: 0px 20px 20px 0px ;
     padding: 20px 40px 20px 40px;
 }
 
 .right-panel {
-    width: 30%; background-color: none;
-    float: left; display: none;
+    width: 50%; background-color: none; min-width: 600px; 
+    float: left; display: block;
 }
 
 .page {
     margin: 78px 20px 20px 20px; 
 }
 
-.ad-content {
-    margin: 0px 10px 20px 20px;
-    background-color:white;
+.add-content {
+    margin: 0px 0px 20px 20px; border-radius: 25px;
+    background-color:white; float: left;
     height: auto;
-    padding: 10px 10px 10px 10px;
+    padding: 20px 40px 20px 40px;
     
 }
 
@@ -105,7 +150,7 @@ p {
 
 .navbar {
     
-  position: fixed; height: 58px;
+  position: fixed; border-bottom: 2px solid rgba(0,0,0,0.1);
   top: 0; width: 100%;
   padding: 0px 0px 5px 10px;
   overflow:auto; background-color: #ffffff;
@@ -121,10 +166,10 @@ p {
     
     
     .right-panel{
-        display: none; 
+        display: block; 
     }
     .page .left-panel {
-        width:100%  ;display: block; 
+          ;display: block; 
     }
     
     .page .left-panel .content {
@@ -170,7 +215,7 @@ p {
 
 .icon-bar {
     background-color: #073763;
-    height:auto; 
+    height:auto; border-radius: 25px;
     padding: 20px;
 }
 
@@ -206,7 +251,7 @@ p {
 }
 
 .nav-bar-option {
-  margin: 10px 10px 5px 0px;
+  margin: 10px 5px 5px 0px;
   float: right;
 }
 
@@ -228,9 +273,9 @@ p {
 
 .left-panel {
     
-    width: 100%;
+    width: 50%;
     float: left;
-    background-color: none;
+    background-color: none; min-width: 600px;
     margin: 0 0 0 0 ;
     padding: 0 0 0 0;
 
@@ -267,14 +312,19 @@ p {
     float:left; width:40px; margin-top: 6px; margin-left: 20px;
 }
 .text-logo-on-navbar {float:left;  display: flex;
-  justify-content: center;
-  align-items: center; margin: 9px 0px 0px 10px; padding:0; font-size: 30px; font-weight: 400;}
+  justify-content: center; color: black; 
+  align-items: center; margin: 9px 0px 0px 10px; padding:0; font-size: 30px; 
+    font-weight: 100;}
 .dark-mode .navbar .text-logo-on-navbar {color: white;}
 
 .nav-logo {
     float: left;
 }
 
+
+input[type="checkbox"]{
+    
+}
 
 input[type=text] {
   min-width:  400px;
@@ -336,3 +386,76 @@ textarea {
 .after-btech-options {
     float: left;
 }
+
+
+.dark-switch {
+  position: relative; margin: 10px 20px 5px 0px;
+  float: right;
+  display: inline-block; 
+  width: 60px;
+  height: 38px;
+}
+
+.dark-switch input { 
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+
+.dark-mode .dark-switch .slider {border:3px solid white;}
+.slider {
+  position: absolute;border: 3px solid black;
+  cursor: pointer;
+  top: 0; 
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: #ccc;
+  -webkit-transition: .4s;
+  transition: .4s;
+}
+
+.slider:before {
+  position: absolute;
+  content: "";
+  height: 23px;
+  width: 23px;
+  left: 4px;
+  bottom: 4px;
+  background-color: white;
+  -webkit-transition: .4s;
+  transition: .4s;
+}
+
+input:checked + .slider {
+  background-color: #000;outline: none;
+}
+
+input:focus + .slider {
+  box-shadow: 0 0 0px #073763; outline:none;
+}
+
+input:checked + .slider:before {
+  -webkit-transform: translateX(23px);
+  -ms-transform: translateX(23px);
+  transform: translateX(23px);
+}
+
+/* Rounded sliders */
+.slider.round {
+  border-radius: 34px;
+}
+
+.slider.round:before {
+  border-radius: 50%;
+}
+.tell-content {
+    margin: 0px 0px 20px 20px; border-radius: 25px;
+    background-color:white;  min-width: 200px; max-width: 400px; float:right;
+    height: auto;
+    padding: 2px 30px 2px 30px;
+}
+
+.dark-mode .tell-content  {
+    background-color: #333333 ;
+    color: white;}
