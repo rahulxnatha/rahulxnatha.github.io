@@ -18,6 +18,8 @@ li {padding: 10px;}
 .dark-mode .nav-bar-option a {border: 3px solid #333333; color: white;}
 .dark-mode .nav-bar-option a:hover {border: 3px solid white; color: white;}
 .dark-mode .navbar a.active  {background-color: white; color:black;border: 3px solid white;}
+
+.dark-mode .sub-menu a.active  {background-color: white; color:black;border: 3px solid white;}
 .dark-mode .button3 {border: 3px solid #ffffff; background-color: #333333; color: white; }
 .dark-mode .tweets {
     background-color: #333333 ;
@@ -125,8 +127,8 @@ p {
 }
 
 .right-panel {
-    width: 50%; background-color: none; min-width: 600px; 
-    float: left; display: block;
+    width: 50%; background-color: none; 
+    float: right; display: block;
 }
 
 .page {
@@ -152,7 +154,7 @@ p {
     
   position: fixed; border-bottom: 2px solid rgba(0,0,0,0.1);
   top: 0; width: 100%;
-  padding: 0px 0px 5px 10px;
+  padding: 0px 0px 0px 10px;
   overflow:auto; background-color: #ffffff;
   
  
@@ -251,7 +253,7 @@ p {
 }
 
 .nav-bar-option {
-  margin: 10px 5px 5px 0px;
+  margin: 10px 5px 10px 0px;
   float: right;
 }
 
@@ -271,11 +273,15 @@ p {
   background-color:  black; color: white; border: 3px solid #000000;
 }
 
+.sub-menu a.active {
+  background-color:  black; color: white; border: 3px solid #000000;
+}
+
 .left-panel {
     
     width: 50%;
     float: left;
-    background-color: none; min-width: 600px;
+    background-color: none; 
     margin: 0 0 0 0 ;
     padding: 0 0 0 0;
 
@@ -451,7 +457,7 @@ input:checked + .slider:before {
 }
 .tell-content {
     margin: 0px 0px 20px 20px; border-radius: 25px;
-    background-color:white;  min-width: 200px; max-width: 400px; float:right;
+    background-color:white;  min-width: 200px;  float:right;
     height: auto;
     padding: 2px 30px 2px 30px;
 }
@@ -459,3 +465,17 @@ input:checked + .slider:before {
 .dark-mode .tell-content  {
     background-color: #333333 ;
     color: white;}
+
+.sub-menu {
+    margin: 0px 0px 20px 0px; border-radius: 25px;
+    background-color:white;  min-width: 200px;  float:left;
+    height: auto;
+    padding: 2px 30px 2px 30px;
+}
+.dark-mode .sub-menu  {
+    background-color: #333333 ;
+    color: white;}
+
+
+
+
