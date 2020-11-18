@@ -287,6 +287,16 @@ p {
 
 }
 
+.full-panel {
+    
+    width: 100%;
+    float: left;
+    background-color: none; 
+    margin: 0 0 0 0 ;
+    padding: 0 0 0 0;
+
+}
+
 .only-phone { float: left;
     max-width: 50px; margin-left: 10px;margin-top: 9px; font-size:25px;cursor:pointer;color:#073763; 
 }
@@ -479,3 +489,11 @@ input:checked + .slider:before {
 
 
 
+
+
+
+
+
+.full-panel-padded {
+    padding: 10px 40px 10px 40px;
+}
