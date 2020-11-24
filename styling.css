@@ -55,7 +55,7 @@ li {padding: 10px;}
 body {
      font-family: 'Roboto', sans-serif;
     margin: 0; padding: 0; 
-    background-color: #d8d8d8;
+    background-color: #d8d8d8 ;
   
 }
 
@@ -116,7 +116,7 @@ h1, h2, h3, h4, h5, h6 {
 
 .button2 {   background-color: white;    color: black;    border: 3px solid #073763ff; }  .button2:hover {   background-color: #073763ff;   color: white; }  
 
-.button3 {  text-align: center;   text-decoration: none;   display: inline-block;   font-size: 100%;         cursor: pointer; height: 100%; padding: 5px 14px;  background-color: #eee;    color:darkslategray;   border: 3px solid #eee;  outline:none; border-radius: 10px; }  .button3:hover { border: 3px solid #000000;    outline:none; color:  black;}  
+.button3 {  text-align: center;   text-decoration: none;   display: inline-block;   font-size: 100%;         cursor: pointer; height: 100%; padding: 5px 14px;  background-color: #eee;    color:darkslategray;   border: 3px solid #eee;  outline:none;  }  .button3:hover { border: 3px solid #000000;    outline:none; color:  black;}  
 
 
 
@@ -562,7 +562,7 @@ input:checked + .slider:before {
 }
 
 #splash_screen {
-    width: 100%; position: fixed; top: 0; display: none;
+    width: 100%; position: fixed; top: 0; 
     height: 100%;
     background-color: darkslategrey;
     animation-name: splash; color: aliceblue;
