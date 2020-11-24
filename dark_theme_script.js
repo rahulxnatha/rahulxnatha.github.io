@@ -18,17 +18,26 @@ function manual_dark() {
       
   }
 
-var hour = new Date().getHours(); 
-var light_tw = document.getElementById("light_t");
-    var dark_tw = document.getElementById("dark_t");
   if (hour > 16) { var element = document.body;
    element.classList.toggle("dark-mode"); 
-                 
-                  light_tw.style.display = "none"
-                  dark_tw.style.display = "block"
     
   } else { 
-      light_tw.style.display = "block"
-                  dark_tw.style.display = "none"
   }
+        
+    document.body.scrollTop = 0;
+    document.documentElement.scrollTop = 0;
+    document.getElementById("sub-menu1").style.display = "none"; 
+    document.getElementById("splash_screen").style.display = "none";
+    document.getElementById("card1").style.display = "block"; 
+    document.getElementById("card2").style.display = "block";
+    document.getElementById("card3").style.display = "none";
+    document.getElementById("card4").style.display = "none";
+    document.getElementById("card5").style.display = "none"; 
+    document.getElementById("card6").style.display = "none";
+    document.getElementById("card7").style.display = "none";
+    document.getElementById("card8").style.display = "none";  
+        
+        
+        
 }
+
