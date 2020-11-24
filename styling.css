@@ -158,7 +158,7 @@ p {
 }
 
 .page {
-    margin-top:  190px;
+    margin-top:  190px; min-width: 1300px;
      
 }
 
