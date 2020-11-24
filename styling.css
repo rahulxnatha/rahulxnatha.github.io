@@ -2,6 +2,23 @@
     box-sizing: border-box;
 }
 
+#site-header {
+	position: fixed;
+	height: 194px;
+	top: 0;
+	width: 100%;
+	z-index: 100;
+	transition: all .3s ease;
+	
+}
+#site-header.hide {
+	top: -194px;
+}
+
+header {
+    
+}
+
 li {padding: 10px;}
 
 .dark-mode .content  {
@@ -12,7 +29,7 @@ li {padding: 10px;}
     color: white;}
 
 .dark-mode .icon-bar {
-    background-color: #121212; 
+    background-color: #121212;  color: white;
 }
 .dark-mode .navbar {background-color: #333; }
 .dark-mode .nav-bar-option a {border: 3px solid #333333; color: white;}
@@ -20,7 +37,8 @@ li {padding: 10px;}
 .dark-mode .navbar a.active  {background-color: white; color:black;border: 3px solid white;}
 
 .dark-mode .sub-menu a.active  {background-color: white; color:black;border: 3px solid white;}
-.dark-mode .button3 {border: 3px solid #ffffff; background-color: #333333; color: white; }
+.dark-mode .button3 {border: 3px solid #333; background-color: #333; color: white; }
+.dark-mode .button3:hover { border: 3px solid #fff;    outline:none; color: white;}  
 .dark-mode .tweets {
     background-color: #333333 ;
 }
@@ -37,7 +55,7 @@ li {padding: 10px;}
 body {
      font-family: 'Roboto', sans-serif;
     margin: 0; padding: 0; 
-    background-color: #073763; 
+    background-color: #d8d8d8;
   
 }
 
@@ -98,7 +116,7 @@ h1, h2, h3, h4, h5, h6 {
 
 .button2 {   background-color: white;    color: black;    border: 3px solid #073763ff; }  .button2:hover {   background-color: #073763ff;   color: white; }  
 
-.button3 {  text-align: center;   text-decoration: none;   display: inline-block;   font-size: 100%;      transition-duration: 0.4s;   cursor: pointer; margin: 0px 0px 0 0 ; padding: 5px 14px;  background-color: white;    color: black;    border: 3px solid #000000; outline:none; }  .button3:hover {    outline:none;}  
+.button3 {  text-align: center;   text-decoration: none;   display: inline-block;   font-size: 100%;         cursor: pointer; height: 100%; padding: 5px 14px;  background-color: #eee;    color:darkslategray;   border: 3px solid #eee;  outline:none; border-radius: 10px; }  .button3:hover { border: 3px solid #000000;    outline:none; color:  black;}  
 
 
 
@@ -119,12 +137,20 @@ p {
 }
 
 .content {
-    width: 100%; border-radius: 25px; 
-    float: left;
+    
+    width: -webkit-calc(50% - 30px);
+    width:    -moz-calc(50% - 30px);
+    width:         calc(50% - 30px);
+    
+    border-radius: 25px; 
+    border: 3px solid grey; float: left;
     background-color: #ffffff;
-    margin: 0px 20px 20px 0px ;
+    margin: 0px 0px 20px 20px ;
     padding: 20px 40px 20px 40px;
+    
 }
+
+
 
 .right-panel {
     width: 50%; background-color: none; 
@@ -132,8 +158,16 @@ p {
 }
 
 .page {
-    margin: 78px 20px 20px 20px; 
+    margin-top:  190px;
+     
 }
+
+#loading-box {position: fixed; width:140px; margin-left: calc(50% - 70px); margin-top: 60px;}
+
+
+
+
+
 
 .add-content {
     margin: 0px 0px 20px 20px; border-radius: 25px;
@@ -152,12 +186,18 @@ p {
 
 .navbar {
     
-  position: fixed; border-bottom: 2px solid rgba(0,0,0,0.1);
-  top: 0; width: 100%;
-  padding: 0px 0px 0px 10px;
-  overflow:auto; background-color: #ffffff;
-  
- 
+   transition: top 0.2s ease-in-out;
+  border-radius: 25px; border: 3px solid grey;
+  margin: 20px 20px 0px 20px; 
+    width: -webkit-calc(100% - 40px);
+    width:    -moz-calc(100% - 40px);
+    width:         calc(100% - 40px);
+  padding: 2px 2px 2px 2px; 
+  overflow:auto; background-color: #eee;
+}
+
+.nav-up {
+  top: -40px;
 }
 
 @media screen and (max-width: 900px) {
@@ -216,9 +256,9 @@ p {
 
 
 .icon-bar {
-    background-color: #073763;
+    background-color: coral; border: 3px solid black;
     height:auto; border-radius: 25px;
-    padding: 20px;
+    padding: 20px; color: black;
 }
 
 
@@ -234,7 +274,7 @@ p {
 }
 
 .inside-heading {
-    color: white; font-weight: 400;
+     font-weight: 400;
     font-size: 37px;
     
 }
@@ -253,7 +293,7 @@ p {
 }
 
 .nav-bar-option {
-  margin: 10px 5px 10px 0px;
+  margin: 8px 5px 8px 0px;  
   float: right;
 }
 
@@ -262,7 +302,7 @@ p {
   color: darkslategrey;
   text-align: center;
   padding: 5px 14px;
-  text-decoration: none; border: 3px solid #ffffff;
+  text-decoration: none; border: 3px solid #eee;
 }
 
 .nav-bar-option a:hover {
@@ -288,13 +328,11 @@ p {
 }
 
 .full-panel {
-    
     width: 100%;
     float: left;
     background-color: none; 
     margin: 0 0 0 0 ;
     padding: 0 0 0 0;
-
 }
 
 .only-phone { float: left;
@@ -325,11 +363,11 @@ p {
 
 
 .logo-on-navbar {
-    float:left; width:40px; margin-top: 6px; margin-left: 20px;
+    float:left; width:40px; margin-top: 6px; margin-left: 6px;
 }
 .text-logo-on-navbar {float:left;  display: flex;
   justify-content: center; color: black; 
-  align-items: center; margin: 9px 0px 0px 10px; padding:0; font-size: 30px; 
+  align-items: center; margin: 9px 0px 0px 6px; padding:0; font-size: 30px; 
     font-weight: 100;}
 .dark-mode .navbar .text-logo-on-navbar {color: white;}
 
@@ -383,9 +421,11 @@ textarea {
     background-color: none; 
     width: 100%;
     float: left;
-    color: aliceblue;
     margin: 0px 0px 20px 0px ; text-align: center;
     padding: 20px 40px 20px 40px;
+}
+.dark-mode .footer {
+    color: white;
 }
 
 
@@ -405,7 +445,7 @@ textarea {
 
 
 .dark-switch {
-  position: relative; margin: 10px 20px 5px 0px;
+  position: relative; margin: 8px 20px 8px 0px;
   float: right;
   display: inline-block; 
   width: 60px;
@@ -421,7 +461,7 @@ textarea {
 .dark-mode .dark-switch .slider {border:3px solid white;}
 .slider {
   position: absolute;border: 3px solid black;
-  cursor: pointer;
+  cursor: pointer; margin-top: 0px;
   top: 0; 
   left: 0;
   right: 0;
@@ -466,23 +506,37 @@ input:checked + .slider:before {
   border-radius: 50%;
 }
 .tell-content {
-    margin: 0px 0px 20px 20px; border-radius: 25px;
+    margin: 20px 20px 20px 20px; border-radius: 25px;
     background-color:white;  min-width: 200px;  float:right;
     height: auto;
-    padding: 2px 30px 2px 30px;
+    padding: 2px 30px 2px 30px; border: 3px solid grey;
+    animation: mymove 1s 5;
+}
+
+@keyframes mymove {
+  from {border-color: red;}
+  to {border-color: blue;}
+    
+    0%   {border-color: grey;}
+  50%  {border-color: #d8d8d8;}
+  100%  {border-color: grey;}
+    
+    
 }
 
 .dark-mode .tell-content  {
     background-color: #333333 ;
     color: white;}
 
-.sub-menu {
-    margin: 0px 0px 20px 0px; border-radius: 25px;
-    background-color:white;  min-width: 200px;  float:left;
+#sub-menu1 {
+    
+    margin: 20px 20px 20px 20px; border-radius: 25px; border: 3px solid grey;
+    background-color:#eee;  min-width: 200px;  float:left;
     height: auto;
     padding: 2px 30px 2px 30px;
+    display: none;
 }
-.dark-mode .sub-menu  {
+.dark-mode #sub-menu1  {
     background-color: #333333 ;
     color: white;}
 
@@ -496,4 +550,78 @@ input:checked + .slider:before {
 
 .full-panel-padded {
     padding: 10px 40px 10px 40px;
+}
+
+#site_header {
+  
+  position: fixed;
+  top: 0;
+  width: 100%;
+  display: block;
+  transition: top 0.3s;
+}
+
+#splash_screen {
+    width: 100%; position: fixed; top: 0; 
+    height: 100%;
+    background-color: darkslategrey;
+    animation-name: splash; color: aliceblue;
+    animation-duration: 0.3s; font-size: 40px;
+}
+
+@keyframes splash {
+  from {font-size: 30px;}
+  to {font-size: 40px;}
+}
+
+#center_placed { width:100%;  margin-top: 260px; text-align: center; vertical-align: middle;
+    
+}
+
+#loading {
+    animation: rotation 2s infinite;
+}
+
+@keyframes rotation {
+		from {-webkit-transform: rotate(0deg);}
+		to {-webkit-transform: rotate(359deg);}
+}
+
+#card3 {
+    display: none;
+}
+
+#card4 {
+    display: none;
+}
+
+#card5 {
+    display: none;
+}
+
+#card6 {
+    display: none;
+}
+
+#card7 {
+    display: none;
+}
+
+#card8 {
+    display: none;}
+
+#card9 {
+    display: none;
+}
+
+#card10 {
+    display: none;
+}
+
+#card1 {
+    display: none;
+}
+
+#card2 {
+    display: none;
 }
