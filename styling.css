@@ -711,3 +711,13 @@ input:checked + .slider:before {
 .hidden {
     display: none;
 }
+
+.float-right {
+    float: right;
+    margin: 10px;
+}
+
+.dark-mode .float-right {
+    float: right;
+    margin: 4px 40px 4px 4px; color: white;
+}
