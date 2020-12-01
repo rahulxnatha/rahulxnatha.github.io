@@ -409,12 +409,12 @@ p {
 
 
 .logo-on-navbar {
-    float:left; width:270px; margin-top: 6px; margin-left: 20px;
+    float:left; width:200px; margin-top: 8px; margin-left: 20px;
 }
-.text-logo-on-navbar {float:left;  display: flex;
-  justify-content: center; color: darkgrey; 
-  align-items: center; margin: 9px 0px 0px 6px; padding:0; font-size: 30px; 
-    font-weight: 100;}
+.text-logo-on-navbar {float:left;  display: flex; float: left;
+  justify-content: center; color: grey; 
+  align-items: center; margin: 6px 0px 0px 6px; padding:0; font-size: 29px; 
+    font-weight: 300;}
 .dark-mode .navbar .text-logo-on-navbar {color:dimgray;}
 
 .nav-logo {
@@ -720,4 +720,26 @@ input:checked + .slider:before {
 .dark-mode .float-right {
     float: right;
     margin: 4px 40px 4px 4px; color: white;
+}
+
+.google-sheet {
+    
+}
+
+.bottom-bar-for-google-sheet {
+    position: fixed; bottom:0; height: 45px; width: 100%; background-color:whitesmoke;z-index:9999999;
+}
+
+.top-in-bar {
+    margin: 2px; font-size: 20px;
+}
+
+#bottom-bar-updated-at {
+    position: fixed; right: 10px;
+}
+
+.message_label_bottom_bar {
+    justify-content: center; color: black; float: right;
+  align-items: center; margin: 16px 20px 0px 500px; padding:0; font-size: 18px; 
+    font-weight: 400;
 }
