@@ -58,7 +58,7 @@
     </style>
 </head>
 
-<body>
+<body onload="autoinvert()">
     <iframe class="iframe-sheet" id="sheet"
         style="position:fixed; top:0; left:0; bottom:0; right:0; width:100%; height:100%; border:none; margin:0; padding:0; overflow:hidden; z-index:9; "
         src="https://docs.google.com/spreadsheets/d/e/2PACX-1vTL5ZyxcOsOpcdYAdbQWjCgUJvJ1fone0C3o7MVW3B7jfty9VpJi6tzv71ikK6FpKhvCJod87722dkV/pubhtml">
@@ -92,13 +92,33 @@
         document.getElementById("at").innerHTML = "Updated today at " + hour + " hours.";
 
         function invert() {
+            if (document.getElementById("darktoggle").checked == true) {
+                document.getElementById("topc").style.filter = "invert(100%)";
+                document.getElementById("bottomc").style.filter = "invert(100%)";
+                document.getElementById("sheet").style.filter = "invert(100%)";
+                document.getElementById("dark-toggle").style.display = "block";
+            }
+            else {
+                document.getElementById("topc").style.filter = "invert(0%)";
+                document.getElementById("bottomc").style.filter = "invert(0%)";
+                document.getElementById("sheet").style.filter = "invert(0%)";
+                document.getElementById("dark-toggle").style.display = "block";
+            }
+        }
 
-            document.getElementById("topc").style.filter = "invert(100%)";
-            document.getElementById("bottomc").style.filter = "invert(100%)";
-            document.getElementById("sheet").style.filter = "invert(100%)";
-            document.getElementById("dark-toggle").style.display = "none";
+        function autoinvert() {
+            if (hour > 16) {
+                document.getElementById("topc").style.filter = "invert(100%)";
+                document.getElementById("bottomc").style.filter = "invert(100%)";
+                document.getElementById("sheet").style.filter = "invert(100%)";
+                document.getElementById("darktoggle").checked = true;
+
+            }
 
         }
+
+
+
     </script>
 
 
