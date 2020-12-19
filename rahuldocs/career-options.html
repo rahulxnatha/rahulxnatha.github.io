@@ -23,6 +23,7 @@
             width: 100%;
             background-color: whitesmoke;
             z-index: 99;
+
         }
 
         .top-bar-for-google-sheet {
@@ -33,6 +34,7 @@
             height: 28px;
             padding: 0;
             width: 100%;
+
             color: black;
             background-color: whitesmoke;
             z-index: 999;
@@ -41,34 +43,62 @@
         .ifame-sheet {
             margin: 40px 0px 40px 0px;
         }
+
+
+
+
+        /* Rounded sliders */
+        .slider.round {
+            border-radius: 34px;
+        }
+
+        .slider.round:before {
+            border-radius: 50%;
+        }
     </style>
 </head>
 
 <body>
-    <iframe class="iframe-sheet"
-        style="position:fixed; top:0; left:0; bottom:0; right:0; width:100%; height:100%; border:none; margin:0; padding:0; overflow:hidden; z-index:9;"
+    <iframe class="iframe-sheet" id="sheet"
+        style="position:fixed; top:0; left:0; bottom:0; right:0; width:100%; height:100%; border:none; margin:0; padding:0; overflow:hidden; z-index:9; "
         src="https://docs.google.com/spreadsheets/d/e/2PACX-1vTL5ZyxcOsOpcdYAdbQWjCgUJvJ1fone0C3o7MVW3B7jfty9VpJi6tzv71ikK6FpKhvCJod87722dkV/pubhtml">
     </iframe>
 
 
-    <div class="top-bar-for-google-sheet">
+    <div class="top-bar-for-google-sheet" id="topc">
         <p style="margin: 4px 0px 4px 10px;">Career Options</p>
     </div>
 
 
-    <div class="bottom-bar-for-google-sheet">
+    <div class="bottom-bar-for-google-sheet" id="bottomc">
         <a href="https://natharahul.github.io">
             <img height="70%" style="margin:5px 5px 5px 2px; float: left"
                 src="https://docs.google.com/drawings/d/e/2PACX-1vQA4iiyPJ8Py6UjOW524b3qVO8LRSsglJVuLPbldYkJ9td08uvFLAWs1sGukrMnTgmdvkiBCbTap_jD/pub?w=280&amp;h=42">
+
             <p style="font-size: 25px; margin: 4px 0 0 0; color: black; float: left">from Rahul Natha</p>
         </a>
 
         <p style="float: right; margin: 8px 2px 5px 0px" id="at">Updated 5 mins ago.</p>
+
+
+        <label id="dark-toggle" style="float: right; margin: 8px 200px 5px 0px"> Dark theme
+            <input id="darktoggle" type="checkbox" onclick="invert()">
+
+        </label>
     </div>
 
     <script>
         var hour = new Date().getHours();
         document.getElementById("at").innerHTML = "Updated today at " + hour + " hours.";
+
+        function invert() {
+
+            document.getElementById("topc").style.filter = "invert(100%)";
+            document.getElementById("bottomc").style.filter = "invert(100%)";
+            document.getElementById("sheet").style.filter = "invert(100%)";
+            document.getElementById("dark-toggle").style.display = "none";
+
+        }
     </script>
 
 
