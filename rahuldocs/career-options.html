@@ -12,11 +12,13 @@
 
         body {
             font-family: 'Roboto Condensed', sans-serif;
+            overflow-y: hidden;
         }
 
         .bottom-bar-for-google-sheet {
             position: fixed;
-            bottom: 0; left: 0px;
+            bottom: 0;
+            left: 0px;
             height: 37px;
             width: 100%;
             background-color: whitesmoke;
@@ -64,10 +66,10 @@
         <p style="float: right; margin: 8px 2px 5px 0px" id="at">Updated 5 mins ago.</p>
     </div>
 
-<script>
-    var hour = new Date().getHours(); 
-    document.getElementById("at").innerHTML = "Updated today at " + hour + " hours."  ;
-</script>
+    <script>
+        var hour = new Date().getHours();
+        document.getElementById("at").innerHTML = "Updated today at " + hour + " hours.";
+    </script>
 
 
 
