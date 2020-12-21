@@ -6,74 +6,61 @@
         href="https://docs.google.com/drawings/d/e/2PACX-1vRGQlyUeKdoy-wYzjbO3yLRdSBrBMBIMoNBoHgz0QQizbTWvlUDPP3aaD1wM9jyJhH1vM9AcpHf-CSY/pub?w=111&amp;h=111"
         type="image/gif">
     <title>Career Options</title>
+    <meta property="og:title" content="Career Options" />
+    <meta property="og:description" content="DOCS from Rahul Natha" />
+    <meta property="og:url" content="https://natharahul.github.io" />
+    <meta property="og:image"
+      content="https://docs.google.com/drawings/d/e/2PACX-1vTsISpsKu-Hn0EdJePBw_UC3y5GBIL-4S-dauzSMiG3Ys3oksH13kBv2qcQLgWSBwhRNPkKgOmPcazN/pub?w=379&amp;h=379" />
 
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Roboto+Condensed:ital,wght@0,300;0,400;0,700;1,300;1,400;1,700&display=swap');
 
-        body {
-            font-family: 'Roboto Condensed', sans-serif;
-            overflow-y: hidden;
-        }
-
-        .bottom-bar-for-google-sheet {
-            position: fixed;
-            bottom: 0;
-            left: 0px;
-            height: 37px;
-            width: 100%;
-            background-color: whitesmoke;
-            z-index: 99;
-
-        }
-
-        .top-bar-for-google-sheet {
-            position: fixed;
-            top: 0%;
-            left: 0px;
-            margin: 0;
-            height: 28px;
-            padding: 0;
-            width: 100%;
-
-            color: black;
-            background-color: whitesmoke;
-            z-index: 999;
-        }
-
-        .ifame-sheet {
-            margin: 40px 0px 40px 0px;
-        }
 
 
+        @media screen and (min-width: 7px) {
+            body {
+                font-family: 'Roboto Condensed', sans-serif;
+                overflow-y: hidden;
+                background-color: darkgrey;
+            }
 
+            .bottom-bar-for-google-sheet {
+                position: fixed;
+                bottom: 0;
+                left: 0px;
+                height: 37px;
+                width: 100%;
+                background-color: whitesmoke;
+                z-index: 99;
+            }
 
-        /* Rounded sliders */
-        .slider.round {
-            border-radius: 34px;
-        }
-
-        .slider.round:before {
-            border-radius: 50%;
+            .top-bar-for-google-sheet {
+                position: fixed;
+                top: 0%;
+                left: 0px;
+                margin: 0;
+                height: 28px;
+                padding: 0;
+                width: 100%;
+                color: black;
+                background-color: whitesmoke;
+                z-index: 999;
+            }
         }
     </style>
 </head>
 
 <body onload="autoinvert()">
     <iframe class="iframe-sheet" id="sheet"
-        style="position:fixed; top:0; left:0; bottom:0; right:0; width:100%; height:100%; border:none; margin:0; padding:0; overflow:hidden; z-index:9; "
+        style="position:fixed; top:0; left:0; bottom:0; right:0; width:100%; height:100%; border:none; margin:0; padding:0; overflow:hidden; z-index:9; background-color: darkgrey; "
         src="https://docs.google.com/spreadsheets/d/e/2PACX-1vTL5ZyxcOsOpcdYAdbQWjCgUJvJ1fone0C3o7MVW3B7jfty9VpJi6tzv71ikK6FpKhvCJod87722dkV/pubhtml">
     </iframe>
-
-
     <div class="top-bar-for-google-sheet" id="topc">
         <p style="margin: 4px 0px 4px 10px;">Career Options</p>
         <label id="dark-toggle" style=" position: fixed; top: 4px; right: 4px; margin: 0px 20px 0px 0px;"> Dark theme
             <input id="darktoggle" type="checkbox" onclick="invert()">
-
         </label>
     </div>
-
-
     <div class="bottom-bar-for-google-sheet" id="bottomc">
         <a href="https://natharahul.github.io">
             <img height="70%" style="margin:5px 5px 5px 2px; float: left"
@@ -81,16 +68,11 @@
 
             <p style="font-size: 25px; margin: 4px 0 0 0; color: black; float: left">from Rahul Natha</p>
         </a>
-
         <p style="float: right; margin: 8px 2px 5px 0px" id="at">Updated 5 mins ago.</p>
-
-
     </div>
-
     <script>
         var hour = new Date().getHours();
         document.getElementById("at").innerHTML = "Updated today at " + hour + " hours.";
-
         function invert() {
             if (document.getElementById("darktoggle").checked == true) {
                 document.getElementById("topc").style.filter = "invert(100%)";
@@ -108,11 +90,10 @@
 
         function autoinvert() {
             if (hour > 16) {
-                document.getElementById("topc").style.filter = "invert(100%)";
-                document.getElementById("bottomc").style.filter = "invert(100%)";
-                document.getElementById("sheet").style.filter = "invert(100%)";
+                document.getElementById("topc").style.filter = "invert(99%)";
+                document.getElementById("bottomc").style.filter = "invert(99%)";
+                document.getElementById("sheet").style.filter = "invert(99%)";
                 document.getElementById("darktoggle").checked = true;
-
             }
 
         }
