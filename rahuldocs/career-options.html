@@ -156,6 +156,13 @@
             }
         }
 
+        
+        document.getElementById("darktoggle").addEventListener("keyup", function (event) {
+            if (event.keyCode === 68) {
+                event.preventDefault();
+                document.getElementById("darktoggle").click();
+            }
+        });
     </script>
 
 
