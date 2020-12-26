@@ -18,6 +18,32 @@
 
 
         @media screen and (min-width: 7px) {
+            
+            .tooltip {
+  position: relative;
+ 
+}
+
+.tooltip .tooltiptext {
+  visibility: hidden;
+  width: 120px;
+  background-color: #505050;
+  color: #fff;
+  text-align: center;
+  border-radius: 6px;
+  padding: 5px 0;
+  
+  /* Position the tooltip */
+  position: absolute;
+  z-index: 1;
+  top: 100%;
+  left: 50%;
+  margin-left: -60px;
+}
+
+.tooltip:hover .tooltiptext {
+  visibility: visible;
+}
             body {
                 font-family: 'Roboto Condensed', sans-serif;
                 overflow-y: hidden;
@@ -83,11 +109,14 @@
 
     <div class="top-bar-for-google-sheet" id="topc">
         <p style="margin: 4px 0px 4px 10px;">Career Options</p>
+<div class="tooltip">
+  
 
         <label id="dark-toggle" style=" position: fixed; top: 4px; right: 4px; margin: 0px 20px 0px 0px;"> Dark theme
             <input id="darktoggle" type="checkbox" onclick="invert()" accesskey="d">
         </label>
-
+    <span class="tooltiptext">Keyboard shortcut: d</span>
+</div>
         <label id="dark-toggle" class="hidden"
             style=" position: fixed; top: 4px; right: 200px; margin: 0px 20px 0px 0px;"> Beta
             <input id="navtoggle" type="checkbox" onclick="navbar_style()">
