@@ -7,7 +7,7 @@
         type="image/gif">
     <title>Career Options</title>
     <meta property="og:title" content="Career Options" />
-    <meta property="og:description" content="Version 2.3" />
+    <meta property="og:description" content="Version 2.4" />
     <meta property="og:url" content="https://natharahul.github.io" />
     <meta property="og:image"
         content="https://docs.google.com/drawings/d/e/2PACX-1vTsISpsKu-Hn0EdJePBw_UC3y5GBIL-4S-dauzSMiG3Ys3oksH13kBv2qcQLgWSBwhRNPkKgOmPcazN/pub?w=379&amp;h=379" />
@@ -82,6 +82,10 @@
             #cal-toggle {
                 display: none;
             }
+
+            #at{
+                display: none;
+            }
         }
 
         @media screen and (max-width: 650px) {
@@ -126,7 +130,7 @@
 </head>
 
 <body onload="autoinvert()">
-    <div id=webpage>
+    <div id="webpage">
         <iframe class="iframe-sheet" id="sheet"
             style="position:fixed; top:0; left:0; bottom:0px; right:0; width:100%; height: calc(100% - 0px); border:none; margin: 0px 0px 0px 0px; padding:0; overflow:hidden; z-index:9; background-color: darkgrey; font-family: 'Roboto Condensed', sans-serif; "
             src="https://docs.google.com/spreadsheets/d/e/2PACX-1vTL5ZyxcOsOpcdYAdbQWjCgUJvJ1fone0C3o7MVW3B7jfty9VpJi6tzv71ikK6FpKhvCJod87722dkV/pubhtml">
@@ -177,7 +181,7 @@
         <div class="top-bar-for-google-sheet" id="topc">
             <a style="text-decoration: none; color:black; "
                 href="https://natharahul.github.io/rahuldocs/career-options">
-                <p style="margin: 4px 0px 4px 10px;">Career Options - Version 2.3</p>
+                <p style="margin: 4px 0px 4px 10px;">Career Options - Version 2.4</p>
             </a>
 
 
@@ -203,12 +207,13 @@
 
         <div class="bottom-bar-for-google-sheet" id="bottomc">
             <a href="https://natharahul.github.io">
-                <img height="25px"  style="margin:5px 5px 5px 2px; float: left"
+                <img height="25px" style="margin:5px 5px 5px 2px; float: left"
                     src="https://docs.google.com/drawings/d/e/2PACX-1vQA4iiyPJ8Py6UjOW524b3qVO8LRSsglJVuLPbldYkJ9td08uvFLAWs1sGukrMnTgmdvkiBCbTap_jD/pub?w=280&amp;h=42">
 
                 <p style="font-size: 25px; margin: 4px 0 0 0; color: black; float: left">from Rahul Natha</p>
             </a>
-            <p style="float: right; margin: 8px 2px 5px 0px" id="at">Updated 5 mins ago.</p>
+
+            <p style="float: right; margin: 8px 2px 5px 0px" id="at" >Updated 5 mins ago.</p>
         </div>
 
     </div>
@@ -216,6 +221,7 @@
     <script>
         var hour = new Date().getHours();
         document.getElementById("at").innerHTML = "Updated today at " + hour + " hours.";
+        
         function invert() {
             if (document.getElementById("darktoggle").checked == true) {
                 document.getElementById("topc").style.filter = "invert(90%)";
@@ -250,6 +256,9 @@
                 document.getElementById("darktoggle").checked = false;
             }
             document.getElementById("splashscreen").style.display = "none";
+
+            
+
         }
 
         function navbar_style() {
