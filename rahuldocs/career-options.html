@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html>
 
@@ -8,7 +7,7 @@
         type="image/gif">
     <title>Career Options</title>
     <meta property="og:title" content="Career Options" />
-    <meta property="og:description" content="Version 2.2" />
+    <meta property="og:description" content="Version 2.3" />
     <meta property="og:url" content="https://natharahul.github.io" />
     <meta property="og:image"
         content="https://docs.google.com/drawings/d/e/2PACX-1vTsISpsKu-Hn0EdJePBw_UC3y5GBIL-4S-dauzSMiG3Ys3oksH13kBv2qcQLgWSBwhRNPkKgOmPcazN/pub?w=379&amp;h=379" />
@@ -18,40 +17,39 @@
 
 
 
-        @media screen and (min-width: 7px) {
+        .tooltip {
+            position: relative;
 
-            .tooltip {
-                position: relative;
+        }
 
-            }
+        .tooltip .tooltiptext {
+            visibility: hidden;
+            width: auto;
+            background-color: #505050;
+            color: #fff;
+            text-align: center;
+            border-radius: 6px;
+            padding: 5px;
 
-            .tooltip .tooltiptext {
-                visibility: hidden;
-                width: auto;
-                background-color: #505050;
-                color: #fff;
-                text-align: center;
-                border-radius: 6px;
-                padding: 5px;
+            /* Position the tooltip */
+            position: absolute;
+            z-index: 1;
+            top: 109%;
+            right: 0%;
+            margin-left: -60px;
+        }
 
-                /* Position the tooltip */
-                position: absolute;
-                z-index: 1;
-                top: 109%;
-                right: 0%;
-                margin-left: -60px;
-            }
+        .tooltip:hover .tooltiptext {
+            visibility: visible;
+        }
 
-            .tooltip:hover .tooltiptext {
-                visibility: visible;
-            }
+        body {
+            font-family: 'Roboto Condensed', sans-serif;
+            overflow-y: hidden;
+            background-color: darkgrey;
+        }
 
-            body {
-                font-family: 'Roboto Condensed', sans-serif;
-                overflow-y: hidden;
-                background-color: darkgrey;
-            }
-
+        @media screen and (min-width: 650px) {
             .bottom-bar-for-google-sheet {
                 position: fixed;
                 bottom: 0;
@@ -75,6 +73,45 @@
                 z-index: 999;
             }
         }
+
+        @media screen and (max-width: 750px) {
+            #hideonclick {
+                display: none;
+            }
+
+            #cal-toggle {
+                display: none;
+            }
+        }
+
+        @media screen and (max-width: 650px) {
+
+            .bottom-bar-for-google-sheet {
+                position: fixed;
+                bottom: 0;
+                left: 0px;
+                height: 52px;
+                width: 100%;
+                background-color: whitesmoke;
+                z-index: 99;
+            }
+
+            .top-bar-for-google-sheet {
+                position: fixed;
+                top: 0%;
+                left: 0px;
+                margin: 0;
+                height: 28px;
+                padding: 0;
+                width: 100%;
+                color: black;
+                background-color: whitesmoke;
+                z-index: 999;
+            }
+        }
+
+
+
 
         .hidden {
             display: none;
@@ -140,11 +177,12 @@
         <div class="top-bar-for-google-sheet" id="topc">
             <a style="text-decoration: none; color:black; "
                 href="https://natharahul.github.io/rahuldocs/career-options">
-                <p style="margin: 4px 0px 4px 10px;">Career Options - Version 2.2</p>
+                <p style="margin: 4px 0px 4px 10px;">Career Options - Version 2.3</p>
             </a>
 
 
-            <button id="hideonclick" style=" position: fixed; top: 4px; right: 400px; margin: 0px 20px 0px 0px;" onclick="openFullscreen();">Fullscreen mode</button>
+            <button id="hideonclick" style=" position: fixed; top: 4px; right: 400px; margin: 0px 20px 0px 0px;"
+                onclick="openFullscreen();">Fullscreen mode</button>
 
             <div class="tooltip">
 
@@ -154,7 +192,8 @@
                 </label>
                 <span class="tooltiptext">Dark theme (d)</span>
             </div>
-            <label id="dark-toggle" class="nothing"
+
+            <label id="cal-toggle" class="nothing"
                 style=" position: fixed; top: 4px; right: 200px; margin: 0px 20px 0px 0px;"> Calendar mode
                 <input id="navtoggle" type="checkbox" onclick="navbar_style()">
             </label>
@@ -164,7 +203,7 @@
 
         <div class="bottom-bar-for-google-sheet" id="bottomc">
             <a href="https://natharahul.github.io">
-                <img height="70%" style="margin:5px 5px 5px 2px; float: left"
+                <img height="25px"  style="margin:5px 5px 5px 2px; float: left"
                     src="https://docs.google.com/drawings/d/e/2PACX-1vQA4iiyPJ8Py6UjOW524b3qVO8LRSsglJVuLPbldYkJ9td08uvFLAWs1sGukrMnTgmdvkiBCbTap_jD/pub?w=280&amp;h=42">
 
                 <p style="font-size: 25px; margin: 4px 0 0 0; color: black; float: left">from Rahul Natha</p>
