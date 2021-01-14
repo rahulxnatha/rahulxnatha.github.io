@@ -7,7 +7,7 @@
         type="image/gif">
     <title>Career Options</title>
     <meta property="og:title" content="Career Options" />
-    <meta property="og:description" content="Version 2.4" />
+    <meta property="og:description" content="Version 2.5" />
     <meta property="og:url" content="https://natharahul.github.io" />
     <meta property="og:image"
         content="https://docs.google.com/drawings/d/e/2PACX-1vTsISpsKu-Hn0EdJePBw_UC3y5GBIL-4S-dauzSMiG3Ys3oksH13kBv2qcQLgWSBwhRNPkKgOmPcazN/pub?w=379&amp;h=379" />
@@ -83,7 +83,7 @@
                 display: none;
             }
 
-            #at{
+            #at {
                 display: none;
             }
         }
@@ -160,13 +160,20 @@
             <!--" https://docs.google.com/spreadsheets/d/e/2PACX-1vTL5ZyxcOsOpcdYAdbQWjCgUJvJ1fone0C3o7MVW3B7jfty9VpJi6tzv71ikK6FpKhvCJod87722dkV/pubhtml?widget=true&amp;headers=false"-->
         </iframe>
 
-        <div class="iframe-sheet-2 hidden" id="sheet4"
-            style="position:fixed; top:128px; left:1220px; bottom:37px; right:20px; width:auto; height: calc(100% - 66px);
-        border:none; margin: 0px 0px 37px 0px; padding:20px; overflow:hidden; z-index:9; background-color: rgb(29, 29, 29); color: white;">
-            <h2>Login to view this column</h2>
-            <input placeholder="Username">
-            <input placeholder="Password">
-            <button>Login</button>
+
+
+
+        <!--top:128px; left:1220px; bottom:37px; right:20px; width:auto; height: calc(100% - 66px);
+        border:none; margin: 0px 0px 37px 0px; padding:20px; overflow:hidden; z-index:9; -->
+
+        <div class="iframe-sheet-2" id="accesspage"
+            style="position:fixed; top:0px; left:0px; bottom:0px; right:0px; width:100%; height: 100%;
+            border:none; margin: 0px 0px 37px 0px; padding:20px; overflow:hidden; z-index:9; background-color: rgb(29, 29, 29); color: white;">
+            <h2>Enter accesskey to view the content</h2>
+
+            <input id="accesskey" type="text" placeholder="Enter any valid accesskey">
+            <button onclick="turnonaccess()">Get access</button>
+            <p id="accessreply"></p>
 
         </div>
 
@@ -181,7 +188,7 @@
         <div class="top-bar-for-google-sheet" id="topc">
             <a style="text-decoration: none; color:black; "
                 href="https://natharahul.github.io/rahuldocs/career-options">
-                <p style="margin: 4px 0px 4px 10px;">Career Options - Version 2.4</p>
+                <p style="margin: 4px 0px 4px 10px;">Career Options - Version 2.5</p>
             </a>
 
 
@@ -213,15 +220,29 @@
                 <p style="font-size: 25px; margin: 4px 0 0 0; color: black; float: left">from Rahul Natha</p>
             </a>
 
-            <p style="float: right; margin: 8px 2px 5px 0px" id="at" >Updated 5 mins ago.</p>
+            <p style="float: right; margin: 8px 2px 5px 0px" id="at">Updated 5 mins ago.</p>
         </div>
 
     </div>
 
     <script>
+
+        function turnonaccess() {
+            var keyentered = document.getElementById("accesskey").value;
+            if (keyentered == "preparation") {
+                document.getElementById("accesspage").style.display = "none";
+            }
+            else {
+                document.getElementById("accessreply").innerHTML = "Access denied!";
+            }
+        }
+
+
+
         var hour = new Date().getHours();
-        document.getElementById("at").innerHTML = "Updated today at " + hour + " hours.";
-        
+        var date_time = new Date();
+        document.getElementById("at").innerHTML = date_time;
+
         function invert() {
             if (document.getElementById("darktoggle").checked == true) {
                 document.getElementById("topc").style.filter = "invert(90%)";
@@ -257,7 +278,7 @@
             }
             document.getElementById("splashscreen").style.display = "none";
 
-            
+
 
         }
 
