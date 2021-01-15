@@ -172,7 +172,7 @@
             <h2>Enter accesskey to view the content</h2>
 
             <input id="accesskey" type="text" placeholder="Enter any valid accesskey">
-            <button onclick="turnonaccess()">Get access</button>
+            <button onclick="turnonaccess()" id="accessbutton">Get access</button>
             <p id="accessreply"></p>
 
         </div>
@@ -229,7 +229,7 @@
 
         function turnonaccess() {
             var keyentered = document.getElementById("accesskey").value;
-            if (keyentered == "preparation") {
+            if (keyentered == "prep") {
                 document.getElementById("accesspage").style.display = "none";
             }
             else {
@@ -237,6 +237,12 @@
             }
         }
 
+        document.getElementById("accesskey").addEventListener("keyup", function (event) {
+            if (event.keyCode === 13) {
+                event.preventDefault();
+                document.getElementById("accessbutton").click();
+            }
+        });
 
 
         var hour = new Date().getHours();
