@@ -188,7 +188,7 @@
         <div class="top-bar-for-google-sheet" id="topc">
             <a style="text-decoration: none; color:black; "
                 href="https://natharahul.github.io/rahuldocs/career-options">
-                <p style="margin: 4px 0px 4px 10px;">Career Options - Version 2.5</p>
+                <p style="margin: 4px 0px 4px 10px;" id="versiond">Career Options - Version 2.5</p>
             </a>
 
 
@@ -235,6 +235,17 @@
             else {
                 document.getElementById("accessreply").innerHTML = "Access denied!";
             }
+            if (keyentered == "ea") {
+                document.getElementById("accesspage").style.display = "none";
+                document.getElementById("versiond").innerHTML = "Career Options - Version 2.6.1 Beta";
+            }
+            else {
+                document.getElementById("accessreply").innerHTML = "Access denied!";
+            }
+
+
+
+
         }
 
         document.getElementById("accesskey").addEventListener("keyup", function (event) {
