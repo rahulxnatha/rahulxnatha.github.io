@@ -7,7 +7,7 @@
         type="image/gif">
     <title>Career Options</title>
     <meta property="og:title" content="Career Options" />
-    <meta property="og:description" content="Version 2.6" />
+    <meta property="og:description" content="Version 2.7" />
     <meta property="og:url" content="https://natharahul.github.io" />
     <meta property="og:image"
         content="https://docs.google.com/drawings/d/e/2PACX-1vTsISpsKu-Hn0EdJePBw_UC3y5GBIL-4S-dauzSMiG3Ys3oksH13kBv2qcQLgWSBwhRNPkKgOmPcazN/pub?w=379&amp;h=379" />
@@ -80,6 +80,10 @@
             }
 
             #cal-toggle {
+                display: none;
+            }
+
+            #cal-toggle2 {
                 display: none;
             }
 
@@ -177,6 +181,19 @@
 
         </div>
 
+        <div class="iframe-sheet-3 hidden" id="mediapage"
+            style="position:fixed; top:0px; left:0px; bottom:0px; right:0px; width:100%; height: 100%;
+            border:none; margin: 0px 0px 37px 0px; padding:20px; overflow:hidden; z-index:9; background-color: rgb(29, 29, 29); color: white;">
+            <iframe
+                src="https://www.facebook.com/plugins/post.php?href=https%3A%2F%2Fwww.facebook.com%2FPraveen.Kulkarni.For.Students%2Fposts%2F3749407878450524&width=500&show_text=true&height=283&appId"
+                width="500" height="283" style="border:none;overflow:hidden" scrolling="no" frameborder="0"
+                allowfullscreen="true"
+                allow="autoplay; clipboard-write; encrypted-media; picture-in-picture; web-share"></iframe>
+            
+            <p id="accessreply"></p>
+
+        </div>
+
         <div id="splashscreen"
             style="position: fixed; top:0;left:0; bottom:0px; right:0; width:100%; height: calc(100% - 0px); border:none; margin: 0px 0px 0px 0px; padding:0; overflow:hidden; z-index:9999; background-color: rgb(36, 36, 36);">
             <div style="position: fixed;top: calc(50% - 100px); left: calc(50% - 100px);">
@@ -186,10 +203,10 @@
         </div>
 
         <div class="top-bar-for-google-sheet" id="topc">
-            <a style="text-decoration: none; color:black; "
-                href="https://natharahul.github.io/rahuldocs/career-options">
-                <p style="margin: 4px 0px 4px 10px;" id="versiond">Career Options - Version 2.6</p>
-            </a>
+            
+                <p style="margin: 4px 0px 4px 10px;" id="versiond"><a style="text-decoration: none; color:black; "
+                    href="https://natharahul.github.io/rahuldocs/career-options">Career Options - Version 2.7</a></p>
+            
 
 
             <button id="hideonclick" style=" position: fixed; top: 4px; right: 400px; margin: 0px 20px 0px 0px;"
@@ -204,9 +221,18 @@
                 <span class="tooltiptext">Dark theme (d)</span>
             </div>
 
+
+
+
+
             <label id="cal-toggle" class="nothing"
                 style=" position: fixed; top: 4px; right: 200px; margin: 0px 20px 0px 0px;"> Calendar mode
                 <input id="navtoggle" type="checkbox" onclick="navbar_style()">
+            </label>
+
+            <label id="cal-toggle2" class="nothing"
+                style=" position: fixed; top: 4px; right: 600px; margin: 0px 20px 0px 0px;"> Media
+                <input id="navtoggle3" type="checkbox" onclick="showmedia()">
             </label>
 
         </div>
@@ -313,6 +339,22 @@
                 document.getElementById("sheet3").style.display = "none";
 
             }
+        }
+
+        function showmedia() {
+            if (document.getElementById("navtoggle3").checked == true) {
+
+
+                document.getElementById("mediapage").style.display = "block";
+
+
+            }
+            else {
+
+                document.getElementById("mediapage").style.display = "none";
+
+            }
+
         }
 
 
