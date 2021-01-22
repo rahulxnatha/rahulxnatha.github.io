@@ -18,7 +18,7 @@
         type="image/gif">
     <title>Career Options</title>
     <meta property="og:title" content="Career Options" />
-    <meta property="og:description" content="Version 2.9" />
+    <meta property="og:description" content="Version 2.9.3" />
     <meta property="og:url" content="https://natharahul.github.io" />
     <meta property="og:image"
         content="https://docs.google.com/drawings/d/e/2PACX-1vTsISpsKu-Hn0EdJePBw_UC3y5GBIL-4S-dauzSMiG3Ys3oksH13kBv2qcQLgWSBwhRNPkKgOmPcazN/pub?w=379&amp;h=379" />
@@ -239,12 +239,11 @@
         <div class="top-bar-for-google-sheet" id="topc">
 
             <p style="margin: 4px 0px 4px 10px;" id="versiond"><a style="text-decoration: none; color:black; "
-                    href="https://natharahul.github.io/rahuldocs/career-options">Career Options - Version 2.9.2</a></p>
+                    href="https://natharahul.github.io/rahuldocs/career-options">Career Options - Version 2.9.3</a></p>
 
 
-
-            <button id="hideonclick" style=" position: fixed; top: 4px; right: 400px; margin: 0px 20px 0px 0px;"
-                onclick="openFullscreen();">Fullscreen mode</button>
+            <label style=" position: fixed; top: 4px; right: 400px; margin: 0px 20px 0px 0px;"> Fullscreen mode
+                <input type="checkbox" id="hideonclick" onclick="decidefullscreen();"></label>
 
             <div class="tooltip">
 
@@ -261,12 +260,12 @@
 
             <label id="cal-toggle" class="nothing"
                 style=" position: fixed; top: 4px; right: 200px; margin: 0px 20px 0px 0px;"> Calendar mode
-                <input id="navtoggle" type="checkbox" onclick="navbar_style()">
+                <input id="calendarswitch" type="checkbox" onclick="navbar_style()" accesskey="c">
             </label>
 
             <label id="cal-toggle2" class="nothing"
                 style=" position: fixed; top: 4px; right: 600px; margin: 0px 20px 0px 0px;"> Media
-                <input id="navtoggle3" type="checkbox" onclick="showmedia()">
+                <input id="mediaswitch" type="checkbox" onclick="showmedia()" accesskey="m">
             </label>
 
         </div>
@@ -315,6 +314,56 @@
             }
         });
 
+        document.addEventListener("keyup", function (event) {
+            if (event.keyCode === 68) {
+                event.preventDefault();
+                document.getElementById("darktoggle").click();
+            }
+        });
+
+        document.addEventListener("keyup", function (event) {
+            if (event.keyCode === 67) {
+                event.preventDefault();
+                document.getElementById("calendarswitch").click();
+            }
+        });
+
+        document.addEventListener("keyup", function (event) {
+            if (event.keyCode === 77) {
+                event.preventDefault();
+                document.getElementById("mediaswitch").click();
+            }
+        });
+
+        document.addEventListener("keyup", function (event) {
+            if (event.keyCode === 70) {
+                event.preventDefault();
+                document.getElementById("hideonclick").click();
+            }
+        });
+        document.addEventListener("keyup", function (event) {
+            if (event.keyCode === 84) {
+                event.preventDefault();
+                window.open("https://www.t.me/rahulnatha");
+            }
+        });
+
+
+        document.addEventListener("keyup", function (event) {
+            if (event.keyCode === 72) {
+                event.preventDefault();
+                document.getElementById("mediaswitch").checked = false;
+                document.getElementById("calendarswitch").checked = false;
+                document.getElementById("mediapage").style.display = "none";
+                document.getElementById("sheet").style.display = "block";
+                document.getElementById("sheet2").style.display = "none";
+                document.getElementById("sheet3").style.display = "none";
+
+
+            }
+        });
+
+
 
         var hour = new Date().getHours();
         var date_time = new Date();
@@ -360,60 +409,83 @@
         }
 
         function navbar_style() {
-            if (document.getElementById("navtoggle").checked == true) {
+            if (document.getElementById("calendarswitch").checked == true) {
 
+                document.getElementById("mediaswitch").checked = false;
+                document.getElementById("mediapage").style.display = "none";
                 document.getElementById("sheet").style.display = "none";
                 document.getElementById("sheet2").style.display = "block";
                 document.getElementById("sheet3").style.display = "block";
 
+
             }
             else {
                 document.getElementById("sheet").style.display = "block";
+                document.getElementById("mediapage").style.display = "none";
                 document.getElementById("sheet2").style.display = "none";
                 document.getElementById("sheet3").style.display = "none";
+
 
             }
         }
 
         function showmedia() {
-            if (document.getElementById("navtoggle3").checked == true) {
+            if (document.getElementById("mediaswitch").checked == true) {
 
 
                 document.getElementById("mediapage").style.display = "block";
+                document.getElementById("calendarswitch").checked = false;
+                document.getElementById("sheet2").style.display = "none";
+                document.getElementById("sheet3").style.display = "none";
 
 
             }
             else {
-
+                document.getElementById("sheet").style.display = "block";
                 document.getElementById("mediapage").style.display = "none";
-
+                document.getElementById("sheet2").style.display = "none";
+                document.getElementById("sheet3").style.display = "none";
             }
 
         }
 
 
-        document.addEventListener("keyup", function (event) {
-            if (event.keyCode === 68) {
-                event.preventDefault();
-                document.getElementById("darktoggle").click();
-            }
-        });
 
 
-        var elem = document.getElementById("webpage");
-        function openFullscreen() {
-            if (elem.requestFullscreen) {
-                elem.requestFullscreen();
-            } else if (elem.webkitRequestFullscreen) { /* Safari */
-                elem.webkitRequestFullscreen();
-            } else if (elem.msRequestFullscreen) { /* IE11 */
-                elem.msRequestFullscreen();
+
+
+
+
+
+
+
+
+        function decidefullscreen() {
+            var elem = document.getElementById("webpage");
+            if (document.getElementById("hideonclick").checked == true) {
+
+                if (elem.requestFullscreen) {
+                    elem.requestFullscreen();
+                } else if (elem.webkitRequestFullscreen) { /* Safari */
+                    elem.webkitRequestFullscreen();
+                } else if (elem.msRequestFullscreen) { /* IE11 */
+                    elem.msRequestFullscreen();
+                }
+
             }
-            document.getElementById("hideonclick").style.display = "none";
+
+
+            if (document.getElementById("hideonclick").checked == false) {
+                if (document.exitFullscreen) {
+                    document.exitFullscreen();
+                } else if (document.webkitExitFullscreen) { /* Safari */
+                    document.webkitExitFullscreen();
+                } else if (document.msExitFullscreen) { /* IE11 */
+                    document.msExitFullscreen();
+                }
+
+            }
         }
-
-
-
     </script>
 
 
