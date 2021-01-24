@@ -18,7 +18,7 @@
         type="image/gif">
     <title>Career Options</title>
     <meta property="og:title" content="Career Options" />
-    <meta property="og:description" content="Version 2.9.3" />
+    <meta property="og:description" content="DOCS from Rahul Natha" />
     <meta property="og:url" content="https://natharahul.github.io" />
     <meta property="og:image"
         content="https://docs.google.com/drawings/d/e/2PACX-1vTsISpsKu-Hn0EdJePBw_UC3y5GBIL-4S-dauzSMiG3Ys3oksH13kBv2qcQLgWSBwhRNPkKgOmPcazN/pub?w=379&amp;h=379" />
@@ -30,28 +30,42 @@
 
         .tooltip {
             position: relative;
+            display: inline-block;
 
         }
 
         .tooltip .tooltiptext {
             visibility: hidden;
-            width: auto;
-            background-color: #505050;
+            min-width: 130px;
+            background-color: #555;
             color: #fff;
             text-align: center;
             border-radius: 6px;
-            padding: 5px;
-
-            /* Position the tooltip */
+            padding: 5px 8px;
             position: absolute;
             z-index: 1;
-            top: 109%;
-            right: 0%;
+            bottom: -175%;
+            left: 20%;
             margin-left: -60px;
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+
+        .tooltip .tooltiptext::after {
+            content: "";
+            position: absolute;
+            top: -33%;
+            transform: rotate(180deg);
+            left: 50%;
+            margin-left: -5px;
+            border-width: 5px;
+            border-style: solid;
+            border-color: #555 transparent transparent transparent;
         }
 
         .tooltip:hover .tooltiptext {
             visibility: visible;
+            opacity: 1;
         }
 
         body {
@@ -239,34 +253,43 @@
         <div class="top-bar-for-google-sheet" id="topc">
 
             <p style="margin: 4px 0px 4px 10px;" id="versiond"><a style="text-decoration: none; color:black; "
-                    href="https://natharahul.github.io/rahuldocs/career-options">Career Options - Version 2.9.3</a></p>
+                    href="https://natharahul.github.io/rahuldocs/career-options">Career Options - Version 2.9.4</a></p>
 
-
+                    <div class="tooltip">
             <label style=" position: fixed; top: 4px; right: 400px; margin: 0px 20px 0px 0px;"> Fullscreen mode
-                <input type="checkbox" id="hideonclick" onclick="decidefullscreen();"></label>
+                <input type="checkbox" id="hideonclick" onclick="decidefullscreen();">
+                <span class="tooltiptext">Fullscreen (f)</span>
+            </label></div>
 
-            <div class="tooltip">
 
-                <label id="dark-toggle" style=" position: fixed; top: 4px; right: 4px; margin: 0px 20px 0px 0px;"> Dark
+            <label id="dark-toggle" style=" position: fixed; top: 4px; right: 4px; margin: 0px 20px 0px 0px;">
+                <div class="tooltip"> Dark
                     theme
                     <input id="darktoggle" type="checkbox" onclick="invert()" accesskey="d">
-                </label>
-                <span class="tooltiptext">Dark theme (d)</span>
-            </div>
-
-
-
-
-
-            <label id="cal-toggle" class="nothing"
-                style=" position: fixed; top: 4px; right: 200px; margin: 0px 20px 0px 0px;"> Calendar mode
-                <input id="calendarswitch" type="checkbox" onclick="navbar_style()" accesskey="c">
+                    <span class="tooltiptext">Dark theme (d)</span>
+                </div>
             </label>
 
-            <label id="cal-toggle2" class="nothing"
-                style=" position: fixed; top: 4px; right: 600px; margin: 0px 20px 0px 0px;"> Media
-                <input id="mediaswitch" type="checkbox" onclick="showmedia()" accesskey="m">
-            </label>
+
+
+
+
+
+            
+                <label id="cal-toggle" class="nothing"
+                    style=" position: fixed; top: 4px; right: 200px; margin: 0px 20px 0px 0px;"><div class="tooltip"> Calendar mode
+                    <input id="calendarswitch" type="checkbox" onclick="navbar_style()" accesskey="c">
+                
+                <span class="tooltiptext">Calendar mode (c)</span>
+            </div></label>
+
+            
+                <label id="cal-toggle2" class="nothing"
+                    style=" position: fixed; top: 4px; right: 600px; margin: 0px 20px 0px 0px;"><div class="tooltip"> Media mode
+                    <input id="mediaswitch" type="checkbox" onclick="showmedia()" accesskey="m">
+                
+                <span class="tooltiptext">Media mode (m)</span>
+            </div></label>
 
         </div>
 
