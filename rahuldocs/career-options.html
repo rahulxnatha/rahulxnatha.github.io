@@ -116,9 +116,11 @@
                 display: none;
             }
 
-            .removeonphone {display: none;}
+            .removeonphone {
+                display: none;
+            }
         }
-       
+
         @media screen and (max-width: 650px) {
 
             .bottom-bar-for-google-sheet {
@@ -217,7 +219,7 @@
 
 
 
-            
+
 
 
             <iframe width="400" height="322" style="border: 1px solid grey;margin:calc((25% - 300px)/2);"
@@ -233,14 +235,14 @@
                 allowfullscreen>
             </iframe>
 
-            
 
-                <iframe width="400" height="322" style="border: 1px solid grey;margin:calc((25% - 300px)/2);"
+
+            <iframe width="400" height="322" style="border: 1px solid grey;margin:calc((25% - 300px)/2);"
                 src="https://www.youtube.com/embed/videoseries?list=UU4ZfW_-pmfjkkZciu5BFzNA" frameborder="0"
                 allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
                 allowfullscreen></iframe>
 
-                <iframe
+            <iframe
                 src="https://www.facebook.com/plugins/post.php?href=https%3A%2F%2Fwww.facebook.com%2FPraveen.Kulkarni.For.Students%2Fposts%2F3749407878450524&width=400&show_text=true&height=322&appId"
                 width="400" height="322" style="border:none;overflow:hidden;margin:calc((25% - 300px)/2);"
                 scrolling="no" frameborder="0" allowfullscreen="true"
@@ -259,7 +261,7 @@
 
         </div>
 
-        <div id="splashscreen" 
+        <div id="splashscreen"
             style="position: fixed; top:0;left:0; bottom:0px; right:0; width:100%; height: calc(100% - 0px); border:none; margin: 0px 0px 0px 0px; padding:0; overflow:hidden; z-index:9999; background-color: rgb(36, 36, 36);display:none;">
             <div style="position: fixed;top: calc(50% - 100px); left: calc(50% - 100px);">
                 <img style="animation: rotate 2s infinite;" width="200px"
@@ -272,14 +274,16 @@
             <p style="margin: 4px 0px 4px 10px;" id="versiond"><a style="text-decoration: none; color:black; "
                     href="https://natharahul.github.io/rahuldocs/career-options">Career Options - Version 2.9.5</a></p>
 
-                    <div class="tooltip">
-            <label style=" position: fixed; top: 4px; right: 400px; margin: 0px 20px 0px 0px;"> Fullscreen mode
-                <input type="checkbox" id="hideonclick" onclick="decidefullscreen();">
-                <span class="tooltiptext">Fullscreen (f)</span>
-            </label></div>
+            <div class="tooltip">
+                <label style=" position: fixed; top: 4px; right: 400px; margin: 0px 20px 0px 0px;"> Fullscreen mode
+                    <input type="checkbox" id="hideonclick" onclick="decidefullscreen();">
+                    <span class="tooltiptext">Fullscreen (f)</span>
+                </label>
+            </div>
 
 
-            <label id="dark-toggle" style=" position: fixed; top: 4px; right: 4px; margin: 0px 20px 0px 0px;display:none;">
+            <label id="dark-toggle"
+                style=" position: fixed; top: 4px; right: 4px; margin: 0px 20px 0px 0px;display:none;">
                 <div class="tooltip"> Dark
                     theme
                     <input id="darktoggle" type="checkbox" onclick="invert()" accesskey="d">
@@ -288,21 +292,25 @@
             </label>
 
 
-            
-                <label id="cal-toggle" class="nothing"
-                    style=" position: fixed; top: 4px; right: 200px; margin: 0px 20px 0px 0px;"><div class="tooltip"> Calendar mode
-                    <input id="calendarswitch" type="checkbox" onclick="navbar_style()" accesskey="c">
-                
-                <span class="tooltiptext">Calendar mode (c)</span>
-            </div></label>
 
-            
-                <label id="cal-toggle2" class="nothing removeonphone"
-                    style=" position: fixed; top: 4px; right: 600px; margin: 0px 20px 0px 0px;"><div class="tooltip"> Media mode
+            <label id="cal-toggle" class="nothing"
+                style=" position: fixed; top: 4px; right: 200px; margin: 0px 20px 0px 0px;">
+                <div class="tooltip"> Calendar mode
+                    <input id="calendarswitch" type="checkbox" onclick="navbar_style()" accesskey="c">
+
+                    <span class="tooltiptext">Calendar mode (c)</span>
+                </div>
+            </label>
+
+
+            <label id="cal-toggle2" class="nothing removeonphone"
+                style=" position: fixed; top: 4px; right: 600px; margin: 0px 20px 0px 0px;">
+                <div class="tooltip"> Media mode
                     <input id="mediaswitch" type="checkbox" onclick="showmedia()" accesskey="m">
-                
-                <span class="tooltiptext">Media mode (m)</span>
-            </div></label>
+
+                    <span class="tooltiptext">Media mode (m)</span>
+                </div>
+            </label>
 
         </div>
 
@@ -422,6 +430,12 @@
             }
         }
 
+        document.getElementById("topc").style.filter = "invert(90%)";
+        document.getElementById("bottomc").style.filter = "invert(90%)";
+        document.getElementById("sheet").style.filter = "invert(90%)";
+        document.getElementById("sheet2").style.filter = "invert(90%)";
+        document.getElementById("darktoggle").checked = true;
+
         function autoinvert() {
             if (hour > 16 || hour < 6) {
                 document.getElementById("topc").style.filter = "invert(90%)";
@@ -429,6 +443,7 @@
                 document.getElementById("sheet").style.filter = "invert(90%)";
                 document.getElementById("sheet2").style.filter = "invert(90%)";
                 document.getElementById("darktoggle").checked = true;
+               
             }
             else {
                 document.getElementById("topc").style.filter = "invert(0%)";
