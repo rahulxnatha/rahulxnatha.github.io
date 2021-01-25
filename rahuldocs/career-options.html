@@ -115,8 +115,10 @@
             #at {
                 display: none;
             }
-        }
 
+            .removeonphone {display: none;}
+        }
+       
         @media screen and (max-width: 650px) {
 
             .bottom-bar-for-google-sheet {
@@ -211,12 +213,11 @@
             border:none; margin: 0px 0px 37px 0px; padding: 0px 0px calc((25% - 300px)/2) calc((25% - 300px)/2);  z-index:9;  background-color: rgb(29, 29, 29); color: white;">
 
 
-            <iframe
-                src="https://www.facebook.com/plugins/post.php?href=https%3A%2F%2Fwww.facebook.com%2FPraveen.Kulkarni.For.Students%2Fposts%2F3749407878450524&width=400&show_text=true&height=322&appId"
-                width="400" height="322" style="border:none;overflow:hidden;margin:calc((25% - 300px)/2);"
-                scrolling="no" frameborder="0" allowfullscreen="true"
-                allow="autoplay; clipboard-write; encrypted-media; picture-in-picture; web-share">
-            </iframe>
+
+
+
+
+            
 
 
             <iframe width="400" height="322" style="border: 1px solid grey;margin:calc((25% - 300px)/2);"
@@ -232,18 +233,34 @@
                 allowfullscreen>
             </iframe>
 
+            
+
+                <iframe width="400" height="322" style="border: 1px solid grey;margin:calc((25% - 300px)/2);"
+                src="https://www.youtube.com/embed/videoseries?list=UU4ZfW_-pmfjkkZciu5BFzNA" frameborder="0"
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                allowfullscreen></iframe>
+
+                <iframe
+                src="https://www.facebook.com/plugins/post.php?href=https%3A%2F%2Fwww.facebook.com%2FPraveen.Kulkarni.For.Students%2Fposts%2F3749407878450524&width=400&show_text=true&height=322&appId"
+                width="400" height="322" style="border:none;overflow:hidden;margin:calc((25% - 300px)/2);"
+                scrolling="no" frameborder="0" allowfullscreen="true"
+                allow="autoplay; clipboard-write; encrypted-media; picture-in-picture; web-share">
+            </iframe>
+
             <iframe width="400" height="322" style="border: 1px solid grey;margin:calc((25% - 300px)/2);"
                 src="https://www.youtube.com/embed/gVRmXA_PAjM" frameborder="0"
                 allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
                 allowfullscreen></iframe>
+
+
 
             <br><br>
             <p> Media! </p>
 
         </div>
 
-        <div id="splashscreen"
-            style="position: fixed; top:0;left:0; bottom:0px; right:0; width:100%; height: calc(100% - 0px); border:none; margin: 0px 0px 0px 0px; padding:0; overflow:hidden; z-index:9999; background-color: rgb(36, 36, 36);">
+        <div id="splashscreen" 
+            style="position: fixed; top:0;left:0; bottom:0px; right:0; width:100%; height: calc(100% - 0px); border:none; margin: 0px 0px 0px 0px; padding:0; overflow:hidden; z-index:9999; background-color: rgb(36, 36, 36);display:none;">
             <div style="position: fixed;top: calc(50% - 100px); left: calc(50% - 100px);">
                 <img style="animation: rotate 2s infinite;" width="200px"
                     src="https://docs.google.com/drawings/d/e/2PACX-1vTsISpsKu-Hn0EdJePBw_UC3y5GBIL-4S-dauzSMiG3Ys3oksH13kBv2qcQLgWSBwhRNPkKgOmPcazN/pub?w=379&amp;h=379">
@@ -253,7 +270,7 @@
         <div class="top-bar-for-google-sheet" id="topc">
 
             <p style="margin: 4px 0px 4px 10px;" id="versiond"><a style="text-decoration: none; color:black; "
-                    href="https://natharahul.github.io/rahuldocs/career-options">Career Options - Version 2.9.4</a></p>
+                    href="https://natharahul.github.io/rahuldocs/career-options">Career Options - Version 2.9.5</a></p>
 
                     <div class="tooltip">
             <label style=" position: fixed; top: 4px; right: 400px; margin: 0px 20px 0px 0px;"> Fullscreen mode
@@ -262,17 +279,13 @@
             </label></div>
 
 
-            <label id="dark-toggle" style=" position: fixed; top: 4px; right: 4px; margin: 0px 20px 0px 0px;">
+            <label id="dark-toggle" style=" position: fixed; top: 4px; right: 4px; margin: 0px 20px 0px 0px;display:none;">
                 <div class="tooltip"> Dark
                     theme
                     <input id="darktoggle" type="checkbox" onclick="invert()" accesskey="d">
                     <span class="tooltiptext">Dark theme (d)</span>
                 </div>
             </label>
-
-
-
-
 
 
             
@@ -284,7 +297,7 @@
             </div></label>
 
             
-                <label id="cal-toggle2" class="nothing"
+                <label id="cal-toggle2" class="nothing removeonphone"
                     style=" position: fixed; top: 4px; right: 600px; margin: 0px 20px 0px 0px;"><div class="tooltip"> Media mode
                     <input id="mediaswitch" type="checkbox" onclick="showmedia()" accesskey="m">
                 
