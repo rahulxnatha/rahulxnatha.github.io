@@ -445,24 +445,27 @@
         document.getElementById("sheet").style.filter = "invert(90%)";
         document.getElementById("sheet2").style.filter = "invert(90%)";
         document.getElementById("darktoggle").checked = true;
-
+        document.getElementById("dark-toggle").style.display = "block";
         function autoinvert() {
-            if (hour > 16 || hour < 6) {
-                document.getElementById("topc").style.filter = "invert(90%)";
-                document.getElementById("bottomc").style.filter = "invert(90%)";
-                document.getElementById("sheet").style.filter = "invert(90%)";
-                document.getElementById("sheet2").style.filter = "invert(90%)";
-                document.getElementById("darktoggle").checked = true;
+           
+          //  if (new Date().getHours() > 16 || new Date().getHours() < 6) {
+          //      document.getElementById("topc").style.filter = "invert(90%)";
+            //    document.getElementById("bottomc").style.filter = "invert(90%)";
+              //  document.getElementById("sheet").style.filter = "invert(90%)";
+                //document.getElementById("sheet2").style.filter = "invert(90%)";
+              //  document.getElementById("darktoggle").checked = true;
 
-            }
-            else {
-                document.getElementById("topc").style.filter = "invert(0%)";
-                document.getElementById("bottomc").style.filter = "invert(0%)";
-                document.getElementById("sheet").style.filter = "invert(0%)";
-                document.getElementById("sheet2").style.filter = "invert(0%)";
-                document.getElementById("dark-toggle").style.display = "block";
-                document.getElementById("darktoggle").checked = false;
-            }
+          //  }
+           // else {
+           //     document.getElementById("topc").style.filter = "invert(0%)";
+           //     document.getElementById("bottomc").style.filter = "invert(0%)";
+           //     document.getElementById("sheet").style.filter = "invert(0%)";
+           //     document.getElementById("sheet2").style.filter = "invert(0%)";
+          //      document.getElementById("dark-toggle").style.display = "block";
+          //      document.getElementById("darktoggle").checked = false;
+           // }
+
+            
             document.getElementById("splashscreen").style.display = "none";
 
 
