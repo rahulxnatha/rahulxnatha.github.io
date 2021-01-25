@@ -71,7 +71,7 @@
         body {
             font-family: 'Roboto Condensed', sans-serif;
 
-            background-color: darkgrey;
+            background-color: white;
         }
 
         @media screen and (min-width: 650px) {
@@ -165,8 +165,11 @@
 <body onload="autoinvert()">
     <div id="webpage">
         <iframe class="iframe-sheet" id="sheet"
-            style="position:fixed; top:0; left:0; bottom:0px; right:0; width:100%; height: calc(100% - 0px); border:none; margin: 0px 0px 0px 0px; padding:0; overflow:hidden; z-index:9; background-color: darkgrey; font-family: 'Roboto Condensed', sans-serif; "
-            src="https://docs.google.com/spreadsheets/d/e/2PACX-1vTL5ZyxcOsOpcdYAdbQWjCgUJvJ1fone0C3o7MVW3B7jfty9VpJi6tzv71ikK6FpKhvCJod87722dkV/pubhtml">
+            style="position:fixed; top:0; left:0px; bottom:0px; right:0; width:100%; height: calc(100% - 0px); border:none; margin: 0px 0px 0px 0px; padding:0; overflow:hidden; z-index:9; background-color: darkgrey; font-family: 'Roboto Condensed', sans-serif; "
+            src="https://docs.google.com/spreadsheets/d/e/2PACX-1vTL5ZyxcOsOpcdYAdbQWjCgUJvJ1fone0C3o7MVW3B7jfty9VpJi6tzv71ikK6FpKhvCJod87722dkV/pubhtml?widget=false&amp;headers=false">
+
+
+
         </iframe>
 
         <iframe class="iframe-sheet-2 hidden" id="sheet2"
@@ -273,6 +276,13 @@
 
             <p style="margin: 4px 0px 4px 10px;" id="versiond"><a style="text-decoration: none; color:black; "
                     href="https://natharahul.github.io/rahuldocs/career-options">Career Options - Version 2.9.5</a></p>
+
+            
+                <button style="position: fixed; top: 4px; right: 800px; margin: 0px 20px 0px 0px;"
+                    type="button"><div class="tooltip">Refresh<span class="tooltiptext">Refresh shortcuts</span></div></button>
+                    
+
+            
 
             <div class="tooltip">
                 <label style=" position: fixed; top: 4px; right: 400px; margin: 0px 20px 0px 0px;"> Fullscreen mode
@@ -443,7 +453,7 @@
                 document.getElementById("sheet").style.filter = "invert(90%)";
                 document.getElementById("sheet2").style.filter = "invert(90%)";
                 document.getElementById("darktoggle").checked = true;
-               
+
             }
             else {
                 document.getElementById("topc").style.filter = "invert(0%)";
