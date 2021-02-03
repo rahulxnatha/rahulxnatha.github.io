@@ -87,6 +87,16 @@ li {
   animation: spin 2s linear infinite;
 }
 
+.noselect {
+  -webkit-touch-callout: none; /* iOS Safari */
+    -webkit-user-select: none; /* Safari */
+     -khtml-user-select: none; /* Konqueror HTML */
+       -moz-user-select: none; /* Old versions of Firefox */
+        -ms-user-select: none; /* Internet Explorer/Edge */
+            user-select: none; /* Non-prefixed version, currently
+                                  supported by Chrome, Edge, Opera and Firefox */
+}
+
 @-webkit-keyframes spin {
   0% {
     -webkit-transform: rotate(0deg);
@@ -752,8 +762,8 @@ input:checked + .slider:before {
 .tell-content {
   margin: 20px 20px 20px 20px;
   border-radius: 0px;
-  background-color: white;
-  min-width: 200px; opacity: 70%;
+  background-color: white; max-width: 400px;
+  min-width: 400px; opacity: 70%;
   float: right; color: black;
   height: auto; 
   padding: 2px 30px 2px 30px;
