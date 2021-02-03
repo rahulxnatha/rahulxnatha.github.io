@@ -23,14 +23,15 @@
   <meta property="og:image"
     content="https://drive.google.com/uc?export=download&id=1-8r_ycnk7Rxv8oNvA6RL33x8ToCuwK39" />
 
-  <title>Career Website</title>
+  <title>Rahul Natha</title>
 </head>
 
 <body onload="automatic_dark_switch()">
   <div class="webpage" id="webpage">
 
-    <div id="site_header">
+    <div id="site_header" class="noselect">
       <div class="navbar" id="navbar">
+          <a  onclick="display_settings_now()" id="settings_on">Settings</a>
         <a href="https://sites.google.com/view/rahulnatha" target="_blank">About me</a>
         <a href="https://rahuldocs.blogspot.com/" target="_blank">Blog</a>
         <a href="https://sites.google.com/view/rahuldocs/covid19" target="_blank">COVID-19 Alert!</a>
@@ -43,10 +44,10 @@
       </div>
 
       <div class="tell-content hidden" id="low_opacity_branding">
-        <p id="tell-user-about-theme">Rahul Natha</p>
+        <p id="tell-user-about-theme">Loading. Please Wait.</p>
           
           <!div class="nav-bar-option" button class="button3" onclick="manual_dark()" Change theme/buttondiv> 
-          
+          <input id="setting_button_mode" type="checkbox" unchecked class="hidden">
           <label
             class="dark-switch">
             <input id="dark-toggle" type="checkbox" onclick="manual_dark()">
