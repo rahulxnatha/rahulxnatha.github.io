@@ -21,7 +21,12 @@ function automatic_dark_switch() {
     document.body.classList.toggle("dark-mode");
     document.getElementById("dark-toggle").checked = true;
     setTimeout(function () { document.getElementById("low_opacity_branding").style.display = "block"; }, 0);
+    
+
+
     setTimeout(function () { document.getElementById("low_opacity_branding").style.display = "none"; }, 3000);
+    setTimeout(function () { document.getElementById("settings_on").style.display = "block"; }, 3000);
+
 
 
 }
@@ -39,8 +44,8 @@ function manual_dark() {
         document.getElementById("tell-user-about-theme").innerHTML = "Oh wow. You have turned on dark theme.";
 
         if (document.getElementById("setting_button_mode").checked == true) {
-        document.getElementById("settings_on").style.border = "3px solid #fff";
-    }
+            document.getElementById("settings_on").style.border = "3px solid #fff";
+        }
 
     }
 
