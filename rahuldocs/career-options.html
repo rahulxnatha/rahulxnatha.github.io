@@ -99,7 +99,7 @@
             }
         }
 
-        @media screen and (max-width: 750px) {
+        @media screen and (max-width: 1100px) {
             #hideonclick {
                 display: none;
             }
@@ -147,7 +147,9 @@
             }
         }
 
-        .suggestion_pop_up { width: 418px; min-height: 300px;  position: fixed; top: 10%; right: 1.5%; z-index: 999; background-color: #eee; }
+        .suggestion_pop_up { width: 418px; min-height: 300px;  position: fixed; top: 60px; right: 30px; z-index: 999; background-color: #eee; }
+        
+        .suggestion_pop_up_closed { min-width: 100px; min-height: 30px;  position: fixed; top: 600px; right: 30px; z-index: 999; background-color: #eee; }
 
 
         .hidden {
@@ -271,7 +273,7 @@
         </div>
 
         <div id="splashscreen"
-            style="position: fixed; top:0;left:0; bottom:0px; right:0; width:100%; height: calc(100% - 0px); border:none; margin: 0px 0px 0px 0px; padding:0; overflow:hidden; z-index:9999; background-color: rgb(36, 36, 36);display:block;">
+            style="position: fixed; top:0;left:0; bottom:0px; right:0; width:100%; height: calc(100% - 0px); border:none; margin: 0px 0px 0px 0px; padding:0; overflow:hidden; z-index:9999; background-color: rgb(36, 36, 36);display:none;">
             <div style="position: fixed;top: calc(50% - 100px); left: calc(50% - 100px);">
                 <img style="animation: rotate 2s infinite;" width="200px"
                     src="https://docs.google.com/drawings/d/e/2PACX-1vTsISpsKu-Hn0EdJePBw_UC3y5GBIL-4S-dauzSMiG3Ys3oksH13kBv2qcQLgWSBwhRNPkKgOmPcazN/pub?w=379&amp;h=379">
@@ -281,36 +283,30 @@
         <div class="top-bar-for-google-sheet" id="topc">
 
             <p style="margin: 4px 0px 4px 10px;" id="versiond"><a style="text-decoration: none; color:black; "
-                    href="https://natharahul.github.io/rahuldocs/career-options">Career Options - Version 2.9.6</a></p>
+                    href="https://natharahul.github.io/rahuldocs/career-options">Career Options - Version 2.9.7</a></p>
 
 
-            <button style="position: fixed; top: 4px; right: 800px; margin: 0px 20px 0px 0px;" type="button">
+            <button style="position: fixed; top: 4px; right: 800px; margin: 0px 20px 0px 0px;" type="button" class="removeonphone">
                 <div class="tooltip">Refresh<span class="tooltiptext">Refresh shortcuts</span></div>
             </button>
 
 
 
 
-            <div class="tooltip">
-                <label style=" position: fixed; top: 4px; right: 400px; margin: 0px 20px 0px 0px;"> Fullscreen mode
-                    <input type="checkbox" id="hideonclick" onclick="decidefullscreen();">
+            
+                <label id="cal-togglexf" class="nothing removeonphone" style=" position: fixed; top: 4px; right: 400px; margin: 0px 20px 0px 0px;"> 
+                    <div class="tooltip">Fullscreen mode
+                    <input type="checkbox" id="hideonclick" onclick="decidefullscreen()">
                     <span class="tooltiptext">Fullscreen (f)</span>
-                </label>
-            </div>
+                
+            </div></label>
 
 
-            <label id="dark-toggle"
-                style=" position: fixed; top: 4px; right: 4px; margin: 0px 20px 0px 0px;display:none;">
-                <div class="tooltip"> Dark
-                    theme
-                    <input id="darktoggle" type="checkbox" onclick="invert()" accesskey="d">
-                    <span class="tooltiptext">Dark theme (d)</span>
-                </div>
-            </label>
+           
 
 
 
-            <label id="cal-toggle" class="nothing"
+            <label id="cal-toggle" class="nothing removeonphone"
                 style=" position: fixed; top: 4px; right: 200px; margin: 0px 20px 0px 0px;">
                 <div class="tooltip"> Calendar mode
                     <input id="calendarswitch" type="checkbox" onclick="navbar_style()" accesskey="c">
@@ -329,6 +325,14 @@
                 </div>
             </label>
 
+            
+             <label id="dark-toggle"
+                style=" position: fixed; top: 4px; right: 4px; margin: 0px 20px 0px 0px;display:none;">
+                <div class="tooltip"> Dark theme
+                    <input id="darktoggle" type="checkbox" onclick="invert()" accesskey="d">
+                    <span class="tooltiptext">Dark theme (d)</span>
+                </div>
+            </label>
         </div>
 
 
@@ -343,7 +347,7 @@
             <p style="float: right; margin: 8px 2px 5px 0px" id="at">Updated 5 mins ago.</p>
         </div>
 
-        <div class="suggestion_pop_up" id="suggestion_gform">
+        <div class="suggestion_pop_up removeonphone" id="suggestion_gform">
             <a onclick="close_pop_up()" style="cursor:pointer;margin:5px 5px 5px 2px; float: right" >Close</a>
             <br>
             
@@ -360,6 +364,16 @@
             <p style="float: right; margin: 8px 2px 5px 0px" id="at"></p>
         </div>
         
+        <div class="suggestion_pop_up_closed removeonphone hidden" id="suggestion_gform_closed">
+            
+            <a onclick="pop_up_open()" style="cursor:pointer;margin:5px 15px 5px 2px; float: right" >
+                Open Form </a>
+            <br>
+            
+        </div>
+        
+        
+        
         
         
         
@@ -371,7 +385,13 @@
 
     <script>
         
-        function close_pop_up() {document.getElementById("suggestion_gform").style.display = "none";}
+        function close_pop_up() {
+            document.getElementById("suggestion_gform_closed").style.display = "block";
+            document.getElementById("suggestion_gform").style.display = "none";}
+        
+        function pop_up_open() {
+            document.getElementById("suggestion_gform_closed").style.display = "none";
+            document.getElementById("suggestion_gform").style.display = "block";}
         
 
         function turnonaccess() {
@@ -464,6 +484,7 @@
                 document.getElementById("sheet").style.filter = "invert(90%)";
                 document.getElementById("sheet2").style.filter = "invert(90%)";
                 document.getElementById("suggestion_gform").style.filter = "invert(90%)";
+                document.getElementById("suggestion_gform_closed").style.filter = "invert(90%)";
                 document.getElementById("dark-toggle").style.display = "block";
             }
             else {
@@ -472,6 +493,7 @@
                 document.getElementById("sheet").style.filter = "invert(0%)";
                 document.getElementById("sheet2").style.filter = "invert(0%)";
                 document.getElementById("suggestion_gform").style.filter = "invert(0%)";
+                document.getElementById("suggestion_gform_closed").style.filter = "invert(0%)";
                 document.getElementById("dark-toggle").style.display = "block";
             }
         }
@@ -481,6 +503,7 @@
         document.getElementById("sheet").style.filter = "invert(90%)";
         document.getElementById("sheet2").style.filter = "invert(90%)";
         document.getElementById("suggestion_gform").style.filter = "invert(90%)";
+        document.getElementById("suggestion_gform_closed").style.filter = "invert(90%)";
         document.getElementById("darktoggle").checked = true;
         document.getElementById("dark-toggle").style.display = "block";
         function autoinvert() {
