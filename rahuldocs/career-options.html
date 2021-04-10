@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html>
 
@@ -80,7 +79,7 @@
                 position: fixed;
                 bottom: 0;
                 left: 0px;
-                height: 37px;
+                height: 37px; border-radius: 3px;
                 width: 100%;
                 background-color: whitesmoke;
                 z-index: 99;
@@ -89,7 +88,7 @@
             .top-bar-for-google-sheet {
                 position: fixed;
                 top: 0%;
-                left: 0px;
+                left: 0px; border-radius: 3px;
                 margin: 0;
                 height: 28px;
                 padding: 0;
@@ -148,9 +147,9 @@
             }
         }
 
-        .suggestion_pop_up { width: 418px; min-height: 300px;  position: fixed; top: 60px; right: 30px; z-index: 999; background-color: #eee; }
+        .suggestion_pop_up { width: 380px; min-height: 300px;  position: fixed; top: 60px; bottom: 60px; right: 13%; z-index: 999; background-color: #eee; border-radius: 10px; }
         
-        .suggestion_pop_up_closed { min-width: 100px; min-height: 30px;  position: fixed; top: 600px; right: 30px; z-index: 999; background-color: #eee; }
+        .suggestion_pop_up_closed { min-width: 100px; min-height: 30px;  position: fixed; bottom: 60px; right: 13%; z-index: 999; background-color: #eee;  border-radius: 10px; }
 
 
         .hidden {
@@ -181,8 +180,8 @@
 
         </iframe>
 
-        <iframe class="iframe-sheet-2 hidden" id="sheet2"
-            style="position:fixed; top:29px; left:0; bottom:37px; right:0; width:100%; height: calc(100% - 66px); border:none; margin: 0px 0px 37px 0px; padding:0; overflow:hidden; z-index:9; background-color: darkgrey; "
+        <iframe  class="iframe-sheet-2 hidden" id="sheet2"
+            style="position:fixed; top:29px; left:0;  border-radius: 10px; bottom:37px; right:0; width:100%; height: calc(100% - 66px); border:none; margin: 0px 0px 37px 0px; padding:0; overflow:hidden; z-index:9; background-color: darkgrey; "
             src="https://drive.google.com/file/d/1o6ixMrD5GOlaFfu6R7wey_HuCRQBIC6r/preview">
             <!--src="https://drive.google.com/file/d/1bzRc6gRU3j_skqOFkyyMexcDgL1c4u7I/preview"-->
 
@@ -283,8 +282,8 @@
 
         <div class="top-bar-for-google-sheet" id="topc">
 
-            <p style="margin: 4px 0px 4px 10px;" id="versiond"><a style="text-decoration: none; color:black; "
-                    href="https://natharahul.github.io/rahuldocs/career-options">Career Options - Version 2.9.9</a></p>
+            <p style="margin: 4px 0px 4px 10px; " id="versiond"><a style="text-decoration: none; color:black; "
+                    href="https://natharahul.github.io/rahuldocs/career-options">Career Options - Version 2.9.9.2</a></p>
 
 
             <button style="position: fixed; top: 4px; right: 800px; margin: 0px 20px 0px 0px;" type="button" class="removeonphone">
@@ -352,7 +351,7 @@
             <a onclick="close_pop_up()" style="cursor:pointer;margin:5px 5px 5px 2px; float: right" >Close</a>
             <br>
             
-            <iframe src="https://docs.google.com/forms/d/e/1FAIpQLSflqPFlLFZn2QkiDdXncAt-tnWm2oRYVqbD9NURNA0uVbNWYw/viewform?embedded=true" width="400" height="500" frameborder="0" marginheight="0" marginwidth="0">Loading…</iframe>
+            <iframe src="https://docs.google.com/forms/d/e/1FAIpQLSflqPFlLFZn2QkiDdXncAt-tnWm2oRYVqbD9NURNA0uVbNWYw/viewform?embedded=true" width="350px" height="525px" frameborder="0" marginheight="0" marginwidth="0">Loading…</iframe>
             
             
             <a href="https://natharahul.github.io">
@@ -372,13 +371,6 @@
             <br>
             
         </div>
-        
-        
-        
-        
-        
-        
-        
         
         
         
