@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html>
 
@@ -79,7 +80,8 @@
                 position: fixed;
                 bottom: 0;
                 left: 0px;
-                height: 37px; border-radius: 3px;
+                height: 37px;
+                border-radius: 3px;
                 width: 100%;
                 background-color: whitesmoke;
                 z-index: 99;
@@ -88,7 +90,8 @@
             .top-bar-for-google-sheet {
                 position: fixed;
                 top: 0%;
-                left: 0px; border-radius: 3px;
+                left: 0px;
+                border-radius: 3px;
                 margin: 0;
                 height: 28px;
                 padding: 0;
@@ -147,9 +150,28 @@
             }
         }
 
-        .suggestion_pop_up { width: 380px; min-height: 300px;  position: fixed; top: 60px; bottom: 60px; right: 13%; z-index: 999; background-color: #eee; border-radius: 10px; }
-        
-        .suggestion_pop_up_closed { min-width: 100px; min-height: 30px;  position: fixed; bottom: 60px; right: 13%; z-index: 999; background-color: #eee;  border-radius: 10px; }
+        .suggestion_pop_up {
+            width: 380px;
+            min-height: 300px;
+            position: fixed;
+            top: 60px;
+            bottom: 60px;
+            right: 13%;
+            z-index: 999;
+            background-color: #eee;
+            border-radius: 10px;
+        }
+
+        .suggestion_pop_up_closed {
+            min-width: 100px;
+            min-height: 30px;
+            position: fixed;
+            bottom: 60px;
+            right: 13%;
+            z-index: 999;
+            background-color: #eee;
+            border-radius: 10px;
+        }
 
 
         .hidden {
@@ -161,14 +183,12 @@
                 transform: rotate(360deg);
             }
         }
+        
+       /* canvas {z-index:99; position:fixed; top:32px; left:912px;  width:300px; height:300px; border:1px solid grey;} */
     </style>
 </head>
 
-<body onload="autoinvert()">
-
-    
-
-
+<body onload="autoinvert() ">
 
 
     <div id="webpage">
@@ -176,53 +196,304 @@
             style="position:fixed; top:0; left:12.4%; bottom:0px; right:10%; width:650px; height: calc(100% - 0px); border:none; margin: 0px 0px 0px 0px; padding:0; overflow:hidden; z-index:9; background-color: white; font-family: 'Roboto Condensed', sans-serif; "
             src="https://docs.google.com/spreadsheets/d/e/2PACX-1vTL5ZyxcOsOpcdYAdbQWjCgUJvJ1fone0C3o7MVW3B7jfty9VpJi6tzv71ikK6FpKhvCJod87722dkV/pubhtml?widget=false&amp;headers=false">
 
-
-
         </iframe>
 
-        <iframe  class="iframe-sheet-2 hidden" id="sheet2"
-            style="position:fixed; top:29px; left:0;  border-radius: 10px; bottom:37px; right:0; width:100%; height: calc(100% - 66px); border:none; margin: 0px 0px 37px 0px; padding:0; overflow:hidden; z-index:9; background-color: darkgrey; "
-            src="https://drive.google.com/file/d/1o6ixMrD5GOlaFfu6R7wey_HuCRQBIC6r/preview">
-            <!--src="https://drive.google.com/file/d/1bzRc6gRU3j_skqOFkyyMexcDgL1c4u7I/preview"-->
+        <div id="webpage">
+            <div class="iframe-sheet" id="sheetforgame"
+                style="position:fixed; top:80px; left:calc(64% + 5px); bottom:0px; right:10%; width:400px; height: calc(100% - 20px); border:none; margin: 0px 0px 0px 0px; padding:0; overflow:hidden; z-index:99; background-color: none; font-family: 'Roboto Condensed', sans-serif; "
+                src="">
+
+                <canvas id="canvass"  width="300" height="300" style="background-color:none">
+                </canvas>
+
+                <script>
+                    var canvass = document.getElementById("canvass");
+                    var ctx = canvass.getContext("2d");
+                    var radius = canvass.height / 2;
+                    ctx.translate(radius, radius);
+                    radius = radius * 0.90
+                    setInterval(drawClock, 1000);
+
+                    function drawClock() {
+                        drawFace(ctx, radius);
+                        drawNumbers(ctx, radius);
+                        drawTime(ctx, radius);
+                    }
+
+                    function drawFace(ctx, radius) {
+                        var grad;
+                        ctx.beginPath();
+                        ctx.arc(0, 0, radius + 5, 0, 2 * Math.PI);
+                        ctx.fillStyle = 'black';
+                        ctx.fill();
+                        grad = ctx.createRadialGradient(0, 0, radius * 0.95, 0, 0, radius * 1.05);
+                        grad.addColorStop(0, '#FFF');
+
+                        grad.addColorStop(0.5, 'white');
+
+                        grad.addColorStop(1, '#FFF');
+                        ctx.strokeStyle = grad;
+                        ctx.lineWidth = radius * 0.03;
+                        ctx.stroke();
+                        ctx.beginPath();
+                        ctx.arc(0, 0, radius * 0.1, 0, 2 * Math.PI);
+                        ctx.fillStyle = 'white';
+                        ctx.fill();
+                    }
+
+                    function drawNumbers(ctx, radius) {
+                        var ang;
+                        var num;
+                        ctx.font = radius * 0.2 + "px arial";
+                        ctx.textBaseline = "middle";
+                        ctx.textAlign = "center";
+                        for (num = 1; num < 13; num++) {
+                            ang = num * Math.PI / 6;
+                            ctx.rotate(ang);
+                            ctx.translate(0, -radius * 0.85);
+                            ctx.rotate(-ang);
+                            ctx.fillText(num.toString(), 0, 0);
+                            ctx.rotate(ang);
+                            ctx.translate(0, radius * 0.85);
+                            ctx.rotate(-ang);
+                        }
+                    }
+
+                    function drawTime(ctx, radius) {
+                        var now = new Date();
+                        var hour = now.getHours();
+                        var minute = now.getMinutes();
+                        var second = now.getSeconds();
+                        //hour
+                        hour = hour % 12;
+                        hour = (hour * Math.PI / 6) +
+                            (minute * Math.PI / (6 * 60)) +
+                            (second * Math.PI / (360 * 60));
+                        drawHand(ctx, hour, radius * 0.5, radius * 0.07);
+                        //minute
+                        minute = (minute * Math.PI / 30) + (second * Math.PI / (30 * 60));
+                        drawHand(ctx, minute, radius * 0.8, radius * 0.07);
+                        // second
+                        second = (second * Math.PI / 30);
+                        drawHand(ctx, second, radius * 0.9, radius * 0.02);
+                    }
+
+                    function drawHand(ctx, pos, length, width) {
+                        ctx.beginPath();
+                        ctx.lineWidth = width;
+                        ctx.lineCap = "round";
+                        ctx.moveTo(0, 0);
+                        ctx.rotate(pos);
+                        ctx.lineTo(0, -length);
+                        ctx.stroke();
+                        ctx.rotate(-pos);
+                    }
+                </script> 
+
+
+            </div>
+
+            <div id="webpage">
+                <div class="iframe-sheet" id="sheetforgame"
+                    style="position:fixed; top:60px; left:63%; bottom:120px; right:10%; width:340px; border:none; margin: 0px 0px 0px 0px; padding:0; overflow:hidden; z-index:9; background-color: #333; font-family: 'Roboto Condensed', sans-serif; border-radius: 10px;"
+                    src="">
+<!--                    <br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br>
+
+                    <script>
+
+                        var myGamePiece;
+                        var myObstacles = [];
+                        var mySound;
+                        
+                        function startGame() {
+                            myGamePiece = new component(30, 30, "red", 10, 120);
+                            mySound = new sound("bounce.mp3");
+                            myGameArea.start();
+                        }
+                        
+                        var myGameArea = {
+                            canvas : document.createElement("canvas"),
+                            start : function() {
+                                this.canvas.width = 300;
+                                this.canvas.height = 300;
+                                this.canvas.style.margin = "50px 10px 20px 30px";
+                                
+                                this.context = this.canvas.getContext("2d");
+                                document.body.insertBefore(this.canvas, document.body.childNodes[0]);
+                                this.frameNo = 0;
+
+                                this.interval = setInterval(updateGameArea, 20);
+                            },
+                            stop : function() {
+                                clearInterval(this.interval);
+                            },    
+                            clear : function() {
+                                this.context.clearRect(0, 0, this.canvas.width, this.canvas.height);
+                            }
+                        }
+                        
+                        function component(width, height, color, x, y) {
+                            this.width = width;
+                            this.height = height;
+                            this.speedX = 0;
+                            this.speedY = 0;    
+                            this.x = x;
+                            this.y = y;    
+                            this.update = function() {
+                                ctx = myGameArea.context;
+                                ctx.fillStyle = color;
+                                ctx.fillRect(this.x, this.y, this.width, this.height);
+                            }
+                            this.newPos = function() {
+                                this.x += this.speedX;
+                                this.y += this.speedY;        
+                            }    
+                            this.crashWith = function(otherobj) {
+                                var myleft = this.x;
+                                var myright = this.x + (this.width);
+                                var mytop = this.y;
+                                var mybottom = this.y + (this.height);
+                                var otherleft = otherobj.x;
+                                var otherright = otherobj.x + (otherobj.width);
+                                var othertop = otherobj.y;
+                                var otherbottom = otherobj.y + (otherobj.height);
+                                var crash = true;
+                                if ((mybottom < othertop) || (mytop > otherbottom) || (myright < otherleft) || (myleft > otherright)) {
+                                    crash = false;
+                                }
+                                return crash;
+                            }
+                        }
+                        
+                        function updateGameArea() {
+                            var x, height, gap, minHeight, maxHeight, minGap, maxGap;
+                            for (i = 0; i < myObstacles.length; i += 1) {
+                                if (myGamePiece.crashWith(myObstacles[i])) {
+                                    mySound.play();
+                                    myGameArea.stop();
+                                    return;
+                                } 
+                            }
+                            myGameArea.clear();
+                            myGameArea.frameNo += 1;
+                            if (myGameArea.frameNo == 1 || everyinterval(150)) {
+                                x = myGameArea.canvas.width;
+                                minHeight = 20;
+                                maxHeight = 200;
+                                height = Math.floor(Math.random()*(maxHeight-minHeight+1)+minHeight);
+                                minGap = 50;
+                                maxGap = 200;
+                                gap = Math.floor(Math.random()*(maxGap-minGap+1)+minGap);
+                                myObstacles.push(new component(10, height, "green", x, 0));
+                                myObstacles.push(new component(10, x - height - gap, "green", x, height + gap));
+                            }
+                            for (i = 0; i < myObstacles.length; i += 1) {
+                                myObstacles[i].x -= 1;
+                                myObstacles[i].update();
+                            }
+                            myGamePiece.newPos();
+                            myGamePiece.update();
+                        }
+                        
+                        function sound(src) {
+                            this.sound = document.createElement("audio");
+                            this.sound.src = src;
+                            this.sound.setAttribute("preload", "auto");
+                            this.sound.setAttribute("controls", "none");
+                            this.sound.style.display = "none";
+                            document.body.appendChild(this.sound);
+                            this.play = function(){
+                                this.sound.play();
+                            }
+                            this.stop = function(){
+                                this.sound.pause();
+                            }    
+                        }
+                        
+                        function everyinterval(n) {
+                            if ((myGameArea.frameNo / n) % 1 == 0) {return true;}
+                            return false;
+                        }
+                        
+                        function moveup() {
+                            myGamePiece.speedY = -1; 
+                        }
+                        
+                        function movedown() {
+                            myGamePiece.speedY = 1; 
+                        }
+                        
+                        function moveleft() {
+                            myGamePiece.speedX = -1; 
+                        }
+                        
+                        function moveright() {
+                            myGamePiece.speedX = 1; 
+                        }
+                        
+                        function clearmove() {
+                            myGamePiece.speedX = 0; 
+                            myGamePiece.speedY = 0; 
+                        }
+                        </script>
+                        <div style="text-align:center;width:300px;">
+                          <button onmousedown="moveup()" onmouseup="clearmove()" ontouchstart="moveup()">UP</button><br><br>
+                          <button onmousedown="moveleft()" onmouseup="clearmove()" ontouchstart="moveleft()"> LEFT</button>
+                          <button onmousedown="moveright()" onmouseup="clearmove()" ontouchstart="moveright()">RIGHT</button><br><br>
+                          <button onmousedown="movedown()" onmouseup="clearmove()" ontouchstart="movedown()">DOWN</button>
+                        </div>
+                        <button onclick="startGame()">Start Game</button>
+                    -->
+                        
+                        
+                </div>
 
 
 
-            <!--src="https://docs.google.com/document/d/e/2PACX-1vRBe_r4JoHo7SL2eInnY3J0LO39kA5ogJcOTebeoYVG0_zEP3lpHWovnVntZg3QDvIcknjBLZG3bJ3I/pub?embedded=true"-->
 
-            <!--" https://docs.google.com/spreadsheets/d/e/2PACX-1vTL5ZyxcOsOpcdYAdbQWjCgUJvJ1fone0C3o7MVW3B7jfty9VpJi6tzv71ikK6FpKhvCJod87722dkV/pubhtml?widget=true&amp;headers=false"-->
-        </iframe>
-
-        <iframe class="iframe-sheet-2 hidden" id="sheetnone"
-            style="position:fixed; top:29px; left:auto; bottom:37px; right:0; width:40%; height: calc(100% - 66px); border:none; margin: 0px 0px 37px 0px; padding:0; overflow:hidden; z-index:9; background-color: darkgrey; "
-            src="https://drive.google.com/file/d/1o6ixMrD5GOlaFfu6R7wey_HuCRQBIC6r/preview">
-            <!--src="https://drive.google.com/file/d/1bzRc6gRU3j_skqOFkyyMexcDgL1c4u7I/preview"-->
+                <iframe class="iframe-sheet-2 hidden" id="sheet2"
+                    style="position:fixed; top:29px; left:0;  border-radius: 10px; bottom:37px; right:0; width:100%; height: calc(100% - 66px); border:none; margin: 0px 0px 37px 0px; padding:0; overflow:hidden; z-index:9; background-color: darkgrey; "
+                    src="https://drive.google.com/file/d/1o6ixMrD5GOlaFfu6R7wey_HuCRQBIC6r/preview">
+                    <!--src="https://drive.google.com/file/d/1bzRc6gRU3j_skqOFkyyMexcDgL1c4u7I/preview"-->
 
 
 
-            <!--src="https://docs.google.com/document/d/e/2PACX-1vRBe_r4JoHo7SL2eInnY3J0LO39kA5ogJcOTebeoYVG0_zEP3lpHWovnVntZg3QDvIcknjBLZG3bJ3I/pub?embedded=true"-->
+                    <!--src="https://docs.google.com/document/d/e/2PACX-1vRBe_r4JoHo7SL2eInnY3J0LO39kA5ogJcOTebeoYVG0_zEP3lpHWovnVntZg3QDvIcknjBLZG3bJ3I/pub?embedded=true"-->
 
-            <!--" https://docs.google.com/spreadsheets/d/e/2PACX-1vTL5ZyxcOsOpcdYAdbQWjCgUJvJ1fone0C3o7MVW3B7jfty9VpJi6tzv71ikK6FpKhvCJod87722dkV/pubhtml?widget=true&amp;headers=false"-->
-        </iframe>
+                    <!--" https://docs.google.com/spreadsheets/d/e/2PACX-1vTL5ZyxcOsOpcdYAdbQWjCgUJvJ1fone0C3o7MVW3B7jfty9VpJi6tzv71ikK6FpKhvCJod87722dkV/pubhtml?widget=true&amp;headers=false"-->
+                </iframe>
+
+                <iframe class="iframe-sheet-2 hidden" id="sheetnone"
+                    style="position:fixed; top:29px; left:auto; bottom:37px; right:0; width:40%; height: calc(100% - 66px); border:none; margin: 0px 0px 37px 0px; padding:0; overflow:hidden; z-index:9; background-color: darkgrey; "
+                    src="https://drive.google.com/file/d/1o6ixMrD5GOlaFfu6R7wey_HuCRQBIC6r/preview">
+                    <!--src="https://drive.google.com/file/d/1bzRc6gRU3j_skqOFkyyMexcDgL1c4u7I/preview"-->
+
+
+
+                    <!--src="https://docs.google.com/document/d/e/2PACX-1vRBe_r4JoHo7SL2eInnY3J0LO39kA5ogJcOTebeoYVG0_zEP3lpHWovnVntZg3QDvIcknjBLZG3bJ3I/pub?embedded=true"-->
+
+                    <!--" https://docs.google.com/spreadsheets/d/e/2PACX-1vTL5ZyxcOsOpcdYAdbQWjCgUJvJ1fone0C3o7MVW3B7jfty9VpJi6tzv71ikK6FpKhvCJod87722dkV/pubhtml?widget=true&amp;headers=false"-->
+                </iframe>
 
 
 
 
-        <!--top:128px; left:1220px; bottom:37px; right:20px; width:auto; height: calc(100% - 66px);
+                <!--top:128px; left:1220px; bottom:37px; right:20px; width:auto; height: calc(100% - 66px);
         border:none; margin: 0px 0px 37px 0px; padding:20px; overflow:hidden; z-index:9; -->
 
-        <div class="iframe-sheet-2 hidden" id="accesspage"
-            style="position:fixed; top:0px; left:0px; bottom:0px; right:0px; width:100%; height: 100%;
+                <div class="iframe-sheet-2 hidden" id="accesspage"
+                    style="position:fixed; top:0px; left:0px; bottom:0px; right:0px; width:100%; height: 100%;
             border:none; margin: 0px 0px 37px 0px; padding:20px; overflow:hidden; z-index:9; background-color: rgb(29, 29, 29); color: white;">
-            <h2>Enter accesskey to view the content</h2>
+                    <h2>Enter accesskey to view the content</h2>
 
-            <input id="accesskey" type="text" placeholder="Enter any valid accesskey" autofocus="autofocus">
-            <button onclick="turnonaccess()" id="accessbutton">Get access</button>
-            <p id="accessreply"></p>
+                    <input id="accesskey" type="text" placeholder="Enter any valid accesskey" autofocus="autofocus">
+                    <button onclick="turnonaccess()" id="accessbutton">Get access</button>
+                    <p id="accessreply"></p>
 
-        </div>
+                </div>
 
-        <div class="iframe-sheet-3 hidden" id="mediapage"
-            style=" overflow-y: auto;  position:fixed; top:29px; left:0px; bottom:0px; right:0px; width:100%; height: 100%;
+                <div class="iframe-sheet-3 hidden" id="mediapage"
+                    style=" overflow-y: auto;  position:fixed; top:29px; left:0px; bottom:0px; right:0px; width:100%; height: 100%;
             border:none; margin: 0px 0px 37px 0px; padding: 0px 0px calc((25% - 300px)/2) calc((25% - 300px)/2);  z-index:9;  background-color: rgb(29, 29, 29); color: white;">
 
 
@@ -233,377 +504,388 @@
 
 
 
-            <iframe width="400" height="322" style="border: 1px solid grey;margin:calc((25% - 300px)/2);"
-                src="https://www.youtube.com/embed/videoseries?list=UUnKlI8bIoRdgzrPUNvxqflQ" frameborder="0"
-                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                allowfullscreen>
-            </iframe>
+                    <iframe width="400" height="322" style="border: 1px solid grey;margin:calc((25% - 300px)/2);"
+                        src="https://www.youtube.com/embed/videoseries?list=UUnKlI8bIoRdgzrPUNvxqflQ" frameborder="0"
+                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                        allowfullscreen>
+                    </iframe>
 
 
-            <iframe width="400" height="322" style="border: 1px solid grey;margin:calc((25% - 300px)/2);"
-                src="https://www.youtube.com/embed/videoseries?list=UUCKEJ5MYyOaKM1gGksrZEJw" frameborder="0"
-                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                allowfullscreen>
-            </iframe>
-
-
-
-            <iframe width="400" height="322" style="border: 1px solid grey;margin:calc((25% - 300px)/2);"
-                src="https://www.youtube.com/embed/videoseries?list=UU4ZfW_-pmfjkkZciu5BFzNA" frameborder="0"
-                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                allowfullscreen></iframe>
-
-            <iframe
-                src="https://www.facebook.com/plugins/post.php?href=https%3A%2F%2Fwww.facebook.com%2FPraveen.Kulkarni.For.Students%2Fposts%2F3749407878450524&width=400&show_text=true&height=322&appId"
-                width="400" height="322" style="border:none;overflow:hidden;margin:calc((25% - 300px)/2);"
-                scrolling="no" frameborder="0" allowfullscreen="true"
-                allow="autoplay; clipboard-write; encrypted-media; picture-in-picture; web-share">
-            </iframe>
-
-            <iframe width="400" height="322" style="border: 1px solid grey;margin:calc((25% - 300px)/2);"
-                src="https://www.youtube.com/embed/gVRmXA_PAjM" frameborder="0"
-                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                allowfullscreen></iframe>
+                    <iframe width="400" height="322" style="border: 1px solid grey;margin:calc((25% - 300px)/2);"
+                        src="https://www.youtube.com/embed/videoseries?list=UUCKEJ5MYyOaKM1gGksrZEJw" frameborder="0"
+                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                        allowfullscreen>
+                    </iframe>
 
 
 
-            <br><br>
-            <p> Media! </p>
+                    <iframe width="400" height="322" style="border: 1px solid grey;margin:calc((25% - 300px)/2);"
+                        src="https://www.youtube.com/embed/videoseries?list=UU4ZfW_-pmfjkkZciu5BFzNA" frameborder="0"
+                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                        allowfullscreen></iframe>
 
-        </div>
+                    <iframe
+                        src="https://www.facebook.com/plugins/post.php?href=https%3A%2F%2Fwww.facebook.com%2FPraveen.Kulkarni.For.Students%2Fposts%2F3749407878450524&width=400&show_text=true&height=322&appId"
+                        width="400" height="322" style="border:none;overflow:hidden;margin:calc((25% - 300px)/2);"
+                        scrolling="no" frameborder="0" allowfullscreen="true"
+                        allow="autoplay; clipboard-write; encrypted-media; picture-in-picture; web-share">
+                    </iframe>
 
-        <div id="splashscreen"
-            style="position: fixed; top:0;left:0; bottom:0px; right:0; width:100%; height: calc(100% - 0px); border:none; margin: 0px 0px 0px 0px; padding:0; overflow:hidden; z-index:9999; background-color: rgb(36, 36, 36);display:none;">
-            <div style="position: fixed;top: calc(50% - 100px); left: calc(50% - 100px);">
-                <img style="animation: rotate 2s infinite;" width="200px"
-                    src="https://docs.google.com/drawings/d/e/2PACX-1vTsISpsKu-Hn0EdJePBw_UC3y5GBIL-4S-dauzSMiG3Ys3oksH13kBv2qcQLgWSBwhRNPkKgOmPcazN/pub?w=379&amp;h=379">
+                    <iframe width="400" height="322" style="border: 1px solid grey;margin:calc((25% - 300px)/2);"
+                        src="https://www.youtube.com/embed/gVRmXA_PAjM" frameborder="0"
+                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                        allowfullscreen></iframe>
+
+
+
+                    <br><br>
+                    <p> Media! </p>
+
+                </div>
+
+                <div id="splashscreen"
+                    style="position: fixed; top:0;left:0; bottom:0px; right:0; width:100%; height: calc(100% - 0px); border:none; margin: 0px 0px 0px 0px; padding:0; overflow:hidden; z-index:9999; background-color: rgb(36, 36, 36);display:none;">
+                    <div style="position: fixed;top: calc(50% - 100px); left: calc(50% - 100px);">
+                        <img style="animation: rotate 2s infinite;" width="200px"
+                            src="https://docs.google.com/drawings/d/e/2PACX-1vTsISpsKu-Hn0EdJePBw_UC3y5GBIL-4S-dauzSMiG3Ys3oksH13kBv2qcQLgWSBwhRNPkKgOmPcazN/pub?w=379&amp;h=379">
+                    </div>
+                </div>
+
+                <div class="top-bar-for-google-sheet" id="topc">
+
+                    <p style="margin: 4px 0px 4px 10px; " id="versiond"><a style="text-decoration: none; color:black; "
+                            href="https://natharahul.github.io/rahuldocs/career-options">Career Options - Version
+                            2.9.9.3</a></p>
+
+
+                    <button style="position: fixed; top: 4px; right: 800px; margin: 0px 20px 0px 0px; display:none;"
+                        type="button" class="removeonphone">
+                        <div class="tooltip">Refresh<span class="tooltiptext">Refresh shortcuts</span></div>
+                    </button>
+
+
+
+
+
+                    <label id="cal-togglexf" class="nothing removeonphone"
+                        style=" position: fixed; top: 4px; right: 400px; margin: 0px 20px 0px 0px; display:none;">
+                        <div class="tooltip">Fullscreen mode
+                            <input type="checkbox" id="hideonclick" onclick="decidefullscreen()">
+                            <span class="tooltiptext">Fullscreen (f)</span>
+
+                        </div>
+                    </label>
+
+
+
+                    <label id="cal-toggle" class="nothing removeonphone"
+                        style=" position: fixed; top: 4px; right: 200px; margin: 0px 20px 0px 0px; display:none;">
+                        <div class="tooltip"> Calendar mode
+                            <input id="calendarswitch" type="checkbox" onclick="navbar_style()" accesskey="c">
+
+                            <span class="tooltiptext">Calendar mode (c)</span>
+                        </div>
+                    </label>
+
+
+                    <label id="cal-toggle2" class="nothing removeonphone"
+                        style=" position: fixed; top: 4px; right: 600px; margin: 0px 20px 0px 0px; display:none;">
+                        <div class="tooltip" style="display:none;"> Media mode
+                            <input id="mediaswitch" type="checkbox" onclick="showmedia()" accesskey="m">
+
+                            <span class="tooltiptext">Media mode (m)</span>
+                        </div>
+                    </label>
+
+
+                    <label id="dark-toggle"
+                        style=" position: fixed; top: 4px; right: 4px; margin: 0px 20px 0px 0px;display:none;">
+                        <div class="tooltip"> Dark theme
+                            <input id="darktoggle" type="checkbox" onclick="invert()" accesskey="d">
+                            <span class="tooltiptext">Dark theme (d)</span>
+                        </div>
+                    </label>
+                </div>
+
+
+                <div class="bottom-bar-for-google-sheet" id="bottomc">
+                    <a href="https://natharahul.github.io">
+                        <img height="25px" style="margin:5px 5px 5px 2px; float: left"
+                            src="https://docs.google.com/drawings/d/e/2PACX-1vQA4iiyPJ8Py6UjOW524b3qVO8LRSsglJVuLPbldYkJ9td08uvFLAWs1sGukrMnTgmdvkiBCbTap_jD/pub?w=280&amp;h=42">
+
+                        <p style="font-size: 25px; margin: 4px 0 0 0; color: black; float: left">from Rahul Natha</p>
+                    </a>
+
+                    <p style="float: right; margin: 8px 2px 5px 0px" id="at">long ago.</p>
+                    <p style="float: right; margin: 8px 2px 5px 0px" id="att">Website loaded at </p>
+                </div>
+
+                <div class="suggestion_pop_up removeonphone hidden" id="suggestion_gform">
+                    <a onclick="close_pop_up()" style="cursor:pointer;margin:5px 5px 5px 2px; float: right">Close</a>
+                    <br>
+
+                    <iframe
+                        src="https://docs.google.com/forms/d/e/1FAIpQLSflqPFlLFZn2QkiDdXncAt-tnWm2oRYVqbD9NURNA0uVbNWYw/viewform?embedded=true"
+                        width="350px" height="525px" frameborder="0" marginheight="0" marginwidth="0">Loading…</iframe>
+
+
+                    <a href="https://natharahul.github.io">
+                        <img height="25px" style="position:relative; top: 0px; margin:5px 5px 5px 2px; float: left"
+                            src="https://docs.google.com/drawings/d/e/2PACX-1vQA4iiyPJ8Py6UjOW524b3qVO8LRSsglJVuLPbldYkJ9td08uvFLAWs1sGukrMnTgmdvkiBCbTap_jD/pub?w=280&amp;h=42">
+
+                        <p
+                            style="font-size: 25px; position: relative; top: 0px; margin: 4px 0 0 0; color: black; float: left">
+                            from Rahul Natha</p>
+                    </a>
+
+                    <p style="float: right; margin: 8px 2px 5px 0px">Website loaded at </p>
+                    <p style="float: right; margin: 8px 2px 5px 0px" id="at"></p>
+
+
+                </div>
+
+                <div class="suggestion_pop_up_closed removeonphone " id="suggestion_gform_closed">
+
+                    <a onclick="pop_up_open()" style="cursor:pointer;margin:5px 15px 5px 2px; float: right">
+                        Open Form </a>
+                    <br>
+
+                </div>
+
+
+
             </div>
-        </div>
 
-        <div class="top-bar-for-google-sheet" id="topc">
+            <script>
 
-            <p style="margin: 4px 0px 4px 10px; " id="versiond"><a style="text-decoration: none; color:black; "
-                    href="https://natharahul.github.io/rahuldocs/career-options">Career Options - Version 2.9.9.2</a></p>
+                function close_pop_up() {
+                    document.getElementById("suggestion_gform_closed").style.display = "block";
+                    document.getElementById("suggestion_gform").style.display = "none";
+                }
 
-
-            <button style="position: fixed; top: 4px; right: 800px; margin: 0px 20px 0px 0px;" type="button" class="removeonphone">
-                <div class="tooltip">Refresh<span class="tooltiptext">Refresh shortcuts</span></div>
-            </button>
-
-
-
-
-            
-                <label id="cal-togglexf" class="nothing removeonphone" style=" position: fixed; top: 4px; right: 400px; margin: 0px 20px 0px 0px;"> 
-                    <div class="tooltip">Fullscreen mode
-                    <input type="checkbox" id="hideonclick" onclick="decidefullscreen()">
-                    <span class="tooltiptext">Fullscreen (f)</span>
-                
-            </div></label>
+                function pop_up_open() {
+                    document.getElementById("suggestion_gform_closed").style.display = "none";
+                    document.getElementById("suggestion_gform").style.display = "block";
+                }
 
 
-           
-
-
-
-            <label id="cal-toggle" class="nothing removeonphone"
-                style=" position: fixed; top: 4px; right: 200px; margin: 0px 20px 0px 0px;">
-                <div class="tooltip"> Calendar mode
-                    <input id="calendarswitch" type="checkbox" onclick="navbar_style()" accesskey="c">
-
-                    <span class="tooltiptext">Calendar mode (c)</span>
-                </div>
-            </label>
-
-
-            <label id="cal-toggle2" class="nothing removeonphone"
-                style=" position: fixed; top: 4px; right: 600px; margin: 0px 20px 0px 0px;">
-                <div class="tooltip"> Media mode
-                    <input id="mediaswitch" type="checkbox" onclick="showmedia()" accesskey="m">
-
-                    <span class="tooltiptext">Media mode (m)</span>
-                </div>
-            </label>
-
-            
-             <label id="dark-toggle"
-                style=" position: fixed; top: 4px; right: 4px; margin: 0px 20px 0px 0px;display:none;">
-                <div class="tooltip"> Dark theme
-                    <input id="darktoggle" type="checkbox" onclick="invert()" accesskey="d">
-                    <span class="tooltiptext">Dark theme (d)</span>
-                </div>
-            </label>
-        </div>
-
-
-        <div class="bottom-bar-for-google-sheet" id="bottomc">
-            <a href="https://natharahul.github.io">
-                <img height="25px" style="margin:5px 5px 5px 2px; float: left"
-                    src="https://docs.google.com/drawings/d/e/2PACX-1vQA4iiyPJ8Py6UjOW524b3qVO8LRSsglJVuLPbldYkJ9td08uvFLAWs1sGukrMnTgmdvkiBCbTap_jD/pub?w=280&amp;h=42">
-
-                <p style="font-size: 25px; margin: 4px 0 0 0; color: black; float: left">from Rahul Natha</p>
-            </a>
-
-            <p style="float: right; margin: 8px 2px 5px 0px" id="at">Updated 5 mins ago.</p>
-        </div>
-
-        <div class="suggestion_pop_up removeonphone hidden" id="suggestion_gform">
-            <a onclick="close_pop_up()" style="cursor:pointer;margin:5px 5px 5px 2px; float: right" >Close</a>
-            <br>
-            
-            <iframe src="https://docs.google.com/forms/d/e/1FAIpQLSflqPFlLFZn2QkiDdXncAt-tnWm2oRYVqbD9NURNA0uVbNWYw/viewform?embedded=true" width="350px" height="525px" frameborder="0" marginheight="0" marginwidth="0">Loading…</iframe>
-            
-            
-            <a href="https://natharahul.github.io">
-                <img height="25px" style="position:relative; top: 0px; margin:5px 5px 5px 2px; float: left"
-                    src="https://docs.google.com/drawings/d/e/2PACX-1vQA4iiyPJ8Py6UjOW524b3qVO8LRSsglJVuLPbldYkJ9td08uvFLAWs1sGukrMnTgmdvkiBCbTap_jD/pub?w=280&amp;h=42">
-
-                <p style="font-size: 25px; position: relative; top: 0px; margin: 4px 0 0 0; color: black; float: left">from Rahul Natha</p>
-            </a>
-
-            <p style="float: right; margin: 8px 2px 5px 0px" id="at"></p>
-        </div>
-        
-        <div class="suggestion_pop_up_closed removeonphone " id="suggestion_gform_closed">
-            
-            <a onclick="pop_up_open()" style="cursor:pointer;margin:5px 15px 5px 2px; float: right" >
-                Open Form </a>
-            <br>
-            
-        </div>
-        
-        
-        
-    </div>
-
-    <script>
-        
-        function close_pop_up() {
-            document.getElementById("suggestion_gform_closed").style.display = "block";
-            document.getElementById("suggestion_gform").style.display = "none";}
-        
-        function pop_up_open() {
-            document.getElementById("suggestion_gform_closed").style.display = "none";
-            document.getElementById("suggestion_gform").style.display = "block";}
-        
-
-        function turnonaccess() {
-            var keyentered = document.getElementById("accesskey").value;
-            if (keyentered == "prep") {
-                document.getElementById("accesspage").style.display = "none";
-            }
-            else {
-                document.getElementById("accessreply").innerHTML = "Access denied!";
-            }
-            if (keyentered == "ea") {
-                document.getElementById("accesspage").style.display = "none";
-                document.getElementById("versiond").innerHTML = "Career Options - Version 2.6.1 Beta";
-            }
-            else {
-                document.getElementById("accessreply").innerHTML = "Access denied!";
-            }
+                function turnonaccess() {
+                    var keyentered = document.getElementById("accesskey").value;
+                    if (keyentered == "prep") {
+                        document.getElementById("accesspage").style.display = "none";
+                    }
+                    else {
+                        document.getElementById("accessreply").innerHTML = "Access denied!";
+                    }
+                    if (keyentered == "ea") {
+                        document.getElementById("accesspage").style.display = "none";
+                        document.getElementById("versiond").innerHTML = "Career Options - Version 2.6.1 Beta";
+                    }
+                    else {
+                        document.getElementById("accessreply").innerHTML = "Access denied!";
+                    }
 
 
 
 
-        }
+                }
 
-        document.getElementById("accesskey").addEventListener("keyup", function (event) {
-            if (event.keyCode === 13) {
-                event.preventDefault();
-                document.getElementById("accessbutton").click();
-            }
-        });
+                document.getElementById("accesskey").addEventListener("keyup", function (event) {
+                    if (event.keyCode === 13) {
+                        event.preventDefault();
+                        document.getElementById("accessbutton").click();
+                    }
+                });
 
-        document.addEventListener("keyup", function (event) {
-            if (event.keyCode === 68) {
-                event.preventDefault();
-                document.getElementById("darktoggle").click();
-            }
-        });
+                document.addEventListener("keyup", function (event) {
+                    if (event.keyCode === 68) {
+                        event.preventDefault();
+                        document.getElementById("darktoggle").click();
+                    }
+                });
 
-        document.addEventListener("keyup", function (event) {
-            if (event.keyCode === 67) {
-                event.preventDefault();
-                document.getElementById("calendarswitch").click();
-            }
-        });
+                document.addEventListener("keyup", function (event) {
+                    if (event.keyCode === 67) {
+                        event.preventDefault();
+                        document.getElementById("calendarswitch").click();
+                    }
+                });
 
-        document.addEventListener("keyup", function (event) {
-            if (event.keyCode === 77) {
-                event.preventDefault();
-                document.getElementById("mediaswitch").click();
-            }
-        });
+                document.addEventListener("keyup", function (event) {
+                    if (event.keyCode === 77) {
+                        event.preventDefault();
+                        document.getElementById("mediaswitch").click();
+                    }
+                });
 
-        document.addEventListener("keyup", function (event) {
-            if (event.keyCode === 70) {
-                event.preventDefault();
-                document.getElementById("hideonclick").click();
-            }
-        });
-        document.addEventListener("keyup", function (event) {
-            if (event.keyCode === 84) {
-                event.preventDefault();
-                window.open("https://www.t.me/rahulnatha");
-            }
-        });
-
-
-        document.addEventListener("keyup", function (event) {
-            if (event.keyCode === 72) {
-                event.preventDefault();
-                document.getElementById("mediaswitch").checked = false;
-                document.getElementById("calendarswitch").checked = false;
-                document.getElementById("mediapage").style.display = "none";
-                document.getElementById("sheet").style.display = "block";
-                document.getElementById("sheet2").style.display = "none";
-                document.getElementById("sheet3").style.display = "none";
+                document.addEventListener("keyup", function (event) {
+                    if (event.keyCode === 70) {
+                        event.preventDefault();
+                        document.getElementById("hideonclick").click();
+                    }
+                });
+                document.addEventListener("keyup", function (event) {
+                    if (event.keyCode === 84) {
+                        event.preventDefault();
+                        window.open("https://www.t.me/rahulnatha");
+                    }
+                });
 
 
-            }
-        });
+                document.addEventListener("keyup", function (event) {
+                    if (event.keyCode === 72) {
+                        event.preventDefault();
+                        document.getElementById("mediaswitch").checked = false;
+                        document.getElementById("calendarswitch").checked = false;
+                        document.getElementById("mediapage").style.display = "none";
+                        document.getElementById("sheet").style.display = "block";
+                        document.getElementById("sheet2").style.display = "none";
+                        document.getElementById("sheet3").style.display = "none";
+
+
+                    }
+                });
 
 
 
-        var hour = new Date().getHours();
-        var date_time = new Date();
-        document.getElementById("at").innerHTML = date_time;
+                var hour = new Date().getHours();
+                var date_time = new Date();
+                document.getElementById("at").innerHTML = date_time;
 
-        function invert() {
-            if (document.getElementById("darktoggle").checked == true) {
+                function invert() {
+                    if (document.getElementById("darktoggle").checked == true) {
+                        document.getElementById("topc").style.filter = "invert(90%)";
+                        document.getElementById("bottomc").style.filter = "invert(90%)";
+                        document.getElementById("sheet").style.filter = "invert(90%)";
+                        document.getElementById("sheet2").style.filter = "invert(90%)";
+                        document.getElementById("suggestion_gform").style.filter = "invert(90%)";
+                        document.getElementById("suggestion_gform_closed").style.filter = "invert(90%)";
+                        document.getElementById("dark-toggle").style.display = "block";
+                    }
+                    else {
+                        document.getElementById("topc").style.filter = "invert(0%)";
+                        document.getElementById("bottomc").style.filter = "invert(0%)";
+                        document.getElementById("sheet").style.filter = "invert(0%)";
+                        document.getElementById("sheet2").style.filter = "invert(0%)";
+                        document.getElementById("suggestion_gform").style.filter = "invert(0%)";
+                        document.getElementById("suggestion_gform_closed").style.filter = "invert(0%)";
+                        document.getElementById("dark-toggle").style.display = "block";
+                    }
+                }
+
                 document.getElementById("topc").style.filter = "invert(90%)";
                 document.getElementById("bottomc").style.filter = "invert(90%)";
                 document.getElementById("sheet").style.filter = "invert(90%)";
                 document.getElementById("sheet2").style.filter = "invert(90%)";
                 document.getElementById("suggestion_gform").style.filter = "invert(90%)";
                 document.getElementById("suggestion_gform_closed").style.filter = "invert(90%)";
+                document.getElementById("darktoggle").checked = true;
                 document.getElementById("dark-toggle").style.display = "block";
-            }
-            else {
-                document.getElementById("topc").style.filter = "invert(0%)";
-                document.getElementById("bottomc").style.filter = "invert(0%)";
-                document.getElementById("sheet").style.filter = "invert(0%)";
-                document.getElementById("sheet2").style.filter = "invert(0%)";
-                document.getElementById("suggestion_gform").style.filter = "invert(0%)";
-                document.getElementById("suggestion_gform_closed").style.filter = "invert(0%)";
-                document.getElementById("dark-toggle").style.display = "block";
-            }
-        }
+                function autoinvert() {
 
-        document.getElementById("topc").style.filter = "invert(90%)";
-        document.getElementById("bottomc").style.filter = "invert(90%)";
-        document.getElementById("sheet").style.filter = "invert(90%)";
-        document.getElementById("sheet2").style.filter = "invert(90%)";
-        document.getElementById("suggestion_gform").style.filter = "invert(90%)";
-        document.getElementById("suggestion_gform_closed").style.filter = "invert(90%)";
-        document.getElementById("darktoggle").checked = true;
-        document.getElementById("dark-toggle").style.display = "block";
-        function autoinvert() {
+                    //  if (new Date().getHours() > 16 || new Date().getHours() < 6) {
+                    //      document.getElementById("topc").style.filter = "invert(90%)";
+                    //    document.getElementById("bottomc").style.filter = "invert(90%)";
+                    //  document.getElementById("sheet").style.filter = "invert(90%)";
+                    //document.getElementById("sheet2").style.filter = "invert(90%)";
+                    //  document.getElementById("darktoggle").checked = true;
 
-            //  if (new Date().getHours() > 16 || new Date().getHours() < 6) {
-            //      document.getElementById("topc").style.filter = "invert(90%)";
-            //    document.getElementById("bottomc").style.filter = "invert(90%)";
-            //  document.getElementById("sheet").style.filter = "invert(90%)";
-            //document.getElementById("sheet2").style.filter = "invert(90%)";
-            //  document.getElementById("darktoggle").checked = true;
-
-            //  }
-            // else {
-            //     document.getElementById("topc").style.filter = "invert(0%)";
-            //     document.getElementById("bottomc").style.filter = "invert(0%)";
-            //     document.getElementById("sheet").style.filter = "invert(0%)";
-            //     document.getElementById("sheet2").style.filter = "invert(0%)";
-            //      document.getElementById("dark-toggle").style.display = "block";
-            //      document.getElementById("darktoggle").checked = false;
-            // }
+                    //  }
+                    // else {
+                    //     document.getElementById("topc").style.filter = "invert(0%)";
+                    //     document.getElementById("bottomc").style.filter = "invert(0%)";
+                    //     document.getElementById("sheet").style.filter = "invert(0%)";
+                    //     document.getElementById("sheet2").style.filter = "invert(0%)";
+                    //      document.getElementById("dark-toggle").style.display = "block";
+                    //      document.getElementById("darktoggle").checked = false;
+                    // }
 
 
-            document.getElementById("splashscreen").style.display = "none";
+                    document.getElementById("splashscreen").style.display = "none";
 
 
 
-        }
-
-        function navbar_style() {
-            if (document.getElementById("calendarswitch").checked == true) {
-
-                document.getElementById("mediaswitch").checked = false;
-                document.getElementById("mediapage").style.display = "none";
-                document.getElementById("sheet").style.display = "none";
-                document.getElementById("sheet2").style.display = "block";
-                document.getElementById("sheet3").style.display = "block";
-
-
-            }
-            else {
-                document.getElementById("sheet").style.display = "block";
-                document.getElementById("mediapage").style.display = "none";
-                document.getElementById("sheet2").style.display = "none";
-                document.getElementById("sheet3").style.display = "none";
-
-
-            }
-        }
-
-        function showmedia() {
-            if (document.getElementById("mediaswitch").checked == true) {
-
-
-                document.getElementById("mediapage").style.display = "block";
-                document.getElementById("calendarswitch").checked = false;
-                document.getElementById("sheet2").style.display = "none";
-                document.getElementById("sheet3").style.display = "none";
-
-
-            }
-            else {
-                document.getElementById("sheet").style.display = "block";
-                document.getElementById("mediapage").style.display = "none";
-                document.getElementById("sheet2").style.display = "none";
-                document.getElementById("sheet3").style.display = "none";
-            }
-
-        }
-
-
-
-
-
-
-
-
-
-
-
-
-        function decidefullscreen() {
-            var elem = document.getElementById("webpage");
-            if (document.getElementById("hideonclick").checked == true) {
-
-                if (elem.requestFullscreen) {
-                    elem.requestFullscreen();
-                } else if (elem.webkitRequestFullscreen) { /* Safari */
-                    elem.webkitRequestFullscreen();
-                } else if (elem.msRequestFullscreen) { /* IE11 */
-                    elem.msRequestFullscreen();
                 }
 
-            }
+                function navbar_style() {
+                    if (document.getElementById("calendarswitch").checked == true) {
+
+                        document.getElementById("mediaswitch").checked = false;
+                        document.getElementById("mediapage").style.display = "none";
+                        document.getElementById("sheet").style.display = "none";
+                        document.getElementById("sheet2").style.display = "block";
+                        document.getElementById("sheet3").style.display = "block";
 
 
-            if (document.getElementById("hideonclick").checked == false) {
-                if (document.exitFullscreen) {
-                    document.exitFullscreen();
-                } else if (document.webkitExitFullscreen) { /* Safari */
-                    document.webkitExitFullscreen();
-                } else if (document.msExitFullscreen) { /* IE11 */
-                    document.msExitFullscreen();
+                    }
+                    else {
+                        document.getElementById("sheet").style.display = "block";
+                        document.getElementById("mediapage").style.display = "none";
+                        document.getElementById("sheet2").style.display = "none";
+                        document.getElementById("sheet3").style.display = "none";
+
+
+                    }
                 }
 
-            }
-        }
-    </script>
+                function showmedia() {
+                    if (document.getElementById("mediaswitch").checked == true) {
+
+
+                        document.getElementById("mediapage").style.display = "block";
+                        document.getElementById("calendarswitch").checked = false;
+                        document.getElementById("sheet2").style.display = "none";
+                        document.getElementById("sheet3").style.display = "none";
+
+
+                    }
+                    else {
+                        document.getElementById("sheet").style.display = "block";
+                        document.getElementById("mediapage").style.display = "none";
+                        document.getElementById("sheet2").style.display = "none";
+                        document.getElementById("sheet3").style.display = "none";
+                    }
+
+                }
+
+
+
+
+
+
+
+
+
+
+
+
+                function decidefullscreen() {
+                    var elem = document.getElementById("webpage");
+                    if (document.getElementById("hideonclick").checked == true) {
+
+                        if (elem.requestFullscreen) {
+                            elem.requestFullscreen();
+                        } else if (elem.webkitRequestFullscreen) { /* Safari */
+                            elem.webkitRequestFullscreen();
+                        } else if (elem.msRequestFullscreen) { /* IE11 */
+                            elem.msRequestFullscreen();
+                        }
+
+                    }
+
+
+                    if (document.getElementById("hideonclick").checked == false) {
+                        if (document.exitFullscreen) {
+                            document.exitFullscreen();
+                        } else if (document.webkitExitFullscreen) { /* Safari */
+                            document.webkitExitFullscreen();
+                        } else if (document.msExitFullscreen) { /* IE11 */
+                            document.msExitFullscreen();
+                        }
+
+                    }
+                }
+            </script>
 
 
 
