@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html>
 
@@ -100,9 +99,14 @@
                 background-color: whitesmoke;
                 z-index: 999;
             }
+
+            #screensizeerror {
+                display: none;  
+            }
         }
 
-        @media screen and (max-width: 1100px) {
+        @media screen and (max-width: 1300px) {
+
             #hideonclick {
                 display: none;
             }
@@ -122,9 +126,17 @@
             .removeonphone {
                 display: none;
             }
+
+            #screensizeerror {
+                display: block;  
+            }
         }
 
+        
+
         @media screen and (max-width: 650px) {
+
+            
 
             .bottom-bar-for-google-sheet {
                 position: fixed;
@@ -183,8 +195,8 @@
                 transform: rotate(360deg);
             }
         }
-        
-       /* canvas {z-index:99; position:fixed; top:32px; left:912px;  width:300px; height:300px; border:1px solid grey;} */
+
+        /* canvas {z-index:99; position:fixed; top:32px; left:912px;  width:300px; height:300px; border:1px solid grey;} */
     </style>
 </head>
 
@@ -198,12 +210,41 @@
 
         </iframe>
 
+        <div id="screensizeerror" style="position:fixed; 
+        background-color: rgb(34, 34, 34);  
+        left:0px; top:25px; bottom:0px; width:100%;height:calc(100% - 25px); z-index:9999; font-size: larger; ">
+        
+        <p style="display: none;">This website isn't designed for this screen size. Try opening on a bigger screen.</p></div>
+
+
+
         <div id="webpage">
             <div class="iframe-sheet" id="sheetforgame"
                 style="position:fixed; top:80px; left:calc(64% + 5px); bottom:0px; right:10%; width:400px; height: calc(100% - 20px); border:none; margin: 0px 0px 0px 0px; padding:0; overflow:hidden; z-index:99; background-color: none; font-family: 'Roboto Condensed', sans-serif; "
                 src="">
 
-                <canvas id="canvass"  width="300" height="300" style="background-color:none">
+                <script>
+
+                    function startTime() {
+                        var todayin = new Date();
+                        var hh2 = todayin.getHours();
+                        var mm2 = todayin.getMinutes();
+                        var ss2 = todayin.getSeconds();
+                        mm2 = checkTime(mm2);
+                        ss2 = checkTime(ss2);
+                        document.getElementById('showthetimeondigitalclock').innerHTML =
+                            hh2 + ":" + mm2 + ":" + ss2;
+
+                        var tt2 = setTimeout(startTime, 500);
+                    }
+
+                    function checkTime(i) {
+                        if (i < 10) { i = "0" + i };  // add zero in front of numbers < 10
+                        return i;
+                    }
+                </script>
+
+                <canvas id="canvass" width="300" height="300" style="background-color:none; display: none;">
                 </canvas>
 
                 <script>
@@ -288,16 +329,19 @@
                         ctx.stroke();
                         ctx.rotate(-pos);
                     }
-                </script> 
-
-
+                </script>
+                <br>
+                <!--<button onclick="startTime()"></button> -->
+                <div id="showthetimeondigitalclock" style="display:none;font-size: 50px; color:rgb(199, 199, 199)">
+                </div>
+                <br>
             </div>
 
             <div id="webpage">
                 <div class="iframe-sheet" id="sheetforgame"
                     style="position:fixed; top:60px; left:63%; bottom:120px; right:10%; width:340px; border:none; margin: 0px 0px 0px 0px; padding:0; overflow:hidden; z-index:9; background-color: #333; font-family: 'Roboto Condensed', sans-serif; border-radius: 10px;"
                     src="">
-<!--                    <br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br>
+                    <!--                    <br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br>
 
                     <script>
 
@@ -444,8 +488,8 @@
                         </div>
                         <button onclick="startGame()">Start Game</button>
                     -->
-                        
-                        
+
+
                 </div>
 
 
@@ -555,7 +599,7 @@
 
                     <p style="margin: 4px 0px 4px 10px; " id="versiond"><a style="text-decoration: none; color:black; "
                             href="https://natharahul.github.io/rahuldocs/career-options">Career Options - Version
-                            2.9.9.3</a></p>
+                            2.9.9.4</a></p>
 
 
                     <button style="position: fixed; top: 4px; right: 800px; margin: 0px 20px 0px 0px; display:none;"
@@ -638,7 +682,7 @@
                             from Rahul Natha</p>
                     </a>
 
-                    <p style="float: right; margin: 8px 2px 5px 0px">Website loaded at </p>
+                    <p style="float: right; margin: 8px 2px 5px 0px"></p>
                     <p style="float: right; margin: 8px 2px 5px 0px" id="at"></p>
 
 
@@ -657,6 +701,12 @@
             </div>
 
             <script>
+
+
+
+
+
+
 
                 function close_pop_up() {
                     document.getElementById("suggestion_gform_closed").style.display = "block";
@@ -758,8 +808,8 @@
                         document.getElementById("bottomc").style.filter = "invert(90%)";
                         document.getElementById("sheet").style.filter = "invert(90%)";
                         document.getElementById("sheet2").style.filter = "invert(90%)";
-                        document.getElementById("suggestion_gform").style.filter = "invert(90%)";
-                        document.getElementById("suggestion_gform_closed").style.filter = "invert(90%)";
+                        document.getElementById("suggestion_gform").style.filter = "invert(0%)";
+                        document.getElementById("suggestion_gform_closed").style.filter = "invert(0%)";
                         document.getElementById("dark-toggle").style.display = "block";
                     }
                     else {
@@ -777,8 +827,8 @@
                 document.getElementById("bottomc").style.filter = "invert(90%)";
                 document.getElementById("sheet").style.filter = "invert(90%)";
                 document.getElementById("sheet2").style.filter = "invert(90%)";
-                document.getElementById("suggestion_gform").style.filter = "invert(90%)";
-                document.getElementById("suggestion_gform_closed").style.filter = "invert(90%)";
+                document.getElementById("suggestion_gform").style.filter = "invert(0%)";
+                document.getElementById("suggestion_gform_closed").style.filter = "invert(0%)";
                 document.getElementById("darktoggle").checked = true;
                 document.getElementById("dark-toggle").style.display = "block";
                 function autoinvert() {
