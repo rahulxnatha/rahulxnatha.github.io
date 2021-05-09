@@ -487,7 +487,7 @@ p {
 }
 
 .icon-bar {
-  background-color: none;
+  background-color: rgb(221, 221, 221);
   border: 0px solid grey;
   height: auto;
   border-radius: 0px;
@@ -572,6 +572,8 @@ p {
   margin: 0;
   padding: 0px 20px 0px 20px;
 }
+
+.dark-mode .invert_in_dark {filter: invert(100%);}
 
 .dark-mode .full-panel {
   
@@ -1004,25 +1006,25 @@ input:checked + .slider:before {
 
 /* width */
 ::-webkit-scrollbar {
-  width: 15px; 
+  width: 14px; 
 }
 
 /* Track */
 ::-webkit-scrollbar-track {
-  box-shadow: inset 0 0 0px grey; 
-  background-color: black;
+  box-shadow: inset 0 0 0px none; 
+  background-color: grey;
   border-radius: 0px;
 }
  
 /* Handle */
 ::-webkit-scrollbar-thumb {
-  background: grey; 
+  background: rgb(216, 216, 216); 
   border-radius: 0px;
 }
 
 /* Handle on hover */
 ::-webkit-scrollbar-thumb:hover {
-  background: grey; 
+  background: rgb(255, 255, 255); 
 }
 
 .webpage {
@@ -1031,4 +1033,10 @@ input:checked + .slider:before {
 
 .dark-mode .webpage {
     background-color: black; 
+}
+
+@media print {
+  html, body {
+     display: none;  /* hide whole page */
+  }
 }
