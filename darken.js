@@ -1,7 +1,7 @@
 function automatic_dark_switch() {
 
     var hour = new Date().getHours();
-    if (hour > 17) {
+    if (hour > 16) {
         document.getElementById("tell-user-about-theme").innerHTML = "Good evening. Press d to toggle the dark theme.";
         document.body.classList.toggle("dark-mode");
         document.getElementById("dark-toggle").checked = true;
