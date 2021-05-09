@@ -1,13 +1,15 @@
 function automatic_dark_switch() {
 
+
+
     var hour = new Date().getHours();
 
     if (hour > 16) {
 
-        document.getElementById("tell-user-about-theme").innerHTML = "Good evening. Dark theme is on.";
+        document.getElementById("tell-user-about-theme").innerHTML = "Good evening. Press d to toggle the dark theme.";
 
     } else {
-        if (hour > 11) { document.getElementById("tell-user-about-theme").innerHTML = "Good afternoon. Dark theme is on."; } else { document.getElementById("tell-user-about-theme").innerHTML = "Good morning. Dark theme is on."; }
+        if (hour > 11) { document.getElementById("tell-user-about-theme").innerHTML = "Good afternoon. Press d to toggle the dark theme."; } else { document.getElementById("tell-user-about-theme").innerHTML = "Good morning. Press d to toggle the dark theme."; }
 
     }
 
