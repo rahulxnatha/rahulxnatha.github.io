@@ -1,16 +1,21 @@
 function automatic_dark_switch() {
 
-
-
     var hour = new Date().getHours();
-
-    if (hour > 16) {
-
+    if (hour > 17) {
         document.getElementById("tell-user-about-theme").innerHTML = "Good evening. Press d to toggle the dark theme.";
-
+        document.body.classList.toggle("dark-mode");
+        document.getElementById("dark-toggle").checked = true;
     } else {
-        if (hour > 11) { document.getElementById("tell-user-about-theme").innerHTML = "Good afternoon. Press d to toggle the dark theme."; } else { document.getElementById("tell-user-about-theme").innerHTML = "Good morning. Press d to toggle the dark theme."; }
-
+        if (hour > 11) { document.getElementById("tell-user-about-theme").innerHTML = "Good afternoon. Press d to toggle the dark theme."; }
+        else {
+            if (hour < 6) { document.getElementById("tell-user-about-theme").innerHTML = "Late night! Press d to toggle the dark theme.";
+            document.body.classList.toggle("dark-mode");
+            document.getElementById("dark-toggle").checked = true;
+        }
+            else {
+                document.getElementById("tell-user-about-theme").innerHTML = "Good morning. Press d to toggle the dark theme.";
+            }
+        }
     }
 
     if (hour > 0) {
@@ -20,10 +25,9 @@ function automatic_dark_switch() {
     }
 
 
-    document.body.classList.toggle("dark-mode");
-    document.getElementById("dark-toggle").checked = true;
+
     setTimeout(function () { document.getElementById("low_opacity_branding").style.display = "block"; }, 0);
-    
+
 
 
     setTimeout(function () { document.getElementById("low_opacity_branding").style.display = "none"; }, 3000);
