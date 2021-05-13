@@ -517,7 +517,7 @@
 
                     <label id="dark-toggle"
                         style=" position: fixed; top: 4px; right: 4px; margin: 0px 20px 0px 0px;display:none;">
-                        <div class="tooltip"> Dark theme
+                        <div class="tooltip" style="display: none;" id="showdarkoption"> Dark theme
                             <input id="darktoggle" type="checkbox" onclick="invert()" accesskey="d">
                             <span class="tooltiptext">Dark theme (d)</span>
                         </div>
@@ -708,6 +708,7 @@
                 document.getElementById("sheetforinfo").style.color = "#000";
 
                 document.getElementById("dark-toggle").style.display = "block";
+                
                 document.body.style.backgroundColor = "grey";
 
                 function autoinvert() {
@@ -722,7 +723,7 @@
                         document.getElementById("sheetforinfo").style.color = "#fff";
 
                         document.getElementById("darktoggle").checked = true;
-
+                        document.getElementById("showdarkoption").style.display = "block";
                     }
                     else {
                         document.getElementById("topc").style.filter = "invert(0%)";
@@ -735,6 +736,8 @@
                         document.getElementById("dark-toggle").style.display = "block";
                         document.body.style.backgroundColor = "#eee";
                         document.getElementById("darktoggle").checked = false;
+                        
+                        document.getElementById("showdarkoption").style.display = "block";
                     }
 
                     document.getElementById("splashscreen").style.display = "none";
