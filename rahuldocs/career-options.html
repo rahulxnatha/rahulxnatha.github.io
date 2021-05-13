@@ -101,7 +101,7 @@
             }
 
             #screensizeerror {
-                display: none;  
+                display: none;
             }
         }
 
@@ -128,15 +128,15 @@
             }
 
             #screensizeerror {
-                display: block;  
+                display: block;
             }
         }
 
-        
+
 
         @media screen and (max-width: 650px) {
 
-            
+
 
             .bottom-bar-for-google-sheet {
                 position: fixed;
@@ -197,24 +197,52 @@
         }
 
         /* canvas {z-index:99; position:fixed; top:32px; left:912px;  width:300px; height:300px; border:1px solid grey;} */
+        @media print {
+
+            html,
+            body {
+                display: none;
+                /* hide whole page */
+            }
+        }
+
+
+        .noselect {
+            -webkit-touch-callout: none;
+            /* iOS Safari */
+            -webkit-user-select: none;
+            /* Safari */
+            -khtml-user-select: none;
+            /* Konqueror HTML */
+            -moz-user-select: none;
+            /* Old versions of Firefox */
+            -ms-user-select: none;
+            /* Internet Explorer/Edge */
+            user-select: none;
+            /* Non-prefixed version, currently
+                                    supported by Chrome, Edge, Opera and Firefox */
+        }
     </style>
 </head>
 
 <body onload="autoinvert() ">
 
 
-    <div id="webpage">
+    <div id="webpage" class="noselect">
         <iframe class="iframe-sheet" id="sheet"
-            style="position:fixed; top:0; left:12.4%; bottom:0px; right:10%; width:650px; height: calc(100% - 0px); border:none; margin: 0px 0px 0px 0px; padding:0; overflow:hidden; z-index:9; background-color: white; font-family: 'Roboto Condensed', sans-serif; "
+            style="position:fixed; top:0; left:10%; bottom:0px; right:10%; width: calc((100%)/2); height: calc(100% - 0px); border:none; margin: 0px 0px 0px 0px; padding:0; overflow:hidden; z-index:9; background-color: white; font-family: 'Roboto Condensed', sans-serif; "
             src="https://docs.google.com/spreadsheets/d/e/2PACX-1vTL5ZyxcOsOpcdYAdbQWjCgUJvJ1fone0C3o7MVW3B7jfty9VpJi6tzv71ikK6FpKhvCJod87722dkV/pubhtml?widget=false&amp;headers=false">
 
         </iframe>
 
         <div id="screensizeerror" style="position:fixed; 
-        background-color: rgb(34, 34, 34);  
-        left:0px; top:25px; bottom:0px; width:100%;height:calc(100% - 25px); z-index:9999; font-size: larger; ">
-        
-        <p style="display: block; color: #eee;">This website isn't designed for this screen size. Try opening on a bigger screen.</p></div>
+        background-color: rgb(222, 222, 222);  
+        left:0px; top:26px; bottom:0px; width:100%;height:calc(100% - 25px); z-index:9999; font-size: 16px; ">
+
+            <p style="display: block; color: rgb(0, 0, 0); margin: 20px ;">This website isn't designed for this screen
+                size. Try opening on a
+                bigger screen.</p>
+        </div>
 
 
 
@@ -338,161 +366,12 @@
             </div>
 
             <div id="webpage">
-                <div class="iframe-sheet" id="sheetforgame"
-                    style="position:fixed; top:60px; left:63%; bottom:120px; right:10%; width:340px; border:none; margin: 0px 0px 0px 0px; padding:0; overflow:hidden; z-index:9; background-color: #333; font-family: 'Roboto Condensed', sans-serif; border-radius: 10px;"
-                    src="">
-                    <!--                    <br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br>
-
-                    <script>
-
-                        var myGamePiece;
-                        var myObstacles = [];
-                        var mySound;
-                        
-                        function startGame() {
-                            myGamePiece = new component(30, 30, "red", 10, 120);
-                            mySound = new sound("bounce.mp3");
-                            myGameArea.start();
-                        }
-                        
-                        var myGameArea = {
-                            canvas : document.createElement("canvas"),
-                            start : function() {
-                                this.canvas.width = 300;
-                                this.canvas.height = 300;
-                                this.canvas.style.margin = "50px 10px 20px 30px";
-                                
-                                this.context = this.canvas.getContext("2d");
-                                document.body.insertBefore(this.canvas, document.body.childNodes[0]);
-                                this.frameNo = 0;
-
-                                this.interval = setInterval(updateGameArea, 20);
-                            },
-                            stop : function() {
-                                clearInterval(this.interval);
-                            },    
-                            clear : function() {
-                                this.context.clearRect(0, 0, this.canvas.width, this.canvas.height);
-                            }
-                        }
-                        
-                        function component(width, height, color, x, y) {
-                            this.width = width;
-                            this.height = height;
-                            this.speedX = 0;
-                            this.speedY = 0;    
-                            this.x = x;
-                            this.y = y;    
-                            this.update = function() {
-                                ctx = myGameArea.context;
-                                ctx.fillStyle = color;
-                                ctx.fillRect(this.x, this.y, this.width, this.height);
-                            }
-                            this.newPos = function() {
-                                this.x += this.speedX;
-                                this.y += this.speedY;        
-                            }    
-                            this.crashWith = function(otherobj) {
-                                var myleft = this.x;
-                                var myright = this.x + (this.width);
-                                var mytop = this.y;
-                                var mybottom = this.y + (this.height);
-                                var otherleft = otherobj.x;
-                                var otherright = otherobj.x + (otherobj.width);
-                                var othertop = otherobj.y;
-                                var otherbottom = otherobj.y + (otherobj.height);
-                                var crash = true;
-                                if ((mybottom < othertop) || (mytop > otherbottom) || (myright < otherleft) || (myleft > otherright)) {
-                                    crash = false;
-                                }
-                                return crash;
-                            }
-                        }
-                        
-                        function updateGameArea() {
-                            var x, height, gap, minHeight, maxHeight, minGap, maxGap;
-                            for (i = 0; i < myObstacles.length; i += 1) {
-                                if (myGamePiece.crashWith(myObstacles[i])) {
-                                    mySound.play();
-                                    myGameArea.stop();
-                                    return;
-                                } 
-                            }
-                            myGameArea.clear();
-                            myGameArea.frameNo += 1;
-                            if (myGameArea.frameNo == 1 || everyinterval(150)) {
-                                x = myGameArea.canvas.width;
-                                minHeight = 20;
-                                maxHeight = 200;
-                                height = Math.floor(Math.random()*(maxHeight-minHeight+1)+minHeight);
-                                minGap = 50;
-                                maxGap = 200;
-                                gap = Math.floor(Math.random()*(maxGap-minGap+1)+minGap);
-                                myObstacles.push(new component(10, height, "green", x, 0));
-                                myObstacles.push(new component(10, x - height - gap, "green", x, height + gap));
-                            }
-                            for (i = 0; i < myObstacles.length; i += 1) {
-                                myObstacles[i].x -= 1;
-                                myObstacles[i].update();
-                            }
-                            myGamePiece.newPos();
-                            myGamePiece.update();
-                        }
-                        
-                        function sound(src) {
-                            this.sound = document.createElement("audio");
-                            this.sound.src = src;
-                            this.sound.setAttribute("preload", "auto");
-                            this.sound.setAttribute("controls", "none");
-                            this.sound.style.display = "none";
-                            document.body.appendChild(this.sound);
-                            this.play = function(){
-                                this.sound.play();
-                            }
-                            this.stop = function(){
-                                this.sound.pause();
-                            }    
-                        }
-                        
-                        function everyinterval(n) {
-                            if ((myGameArea.frameNo / n) % 1 == 0) {return true;}
-                            return false;
-                        }
-                        
-                        function moveup() {
-                            myGamePiece.speedY = -1; 
-                        }
-                        
-                        function movedown() {
-                            myGamePiece.speedY = 1; 
-                        }
-                        
-                        function moveleft() {
-                            myGamePiece.speedX = -1; 
-                        }
-                        
-                        function moveright() {
-                            myGamePiece.speedX = 1; 
-                        }
-                        
-                        function clearmove() {
-                            myGamePiece.speedX = 0; 
-                            myGamePiece.speedY = 0; 
-                        }
-                        </script>
-                        <div style="text-align:center;width:300px;">
-                          <button onmousedown="moveup()" onmouseup="clearmove()" ontouchstart="moveup()">UP</button><br><br>
-                          <button onmousedown="moveleft()" onmouseup="clearmove()" ontouchstart="moveleft()"> LEFT</button>
-                          <button onmousedown="moveright()" onmouseup="clearmove()" ontouchstart="moveright()">RIGHT</button><br><br>
-                          <button onmousedown="movedown()" onmouseup="clearmove()" ontouchstart="movedown()">DOWN</button>
-                        </div>
-                        <button onclick="startGame()">Start Game</button>
-                    -->
-
-
+                <div class="iframe-sheet" id="sheetforinfo"
+                    style="position:fixed; top:60px;   right:10%;  border:none;  padding:30px; overflow:hidden; z-index:9; background-color: #121212; width: calc((100%) / 4.5); margin: 0px 0px 0px 0px; font-family: 'Roboto Condensed', sans-serif; border-radius: 10px; color: #fff;">
+                    <p>This is the Career Options website created by Rahul Natha. You can contribute to this website by
+                        giving your interests and opinions in the form.
+                    </p>
                 </div>
-
-
 
 
                 <iframe class="iframe-sheet-2 hidden" id="sheet2"
@@ -539,11 +418,6 @@
                 <div class="iframe-sheet-3 hidden" id="mediapage"
                     style=" overflow-y: auto;  position:fixed; top:29px; left:0px; bottom:0px; right:0px; width:100%; height: 100%;
             border:none; margin: 0px 0px 37px 0px; padding: 0px 0px calc((25% - 300px)/2) calc((25% - 300px)/2);  z-index:9;  background-color: rgb(29, 29, 29); color: white;">
-
-
-
-
-
 
 
 
@@ -599,13 +473,14 @@
 
                     <p style="margin: 4px 0px 4px 10px; " id="versiond"><a style="text-decoration: none; color:black; "
                             href="https://natharahul.github.io/rahuldocs/career-options">Career Options - Version
-                            2.9.9.6</a></p>
+                            2.9.9.7</a></p>
 
-                            <a href="https://natharahul.github.io" style="color:black;text-decoration: none;">
-                    <button style="position: fixed; top: 4px; right: 800px; margin: 0px 20px 0px 0px; display:block;"
-                        type="button" class="removeonphone">
-                        <div class="tooltip">Home<span class="tooltiptext">Go to home page</span></div>
-                    </button></a>
+                    <a href="https://natharahul.github.io" style="color:black;text-decoration: none;">
+                        <button
+                            style="position: fixed; top: 4px; right: calc(60%); margin: 0px 20px 0px 0px; display:block;"
+                            type="button" class="removeonphone">
+                            <div class="tooltip">Home<span class="tooltiptext">Go to home page</span></div>
+                        </button></a>
 
 
                     <label id="cal-togglexf" class="nothing removeonphone"
@@ -685,9 +560,9 @@
 
                 </div>
 
-                <div class="suggestion_pop_up_closed removeonphone " id="suggestion_gform_closed">
+                <div style="display:none;" class="suggestion_pop_up_closed removeonphone " id="suggestion_gform_closed">
 
-                    <a onclick="pop_up_open()" style="cursor:pointer;margin:5px 15px 5px 2px; float: right">
+                    <a onclick="pop_up_open()" style=" cursor:pointer;margin:5px 15px 5px 2px; float: right">
                         Open Form </a>
                     <br>
 
@@ -698,11 +573,6 @@
             </div>
 
             <script>
-
-
-
-
-
 
 
                 function close_pop_up() {
@@ -731,8 +601,6 @@
                     else {
                         document.getElementById("accessreply").innerHTML = "Access denied!";
                     }
-
-
 
 
                 }
@@ -800,6 +668,8 @@
                 document.getElementById("at").innerHTML = date_time;
 
                 function invert() {
+
+
                     if (document.getElementById("darktoggle").checked == true) {
                         document.getElementById("topc").style.filter = "invert(90%)";
                         document.getElementById("bottomc").style.filter = "invert(90%)";
@@ -807,7 +677,11 @@
                         document.getElementById("sheet2").style.filter = "invert(90%)";
                         document.getElementById("suggestion_gform").style.filter = "invert(0%)";
                         document.getElementById("suggestion_gform_closed").style.filter = "invert(0%)";
+                        document.getElementById("sheetforinfo").style.backgroundColor = "#222";
+                        document.getElementById("sheetforinfo").style.color = "#fff";
+
                         document.getElementById("dark-toggle").style.display = "block";
+                        document.body.style.backgroundColor = "#121212";
                     }
                     else {
                         document.getElementById("topc").style.filter = "invert(0%)";
@@ -816,37 +690,51 @@
                         document.getElementById("sheet2").style.filter = "invert(0%)";
                         document.getElementById("suggestion_gform").style.filter = "invert(0%)";
                         document.getElementById("suggestion_gform_closed").style.filter = "invert(0%)";
+                        document.getElementById("sheetforinfo").style.backgroundColor = "#fff";
+                        document.getElementById("sheetforinfo").style.color = "#000";
+
                         document.getElementById("dark-toggle").style.display = "block";
+                        document.body.style.backgroundColor = "#eee";
                     }
                 }
-
-                document.getElementById("topc").style.filter = "invert(90%)";
-                document.getElementById("bottomc").style.filter = "invert(90%)";
-                document.getElementById("sheet").style.filter = "invert(90%)";
-                document.getElementById("sheet2").style.filter = "invert(90%)";
+                document.getElementById("topc").style.filter = "invert(0%)";
+                document.getElementById("bottomc").style.filter = "invert(0%)";
+                document.getElementById("sheet").style.filter = "invert(0%)";
+                document.getElementById("sheet2").style.filter = "invert(0%)";
                 document.getElementById("suggestion_gform").style.filter = "invert(0%)";
                 document.getElementById("suggestion_gform_closed").style.filter = "invert(0%)";
-                document.getElementById("darktoggle").checked = true;
+                document.getElementById("sheetforinfo").style.backgroundColor = "#fff";
+                document.getElementById("sheetforinfo").style.color = "#000";
+
                 document.getElementById("dark-toggle").style.display = "block";
+                document.body.style.backgroundColor = "grey";
+
                 function autoinvert() {
 
-                    //  if (new Date().getHours() > 16 || new Date().getHours() < 6) {
-                    //      document.getElementById("topc").style.filter = "invert(90%)";
-                    //    document.getElementById("bottomc").style.filter = "invert(90%)";
-                    //  document.getElementById("sheet").style.filter = "invert(90%)";
-                    //document.getElementById("sheet2").style.filter = "invert(90%)";
-                    //  document.getElementById("darktoggle").checked = true;
+                    if (new Date().getHours() > 16 || new Date().getHours() < 6) {
+                        document.getElementById("topc").style.filter = "invert(90%)";
+                        document.getElementById("bottomc").style.filter = "invert(90%)";
+                        document.getElementById("sheet").style.filter = "invert(100%)";
+                        document.getElementById("sheet2").style.filter = "invert(90%)";
+                        document.body.style.backgroundColor = "#121212";
+                        document.getElementById("sheetforinfo").style.backgroundColor = "#121212";
+                        document.getElementById("sheetforinfo").style.color = "#fff";
 
-                    //  }
-                    // else {
-                    //     document.getElementById("topc").style.filter = "invert(0%)";
-                    //     document.getElementById("bottomc").style.filter = "invert(0%)";
-                    //     document.getElementById("sheet").style.filter = "invert(0%)";
-                    //     document.getElementById("sheet2").style.filter = "invert(0%)";
-                    //      document.getElementById("dark-toggle").style.display = "block";
-                    //      document.getElementById("darktoggle").checked = false;
-                    // }
+                        document.getElementById("darktoggle").checked = true;
 
+                    }
+                    else {
+                        document.getElementById("topc").style.filter = "invert(0%)";
+                        document.getElementById("bottomc").style.filter = "invert(0%)";
+                        document.getElementById("sheet").style.filter = "invert(0%)";
+                        document.getElementById("sheet2").style.filter = "invert(0%)";
+                        document.getElementById("sheetforinfo").style.backgroundColor = "#fff";
+                        document.getElementById("sheetforinfo").style.color = "#000";
+
+                        document.getElementById("dark-toggle").style.display = "block";
+                        document.body.style.backgroundColor = "#eee";
+                        document.getElementById("darktoggle").checked = false;
+                    }
 
                     document.getElementById("splashscreen").style.display = "none";
 
@@ -933,8 +821,7 @@
                     }
                 }
             </script>
+        </div>
 
-
-
-
+    </div>
 </body>
