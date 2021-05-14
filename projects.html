@@ -20,7 +20,8 @@
   <link rel="stylesheet" type="text/css" href="assets/css/animations.css">
   <link rel="stylesheet" type="text/css" href="assets/css/basic_elements.css">
   <link rel="stylesheet" type="text/css" href="assets/css/colors.css">
-  <link rel="stylesheet" type="text/css" href="assets/css/dimensions.css">
+  <link rel="stylesheet" type="text/css" href="assets/css/dimensions_for_desktop.css">
+  <link rel="stylesheet" type="text/css" href="assets/css/dimensions_for_mobile_devices.css">
   <link rel="stylesheet" type="text/css" href="assets/css/fonts.css">
   <link rel="stylesheet" type="text/css" href="assets/css/id.css">
   <link rel="stylesheet" type="text/css" href="assets/css/remaining_styling.css">
@@ -29,7 +30,7 @@
 
   <script src="assets/js/automatic_manual_dark.js"></script>
   <script src="assets/js/show_content_when_needed.js"></script>
- 
+
 
   <meta property="og:title" content="Website of Rahul Natha" />
   <meta property="og:description" content="Home page for all of the websites made by Rahul Natha" />
@@ -44,46 +45,50 @@
 <body onload="automatic_dark_switch()">
 
   <div class="webpage noselect" id="webpage">
+    <div class="desktop_only">
+      <div id="site_header" class="site_header noselect">
+        <div class="navbar" id="navbar">
 
-    <div id="site_header" class="noselect">
-      <div class="navbar" id="navbar">
+          <a onclick="display_settings_now()" id="settings_on" style="display:none">Settings</a>
 
-        <a onclick="display_settings_now()" id="settings_on" style="display:none">Settings</a>
+          <a href="">About me</a>
+          <a href="">Blog</a>
+          <a href="projects.html">Projects</a>
+          <a href="">COVID-19 Alert!</a>
 
-        <a href="">About me</a>
-        <a href="">Blog</a>
-        <a href="projects.html">Projects</a>
-        <a href="">COVID-19 Alert!</a>
+          <a class="active" href="index.html">Home</a>
 
-        <a class="active" href="index.html">Home</a>
+          <div style="float:left;">
+            <a href="index.html">Rahul Natha</a>
+          </div>
+        </div>
 
-        <div style="float:left;">
+        <div class="branding_that_appears_on_scroll" id="branding_that_appears_on_scroll">
           <a href="index.html">Rahul Natha</a>
+        </div>
+
+        <div class="tell-content hidden" id="low_opacity_branding">
+          <p id="tell-user-about-theme">Loading. Please Wait.</p>
+
+          <!--div class="nav-bar-option" button class="button3" onclick="manual_dark()" Change theme/buttondiv -->
+
+          <input id="setting_button_mode" type="checkbox" unchecked class="hidden">
+          <label class="dark-switch">
+            <input id="dark-toggle" type="checkbox" onclick="manual_dark()">
+            <span class="slider round"></span>
+          </label>
+          <script>document.addEventListener("keyup", function (event) {
+              if (event.keyCode === 68) {
+                event.preventDefault();
+                document.getElementById("dark-toggle").click();
+              }
+            });</script>
+
         </div>
       </div>
 
-      <div class="tell-content hidden" id="low_opacity_branding">
-        <p id="tell-user-about-theme">Loading. Please Wait.</p>
-
-        <!--div class="nav-bar-option" button class="button3" onclick="manual_dark()" Change theme/buttondiv -->
-
-        <input id="setting_button_mode" type="checkbox" unchecked class="hidden">
-        <label class="dark-switch">
-          <input id="dark-toggle" type="checkbox" onclick="manual_dark()">
-          <span class="slider round"></span>
-        </label>
-        <script>document.addEventListener("keyup", function (event) {
-            if (event.keyCode === 68) {
-              event.preventDefault();
-              document.getElementById("dark-toggle").click();
-            }
-          });</script>
-
-      </div>
+      <div class="under_the_navbar"></div>
     </div>
-
-    <div class="under_the_navbar"></div>
-
 
 
     <div class="page animate-bottom" id="page">
