@@ -21,6 +21,7 @@ function automatic_dark_switch() {
     setTimeout(function () { document.getElementById("low_opacity_branding").style.display = "none"; }, 3000);
     setTimeout(function () { document.getElementById("settings_on").style.display = "block"; }, 3000);
 }
+
 function manual_dark() {
     document.body.classList.toggle("dark-mode");
     if (document.getElementById("dark-toggle").checked == false) {
