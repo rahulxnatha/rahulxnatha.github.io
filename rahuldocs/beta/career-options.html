@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+
+    <!-- Global site tag (gtag.js) - Google Analytics -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-6KPJHELRE9"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag() { dataLayer.push(arguments); }
+        gtag('js', new Date());
+
+        gtag('config', 'G-6KPJHELRE9');
+    </script>
+
+    <link rel="icon"
+        href="https://docs.google.com/drawings/d/e/2PACX-1vTsISpsKu-Hn0EdJePBw_UC3y5GBIL-4S-dauzSMiG3Ys3oksH13kBv2qcQLgWSBwhRNPkKgOmPcazN/pub?w=30&amp;h=30"
+        type="image/gif">
+    <title>Career Options</title>
+    <meta property="og:title" content="Career Options" />
+    <meta property="og:description" content="DOCS from Rahul Natha" />
+    <meta property="og:url" content="https://natharahul.github.io" />
+    <meta property="og:image"
+        content="https://docs.google.com/drawings/d/e/2PACX-1vTsISpsKu-Hn0EdJePBw_UC3y5GBIL-4S-dauzSMiG3Ys3oksH13kBv2qcQLgWSBwhRNPkKgOmPcazN/pub?w=379&amp;h=379" />
+
+    <link rel="stylesheet" href="light_theme.css">
+    <link rel="stylesheet" href="dark_theme.css">
+
+
+    <link rel="stylesheet" href="style.css">
+
+
+    <link rel="stylesheet" href="desktop.css">
+    <link rel="stylesheet" href="tablet.css">
+    <link rel="stylesheet" href="mobile.css">
+
+
+</head>
+
+<body onload="autoinvert() ">
+
+    <div id="screen_size_error" style="position:fixed; 
+    background-color: rgb(222, 222, 222);  
+    left:0px; top:26px; bottom:0px; width:100%;height:calc(100% - 25px); z-index:9999; font-size: 16px; ">
+
+        <p style="display: block; color: rgb(0, 0, 0); margin: 20px ;">This website isn't designed for this screen size.
+            Try opening on a bigger screen.</p>
+    </div>
+
+    <div class="iframe-sheet-2 hidden" id="accesspage"
+        style="position:fixed; top:0px; left:0px; bottom:0px; right:0px; width:100%; height: 100%;
+               border:none; margin: 0px 0px 37px 0px; padding:20px; overflow:hidden; z-index:9; background-color: rgb(29, 29, 29); color: white;">
+        <h2>Enter accesskey to view the content</h2>
+
+        <input id="accesskey" type="text" placeholder="Enter any valid accesskey" autofocus="autofocus">
+        <button onclick="turnonaccess()" id="accessbutton">Get access</button>
+        <p id="accessreply"></p>
+
+    </div>
+
+    <div id="splashscreen" class="hidden"
+        style="position: fixed; top:0;left:0; bottom:0px; right:0; width:100%; height: calc(100% - 0px); border:none; margin: 0px 0px 0px 0px; padding:0; overflow:hidden; z-index:9999; background-color: rgb(36, 36, 36);">
+        <div style="position: fixed;top: calc(50% - 100px); left: calc(50% - 100px);">
+            <img style="animation: rotate 2s infinite;" width="200px"
+                src="https://docs.google.com/drawings/d/e/2PACX-1vTsISpsKu-Hn0EdJePBw_UC3y5GBIL-4S-dauzSMiG3Ys3oksH13kBv2qcQLgWSBwhRNPkKgOmPcazN/pub?w=379&amp;h=379">
+        </div>
+    </div>
+
+    <div class="top-bar shadow" id="topc">
+
+        <span class="top-bar-item"><a href="https://natharahul.github.io/rahuldocs/career-options">Career Options -
+                Version 2.9.9.8</a></span>
+
+        <label id="cal-togglexf" class="top-bar-item expand">
+            <div class="tooltip expand"> Fullscreen
+                <input type="checkbox" id="hideonclick" class="expand" onclick="decidefullscreen()">
+                <span class="tooltiptext">Fullscreen (f)</span>
+            </div>
+        </label>
+
+        <label id="dark-toggle" class="top-bar-item expand">
+            <div class="tooltip" id="showdarkoption" class="expand"> Dark theme
+                <input id="darktoggle" class="expand" type="checkbox" onclick="invert()" accesskey="d">
+                <span class="tooltiptext">Dark theme (d)</span>
+            </div>
+        </label>
+
+    </div>
+
+    <div class="bottom-bar shadow" id="bottomc">
+        <a href="https://natharahul.github.io">
+            <img height="25px" style="margin:5px 5px 5px 2px; float: left"
+                src="https://docs.google.com/drawings/d/e/2PACX-1vQA4iiyPJ8Py6UjOW524b3qVO8LRSsglJVuLPbldYkJ9td08uvFLAWs1sGukrMnTgmdvkiBCbTap_jD/pub?w=280&amp;h=42">
+
+            <p style="font-size: 25px; margin: 4px 0 0 0; color: black; float: left">from Rahul Natha</p>
+        </a>
+
+        <p style="float: right; margin: 8px 2px 5px 0px" id="at">long ago.</p>
+        <p style="float: right; margin: 8px 2px 5px 0px" id="att">Website loaded at </p>
+    </div>
+
+    <div id="webpage" class="noselect">
+
+        <iframe class="shadow item hidden" id="sheet" style="border:none;height: calc(100vh - 144px);width:1000px"
+            src="https://docs.google.com/spreadsheets/d/e/2PACX-1vTL5ZyxcOsOpcdYAdbQWjCgUJvJ1fone0C3o7MVW3B7jfty9VpJi6tzv71ikK6FpKhvCJod87722dkV/pubhtml?widget=false&amp;headers=false">
+
+        </iframe>
+
+        <!--
+        <iframe class="item" frameborder="0"
+            src="https://www.youtube.com/embed/videoseries?list=UUnKlI8bIoRdgzrPUNvxqflQ">
+        </iframe>
+
+        <iframe class="item" src="https://www.youtube.com/embed/videoseries?list=UUCKEJ5MYyOaKM1gGksrZEJw"
+            frameborder="0">
+        </iframe>
+
+        <iframe class="item" src="https://www.youtube.com/embed/videoseries?list=UU4ZfW_-pmfjkkZciu5BFzNA"
+            frameborder="0"></iframe>
+    -->
+
+    <div class="item"></div>
+    <div class="item"></div>
+    <div class="item"></div>
+    <div class="item"></div>
+    <div class="item"></div>
+    <div class="item"></div>
+    <div class="item"></div>
+    <div class="item"></div>
+
+
+    </div>
+
+
+    <script src="js.js"></script>
+</body>
