@@ -1,0 +1,16 @@
+body {
+    background-color: rgb(255, 255, 255);
+}
+
+.bottom-bar-for-google-sheet, .top-bar-for-google-sheet {
+    background-color: rgba(255, 255, 255, 0.750) !important;
+}
+
+.bottom-bar-for-google-sheet:hover, .top-bar-for-google-sheet:hover {
+    background-color: rgba(255, 255, 255, 1) !important;
+}
+
+.item:hover {
+    background-color: teal;
+    cursor: pointer;
+}
