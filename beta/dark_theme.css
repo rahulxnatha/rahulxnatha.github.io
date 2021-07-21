@@ -16,14 +16,19 @@
 
 
 .dark .item {
-    background-color: rgb(122, 62, 40);
+    background-color: rgb(66,66,66);
     color:white;
 }
 
 .dark .item:hover {
-    background-color: rgb(0, 75, 75);
+    background-color: rgb(50, 105, 119) ;
+    color: #fff;
 }
 
 .dark a, .dark p, .dark  {
     color: #fff;
+  }
+
+  .dark .main_item:hover {
+    background-color: rgb(66,66,66);
   }

@@ -9,8 +9,10 @@ a {
   text-decoration: none;
 }
 
-p {
-  margin: 5px;
+p,
+h1 {
+  margin: 0px;
+  font-weight: 400;
 }
 
 .tooltip {
@@ -88,8 +90,6 @@ p {
 }
 
 #webpage {
-  
-
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(400px, 1fr));
 
@@ -117,11 +117,16 @@ body {
   border-radius: 18.5px;
 
   padding: 20px;
-  font-size: 30px;
 
   cursor: pointer;
-  
+
   overflow: auto;
+}
+
+.item > h1 {
+  text-align: center;
+  vertical-align: middle;
+  line-height: 200px;
 }
 
 .item_drag {
@@ -138,5 +143,14 @@ body {
   grid-column-start: 1;
   grid-column-end: 3;
   min-height: calc(100vh - 154px);
+  resize: vertical;
+  cursor: default;
+}
+
+.more_content {
+  visibility: hidden;
+}
+
+.resize {
   resize: vertical;
 }

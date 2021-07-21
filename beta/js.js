@@ -121,6 +121,7 @@ function invert() {
     document.body.classList.toggle("dark");
     if (document.getElementById("darktoggle").checked == true) {
     document.getElementById("g_frame").style.filter = "invert(90%)";
+    
     }
     if (document.getElementById("darktoggle").checked == false) {
     document.getElementById("g_frame").style.filter = "invert(0%)";
@@ -128,6 +129,17 @@ function invert() {
 
   
 }
+
+function widen() {
+    document.getElementById("widen").style.gridColumnStart = 1;
+    document.getElementById("widen").style.gridColumnEnd = 4;
+    document.getElementById("widen").style.minHeight = "calc(100vh - 154px)";
+
+document.getElementById("more_content").style.visibility = "visible";
+}
+
+
+
 
 function navbar_style() {
     if (document.getElementById("calendarswitch").checked == true) {
