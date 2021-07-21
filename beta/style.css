@@ -116,13 +116,10 @@ body {
 .item {
   border-radius: 18.5px;
 
-  
-
   padding: 20px;
   font-size: 30px;
 
   cursor: pointer;
-
   
   overflow: auto;
 }
@@ -140,6 +137,6 @@ body {
 .main_item {
   grid-column-start: 1;
   grid-column-end: 3;
-  min-height: minmax(200px, auto);
+  min-height: calc(100vh - 154px);
   resize: vertical;
 }
