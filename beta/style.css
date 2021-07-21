@@ -88,6 +88,8 @@ p {
 }
 
 #webpage {
+  
+
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(400px, 1fr));
 
@@ -112,22 +114,32 @@ body {
 }
 
 .item {
-  
   border-radius: 18.5px;
+
   
+
   padding: 20px;
   font-size: 30px;
 
   cursor: pointer;
 
-  resize:vertical;
+  
   overflow: auto;
 }
 
-
-.item1-3 {
-  grid-column-start: 1;
-  grid-column-end: 3;
+.item_drag {
+  background-color: chocolate;
+  cursor: move;
+  font-size: small;
+  color: white;
+  margin: 0;
+  padding: 0;
+  height: 20px;
 }
 
-
+.main_item {
+  grid-column-start: 1;
+  grid-column-end: 3;
+  min-height: minmax(200px, auto);
+  resize: vertical;
+}
