@@ -13,7 +13,7 @@
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
 
-    grid-auto-rows: minmax(200px, 250px);
+    grid-auto-rows: minmax(200px, auto);
     grid-auto-columns: minmax(200px, 250px);
 
     column-gap: 20px;
