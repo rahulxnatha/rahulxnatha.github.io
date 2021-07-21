@@ -1,6 +1,6 @@
 @media screen and (max-width: 650px) {
   .top-bar, .bottom-bar {
-      display: block;
+      width: 70vw;
   }
 
 
