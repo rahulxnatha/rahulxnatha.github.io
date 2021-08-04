@@ -1,4 +1,12 @@
+var item = document.getElementsByClassName("item");
 
+for (let i = 2; i < item.length; i++) {
+    item[i].addEventListener("click", coming_soon);
+  }
+
+function coming_soon(){
+    alert("This feature will start working in the future. Release date is not yet confirmed.");
+}
 
 function close_pop_up() {
     document.getElementById("suggestion_gform_closed").style.display = "block";
@@ -93,31 +101,29 @@ var date_time = new Date();
 document.getElementById("at").innerHTML = date_time;
 
 document.getElementById("dark-toggle").style.display = "block";
-document.getElementById("splashscreen").style.display = "none";
-
 
 
 function onload_tasks() {
 
-    document.getElementById("text_in").innerHTML = "This is the first block!";
+    
 
-    if (new Date().getHours() > 44 || new Date().getHours() < 0) {
-
-        document.getElementById("darktoggle").checked = false;
-
+    if (new Date().getHours() > 16 || new Date().getHours() < 6) {
+        document.body.classList.toggle("dark");
+        document.getElementById("darktoggle").checked = true;
+        document.getElementById("g_frame").style.filter = "invert(90%)";
+        
     }
     else {
+        
         document.getElementById("darktoggle").checked = false;
-        document.getElementById("showdarkoption").style.display = "block";
+        document.getElementById("g_frame").style.filter = "invert(0%)";
     }
 
-
-
+    document.getElementById("splash_screen").style.display = "none";
 }
 
 function invert() {
 
-   
     document.body.classList.toggle("dark");
     if (document.getElementById("darktoggle").checked == true) {
     document.getElementById("g_frame").style.filter = "invert(90%)";
@@ -127,7 +133,6 @@ function invert() {
     document.getElementById("g_frame").style.filter = "invert(0%)";
     }
 
-  
 }
 
 function widen() {
