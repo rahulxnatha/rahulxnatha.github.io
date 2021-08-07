@@ -215,7 +215,7 @@ body {
   grid-column-start: 1;
   grid-column-end: 3;
   min-height: calc(100vh - 154px);
-  resize: vertical;
+  resize: both;
   cursor: default;
 }
 
