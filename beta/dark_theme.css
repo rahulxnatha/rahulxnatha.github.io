@@ -21,7 +21,7 @@
 }
 
 .dark .item:hover {
-    background-color: rgb(50, 105, 119) ;
+    background-color: none;
     color: #fff;
 }
 

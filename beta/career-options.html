@@ -16,7 +16,9 @@
     <link rel="icon"
         href="https://docs.google.com/drawings/d/e/2PACX-1vTsISpsKu-Hn0EdJePBw_UC3y5GBIL-4S-dauzSMiG3Ys3oksH13kBv2qcQLgWSBwhRNPkKgOmPcazN/pub?w=30&amp;h=30"
         type="image/gif">
+
     <title>Career Options</title>
+
     <meta property="og:title" content="Career Options" />
     <meta property="og:description" content="DOCS from Rahul Natha" />
     <meta property="og:url" content="https://natharahul.github.io" />
@@ -26,9 +28,7 @@
     <link rel="stylesheet" href="light_theme.css">
     <link rel="stylesheet" href="dark_theme.css">
 
-
     <link rel="stylesheet" href="style.css">
-
 
     <link rel="stylesheet" href="desktop.css">
     <link rel="stylesheet" href="tablet.css">
@@ -37,20 +37,22 @@
 
 </head>
 
-<body onload="onload_tasks()">
+<body onload="auto()">
 
+    <!--The login page : starts-->
     <div class="iframe-sheet-2 hidden" id="accesspage"
-        style="position:fixed; top:0px; left:0px; bottom:0px; right:0px; width:100%; height: 100%;
-               border:none; margin: 0px; padding:80px; overflow:hidden; z-index:9; background-color: rgb(29, 29, 29); color: white;">
-        <h2>Enter accesskey to view the content</h2>
+        style="position:fixed; top:0px; left:0px; bottom:0px; right:0px; width:100%; height: 100%; border:none; margin: 0px; padding:80px; overflow:hidden; z-index:9; background-color: rgb(29, 29, 29); color: white;">
 
+        <h2>Enter accesskey to view the content</h2>
         <input id="accesskey" type="text" placeholder="Enter accesskey" autofocus="autofocus">
         <button onclick="turnonaccess()" id="accessbutton">Get access</button>
         <p id="accessreply"></p>
 
     </div>
+    <!--The login page : ends-->
 
-    <div id="splash_screen" 
+    <!--The splash screen : starts-->
+    <div id="splash_screen"
         style="position: fixed; top:0;left:0; bottom:0px; right:0; width:100%; height: calc(100% - 0px); border:none; margin: 0px 0px 0px 0px; padding:0; overflow:hidden; z-index:9999999; background-color: rgb(36, 36, 36); display:block;">
 
         <div style="position: fixed;top: calc(50% - 100px); left: calc(50% - 100px);">
@@ -58,28 +60,44 @@
                 src="https://docs.google.com/drawings/d/e/2PACX-1vTsISpsKu-Hn0EdJePBw_UC3y5GBIL-4S-dauzSMiG3Ys3oksH13kBv2qcQLgWSBwhRNPkKgOmPcazN/pub?w=379&amp;h=379">
         </div>
     </div>
+    <!--The splash screen : ends-->
 
+
+
+
+    <!--The 'top bar' : starts-->
     <div class="top-bar shadow transition" id="topc">
 
+        <!--Version number and branding-->
         <span class="top-bar-item"><a href="https://natharahul.github.io/rahuldocs/career-options">
-                Career Options Beta - 2.9.9840</a></span>
+                Career Options Beta - 2.9.9842</a></span>
 
-        <label id="cal-togglexf" class="top-bar-item expand hidden">
-            <div class="tooltip expand"> Fullscreen
-                <input type="checkbox" id="hideonclick" class="expand" onclick="decidefullscreen()">
-                <span class="tooltiptext">Fullscreen (f)</span>
-            </div>
-        </label>
-
+        <!--Dark theme manual toggle-->
         <label id="dark-toggle" class="top-bar-item expand">
-            <div class="tooltip" id="showdarkoption" class="expand"> Dark theme
-                <input id="darktoggle" class="expand" type="checkbox" onclick="invert()" accesskey="d">
-                <span class="tooltiptext">Dark theme (d)</span>
+            <div class="tooltip" id="showdarkoption" class="expand">
+
+                <label class="switch">
+                    <input id="darktoggle" class="expand" type="checkbox" onclick="invert()">
+                    <span class="slider"></span>
+                </label>
+
+                <span class="tooltiptext">Dark theme toggle</span>
             </div>
         </label>
 
     </div>
+    <!--The 'top bar' : ends-->
 
+    <!--The 'top message bar' : starts-->
+    <div class="top-bar2  transition" id="topc2">
+
+        <p id="welcome_message">Hi. Good day.</p>
+        <p id="alert"></p>
+
+    </div>
+    <!--The 'top message bar' : ends-->
+
+    <!--The 'bottom bar' : starts-->
     <div class="bottom-bar shadow transition" id="bottomc">
         <a href="https://natharahul.github.io">
             <img height="25px" style="margin:5px 5px 5px 2px; float: left"
@@ -121,8 +139,19 @@
             </iframe>
         </div>
 
-        <div class="item">
+        <div class="item no_pointer">
             <h1>Glance</h1>
+            <p>
+            <ul>
+                <li>Majority of the exams are going to start from next week.</li>
+                <li>New applications are being added, you can ideally check them tomorrow.</li>
+                <li>Application deadlines of 1 exam is very near.</li>
+            </ul>
+            </p>
+            <br>
+
+          
+            <p id="answer"></p>
         </div>
 
         <div class="item">

@@ -16,8 +16,8 @@ body {
 }
 
 .item:hover {
-    background-color: rgb(50, 105, 119) ;
-    color: #fff;
+    background-color: none ;
+    
 }
 
 .main_item:hover {
