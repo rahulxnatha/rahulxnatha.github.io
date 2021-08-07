@@ -16,816 +16,162 @@
     <link rel="icon"
         href="https://docs.google.com/drawings/d/e/2PACX-1vTsISpsKu-Hn0EdJePBw_UC3y5GBIL-4S-dauzSMiG3Ys3oksH13kBv2qcQLgWSBwhRNPkKgOmPcazN/pub?w=30&amp;h=30"
         type="image/gif">
+
     <title>Career Options</title>
+
     <meta property="og:title" content="Career Options" />
     <meta property="og:description" content="DOCS from Rahul Natha" />
     <meta property="og:url" content="https://natharahul.github.io" />
     <meta property="og:image"
         content="https://docs.google.com/drawings/d/e/2PACX-1vTsISpsKu-Hn0EdJePBw_UC3y5GBIL-4S-dauzSMiG3Ys3oksH13kBv2qcQLgWSBwhRNPkKgOmPcazN/pub?w=379&amp;h=379" />
 
-    <style>
-        @import url('https://fonts.googleapis.com/css2?family=Roboto+Condensed:ital,wght@0,300;0,400;0,700;1,300;1,400;1,700&display=swap');
+    <link rel="stylesheet" href="light_theme.css">
+    <link rel="stylesheet" href="dark_theme.css">
+
+    <link rel="stylesheet" href="style.css">
+
+    <link rel="stylesheet" href="desktop.css">
+    <link rel="stylesheet" href="tablet.css">
+    <link rel="stylesheet" href="mobile.css">
 
 
-
-        .tooltip {
-            position: relative;
-            display: inline-block;
-
-        }
-
-        .tooltip .tooltiptext {
-            visibility: hidden;
-            min-width: 130px;
-            background-color: #555;
-            color: #fff;
-            text-align: center;
-            border-radius: 6px;
-            padding: 5px 8px;
-            position: absolute;
-            z-index: 1;
-            bottom: -175%;
-            left: 20%;
-            margin-left: -60px;
-            opacity: 0;
-            transition: opacity 0.3s;
-        }
-
-        .tooltip .tooltiptext::after {
-            content: "";
-            position: absolute;
-            top: -33%;
-            transform: rotate(180deg);
-            left: 50%;
-            margin-left: -5px;
-            border-width: 5px;
-            border-style: solid;
-            border-color: #555 transparent transparent transparent;
-        }
-
-        .tooltip:hover .tooltiptext {
-            visibility: visible;
-            opacity: 1;
-        }
-
-        body {
-            font-family: 'Roboto Condensed', sans-serif;
-
-            background-color: rgb(12, 12, 12);
-        }
-
-        @media screen and (min-width: 650px) {
-            .bottom-bar-for-google-sheet {
-                position: fixed;
-                bottom: 0;
-                left: 0px;
-                height: 37px;
-                border-radius: 3px;
-                width: 100%;
-                background-color: whitesmoke;
-                z-index: 99;
-            }
-
-            .top-bar-for-google-sheet {
-                position: fixed;
-                top: 0%;
-                left: 0px;
-                border-radius: 3px;
-                margin: 0;
-                height: 28px;
-                padding: 0;
-                width: 100%;
-                color: black;
-                background-color: whitesmoke;
-                z-index: 999;
-            }
-
-            #screensizeerror {
-                display: none;
-            }
-        }
-
-        @media screen and (max-width: 1300px) {
-
-            #hideonclick {
-                display: none;
-            }
-
-            #cal-toggle {
-                display: none;
-            }
-
-            #cal-toggle2 {
-                display: none;
-            }
-
-            #at {
-                display: none;
-            }
-
-            .removeonphone {
-                display: none;
-            }
-
-            #screensizeerror {
-                display: block;
-            }
-        }
-
-
-
-        @media screen and (max-width: 650px) {
-
-
-
-            .bottom-bar-for-google-sheet {
-                position: fixed;
-                bottom: 0;
-                left: 0px;
-                height: 52px;
-                width: 100%;
-                background-color: whitesmoke;
-                z-index: 99;
-            }
-
-            .top-bar-for-google-sheet {
-                position: fixed;
-                top: 0%;
-                left: 0px;
-                margin: 0;
-                height: 28px;
-                padding: 0;
-                width: 100%;
-                color: black;
-                background-color: whitesmoke;
-                z-index: 999;
-            }
-        }
-
-        .suggestion_pop_up {
-            width: 380px;
-            min-height: 300px;
-            position: fixed;
-            top: 60px;
-            bottom: 60px;
-            right: 13%;
-            z-index: 999;
-            background-color: #eee;
-            border-radius: 10px;
-        }
-
-        .suggestion_pop_up_closed {
-            min-width: 100px;
-            min-height: 30px;
-            position: fixed;
-            bottom: 60px;
-            right: 13%;
-            z-index: 999;
-            background-color: #eee;
-            border-radius: 10px;
-        }
-
-
-        .hidden {
-            display: none;
-        }
-
-        @keyframes rotate {
-            100% {
-                transform: rotate(360deg);
-            }
-        }
-
-        /* canvas {z-index:99; position:fixed; top:32px; left:912px;  width:300px; height:300px; border:1px solid grey;} */
-        @media print {
-
-            html,
-            body {
-                display: none;
-                /* hide whole page */
-            }
-        }
-
-
-        .noselect {
-            -webkit-touch-callout: none;
-            /* iOS Safari */
-            -webkit-user-select: none;
-            /* Safari */
-            -khtml-user-select: none;
-            /* Konqueror HTML */
-            -moz-user-select: none;
-            /* Old versions of Firefox */
-            -ms-user-select: none;
-            /* Internet Explorer/Edge */
-            user-select: none;
-            /* Non-prefixed version, currently
-                                    supported by Chrome, Edge, Opera and Firefox */
-        }
-    </style>
 </head>
 
-<body onload="autoinvert() ">
+<body onload="auto()">
 
+    <!--The login page : starts-->
+    <div class="iframe-sheet-2 hidden" id="accesspage"
+        style="position:fixed; top:0px; left:0px; bottom:0px; right:0px; width:100%; height: 100%; border:none; margin: 0px; padding:80px; overflow:hidden; z-index:9; background-color: rgb(29, 29, 29); color: white;">
+
+        <h2>Enter accesskey to view the content</h2>
+        <input id="accesskey" type="text" placeholder="Enter accesskey" autofocus="autofocus">
+        <button onclick="turnonaccess()" id="accessbutton">Get access</button>
+        <p id="accessreply"></p>
+
+    </div>
+    <!--The login page : ends-->
+
+    <!--The splash screen : starts-->
+    <div id="splash_screen"
+        style="position: fixed; top:0;left:0; bottom:0px; right:0; width:100%; height: calc(100% - 0px); border:none; margin: 0px 0px 0px 0px; padding:0; overflow:hidden; z-index:9999999; background-color: rgb(36, 36, 36); display:block;">
+
+        <div style="position: fixed;top: calc(50% - 100px); left: calc(50% - 100px);">
+            <img style="animation: rotate 2s infinite;" width="200px"
+                src="https://docs.google.com/drawings/d/e/2PACX-1vTsISpsKu-Hn0EdJePBw_UC3y5GBIL-4S-dauzSMiG3Ys3oksH13kBv2qcQLgWSBwhRNPkKgOmPcazN/pub?w=379&amp;h=379">
+        </div>
+    </div>
+    <!--The splash screen : ends-->
+
+
+
+
+    <!--The 'top bar' : starts-->
+    <div class="top-bar shadow transition" id="topc">
+
+        <!--Version number and branding-->
+        <span class="top-bar-item"><a href="https://natharahul.github.io/rahuldocs/career-options">
+                Career Options Beta - 2.9.9842</a></span>
+
+        <!--Dark theme manual toggle-->
+        <label id="dark-toggle" class="top-bar-item expand">
+            <div class="tooltip" id="showdarkoption" class="expand">
+
+                <label class="switch">
+                    <input id="darktoggle" class="expand" type="checkbox" onclick="invert()">
+                    <span class="slider"></span>
+                </label>
+
+                <span class="tooltiptext">Dark theme toggle</span>
+            </div>
+        </label>
+
+    </div>
+    <!--The 'top bar' : ends-->
+
+    <!--The 'top message bar' : starts-->
+    <div class="top-bar2  transition" id="topc2">
+
+        <p id="welcome_message">Hi. Good day.</p>
+        <p id="alert"></p>
+
+    </div>
+    <!--The 'top message bar' : ends-->
+
+    <!--The 'bottom bar' : starts-->
+    <div class="bottom-bar shadow transition" id="bottomc">
+        <a href="https://natharahul.github.io">
+            <img height="25px" style="margin:5px 5px 5px 2px; float: left"
+                src="https://docs.google.com/drawings/d/e/2PACX-1vQA4iiyPJ8Py6UjOW524b3qVO8LRSsglJVuLPbldYkJ9td08uvFLAWs1sGukrMnTgmdvkiBCbTap_jD/pub?w=280&amp;h=42">
+
+            <p style="font-size: 25px; margin: 4px 0 0 0;  float: left">from Rahul Natha</p>
+        </a>
+
+        <p style="float: right; margin: 8px 2px 5px 0px" id="at"> long ago.</p>
+        <p style="float: right; margin: 8px 2px 5px 0px" id="att">Website loaded: </p>
+    </div>
 
     <div id="webpage" class="noselect">
-        <iframe class="iframe-sheet" id="sheet"
-            style="position:fixed; top:0; left:10%; bottom:0px; right:10%; width: calc((100%)/2); height: calc(100% - 0px); border:none; margin: 0px 0px 0px 0px; padding:0; overflow:hidden; z-index:9; background-color: white; font-family: 'Roboto Condensed', sans-serif; "
+
+        <iframe class="shadow item hidden" id="sheet" style="border:none;height: calc(100vh - 144px);width:1000px;"
             src="https://docs.google.com/spreadsheets/d/e/2PACX-1vTL5ZyxcOsOpcdYAdbQWjCgUJvJ1fone0C3o7MVW3B7jfty9VpJi6tzv71ikK6FpKhvCJod87722dkV/pubhtml?widget=false&amp;headers=false">
 
         </iframe>
 
-        <div id="screensizeerror" style="position:fixed; 
-        background-color: rgb(222, 222, 222);  
-        left:0px; top:26px; bottom:0px; width:100%;height:calc(100% - 25px); z-index:9999; font-size: 16px; ">
+        <!--
+        <iframe class="item" frameborder="0"
+            src="https://www.youtube.com/embed/videoseries?list=UUnKlI8bIoRdgzrPUNvxqflQ">
+        </iframe>
 
-            <p style="display: block; color: rgb(0, 0, 0); margin: 20px ;">This website isn't designed for this screen
-                size. Try opening on a
-                bigger screen.</p>
+        <iframe class="item" src="https://www.youtube.com/embed/videoseries?list=UUCKEJ5MYyOaKM1gGksrZEJw"
+            frameborder="0">
+        </iframe>
+
+        <iframe class="item" src="https://www.youtube.com/embed/videoseries?list=UU4ZfW_-pmfjkkZciu5BFzNA"
+            frameborder="0"></iframe>
+    -->
+
+        <div class="item main_item" id="item">
+            <span class="item_drag hidden" id="item_drag">Drag</span>
+            <iframe id="g_frame"
+                style="border:none; height: calc(100% - 10px);width:calc(100% - 40px);margin:0 20px;padding:0;"
+                src="https://docs.google.com/spreadsheets/d/e/2PACX-1vTL5ZyxcOsOpcdYAdbQWjCgUJvJ1fone0C3o7MVW3B7jfty9VpJi6tzv71ikK6FpKhvCJod87722dkV/pubhtml?widget=false&amp;headers=false">
+
+            </iframe>
         </div>
 
-
-
-        <div id="webpage">
-            <div class="iframe-sheet" id="sheetforgame"
-                style="position:fixed; top:80px; left:calc(64% + 5px); bottom:0px; right:10%; width:400px; height: calc(100% - 20px); border:none; margin: 0px 0px 0px 0px; padding:0; overflow:hidden; z-index:99; background-color: none; font-family: 'Roboto Condensed', sans-serif; "
-                src="">
-
-                <script>
-
-                    function startTime() {
-                        var todayin = new Date();
-                        var hh2 = todayin.getHours();
-                        var mm2 = todayin.getMinutes();
-                        var ss2 = todayin.getSeconds();
-                        mm2 = checkTime(mm2);
-                        ss2 = checkTime(ss2);
-                        document.getElementById('showthetimeondigitalclock').innerHTML =
-                            hh2 + ":" + mm2 + ":" + ss2;
-
-                        var tt2 = setTimeout(startTime, 500);
-                    }
-
-                    function checkTime(i) {
-                        if (i < 10) { i = "0" + i };  // add zero in front of numbers < 10
-                        return i;
-                    }
-                </script>
-
-                <canvas id="canvass" width="300" height="300" style="background-color:none; display: none;">
-                </canvas>
-
-                <script>
-                    var canvass = document.getElementById("canvass");
-                    var ctx = canvass.getContext("2d");
-                    var radius = canvass.height / 2;
-                    ctx.translate(radius, radius);
-                    radius = radius * 0.90
-                    setInterval(drawClock, 1000);
-
-                    function drawClock() {
-                        drawFace(ctx, radius);
-                        drawNumbers(ctx, radius);
-                        drawTime(ctx, radius);
-                    }
-
-                    function drawFace(ctx, radius) {
-                        var grad;
-                        ctx.beginPath();
-                        ctx.arc(0, 0, radius + 5, 0, 2 * Math.PI);
-                        ctx.fillStyle = 'black';
-                        ctx.fill();
-                        grad = ctx.createRadialGradient(0, 0, radius * 0.95, 0, 0, radius * 1.05);
-                        grad.addColorStop(0, '#FFF');
-
-                        grad.addColorStop(0.5, 'white');
-
-                        grad.addColorStop(1, '#FFF');
-                        ctx.strokeStyle = grad;
-                        ctx.lineWidth = radius * 0.03;
-                        ctx.stroke();
-                        ctx.beginPath();
-                        ctx.arc(0, 0, radius * 0.1, 0, 2 * Math.PI);
-                        ctx.fillStyle = 'white';
-                        ctx.fill();
-                    }
-
-                    function drawNumbers(ctx, radius) {
-                        var ang;
-                        var num;
-                        ctx.font = radius * 0.2 + "px arial";
-                        ctx.textBaseline = "middle";
-                        ctx.textAlign = "center";
-                        for (num = 1; num < 13; num++) {
-                            ang = num * Math.PI / 6;
-                            ctx.rotate(ang);
-                            ctx.translate(0, -radius * 0.85);
-                            ctx.rotate(-ang);
-                            ctx.fillText(num.toString(), 0, 0);
-                            ctx.rotate(ang);
-                            ctx.translate(0, radius * 0.85);
-                            ctx.rotate(-ang);
-                        }
-                    }
-
-                    function drawTime(ctx, radius) {
-                        var now = new Date();
-                        var hour = now.getHours();
-                        var minute = now.getMinutes();
-                        var second = now.getSeconds();
-                        //hour
-                        hour = hour % 12;
-                        hour = (hour * Math.PI / 6) +
-                            (minute * Math.PI / (6 * 60)) +
-                            (second * Math.PI / (360 * 60));
-                        drawHand(ctx, hour, radius * 0.5, radius * 0.07);
-                        //minute
-                        minute = (minute * Math.PI / 30) + (second * Math.PI / (30 * 60));
-                        drawHand(ctx, minute, radius * 0.8, radius * 0.07);
-                        // second
-                        second = (second * Math.PI / 30);
-                        drawHand(ctx, second, radius * 0.9, radius * 0.02);
-                    }
-
-                    function drawHand(ctx, pos, length, width) {
-                        ctx.beginPath();
-                        ctx.lineWidth = width;
-                        ctx.lineCap = "round";
-                        ctx.moveTo(0, 0);
-                        ctx.rotate(pos);
-                        ctx.lineTo(0, -length);
-                        ctx.stroke();
-                        ctx.rotate(-pos);
-                    }
-                </script>
-                <br>
-                <!--<button onclick="startTime()"></button> -->
-                <div id="showthetimeondigitalclock" style="display:none;font-size: 50px; color:rgb(199, 199, 199)">
-                </div>
-                <br>
-            </div>
-
-            <div id="webpage">
-                <div class="iframe-sheet" id="sheetforinfo"
-                    style="position:fixed; top:60px;   right:10%;  border:none;  padding:30px; overflow:hidden; z-index:99999; background-color: #121212; width: calc((100%) / 4.5); margin: 0px 0px 0px 0px; font-family: 'Roboto Condensed', sans-serif; border-radius: 10px; color: #fff;">
-
-                    <p>This is the Career Options website created by Rahul Natha. You can contribute to this website by
-                        giving your interests and opinions in this <a href="https://docs.google.com/forms/d/e/1FAIpQLSflqPFlLFZn2QkiDdXncAt-tnWm2oRYVqbD9NURNA0uVbNWYw/viewform" target="_blank">form</a>.
-                    </p>
-                </div>
-
-
-                <iframe class="iframe-sheet-2 hidden" id="sheet2"
-                    style="position:fixed; top:29px; left:0;  border-radius: 10px; bottom:37px; right:0; width:100%; height: calc(100% - 66px); border:none; margin: 0px 0px 37px 0px; padding:0; overflow:hidden; z-index:9; background-color: darkgrey; "
-                    src="https://drive.google.com/file/d/1o6ixMrD5GOlaFfu6R7wey_HuCRQBIC6r/preview">
-                    <!--src="https://drive.google.com/file/d/1bzRc6gRU3j_skqOFkyyMexcDgL1c4u7I/preview"-->
-
-
-
-                    <!--src="https://docs.google.com/document/d/e/2PACX-1vRBe_r4JoHo7SL2eInnY3J0LO39kA5ogJcOTebeoYVG0_zEP3lpHWovnVntZg3QDvIcknjBLZG3bJ3I/pub?embedded=true"-->
-
-                    <!--" https://docs.google.com/spreadsheets/d/e/2PACX-1vTL5ZyxcOsOpcdYAdbQWjCgUJvJ1fone0C3o7MVW3B7jfty9VpJi6tzv71ikK6FpKhvCJod87722dkV/pubhtml?widget=true&amp;headers=false"-->
-                </iframe>
-
-                <iframe class="iframe-sheet-2 hidden" id="sheetnone"
-                    style="position:fixed; top:29px; left:auto; bottom:37px; right:0; width:40%; height: calc(100% - 66px); border:none; margin: 0px 0px 37px 0px; padding:0; overflow:hidden; z-index:9; background-color: darkgrey; "
-                    src="https://drive.google.com/file/d/1o6ixMrD5GOlaFfu6R7wey_HuCRQBIC6r/preview">
-                    <!--src="https://drive.google.com/file/d/1bzRc6gRU3j_skqOFkyyMexcDgL1c4u7I/preview"-->
-
-
-
-                    <!--src="https://docs.google.com/document/d/e/2PACX-1vRBe_r4JoHo7SL2eInnY3J0LO39kA5ogJcOTebeoYVG0_zEP3lpHWovnVntZg3QDvIcknjBLZG3bJ3I/pub?embedded=true"-->
-
-                    <!--" https://docs.google.com/spreadsheets/d/e/2PACX-1vTL5ZyxcOsOpcdYAdbQWjCgUJvJ1fone0C3o7MVW3B7jfty9VpJi6tzv71ikK6FpKhvCJod87722dkV/pubhtml?widget=true&amp;headers=false"-->
-                </iframe>
-
-
-
-
-                <!--top:128px; left:1220px; bottom:37px; right:20px; width:auto; height: calc(100% - 66px);
-        border:none; margin: 0px 0px 37px 0px; padding:20px; overflow:hidden; z-index:9; -->
-
-                <div class="iframe-sheet-2 hidden" id="accesspage"
-                    style="position:fixed; top:0px; left:0px; bottom:0px; right:0px; width:100%; height: 100%;
-            border:none; margin: 0px 0px 37px 0px; padding:20px; overflow:hidden; z-index:9; background-color: rgb(29, 29, 29); color: white;">
-                    <h2>Enter accesskey to view the content</h2>
-
-                    <input id="accesskey" type="text" placeholder="Enter any valid accesskey" autofocus="autofocus">
-                    <button onclick="turnonaccess()" id="accessbutton">Get access</button>
-                    <p id="accessreply"></p>
-
-                </div>
-
-                <div class="iframe-sheet-3 hidden" id="mediapage"
-                    style=" overflow-y: auto;  position:fixed; top:29px; left:0px; bottom:0px; right:0px; width:100%; height: 100%;
-            border:none; margin: 0px 0px 37px 0px; padding: 0px 0px calc((25% - 300px)/2) calc((25% - 300px)/2);  z-index:9;  background-color: rgb(29, 29, 29); color: white;">
-
-
-
-
-                    <iframe width="400" height="322" style="border: 1px solid grey;margin:calc((25% - 300px)/2);"
-                        src="https://www.youtube.com/embed/videoseries?list=UUnKlI8bIoRdgzrPUNvxqflQ" frameborder="0"
-                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                        allowfullscreen>
-                    </iframe>
-
-
-                    <iframe width="400" height="322" style="border: 1px solid grey;margin:calc((25% - 300px)/2);"
-                        src="https://www.youtube.com/embed/videoseries?list=UUCKEJ5MYyOaKM1gGksrZEJw" frameborder="0"
-                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                        allowfullscreen>
-                    </iframe>
-
-
-
-                    <iframe width="400" height="322" style="border: 1px solid grey;margin:calc((25% - 300px)/2);"
-                        src="https://www.youtube.com/embed/videoseries?list=UU4ZfW_-pmfjkkZciu5BFzNA" frameborder="0"
-                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                        allowfullscreen></iframe>
-
-                    <iframe
-                        src="https://www.facebook.com/plugins/post.php?href=https%3A%2F%2Fwww.facebook.com%2FPraveen.Kulkarni.For.Students%2Fposts%2F3749407878450524&width=400&show_text=true&height=322&appId"
-                        width="400" height="322" style="border:none;overflow:hidden;margin:calc((25% - 300px)/2);"
-                        scrolling="no" frameborder="0" allowfullscreen="true"
-                        allow="autoplay; clipboard-write; encrypted-media; picture-in-picture; web-share">
-                    </iframe>
-
-                    <iframe width="400" height="322" style="border: 1px solid grey;margin:calc((25% - 300px)/2);"
-                        src="https://www.youtube.com/embed/gVRmXA_PAjM" frameborder="0"
-                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                        allowfullscreen></iframe>
-
-
-
-                    <br><br>
-                    <p> Media! </p>
-
-                </div>
-
-                <div id="splashscreen"
-                    style="position: fixed; top:0;left:0; bottom:0px; right:0; width:100%; height: calc(100% - 0px); border:none; margin: 0px 0px 0px 0px; padding:0; overflow:hidden; z-index:9999; background-color: rgb(36, 36, 36);display:none;">
-                    <div style="position: fixed;top: calc(50% - 100px); left: calc(50% - 100px);">
-                        <img style="animation: rotate 2s infinite;" width="200px"
-                            src="https://docs.google.com/drawings/d/e/2PACX-1vTsISpsKu-Hn0EdJePBw_UC3y5GBIL-4S-dauzSMiG3Ys3oksH13kBv2qcQLgWSBwhRNPkKgOmPcazN/pub?w=379&amp;h=379">
-                    </div>
-                </div>
-
-                <div class="top-bar-for-google-sheet" id="topc">
-
-                    <p style="margin: 4px 0px 4px 10px; " id="versiond"><a style="text-decoration: none; color:black; "
-                            href="https://natharahul.github.io/rahuldocs/career-options">Career Options - Version
-                            2.9.9.7</a></p>
-
-                    <a href="https://natharahul.github.io" style="color:black;text-decoration: none;">
-                        <button
-                            style="position: fixed; top: 4px; right: calc(60%); margin: 0px 20px 0px 0px; display:block;"
-                            type="button" class="removeonphone">
-                            <div class="tooltip">Home<span class="tooltiptext">Go to home page</span></div>
-                        </button></a>
-
-
-                    <label id="cal-togglexf" class="nothing removeonphone"
-                        style=" position: fixed; top: 4px; right: 400px; margin: 0px 20px 0px 0px; display:none;">
-                        <div class="tooltip">Fullscreen mode
-                            <input type="checkbox" id="hideonclick" onclick="decidefullscreen()">
-                            <span class="tooltiptext">Fullscreen (f)</span>
-
-                        </div>
-                    </label>
-
-
-
-                    <label id="cal-toggle" class="nothing removeonphone"
-                        style=" position: fixed; top: 4px; right: 200px; margin: 0px 20px 0px 0px; display:none;">
-                        <div class="tooltip"> Calendar mode
-                            <input id="calendarswitch" type="checkbox" onclick="navbar_style()" accesskey="c">
-
-                            <span class="tooltiptext">Calendar mode (c)</span>
-                        </div>
-                    </label>
-
-
-                    <label id="cal-toggle2" class="nothing removeonphone"
-                        style=" position: fixed; top: 4px; right: 600px; margin: 0px 20px 0px 0px; display:none;">
-                        <div class="tooltip" style="display:none;"> Media mode
-                            <input id="mediaswitch" type="checkbox" onclick="showmedia()" accesskey="m">
-
-                            <span class="tooltiptext">Media mode (m)</span>
-                        </div>
-                    </label>
-
-
-                    <label id="dark-toggle"
-                        style=" position: fixed; top: 4px; right: 4px; margin: 0px 20px 0px 0px;display:none;">
-                        <div class="tooltip" style="display: none;" id="showdarkoption"> Dark theme
-                            <input id="darktoggle" type="checkbox" onclick="invert()" accesskey="d">
-                            <span class="tooltiptext">Dark theme (d)</span>
-                        </div>
-                    </label>
-                </div>
-
-
-                <div class="bottom-bar-for-google-sheet" id="bottomc">
-                    <a href="https://natharahul.github.io">
-                        <img height="25px" style="margin:5px 5px 5px 2px; float: left"
-                            src="https://docs.google.com/drawings/d/e/2PACX-1vQA4iiyPJ8Py6UjOW524b3qVO8LRSsglJVuLPbldYkJ9td08uvFLAWs1sGukrMnTgmdvkiBCbTap_jD/pub?w=280&amp;h=42">
-
-                        <p style="font-size: 25px; margin: 4px 0 0 0; color: black; float: left">from Rahul Natha</p>
-                    </a>
-
-                    <p style="float: right; margin: 8px 2px 5px 0px" id="at">long ago.</p>
-                    <p style="float: right; margin: 8px 2px 5px 0px" id="att">Website loaded at </p>
-                </div>
-
-                <div class="suggestion_pop_up removeonphone hidden" id="suggestion_gform">
-                    <a onclick="close_pop_up()" style="cursor:pointer;margin:5px 5px 5px 2px; float: right">Close</a>
-                    <br>
-
-                    <iframe
-                        src="https://docs.google.com/forms/d/e/1FAIpQLSflqPFlLFZn2QkiDdXncAt-tnWm2oRYVqbD9NURNA0uVbNWYw/viewform?embedded=true"
-                        width="350px" height="525px" frameborder="0" marginheight="0" marginwidth="0">Loading…</iframe>
-
-
-                    <a href="https://natharahul.github.io">
-                        <img height="25px" style="position:relative; top: 0px; margin:5px 5px 5px 2px; float: left"
-                            src="https://docs.google.com/drawings/d/e/2PACX-1vQA4iiyPJ8Py6UjOW524b3qVO8LRSsglJVuLPbldYkJ9td08uvFLAWs1sGukrMnTgmdvkiBCbTap_jD/pub?w=280&amp;h=42">
-
-                        <p
-                            style="font-size: 25px; position: relative; top: 0px; margin: 4px 0 0 0; color: black; float: left">
-                            from Rahul Natha</p>
-                    </a>
-
-                    <p style="float: right; margin: 8px 2px 5px 0px"></p>
-                    <p style="float: right; margin: 8px 2px 5px 0px" id="at"></p>
-
-
-                </div>
-
-                <div style="display:none;" class="suggestion_pop_up_closed removeonphone " id="suggestion_gform_closed">
-
-                    <a onclick="pop_up_open()" style=" cursor:pointer;margin:5px 15px 5px 2px; float: right">
-                        Open Form </a>
-                    <br>
-
-                </div>
-
-
-
-            </div>
-
-            <script>
-
-
-                function close_pop_up() {
-                    document.getElementById("suggestion_gform_closed").style.display = "block";
-                    document.getElementById("suggestion_gform").style.display = "none";
-                }
-
-                function pop_up_open() {
-                    document.getElementById("suggestion_gform_closed").style.display = "none";
-                    document.getElementById("suggestion_gform").style.display = "block";
-                }
-
-
-                function turnonaccess() {
-                    var keyentered = document.getElementById("accesskey").value;
-                    if (keyentered == "prep") {
-                        document.getElementById("accesspage").style.display = "none";
-                    }
-                    else {
-                        document.getElementById("accessreply").innerHTML = "Access denied!";
-                    }
-                    if (keyentered == "ea") {
-                        document.getElementById("accesspage").style.display = "none";
-                        document.getElementById("versiond").innerHTML = "Career Options - Version 2.6.1 Beta";
-                    }
-                    else {
-                        document.getElementById("accessreply").innerHTML = "Access denied!";
-                    }
-
-
-                }
-
-                document.getElementById("accesskey").addEventListener("keyup", function (event) {
-                    if (event.keyCode === 13) {
-                        event.preventDefault();
-                        document.getElementById("accessbutton").click();
-                    }
-                });
-
-                document.addEventListener("keyup", function (event) {
-                    if (event.keyCode === 68) {
-                        event.preventDefault();
-                        document.getElementById("darktoggle").click();
-                    }
-                });
-
-                document.addEventListener("keyup", function (event) {
-                    if (event.keyCode === 67) {
-                        event.preventDefault();
-                        document.getElementById("calendarswitch").click();
-                    }
-                });
-
-                document.addEventListener("keyup", function (event) {
-                    if (event.keyCode === 77) {
-                        event.preventDefault();
-                        document.getElementById("mediaswitch").click();
-                    }
-                });
-
-                document.addEventListener("keyup", function (event) {
-                    if (event.keyCode === 70) {
-                        event.preventDefault();
-                        document.getElementById("hideonclick").click();
-                    }
-                });
-                document.addEventListener("keyup", function (event) {
-                    if (event.keyCode === 84) {
-                        event.preventDefault();
-                        window.open("https://www.t.me/rahulnatha");
-                    }
-                });
-
-
-                document.addEventListener("keyup", function (event) {
-                    if (event.keyCode === 72) {
-                        event.preventDefault();
-                        document.getElementById("mediaswitch").checked = false;
-                        document.getElementById("calendarswitch").checked = false;
-                        document.getElementById("mediapage").style.display = "none";
-                        document.getElementById("sheet").style.display = "block";
-                        document.getElementById("sheet2").style.display = "none";
-                        document.getElementById("sheet3").style.display = "none";
-
-
-                    }
-                });
-
-
-
-                var hour = new Date().getHours();
-                var date_time = new Date();
-                document.getElementById("at").innerHTML = date_time;
-
-                function invert() {
-
-
-                    if (document.getElementById("darktoggle").checked == true) {
-                        document.getElementById("topc").style.filter = "invert(90%)";
-                        document.getElementById("bottomc").style.filter = "invert(90%)";
-                        document.getElementById("sheet").style.filter = "invert(90%)";
-                        document.getElementById("sheet2").style.filter = "invert(90%)";
-                        document.getElementById("suggestion_gform").style.filter = "invert(0%)";
-                        document.getElementById("suggestion_gform_closed").style.filter = "invert(0%)";
-                        document.getElementById("sheetforinfo").style.backgroundColor = "#222";
-                        document.getElementById("sheetforinfo").style.color = "#fff";
-
-                        document.getElementById("dark-toggle").style.display = "block";
-                        document.body.style.backgroundColor = "#121212";
-                    }
-                    else {
-                        document.getElementById("topc").style.filter = "invert(0%)";
-                        document.getElementById("bottomc").style.filter = "invert(0%)";
-                        document.getElementById("sheet").style.filter = "invert(0%)";
-                        document.getElementById("sheet2").style.filter = "invert(0%)";
-                        document.getElementById("suggestion_gform").style.filter = "invert(0%)";
-                        document.getElementById("suggestion_gform_closed").style.filter = "invert(0%)";
-                        document.getElementById("sheetforinfo").style.backgroundColor = "#fff";
-                        document.getElementById("sheetforinfo").style.color = "#000";
-
-                        document.getElementById("dark-toggle").style.display = "block";
-                        document.body.style.backgroundColor = "#eee";
-                    }
-                }
-                document.getElementById("topc").style.filter = "invert(0%)";
-                document.getElementById("bottomc").style.filter = "invert(0%)";
-                document.getElementById("sheet").style.filter = "invert(0%)";
-                document.getElementById("sheet2").style.filter = "invert(0%)";
-                document.getElementById("suggestion_gform").style.filter = "invert(0%)";
-                document.getElementById("suggestion_gform_closed").style.filter = "invert(0%)";
-                document.getElementById("sheetforinfo").style.backgroundColor = "#fff";
-                document.getElementById("sheetforinfo").style.color = "#000";
-
-                document.getElementById("dark-toggle").style.display = "block";
-                
-                document.body.style.backgroundColor = "grey";
-
-                function autoinvert() {
-
-                    if (new Date().getHours() > 16 || new Date().getHours() < 6) {
-                        document.getElementById("topc").style.filter = "invert(90%)";
-                        document.getElementById("bottomc").style.filter = "invert(90%)";
-                        document.getElementById("sheet").style.filter = "invert(100%)";
-                        document.getElementById("sheet2").style.filter = "invert(90%)";
-                        document.body.style.backgroundColor = "#121212";
-                        document.getElementById("sheetforinfo").style.backgroundColor = "#121212";
-                        document.getElementById("sheetforinfo").style.color = "#fff";
-
-                        document.getElementById("darktoggle").checked = true;
-                        document.getElementById("showdarkoption").style.display = "block";
-                    }
-                    else {
-                        document.getElementById("topc").style.filter = "invert(0%)";
-                        document.getElementById("bottomc").style.filter = "invert(0%)";
-                        document.getElementById("sheet").style.filter = "invert(0%)";
-                        document.getElementById("sheet2").style.filter = "invert(0%)";
-                        document.getElementById("sheetforinfo").style.backgroundColor = "#fff";
-                        document.getElementById("sheetforinfo").style.color = "#000";
-
-                        document.getElementById("dark-toggle").style.display = "block";
-                        document.body.style.backgroundColor = "#eee";
-                        document.getElementById("darktoggle").checked = false;
-                        
-                        document.getElementById("showdarkoption").style.display = "block";
-                    }
-
-                    document.getElementById("splashscreen").style.display = "none";
-
-
-
-                }
-
-                function navbar_style() {
-                    if (document.getElementById("calendarswitch").checked == true) {
-
-                        document.getElementById("mediaswitch").checked = false;
-                        document.getElementById("mediapage").style.display = "none";
-                        document.getElementById("sheet").style.display = "none";
-                        document.getElementById("sheet2").style.display = "block";
-                        document.getElementById("sheet3").style.display = "block";
-
-
-                    }
-                    else {
-                        document.getElementById("sheet").style.display = "block";
-                        document.getElementById("mediapage").style.display = "none";
-                        document.getElementById("sheet2").style.display = "none";
-                        document.getElementById("sheet3").style.display = "none";
-
-
-                    }
-                }
-
-                function showmedia() {
-                    if (document.getElementById("mediaswitch").checked == true) {
-
-
-                        document.getElementById("mediapage").style.display = "block";
-                        document.getElementById("calendarswitch").checked = false;
-                        document.getElementById("sheet2").style.display = "none";
-                        document.getElementById("sheet3").style.display = "none";
-
-
-                    }
-                    else {
-                        document.getElementById("sheet").style.display = "block";
-                        document.getElementById("mediapage").style.display = "none";
-                        document.getElementById("sheet2").style.display = "none";
-                        document.getElementById("sheet3").style.display = "none";
-                    }
-
-                }
-
-
-
-
-
-
-
-
-
-
-
-
-                function decidefullscreen() {
-                    var elem = document.getElementById("webpage");
-                    if (document.getElementById("hideonclick").checked == true) {
-
-                        if (elem.requestFullscreen) {
-                            elem.requestFullscreen();
-                        } else if (elem.webkitRequestFullscreen) { /* Safari */
-                            elem.webkitRequestFullscreen();
-                        } else if (elem.msRequestFullscreen) { /* IE11 */
-                            elem.msRequestFullscreen();
-                        }
-
-                    }
-
-
-                    if (document.getElementById("hideonclick").checked == false) {
-                        if (document.exitFullscreen) {
-                            document.exitFullscreen();
-                        } else if (document.webkitExitFullscreen) { /* Safari */
-                            document.webkitExitFullscreen();
-                        } else if (document.msExitFullscreen) { /* IE11 */
-                            document.msExitFullscreen();
-                        }
-
-                    }
-                }
-            </script>
+        <div class="item no_pointer">
+            <h1>Glance</h1>
+            <p>
+            <ul>
+                <li>Majority of the exams are going to start from next week.</li>
+                <li>New applications are being added, you can ideally check them tomorrow.</li>
+                <li>Application deadlines of 1 exam is very near.</li>
+            </ul>
+            </p>
+            <br>
+
+          
+            <p id="answer"></p>
+        </div>
+
+        <div class="item">
+            <h1>Watch movies</h1>
+        </div>
+
+        <div class="item">
+            <h1>Practice skills</h1>
+        </div>
+
+        <div class="item">
+            <h1>Search jobs</h1>
+        </div>
+
+        <div class="item">
+            <h1>Search education centers</h1>
         </div>
 
     </div>
+
+    <script src="js.js"></script>
+
 </body>
