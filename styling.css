@@ -627,23 +627,9 @@ p {
   cursor: pointer;
   color: #073763;
 }
-@media screen and (max-width: 9750px) {
-  .navbar .only-desktop {
-    display: block;
-  }
-  .navbar .only-phone {
-    display: none;
-  }
-}
 
-@media screen and (max-width: 750px) {
-  .navbar .only-phone {
-    display: none;
-  }
-  .navbar .only-desktop {
-    display: none;
-  }
-}
+
+
 
 .logo-on-navbar {
   float: left;
