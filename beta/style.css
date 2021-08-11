@@ -17,7 +17,7 @@ a {
   border-radius: 50vw;
 }
 
-.switch input { 
+.switch input {
   opacity: 0;
   width: 0;
   height: 0;
@@ -31,8 +31,8 @@ a {
   right: 0;
   bottom: 0;
   background-color: rgb(228, 228, 228);
-  -webkit-transition: .4s;
-  transition: .4s;
+  -webkit-transition: 0.4s;
+  transition: 0.4s;
 
   border-radius: 50vw;
 }
@@ -45,8 +45,8 @@ a {
   left: 5px;
   bottom: 20%;
   background-color: white;
-  -webkit-transition: .4s;
-  transition: .4s;
+  -webkit-transition: 0.4s;
+  transition: 0.4s;
 
   border-radius: 50vw;
 }
@@ -65,18 +65,18 @@ input:checked + .slider:before {
   transform: translateX(26px);
 }
 
-
-
 p,
 h1 {
   margin: 0px;
   font-weight: 400;
 }
 
-h1{ font-size: 20px;}
+h1 {
+  font-size: 20px;
+}
 
 li {
-  margin-bottom:8px;
+  margin-bottom: 8px;
 }
 
 .tooltip {
@@ -157,7 +157,7 @@ li {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(400px, 1fr));
 
-float:none;
+  float: none;
 
   grid-auto-rows: minmax(200px, auto);
   grid-auto-columns: minmax(200px, auto);

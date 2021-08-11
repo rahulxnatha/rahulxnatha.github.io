@@ -1,18 +1,19 @@
 body {
-    background-color: #eee;
+    background-color: var(--background_color);
 }
 
 .bottom-bar, .top-bar {
-    background-color: rgba(255, 255, 255, 0.750) !important;
+    background-color: var(--bar_color);
 }
 
 .bottom-bar:hover, .top-bar:hover {
-    background-color: rgba(255, 255, 255, 1) !important;
+    
+   background-color: var(--bar_color_hover);
 }
 
 .item {
-    background-color: rgba(255, 255, 255, 1) ;
-    color: black;
+    background-color: var(--item_background_color) ;
+    color: var(--font_color);
 }
 
 .item:hover {
@@ -21,10 +22,10 @@ body {
 }
 
 .main_item:hover {
-    background-color: #fff;
-    color: #000;
+    
+    color: var(--font_color);
 }
 
-a {
-    color: black;
+a, p {
+    color: var(--font_color);
   }

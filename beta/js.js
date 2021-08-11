@@ -27,7 +27,7 @@ function turnonaccess() {
 
 
 function auto() {
-    
+
     let hour = new Date().getHours();
     let date_time = new Date();
     if (hour > 16 || hour < 6) {
@@ -48,26 +48,16 @@ function auto() {
         welcome_message.innerHTML = "Hi. Have a nice day.";
         document.getElementById("darktoggle").checked = false;
         document.getElementById("g_frame").style.filter = "invert(0%)";
+
     }
 
     document.getElementById("at").innerHTML = date_time;
     document.getElementById("dark-toggle").style.display = "block";
-    
+
 }
 document.getElementById("splash_screen").style.display = "none";
 
-function invert() {
 
-    document.body.classList.toggle("dark");
-    if (document.getElementById("darktoggle").checked == true) {
-        document.getElementById("g_frame").style.filter = "invert(90%)";
-
-    }
-    if (document.getElementById("darktoggle").checked == false) {
-        document.getElementById("g_frame").style.filter = "invert(0%)";
-    }
-
-}
 
 function widen() {
     document.getElementById("widen").style.gridColumnStart = 1;

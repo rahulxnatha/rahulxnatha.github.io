@@ -41,11 +41,12 @@
     <link rel="stylesheet" href="desktop.css" />
     <link rel="stylesheet" href="tablet.css" />
     <link rel="stylesheet" href="mobile.css" />
+    <link rel="stylesheet" href="colors.css" />
 
 
 </head>
 
-<body onload="auto()">
+<body onload="auto()" class="light">
 
     <!--The login page : starts-->
     <div class="iframe-sheet-2 hidden" id="accesspage"
@@ -79,8 +80,20 @@
         <!--Version number and branding-->
         <span class="top-bar-item" contenteditable="true"><a
                 href="https://natharahul.github.io/rahuldocs/career-options">
-                Career Options Beta - 2.9.9845</a></span>
+                Career Options Beta - 2.9.9846</a></span>
 
+        <!--Dark theme manual toggle-->
+        <label  class="top-bar-item expand">
+            <div class="tooltip"  class="expand">
+
+                <label class="switch"> Dark theme
+                    <input id="darktoggle" class="expand darktoggle" type="checkbox">
+                    <span class="slider"></span>
+                </label>
+
+                <span class="tooltiptext">Dark</span>
+            </div>
+        </label>
 
         <!--Beta toggle-->
         <label class="top-bar-item expand">
@@ -96,18 +109,7 @@
         </label>
 
 
-        <!--Dark theme manual toggle-->
-        <label id="dark-toggle" class="top-bar-item expand">
-            <div class="tooltip" id="showdarkoption" class="expand">
 
-                <label class="switch"> Dark theme
-                    <input id="darktoggle" class="expand" type="checkbox" onclick="invert()">
-                    <span class="slider"></span>
-                </label>
-
-                <span class="tooltiptext">Dark theme toggle</span>
-            </div>
-        </label>
 
     </div>
     <!--The 'top bar' : ends-->
@@ -197,6 +199,7 @@
     </div>
 
     <script src="js.js"></script>
+    <script src="theme.js"></script>
 
 </body>
 
