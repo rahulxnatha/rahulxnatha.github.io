@@ -50,10 +50,10 @@ function auto() {
     }
 
     document.getElementById("at").innerHTML = date_time;
-    document.getElementById("splash_screen").style.display = "none";
+    
     document.getElementById("dark-toggle").style.display = "block";
 }
-
+document.getElementById("splash_screen").style.display = "none";
 function invert() {
 
     document.body.classList.toggle("dark");
