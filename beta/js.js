@@ -8,6 +8,15 @@ function coming_soon() {
     alert("This feature will start working in the future. Release date is not yet confirmed.");
 }
 
+function beta_access() {
+    if (document.getElementById("betatoggle").checked == true) {
+        window.open("https://natharahul.github.io/beta/career-options", "_self");
+    }
+    else{
+        window.open("https://natharahul.github.io/rahuldocs/career-options", "_self");
+    }
+}
+
 function turnonaccess() {
     var keyentered = document.getElementById("accesskey").value;
     if (keyentered == "prep") {

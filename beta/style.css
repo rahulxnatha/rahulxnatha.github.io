@@ -13,7 +13,7 @@ a {
   position: relative;
   display: inline-block;
   width: 60px;
-  height: inherit;
+  height: 20px;
   border-radius: 50vw;
 }
 

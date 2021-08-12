@@ -4,6 +4,7 @@ body {
 
 .bottom-bar, .top-bar {
     background-color: var(--bar_color);
+    color: var(--font_color);
 }
 
 .bottom-bar:hover, .top-bar:hover {

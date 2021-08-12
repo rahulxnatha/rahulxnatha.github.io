@@ -72,43 +72,39 @@
     <!--The splash screen : ends-->
 
 
-
-
     <!--The 'top bar' : starts-->
     <div class="top-bar shadow transition" id="topc">
 
         <!--Version number and branding-->
         <span class="top-bar-item" contenteditable="true"><a
                 href="https://natharahul.github.io/rahuldocs/career-options">
-                Career Options Beta - 2.9.9846</a></span>
+                Career Options Beta - 2.9.9847</a></span>
 
         <!--Dark theme manual toggle-->
-        <label  class="top-bar-item expand">
+        <label  class="top-bar-item expand">Dark theme
             <div class="tooltip"  class="expand">
 
-                <label class="switch"> Dark theme
+                <label class="switch"> 
                     <input id="darktoggle" class="expand darktoggle" type="checkbox">
                     <span class="slider"></span>
                 </label>
 
-                <span class="tooltiptext">Dark</span>
+                <span class="tooltiptext">Dark theme</span>
             </div>
         </label>
 
         <!--Beta toggle-->
-        <label class="top-bar-item expand">
+        <label class="top-bar-item expand">Beta
             <div class="tooltip" class="expand">
 
-                <label class="switch"> Beta
-                    <input class="expand" type="checkbox" checked>
+                <label class="switch"> 
+                    <input id="betatoggle" class="expand" type="checkbox" checked onclick="beta_access()">
                     <span class="slider"></span>
                 </label>
 
                 <span class="tooltiptext">Beta</span>
             </div>
         </label>
-
-
 
 
     </div>
