@@ -1,3 +1,48 @@
 @media screen and (max-width: 650px) {
-  
+  #webpage {
+    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+
+    grid-auto-rows: minmax(200px, auto);
+    grid-auto-columns: minmax(200px, auto);
+
+    column-gap: 10px;
+    row-gap: 10px;
+
+    margin: 57px 10px 57px 10px;
+    padding: 0px;
+
+    border-radius: 18.5px;
+    background-color: transparent;
+  }
+
+  .item {
+    border-radius: 18.5px;
+    padding: 10px;
+    cursor: pointer;
+    overflow: auto;
+  }
+
+  .main_item {
+    grid-column-start: 1;
+    grid-column-end: 2;
+  }
+
+  .top-bar {
+    display: none;
+  }
+  .top-bar2{
+    
+    top: 10px;
+    right: 10px;
+  }
+
+  .bottom-bar {
+   
+
+    bottom: 10px;
+    
+    right: 10px;
+    height: 37px;
+  }
+
 }

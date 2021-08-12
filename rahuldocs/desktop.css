@@ -44,12 +44,13 @@
   }
 
   .top-bar {
-    position: absolute;
+    position: fixed;
     top:20px;
     left: 20px;
     float: left;
-    width: 300px;
-
+    
+    width: calc(100% - 40px - 320px);
+    width: 300px; 
     border-radius: 50vmin;
     margin: 0;
     height: 37px;
@@ -64,12 +65,12 @@
   .top-bar > .expand {
     visibility: hidden;
     float: right;
-    transition-delay: 1s;
+    transition-delay: 650ms;
   }
 
   .top-bar:hover > .expand {
     visibility: visible;
-    transition-delay: 400ms;
+    transition-delay: 100ms;
     
   }
 
@@ -88,6 +89,7 @@
   .top-bar-item {
     float:left;
     margin-right: 20px;
+    
   }
 
 
