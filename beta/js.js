@@ -11,10 +11,14 @@ function coming_soon() {
 function beta_access() {
     if (document.getElementById("betatoggle").checked == true) {
         window.open("https://natharahul.github.io/beta/career-options", "_self");
+        document.getElementById("betatoggle").checked = false;
     }
     else{
         window.open("https://natharahul.github.io/rahuldocs/career-options", "_self");
+        document.getElementById("betatoggle").checked = true;
     }
+
+
 }
 
 function turnonaccess() {
@@ -37,6 +41,8 @@ function turnonaccess() {
 
 function auto() {
 
+   
+    var welcome_message = document.getElementById("welcome_message");
     let hour = new Date().getHours();
     let date_time = new Date();
     if (hour > 16 || hour < 6) {
@@ -44,7 +50,7 @@ function auto() {
         document.getElementById("darktoggle").checked = true;
         document.getElementById("g_frame").style.filter = "invert(90%)";
 
-        var welcome_message = document.getElementById("welcome_message");
+       
         if (hour > 16) {
 
             if (hour > 22) { welcome_message.innerHTML = "Good night. See you tomorrow"; }
