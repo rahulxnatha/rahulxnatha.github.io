@@ -11,10 +11,14 @@ function coming_soon() {
 function beta_access() {
     if (document.getElementById("betatoggle").checked == true) {
         window.open("https://natharahul.github.io/beta/career-options", "_self");
+        document.getElementById("betatoggle").checked = false;
     }
     else{
         window.open("https://natharahul.github.io/rahuldocs/career-options", "_self");
+        document.getElementById("betatoggle").checked = true;
     }
+
+
 }
 
 function turnonaccess() {
