@@ -134,7 +134,7 @@ function showmedia() {
 function g_frame_fullscreen() {
 
     var eleme = document.getElementById("item");
-    if (document.getElementById("betatoggle").checked == true) {
+   // if (document.getElementById("betatoggle").checked == true) {
 
         if (eleme.requestFullscreen) {
             eleme.requestFullscreen();
@@ -145,7 +145,7 @@ function g_frame_fullscreen() {
         }
         document.getElementById("gframe_fulls").style.display = "none";
         document.getElementById("gframe_fulls_off").style.display = "block";
-    }
+  //  }
 }
 
 function g_frame_fullscreen_off() {
