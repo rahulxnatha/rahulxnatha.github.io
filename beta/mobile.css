@@ -8,7 +8,7 @@
     column-gap: 10px;
     row-gap: 10px;
 
-    margin: 57px 10px 57px 10px;
+    margin: calc(2 * 57px - 10px) 10px 57px 10px;
     padding: 0px;
 
     border-radius: 18.5px;
@@ -28,21 +28,28 @@
   }
 
   .top-bar {
-    display: none;
-  }
-  .top-bar2{
-    
+    display: block;
+    left: 10px;
     top: 10px;
+  }
+
+  .top-bar:hover {
+    width: calc(100% - 20px);
+    right: 10px;
+    line-height: 200%;
+    transition-delay: 0s;
+    height: calc(2 * 37px + 10px);
+  }
+
+  .top-bar2 {
+    top: calc(20px + 37px);
     right: 10px;
   }
 
   .bottom-bar {
-   
-
     bottom: 10px;
-    
+
     right: 10px;
     height: 37px;
   }
-
 }
