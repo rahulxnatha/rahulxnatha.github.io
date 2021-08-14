@@ -9,6 +9,8 @@
   font-weight: 400;
 }
 
+
+
 .youtube_embed {
   position: relative;
   padding-bottom: 56.25%;
@@ -32,6 +34,8 @@ a {
   width: 60px;
   height: 20px;
   border-radius: 50vw;
+  top: 0px;
+
 }
 
 .switch input {
@@ -62,8 +66,8 @@ a {
   left: 5px;
   bottom: 20%;
   background-color: white;
-  -webkit-transition: 0.2s;
-  transition: 0.2s;
+  -webkit-transition: 0s;
+  transition: 0s;
 
   border-radius: 50vw;
 }

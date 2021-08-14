@@ -3,3 +3,8 @@
 .dark .bottom-bar > a > img {
     filter:invert(100%);
 }
+
+.dark .item > #icon_fscreen_gframe > #gframe_fulls, .dark .item > #icon_fscreen_gframe > #gframe_fulls_off  {
+    filter:invert(100%);
+}
+

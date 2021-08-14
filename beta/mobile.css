@@ -32,14 +32,44 @@
     left: 10px;
     top: 10px;
     width: 300px;
+    transition: 800ms;
   }
 
   .top-bar:hover {
     width: calc(100% - 20px);
     right: 10px;
     line-height: 200%;
-    transition-delay: 0s;
+    transition-delay: 0ms;
+    transition: 400ms;
     height: calc(2 * 37px + 10px);
+    padding-left: 40px;
+  }
+
+  .top-bar > .expand {
+    visibility: hidden;
+    float: right;
+    margin-top: 10px ;
+    transition-delay: 200ms;
+  }
+
+  .switch {
+    position: relative;
+    display: inline-block;
+    width: 60px;
+    height: 20px;
+    border-radius: 50vw;
+    top: 6px;
+  
+  }
+
+  .tooltiptext {
+    display: none;
+  }
+
+  .top-bar:hover > .expand {
+    visibility: visible;
+    transition-delay: 200ms;
+    
   }
 
   .top-bar2 {

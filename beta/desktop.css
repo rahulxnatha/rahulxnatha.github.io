@@ -28,7 +28,7 @@
     border-width: 0px;
     border-style: solid;
     border-radius: 50vmin;
-
+    transition-delay:800ms;
     
     z-index: 99;
     overflow: hidden;
@@ -59,26 +59,28 @@
 
     z-index: 9999;
     transition-delay: 800ms;
+    transition: 400ms;
     
   }
 
   .top-bar > .expand {
     visibility: hidden;
     float: right;
-    transition-delay: 650ms;
+    transition-delay: 100ms;
   }
 
   .top-bar:hover > .expand {
     visibility: visible;
-    transition-delay: 100ms;
+    transition-delay: 200ms;
     
   }
 
 
   .top-bar:hover {
     width: calc(100% - 40px - 320px);
-   
     transition-delay:0s;
+    transition: 400ms;
+  
   }
 
   .bottom-bar:hover {
