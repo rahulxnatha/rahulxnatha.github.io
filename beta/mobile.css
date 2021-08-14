@@ -31,6 +31,7 @@
     display: block;
     left: 10px;
     top: 10px;
+    width: 300px;
   }
 
   .top-bar:hover {

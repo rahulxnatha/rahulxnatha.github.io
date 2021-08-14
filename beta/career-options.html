@@ -84,7 +84,7 @@
 
         <!--Version number and branding-->
         <span class="top-bar-item" contenteditable="false">
-                Career Options - 2.9.9849 (Beta)</span>
+            Career Options - 2.9.9850 (Beta)</span>
 
         <!--Dark theme manual toggle-->
         <label class="top-bar-item expand">Dark theme
@@ -140,34 +140,44 @@
 
     <div id="webpage" class="noselect">
 
-        <iframe class="shadow item hidden" id="sheet" style="border:none;height: calc(100vh - 144px);width:1000px;"
+        <!--
+
+            <iframe class="shadow item hidden" id="sheet" style="border:none;height: calc(100vh - 144px);width:1000px;"
             src="https://docs.google.com/spreadsheets/d/e/2PACX-1vTL5ZyxcOsOpcdYAdbQWjCgUJvJ1fone0C3o7MVW3B7jfty9VpJi6tzv71ikK6FpKhvCJod87722dkV/pubhtml?widget=false&amp;headers=false">
 
-        </iframe>
+          </iframe>
 
-        <!--
-        <iframe class="item" frameborder="0"
+
+           <iframe class="item" frameborder="0"
             src="https://www.youtube.com/embed/videoseries?list=UUnKlI8bIoRdgzrPUNvxqflQ">
-        </iframe>
+          </iframe>
 
-        <iframe class="item" src="https://www.youtube.com/embed/videoseries?list=UUCKEJ5MYyOaKM1gGksrZEJw"
+          <iframe class="item" src="https://www.youtube.com/embed/videoseries?list=UUCKEJ5MYyOaKM1gGksrZEJw"
             frameborder="0">
-        </iframe>
+          </iframe>
 
-        <iframe class="item" src="https://www.youtube.com/embed/videoseries?list=UU4ZfW_-pmfjkkZciu5BFzNA"
+          <iframe class="item" src="https://www.youtube.com/embed/videoseries?list=UU4ZfW_-pmfjkkZciu5BFzNA"
             frameborder="0"></iframe>
-    -->
+        -->
 
-        <div class="item main_item" id="item">
+        <div class="item main_item" id="item" style="position: relative;">
 
             <!-- <span id="g_frame" style="height: calc(100% - 10px);"></span>-->
-           
+
             <iframe id="g_frame"
                 style="border:none; height: calc(100% - 10px); width:calc(100% - 40px);margin:0 20px;padding:0;"
                 src="https://docs.google.com/spreadsheets/d/e/2PACX-1vTL5ZyxcOsOpcdYAdbQWjCgUJvJ1fone0C3o7MVW3B7jfty9VpJi6tzv71ikK6FpKhvCJod87722dkV/pubhtml?widget=false&amp;headers=false">
 
 
             </iframe>
+
+            <span style="position: absolute;bottom:10px;left:10px; cursor: pointer; background-color: rgba(255, 255, 255, 0.5);" >
+                
+                <svg id="gframe_fulls" onclick="g_frame_fullscreen()" xmlns="http://www.w3.org/2000/svg" enable-background="new 0 0 24 24" height="24px" viewBox="0 0 24 24" width="24px" fill="#000000"><rect fill="none" height="24" width="24"/><path d="M21,8.59V4c0-0.55-0.45-1-1-1h-4.59c-0.89,0-1.34,1.08-0.71,1.71l1.59,1.59l-10,10l-1.59-1.59C4.08,14.08,3,14.52,3,15.41 V20c0,0.55,0.45,1,1,1h4.59c0.89,0,1.34-1.08,0.71-1.71l-1.59-1.59l10-10l1.59,1.59C19.92,9.92,21,9.48,21,8.59z"   /></svg>
+            
+                <svg id="gframe_fulls_off" style="display: none;" onclick="g_frame_fullscreen_off()" xmlns="http://www.w3.org/2000/svg" enable-background="new 0 0 24 24" height="24px" viewBox="0 0 24 24" width="24px" fill="#000000"><rect fill="none" height="24" width="24"/><path d="M21.29,4.12l-4.59,4.59l1.59,1.59c0.63,0.63,0.18,1.71-0.71,1.71H13c-0.55,0-1-0.45-1-1V6.41c0-0.89,1.08-1.34,1.71-0.71 l1.59,1.59l4.59-4.59c0.39-0.39,1.02-0.39,1.41,0v0C21.68,3.1,21.68,3.73,21.29,4.12z M4.12,21.29l4.59-4.59l1.59,1.59 c0.63,0.63,1.71,0.18,1.71-0.71V13c0-0.55-0.45-1-1-1H6.41c-0.89,0-1.34,1.08-0.71,1.71l1.59,1.59l-4.59,4.59 c-0.39,0.39-0.39,1.02,0,1.41l0,0C3.1,21.68,3.73,21.68,4.12,21.29z"   /></svg>
+            
+            </span>
         </div>
 
 
@@ -192,26 +202,25 @@
 
         <div class="youtube_embed item" style="position: relative; padding-bottom: 56.25%;">
             <iframe class="iframe_youtube" width="100%" height="100%" frameborder="0"
-                src="https://www.youtube.com/embed/videoseries?list=UUnKlI8bIoRdgzrPUNvxqflQ"
-                allowfullscreen>
-                
+                src="https://www.youtube.com/embed/videoseries?list=UUnKlI8bIoRdgzrPUNvxqflQ" allowfullscreen>
+
             </iframe>
         </div>
 
         <div class="youtube_embed item" style="position: relative; padding-bottom: 56.25%;">
             <iframe class="iframe_youtube" width="100%" height="100%" frameborder="0"
-                src="https://www.youtube.com/embed/videoseries?list=UUCKEJ5MYyOaKM1gGksrZEJw"allowfullscreen>
+                src="https://www.youtube.com/embed/videoseries?list=UUCKEJ5MYyOaKM1gGksrZEJw" allowfullscreen>
             </iframe>
         </div>
 
         <div class="youtube_embed item" style="position: relative; padding-bottom: 56.25%;">
             <iframe class="iframe_youtube" width="100%" height="100%" frameborder="0"
-                src="https://www.youtube.com/embed/videoseries?list=UU4ZfW_-pmfjkkZciu5BFzNA"allowfullscreen>
+                src="https://www.youtube.com/embed/videoseries?list=UU4ZfW_-pmfjkkZciu5BFzNA" allowfullscreen>
             </iframe>
         </div>
 
 
-        <div class="item">
+        <div class="item" aria="">
             <h1>Practice skills</h1>
         </div>
 

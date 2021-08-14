@@ -10,7 +10,8 @@
 }
 
 .youtube_embed {
-  position: relative; padding-bottom: 56.25%;
+  position: relative;
+  padding-bottom: 56.25%;
 }
 
 .iframe_youtube {
@@ -220,8 +221,8 @@ body {
 .main_item {
   grid-column-start: 1;
   grid-column-end: 3;
- /* min-height: calc(100vh - 154px); */
- min-height: 275px; 
+  /* min-height: calc(100vh - 154px); */
+  min-height: 275px;
   resize: vertical;
   cursor: default;
 }
