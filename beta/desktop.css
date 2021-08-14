@@ -50,7 +50,7 @@
     float: left;
     
     width: calc(100% - 40px - 320px);
-    width: 300px; 
+    width: 370px; 
     border-radius: 50vmin;
     margin: 0;
     height: 37px;
@@ -65,12 +65,12 @@
   .top-bar > .expand {
     visibility: hidden;
     float: right;
-    transition-delay: 1s;
+    transition-delay: 650ms;
   }
 
   .top-bar:hover > .expand {
     visibility: visible;
-    transition-delay: 0ms;
+    transition-delay: 100ms;
     
   }
 

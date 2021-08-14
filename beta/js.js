@@ -38,15 +38,15 @@ function turnonaccess() {
     }
 }
 
-
+document.body.classList.toggle("dark");
+document.getElementById("g_frame").style.filter = "invert(90%)";
 function auto() {
 
-   
     var welcome_message = document.getElementById("welcome_message");
     let hour = new Date().getHours();
     let date_time = new Date();
     if (hour > 16 || hour < 6) {
-        document.body.classList.toggle("dark");
+        
         document.getElementById("darktoggle").checked = true;
         document.getElementById("g_frame").style.filter = "invert(90%)";
 
@@ -61,6 +61,7 @@ function auto() {
     }
     else {
         welcome_message.innerHTML = "Hi. Have a nice day.";
+        document.body.classList.toggle("dark");
         document.getElementById("darktoggle").checked = false;
         document.getElementById("g_frame").style.filter = "invert(0%)";
 
