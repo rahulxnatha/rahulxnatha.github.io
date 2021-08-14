@@ -1,0 +1,263 @@
+<!DOCTYPE html>
+<html lang="en-IN" dir="ltr">
+
+<head>
+
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <!-- Global site tag (gtag.js) - Google Analytics -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-6KPJHELRE9"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag() { dataLayer.push(arguments); }
+        gtag('js', new Date());
+
+        gtag('config', 'G-6KPJHELRE9');
+    </script>
+
+    <!-- Fav_icon for this webpage -->
+    <link rel="icon"
+        href="https://docs.google.com/drawings/d/e/2PACX-1vTsISpsKu-Hn0EdJePBw_UC3y5GBIL-4S-dauzSMiG3Ys3oksH13kBv2qcQLgWSBwhRNPkKgOmPcazN/pub?w=30&amp;h=30"
+        type="image/gif" />
+
+    <!-- Title for this webpage -->
+    <title>Career Options</title>
+
+    <!-- Descriptions -->
+    <meta property="og:title" content="Career Options" />
+
+    <meta property="og:description" content="DOCS from Rahul Natha" />
+
+    <meta name="description" content="Career Options" />
+
+    <meta property="og:url" content="https://natharahul.github.io" />
+
+    <meta property="og:image"
+        content="https://docs.google.com/drawings/d/e/2PACX-1vTsISpsKu-Hn0EdJePBw_UC3y5GBIL-4S-dauzSMiG3Ys3oksH13kBv2qcQLgWSBwhRNPkKgOmPcazN/pub?w=379&amp;h=379" />
+
+
+
+    <!-- CSS -->
+    <link rel="stylesheet" href="light_theme.css" />
+    <link rel="stylesheet" href="dark_theme.css" />
+
+    <link rel="stylesheet" href="style.css" />
+
+    <link rel="stylesheet" href="desktop.css" />
+    <link rel="stylesheet" href="tablet.css" />
+    <link rel="stylesheet" href="mobile.css" />
+    <link rel="stylesheet" href="colors.css" />
+
+
+</head>
+
+<body onload="auto()" class="light noselect">
+
+    <!--The login page : starts-->
+    <div class="iframe-sheet-2 hidden" id="accesspage"
+        style="position:fixed; top:0px; left:0px; bottom:0px; right:0px; width:100%; height: 100%; border:none; margin: 0px; padding:80px; overflow:hidden; z-index:9; background-color: rgb(29, 29, 29); color: white;">
+
+        <h2>Enter accesskey to view the content</h2>
+        <input id="accesskey" type="text" placeholder="Enter accesskey" autofocus="autofocus">
+        <button onclick="turnonaccess()" id="accessbutton">Get access</button>
+        <p id="accessreply"></p>
+
+    </div>
+    <!--The login page : ends-->
+
+    <!--The splash screen : starts-->
+    <div id="splash_screen"
+        style="position: fixed; top:0;left:0; bottom:0px; right:0; width:100%; height: calc(100% - 0px); border:none; margin: 0px 0px 0px 0px; padding:0; overflow:hidden; z-index:9999999; background-color: rgb(36, 36, 36); display:block;">
+
+        <div style="position: fixed;top: calc(50% - 100px); left: calc(50% - 100px);">
+            <img style="animation: rotate 2s infinite;" width="200px"
+                src="https://docs.google.com/drawings/d/e/2PACX-1vTsISpsKu-Hn0EdJePBw_UC3y5GBIL-4S-dauzSMiG3Ys3oksH13kBv2qcQLgWSBwhRNPkKgOmPcazN/pub?w=379&amp;h=379">
+        </div>
+    </div>
+    <!--The splash screen : ends-->
+
+
+    <!--The 'top bar' : starts-->
+    <div class="top-bar shadow transition" id="topc">
+
+        <!--Version number and branding-->
+        <span class="top-bar-item" contenteditable="false">
+            Career Options - 2.9.9855 (Beta)</span>
+
+
+        
+
+            <!--Dark theme manual toggle-->
+            <label class="top-bar-item expand">Dark
+                <div class="tooltip" class="expand">
+
+                    <label class="switch">
+                        <input id="darktoggle" class="expand darktoggle" type="checkbox">
+                        <span class="slider"></span>
+                    </label>
+
+                    <span class="tooltiptext">Dark</span>
+                </div>
+            </label>
+
+            <!--Beta toggle-->
+            <label class="top-bar-item expand">Beta
+                <div class="tooltip" class="expand">
+
+                    <label class="switch">
+                        <input id="betatoggle" class="expand" type="checkbox" checked onclick="beta_access()">
+                        <span class="slider"></span>
+                    </label>
+
+                    <span class="tooltiptext">Beta</span>
+                </div>
+            </label>
+        
+
+    </div>
+    <!--The 'top bar' : ends-->
+
+    <!--The 'top message bar' : starts-->
+    <div class="top-bar2  transition" id="topc2">
+
+        <span id="welcome_message">Loading. Please wait.</span>
+        <p id="alert"></p>
+
+    </div>
+    <!--The 'top message bar' : ends-->
+
+    <!--The 'bottom bar' : starts-->
+    <div class="bottom-bar shadow transition" id="bottomc">
+        <a href="https://natharahul.github.io">
+            <img height="25px" style="margin:5px 5px 5px 2px; float: left"
+                src="https://docs.google.com/drawings/d/e/2PACX-1vQA4iiyPJ8Py6UjOW524b3qVO8LRSsglJVuLPbldYkJ9td08uvFLAWs1sGukrMnTgmdvkiBCbTap_jD/pub?w=280&amp;h=42">
+
+            <p style="font-size: 21px; margin: 4px 0 0 0;  float: left">from Rahul Natha</p>
+        </a>
+
+        <p style="float: right; margin: 8px 2px 5px 0px" id="at"> long ago.</p>
+        <p style="float: right; margin: 8px 2px 5px 0px" id="att">Website loaded: </p>
+    </div>
+
+    <div id="webpage" class="noselect">
+
+        <!--
+
+            <iframe class="shadow item hidden" id="sheet" style="border:none;height: calc(100vh - 144px);width:1000px;"
+            src="https://docs.google.com/spreadsheets/d/e/2PACX-1vTL5ZyxcOsOpcdYAdbQWjCgUJvJ1fone0C3o7MVW3B7jfty9VpJi6tzv71ikK6FpKhvCJod87722dkV/pubhtml?widget=false&amp;headers=false">
+
+          </iframe>
+
+
+           <iframe class="item" frameborder="0"
+            src="https://www.youtube.com/embed/videoseries?list=UUnKlI8bIoRdgzrPUNvxqflQ">
+          </iframe>
+
+          <iframe class="item" src="https://www.youtube.com/embed/videoseries?list=UUCKEJ5MYyOaKM1gGksrZEJw"
+            frameborder="0">
+          </iframe>
+
+          <iframe class="item" src="https://www.youtube.com/embed/videoseries?list=UU4ZfW_-pmfjkkZciu5BFzNA"
+            frameborder="0"></iframe>
+        -->
+
+        <div class="item main_item" id="item" style="position: relative;">
+
+            <!-- <span id="g_frame" style="height: calc(100% - 10px);"></span>-->
+
+            <iframe id="g_frame"
+                style="border:none; height: calc(100% - 10px); width:calc(100% - 40px);margin:0 20px;padding:0;"
+                src="https://docs.google.com/spreadsheets/d/e/2PACX-1vTL5ZyxcOsOpcdYAdbQWjCgUJvJ1fone0C3o7MVW3B7jfty9VpJi6tzv71ikK6FpKhvCJod87722dkV/pubhtml?widget=false&amp;headers=false">
+
+
+            </iframe>
+
+            <span id="icon_fscreen_gframe"
+                style="position: absolute;bottom:10px;left:10px; cursor: pointer; background-color: none;">
+
+                <svg id="gframe_fulls" onclick="g_frame_fullscreen()" xmlns="http://www.w3.org/2000/svg"
+                    enable-background="new 0 0 24 24" height="24px" viewBox="0 0 24 24" width="24px" fill="#000000">
+                    <rect fill="none" height="24" width="24" />
+                    <path
+                        d="M21,8.59V4c0-0.55-0.45-1-1-1h-4.59c-0.89,0-1.34,1.08-0.71,1.71l1.59,1.59l-10,10l-1.59-1.59C4.08,14.08,3,14.52,3,15.41 V20c0,0.55,0.45,1,1,1h4.59c0.89,0,1.34-1.08,0.71-1.71l-1.59-1.59l10-10l1.59,1.59C19.92,9.92,21,9.48,21,8.59z" />
+                </svg>
+
+                <svg id="gframe_fulls_off" style="display: none;" onclick="g_frame_fullscreen_off()"
+                    xmlns="http://www.w3.org/2000/svg" enable-background="new 0 0 24 24" height="24px"
+                    viewBox="0 0 24 24" width="24px" fill="#000000">
+                    <rect fill="none" height="24" width="24" />
+                    <path
+                        d="M21.29,4.12l-4.59,4.59l1.59,1.59c0.63,0.63,0.18,1.71-0.71,1.71H13c-0.55,0-1-0.45-1-1V6.41c0-0.89,1.08-1.34,1.71-0.71 l1.59,1.59l4.59-4.59c0.39-0.39,1.02-0.39,1.41,0v0C21.68,3.1,21.68,3.73,21.29,4.12z M4.12,21.29l4.59-4.59l1.59,1.59 c0.63,0.63,1.71,0.18,1.71-0.71V13c0-0.55-0.45-1-1-1H6.41c-0.89,0-1.34,1.08-0.71,1.71l1.59,1.59l-4.59,4.59 c-0.39,0.39-0.39,1.02,0,1.41l0,0C3.1,21.68,3.73,21.68,4.12,21.29z" />
+                </svg>
+
+            </span>
+        </div>
+
+
+        <!-- Beta features -->
+
+       
+
+        <div class="item no_pointer">
+            <h1>Glance</h1>
+            <p>
+            <ul>
+                <li>Majority of the exams are going to start from next week.</li>
+                <li>New applications are being added, you can ideally check them tomorrow.</li>
+                <li>Application deadlines of 1 exam is very near.</li>
+            </ul>
+            </p>
+            <br>
+
+
+            <p id="answer"></p>
+        </div>
+
+        
+
+
+        <div class="youtube_embed item" style="position: relative; padding-bottom: 56.25%;">
+            <iframe class="iframe_youtube" width="100%" height="100%" frameborder="0"
+                src="https://www.youtube.com/embed/videoseries?list=UUnKlI8bIoRdgzrPUNvxqflQ" allowfullscreen>
+
+            </iframe>
+        </div>
+
+        <div class="youtube_embed item" style="position: relative; padding-bottom: 56.25%;">
+            <iframe class="iframe_youtube" width="100%" height="100%" frameborder="0"
+                src="https://www.youtube.com/embed/videoseries?list=UUCKEJ5MYyOaKM1gGksrZEJw" allowfullscreen>
+            </iframe>
+        </div>
+
+        <div class="youtube_embed item" style="position: relative; padding-bottom: 56.25%;">
+            <iframe class="iframe_youtube" width="100%" height="100%" frameborder="0"
+                src="https://www.youtube.com/embed/videoseries?list=UU4ZfW_-pmfjkkZciu5BFzNA" allowfullscreen>
+            </iframe>
+        </div>
+
+       
+         <div class="item" aria="">
+            <h1>Practice skills</h1>
+         </div>
+
+         <div class="item">
+            <h1>Search jobs</h1>
+         </div>
+
+         <div class="item">
+            <h1>Search education centers</h1>
+         </div>
+
+         
+
+    </div>
+
+    <script src="js.js"></script>
+    <script src="theme.js"></script>
+    <noscript>You need to enable JavaScript to view the full site.</noscript>
+
+</body>
+
+</html>
