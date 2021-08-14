@@ -3,6 +3,10 @@
 
 <head>
 
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+
     <!-- Global site tag (gtag.js) - Google Analytics -->
     <script async src="https://www.googletagmanager.com/gtag/js?id=G-6KPJHELRE9"></script>
     <script>
@@ -21,16 +25,19 @@
     <!-- Title for this webpage -->
     <title>Career Options</title>
 
-    <!-- Meta data -->
+    <!-- Descriptions -->
     <meta property="og:title" content="Career Options" />
+
     <meta property="og:description" content="DOCS from Rahul Natha" />
+
+    <meta name="description" content="Career Options" />
+
     <meta property="og:url" content="https://natharahul.github.io" />
+
     <meta property="og:image"
         content="https://docs.google.com/drawings/d/e/2PACX-1vTsISpsKu-Hn0EdJePBw_UC3y5GBIL-4S-dauzSMiG3Ys3oksH13kBv2qcQLgWSBwhRNPkKgOmPcazN/pub?w=379&amp;h=379" />
 
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <meta name="description" content="Career Options" />
+
 
     <!-- CSS -->
     <link rel="stylesheet" href="light_theme.css" />
@@ -46,7 +53,7 @@
 
 </head>
 
-<body onload="auto()" class="light">
+<body onload="auto()" class="light noselect">
 
     <!--The login page : starts-->
     <div class="iframe-sheet-2 hidden" id="accesspage"
@@ -76,36 +83,38 @@
     <div class="top-bar shadow transition" id="topc">
 
         <!--Version number and branding-->
-        <span class="top-bar-item" contenteditable="false"><a
-                href="https://natharahul.github.io/rahuldocs/career-options">
-                Career Options - 2.9.9848</a></span>
+        <span class="top-bar-item" contenteditable="false">
+            Career Options - 2.9.9853</span>
 
-        <!--Dark theme manual toggle-->
-        <label  class="top-bar-item expand">Dark theme
-            <div class="tooltip"  class="expand">
 
-                <label class="switch"> 
-                    <input id="darktoggle" class="expand darktoggle" type="checkbox">
-                    <span class="slider"></span>
-                </label>
+        
 
-                <span class="tooltiptext">Dark theme</span>
-            </div>
-        </label>
+            <!--Dark theme manual toggle-->
+            <label class="top-bar-item expand">Dark
+                <div class="tooltip" class="expand">
 
-        <!--Beta toggle-->
-        <label class="top-bar-item expand">Beta
-            <div class="tooltip" class="expand">
+                    <label class="switch">
+                        <input id="darktoggle" class="expand darktoggle" type="checkbox">
+                        <span class="slider"></span>
+                    </label>
 
-                <label class="switch"> 
-                    <input id="betatoggle" class="expand" type="checkbox" unchecked onclick="beta_access()">
-                    <span class="slider"></span>
-                </label>
+                    <span class="tooltiptext">Dark</span>
+                </div>
+            </label>
 
-                <span class="tooltiptext">Beta</span>
-            </div>
-        </label>
+            <!--Beta toggle-->
+            <label class="top-bar-item expand">Beta
+                <div class="tooltip" class="expand">
 
+                    <label class="switch">
+                        <input id="betatoggle" class="expand" type="checkbox" unchecked onclick="beta_access()">
+                        <span class="slider"></span>
+                    </label>
+
+                    <span class="tooltiptext">Beta</span>
+                </div>
+            </label>
+        
 
     </div>
     <!--The 'top bar' : ends-->
@@ -113,7 +122,7 @@
     <!--The 'top message bar' : starts-->
     <div class="top-bar2  transition" id="topc2">
 
-        <p id="welcome_message">Hi. Good day.</p>
+        <span id="welcome_message">Loading. Please wait.</span>
         <p id="alert"></p>
 
     </div>
@@ -125,7 +134,7 @@
             <img height="25px" style="margin:5px 5px 5px 2px; float: left"
                 src="https://docs.google.com/drawings/d/e/2PACX-1vQA4iiyPJ8Py6UjOW524b3qVO8LRSsglJVuLPbldYkJ9td08uvFLAWs1sGukrMnTgmdvkiBCbTap_jD/pub?w=280&amp;h=42">
 
-            <p style="font-size: 25px; margin: 4px 0 0 0;  float: left">from Rahul Natha</p>
+            <p style="font-size: 21px; margin: 4px 0 0 0;  float: left">from Rahul Natha</p>
         </a>
 
         <p style="float: right; margin: 8px 2px 5px 0px" id="at"> long ago.</p>
@@ -134,39 +143,64 @@
 
     <div id="webpage" class="noselect">
 
-        <iframe class="shadow item hidden" id="sheet" style="border:none;height: calc(100vh - 144px);width:1000px;"
+        <!--
+
+            <iframe class="shadow item hidden" id="sheet" style="border:none;height: calc(100vh - 144px);width:1000px;"
             src="https://docs.google.com/spreadsheets/d/e/2PACX-1vTL5ZyxcOsOpcdYAdbQWjCgUJvJ1fone0C3o7MVW3B7jfty9VpJi6tzv71ikK6FpKhvCJod87722dkV/pubhtml?widget=false&amp;headers=false">
 
-        </iframe>
+          </iframe>
 
-        <!--
-        <iframe class="item" frameborder="0"
+
+           <iframe class="item" frameborder="0"
             src="https://www.youtube.com/embed/videoseries?list=UUnKlI8bIoRdgzrPUNvxqflQ">
-        </iframe>
+          </iframe>
 
-        <iframe class="item" src="https://www.youtube.com/embed/videoseries?list=UUCKEJ5MYyOaKM1gGksrZEJw"
+          <iframe class="item" src="https://www.youtube.com/embed/videoseries?list=UUCKEJ5MYyOaKM1gGksrZEJw"
             frameborder="0">
-        </iframe>
+          </iframe>
 
-        <iframe class="item" src="https://www.youtube.com/embed/videoseries?list=UU4ZfW_-pmfjkkZciu5BFzNA"
+          <iframe class="item" src="https://www.youtube.com/embed/videoseries?list=UU4ZfW_-pmfjkkZciu5BFzNA"
             frameborder="0"></iframe>
-    -->
+        -->
 
-        <div class="item main_item" id="item">
-            <span class="item_drag hidden" id="item_drag">Drag</span>
+        <div class="item main_item" id="item" style="position: relative;">
+
+            <!-- <span id="g_frame" style="height: calc(100% - 10px);"></span>-->
+
             <iframe id="g_frame"
-                style="border:none; height: calc(100% - 10px);width:calc(100% - 40px);margin:0 20px;padding:0;"
+                style="border:none; height: calc(100% - 10px); width:calc(100% - 40px);margin:0 20px;padding:0;"
                 src="https://docs.google.com/spreadsheets/d/e/2PACX-1vTL5ZyxcOsOpcdYAdbQWjCgUJvJ1fone0C3o7MVW3B7jfty9VpJi6tzv71ikK6FpKhvCJod87722dkV/pubhtml?widget=false&amp;headers=false">
 
+
             </iframe>
+
+            <span id="icon_fscreen_gframe"
+                style="position: absolute;bottom:10px;left:10px; cursor: pointer; background-color: none;">
+
+                <svg id="gframe_fulls" onclick="g_frame_fullscreen()" xmlns="http://www.w3.org/2000/svg"
+                    enable-background="new 0 0 24 24" height="24px" viewBox="0 0 24 24" width="24px" fill="#000000">
+                    <rect fill="none" height="24" width="24" />
+                    <path
+                        d="M21,8.59V4c0-0.55-0.45-1-1-1h-4.59c-0.89,0-1.34,1.08-0.71,1.71l1.59,1.59l-10,10l-1.59-1.59C4.08,14.08,3,14.52,3,15.41 V20c0,0.55,0.45,1,1,1h4.59c0.89,0,1.34-1.08,0.71-1.71l-1.59-1.59l10-10l1.59,1.59C19.92,9.92,21,9.48,21,8.59z" />
+                </svg>
+
+                <svg id="gframe_fulls_off" style="display: none;" onclick="g_frame_fullscreen_off()"
+                    xmlns="http://www.w3.org/2000/svg" enable-background="new 0 0 24 24" height="24px"
+                    viewBox="0 0 24 24" width="24px" fill="#000000">
+                    <rect fill="none" height="24" width="24" />
+                    <path
+                        d="M21.29,4.12l-4.59,4.59l1.59,1.59c0.63,0.63,0.18,1.71-0.71,1.71H13c-0.55,0-1-0.45-1-1V6.41c0-0.89,1.08-1.34,1.71-0.71 l1.59,1.59l4.59-4.59c0.39-0.39,1.02-0.39,1.41,0v0C21.68,3.1,21.68,3.73,21.29,4.12z M4.12,21.29l4.59-4.59l1.59,1.59 c0.63,0.63,1.71,0.18,1.71-0.71V13c0-0.55-0.45-1-1-1H6.41c-0.89,0-1.34,1.08-0.71,1.71l1.59,1.59l-4.59,4.59 c-0.39,0.39-0.39,1.02,0,1.41l0,0C3.1,21.68,3.73,21.68,4.12,21.29z" />
+                </svg>
+
+            </span>
         </div>
 
 
         <!-- Beta features -->
 
-        <!--
 
-        <div class="item no_pointer">
+
+        <div class="item no_pointer hidden">
             <h1>Glance</h1>
             <p>
             <ul>
@@ -181,28 +215,45 @@
             <p id="answer"></p>
         </div>
 
-        <div class="item">
-            <h1>Watch movies</h1>
+        <div class="youtube_embed item" style="position: relative; padding-bottom: 56.25%;">
+            <iframe class="iframe_youtube" width="100%" height="100%" frameborder="0"
+                src="https://www.youtube.com/embed/videoseries?list=UUnKlI8bIoRdgzrPUNvxqflQ" allowfullscreen>
+
+            </iframe>
         </div>
 
-        <div class="item">
+        <div class="youtube_embed item" style="position: relative; padding-bottom: 56.25%;">
+            <iframe class="iframe_youtube" width="100%" height="100%" frameborder="0"
+                src="https://www.youtube.com/embed/videoseries?list=UUCKEJ5MYyOaKM1gGksrZEJw" allowfullscreen>
+            </iframe>
+        </div>
+
+        <div class="youtube_embed item" style="position: relative; padding-bottom: 56.25%;">
+            <iframe class="iframe_youtube" width="100%" height="100%" frameborder="0"
+                src="https://www.youtube.com/embed/videoseries?list=UU4ZfW_-pmfjkkZciu5BFzNA" allowfullscreen>
+            </iframe>
+        </div>
+
+
+        <div class="hidden item" aria="">
             <h1>Practice skills</h1>
         </div>
 
-        <div class="item">
+        <div class="hidden item">
             <h1>Search jobs</h1>
         </div>
 
-        <div class="item">
+        <div class="hidden item">
             <h1>Search education centers</h1>
         </div>
 
-    -->
+
 
     </div>
 
     <script src="js.js"></script>
     <script src="theme.js"></script>
+    <noscript>You need to enable JavaScript to view the full site.</noscript>
 
 </body>
 

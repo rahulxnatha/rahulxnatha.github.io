@@ -1,5 +1,7 @@
 body {
     background-color: var(--background_color);
+    color: var(--font_color);
+
 }
 
 .bottom-bar, .top-bar {

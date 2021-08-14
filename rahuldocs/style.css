@@ -1,8 +1,30 @@
-@import url("https://fonts.googleapis.com/css2?family=Roboto+Condensed:ital,wght@0,300;0,400;0,700;1,300;1,400;1,700&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Montserrat&family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap");
 
 * {
   box-sizing: border-box;
-  font-family: "Roboto Condensed", sans-serif;
+  font-family: "Roboto", sans-serif;
+  font-family: "Montserrat", sans-serif;
+  color: var(--fontColor);
+  font-size: 16px;
+  font-weight: 400;
+
+  -webkit-tap-highlight-color:transparent;
+  
+}
+
+
+
+.youtube_embed {
+  position: relative;
+  padding-bottom: 56.25%;
+}
+
+.iframe_youtube {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
 }
 
 a {
@@ -15,6 +37,8 @@ a {
   width: 60px;
   height: 20px;
   border-radius: 50vw;
+  top: 0px;
+
 }
 
 .switch input {
@@ -45,8 +69,8 @@ a {
   left: 5px;
   bottom: 20%;
   background-color: white;
-  -webkit-transition: 0.2s;
-  transition: 0.2s;
+  -webkit-transition: 0s;
+  transition: 0s;
 
   border-radius: 50vw;
 }
@@ -63,16 +87,6 @@ input:checked + .slider:before {
   -webkit-transform: translateX(26px);
   -ms-transform: translateX(26px);
   transform: translateX(26px);
-}
-
-p,
-h1 {
-  margin: 0px;
-  font-weight: 400;
-}
-
-h1 {
-  font-size: 20px;
 }
 
 li {
@@ -214,7 +228,8 @@ body {
 .main_item {
   grid-column-start: 1;
   grid-column-end: 3;
-  min-height: calc(100vh - 154px);
+  /* min-height: calc(100vh - 154px); */
+  min-height: 275px;
   resize: vertical;
   cursor: default;
 }
