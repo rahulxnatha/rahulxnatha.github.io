@@ -36,6 +36,11 @@
       transition: 800ms;
     }
 
+    .top-bar3,
+    .menu_option {
+      display: none;
+    }
+
     .top-bar:hover,
     .bottom-bar:hover {
       width: calc(100% - 40px);

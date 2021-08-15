@@ -40,15 +40,15 @@
 
 
     <!-- CSS -->
+    <link rel="stylesheet" href="style.css" />
+
+    <link rel="stylesheet" href="colors.css" />
     <link rel="stylesheet" href="light_theme.css" />
     <link rel="stylesheet" href="dark_theme.css" />
-
-    <link rel="stylesheet" href="style.css" />
 
     <link rel="stylesheet" href="desktop.css" />
     <link rel="stylesheet" href="tablet.css" />
     <link rel="stylesheet" href="mobile.css" />
-    <link rel="stylesheet" href="colors.css" />
 
 </head>
 
@@ -83,7 +83,7 @@
 
         <!--Version number and branding-->
         <span class="top-bar-item" contenteditable="false">
-            Career Options - 2.9.9856 (Beta)</span>
+            Career Options - 2.9.9857 (Beta)</span>
      
 
             <!--Dark theme manual toggle-->
@@ -125,6 +125,19 @@
     </div>
     <!--The 'top message bar' : ends-->
 
+    <!--The 'top menu bar' : starts-->
+    <div class="top-bar3  transition" id="topc3">
+
+        <span class="menu_option"  onclick="show_all_contents()">All</span>
+        <span class="menu_option" onclick="show_jobs()">Jobs</span>
+        <span class="menu_option o_active" id="youtube_option" onclick=" show_YouTube_videos()">YouTube</span>
+        <span class="menu_option " onclick="show_skills()">Learn skills</span>
+        <span class="menu_option " onclick="show_education()">Search education center</span>
+        
+
+    </div>
+    <!--The 'top menu bar' : ends-->
+
     <!--The 'bottom bar' : starts-->
     <div class="bottom-bar shadow transition" id="bottomc">
         <a href="#">
@@ -160,7 +173,7 @@
             frameborder="0"></iframe>
         -->
 
-        <div class="item main_item" id="item" style="position: relative;">
+        <div class="item main_item jobs" id="item" style="position: relative;">
 
             <!-- <span id="g_frame" style="height: calc(100% - 10px);"></span>-->
 
@@ -197,7 +210,7 @@
 
        
 
-        <div class="item no_pointer">
+        <div class="item no_pointer jobs">
             <h1>Glance</h1>
             <p>
             <ul>
@@ -235,15 +248,15 @@
         </div>
 
        
-         <div class="item" aria="">
+         <div class=" item skills" aria="">
             <h1>Practice skills</h1>
          </div>
 
-         <div class="item">
+         <div class="item jobs">
             <h1>Search jobs</h1>
          </div>
 
-         <div class="item">
+         <div class="item education">
             <h1>Search education centers</h1>
          </div>
 

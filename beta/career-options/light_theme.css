@@ -4,12 +4,12 @@ body {
 
 }
 
-.bottom-bar, .top-bar {
+.bottom-bar, .top-bar, .menu_option {
     background-color: var(--bar_color);
     color: var(--font_color);
 }
 
-.bottom-bar:hover, .top-bar:hover {
+.bottom-bar:hover, .top-bar:hover, .menu_option {
     
    background-color: var(--bar_color_hover);
 }
