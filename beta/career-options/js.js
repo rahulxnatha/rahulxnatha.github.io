@@ -40,23 +40,30 @@ function turnonaccess() {
 
 document.body.classList.toggle("dark");
 document.getElementById("g_frame").style.filter = "invert(90%)";
+
 function auto() {
 
     var welcome_message = document.getElementById("welcome_message");
     let hour = new Date().getHours();
-    let date_time = new Date();
+    let minute = new Date().getMinutes();
+    am_pm = "am";
+    if (hour > 12) { var hour_12 = hour - 12; am_pm = "pm"; }
+    
+    document.getElementById("at").innerHTML = "This website is loaded at " + hour_12 + ":" + minute + am_pm;
+
     if (hour > 16 || hour < 6) {
 
         document.getElementById("darktoggle").checked = true;
         document.getElementById("g_frame").style.filter = "invert(90%)";
 
-
         if (hour > 16) {
-
-            if (hour > 22) { welcome_message.innerHTML = "Good night. See you tomorrow"; }
+            if (hour > 22) { 
+                welcome_message.innerHTML = "Good night. See you tomorrow"; 
+            }
             else {
                 welcome_message.innerHTML = "Hi. Good evening.";
             }
+            
         }
     }
     else {
@@ -64,14 +71,13 @@ function auto() {
         document.body.classList.toggle("dark");
         document.getElementById("darktoggle").checked = false;
         document.getElementById("g_frame").style.filter = "invert(0%)";
-
     }
 
-    document.getElementById("at").innerHTML = date_time;
-    document.getElementById("dark-toggle").style.display = "block";
+    
+    document.getElementById("dark-toggle-label").style.display = "inline";
 
 }
-document.getElementById("splash_screen").style.display = "none";
+
 
 
 

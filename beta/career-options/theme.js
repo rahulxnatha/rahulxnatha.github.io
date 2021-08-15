@@ -19,3 +19,4 @@ switcher.addEventListener('click', function () {
 
 });
 
+document.getElementById("splash_screen").style.display = "none";

@@ -29,7 +29,7 @@
 
   .top-bar {
     display: block;
-    left: 10px;
+    left: 20px;
     top: 20px;
     width: 300px;
     transition: 800ms;
@@ -37,8 +37,8 @@
 
   
 
-  .top-bar:hover {
-    width: calc(100% - 20px);
+  .top-bar:hover, .bottom-bar:hover {
+    width: calc(100% - 40px);
     right: 20px;
     line-height: 200%;
     transition-delay: 0ms;

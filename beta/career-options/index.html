@@ -50,7 +50,6 @@
     <link rel="stylesheet" href="mobile.css" />
     <link rel="stylesheet" href="colors.css" />
 
-
 </head>
 
 <body onload="auto()" class="light noselect">
@@ -84,13 +83,11 @@
 
         <!--Version number and branding-->
         <span class="top-bar-item" contenteditable="false">
-            Career Options - 2.9.9855 (Beta)</span>
-
-
-        
+            Career Options - 2.9.9856 (Beta)</span>
+     
 
             <!--Dark theme manual toggle-->
-            <label class="top-bar-item expand">Dark
+            <label class="top-bar-item expand hidden" id="dark-toggle-label">Dark
                 <div class="tooltip" class="expand">
 
                     <label class="switch">
@@ -130,15 +127,15 @@
 
     <!--The 'bottom bar' : starts-->
     <div class="bottom-bar shadow transition" id="bottomc">
-        <a href="https://natharahul.github.io">
+        <a href="#">
             <img height="25px" style="margin:5px 5px 5px 2px; float: left"
                 src="https://docs.google.com/drawings/d/e/2PACX-1vQA4iiyPJ8Py6UjOW524b3qVO8LRSsglJVuLPbldYkJ9td08uvFLAWs1sGukrMnTgmdvkiBCbTap_jD/pub?w=280&amp;h=42">
 
             <p style="font-size: 21px; margin: 4px 0 0 0;  float: left">from Rahul Natha</p>
         </a>
 
-        <p style="float: right; margin: 8px 2px 5px 0px" id="at"> long ago.</p>
-        <p style="float: right; margin: 8px 2px 5px 0px" id="att">Website loaded: </p>
+        <p style="float: right; margin: 8px 2px 5px 0px" id="at">Wait a moment.</p>
+        <p style="float: right; margin: 8px 2px 5px 0px" id="att"></p>
     </div>
 
     <div id="webpage" class="noselect">
@@ -256,6 +253,7 @@
 
     <script src="js.js"></script>
     <script src="theme.js"></script>
+
     <noscript>You need to enable JavaScript to view the full site.</noscript>
 
 </body>
