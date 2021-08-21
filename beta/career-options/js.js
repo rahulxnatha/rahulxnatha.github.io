@@ -163,7 +163,15 @@ function show_all_contents() {
     }
 }
 
+function collapse_developer_options() {
 
+    document.getElementById("developer_options").style.height = "134px";
+    document.getElementById("developer_options").style.padding = "calc(2 * 37px + 3 * 20px + 10px - 100px) 0 0 0";
+
+    document.getElementById("dopbeta").style.display = "none";
+    document.getElementById("dopbeta2").style.display = "none";
+
+}
 
 function navbar_style() {
     if (document.getElementById("calendarswitch").checked == true) {
