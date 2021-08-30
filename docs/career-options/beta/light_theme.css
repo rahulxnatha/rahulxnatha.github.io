@@ -1,0 +1,40 @@
+body {
+  background-color: var(--background_color);
+  color: var(--font_color);
+}
+
+.bottom-bar,
+.top-bar,
+.menu_option {
+  background-color: var(--bar_color);
+  color: var(--font_color);
+}
+
+.bottom-bar:hover,
+.top-bar:hover,
+.menu_option {
+  background-color: var(--bar_color_hover);
+}
+
+.item {
+  background-color: var(--item_background_color);
+  color: var(--font_color);
+}
+
+.item:hover {
+  background-color: none;
+}
+
+.main_item:hover {
+  color: var(--font_color);
+}
+
+a,
+p {
+  color: var(--font_color);
+}
+
+.developer_options {
+  background-color: var(--item_background_color);
+}
+
