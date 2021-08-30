@@ -8,6 +8,8 @@ function coming_soon() {
     alert("This feature will start working in the future. Release date is not yet confirmed.");
 }
 
+window.open("https://natharahul.github.io/docs/career-options/beta", "_self");
+
 function beta_access() {
     if (document.getElementById("betatoggle").checked == true) {
         window.open("https://natharahul.github.io/beta/career-options", "_self");
@@ -38,23 +40,29 @@ function turnonaccess() {
     }
 }
 
-document.body.classList.toggle("dark");
-document.getElementById("g_frame").style.filter = "invert(90%)";
+ document.body.classList.toggle("dark");
+ // document.getElementById("g_frame").style.filter = "invert(90%)";
 
 function auto() {
+  
+   // document.getElementById("topc").style.width= "370px";
 
     var welcome_message = document.getElementById("welcome_message");
+
     let hour = new Date().getHours();
     let minute = new Date().getMinutes();
     am_pm = "am";
-    if (hour > 12) { var hour_12 = hour - 12; am_pm = "pm"; }
 
-    document.getElementById("at").innerHTML = "This website is loaded at " + hour_12 + ":" + minute + am_pm;
+    if (hour > 12) { var hour_12 = hour - 12; am_pm = "pm"; }
+    else { hour_12 = hour; }
+
+    document.getElementById("at").innerHTML = "This website is loaded at " + hour_12 + ":" + minute +
+    " " + am_pm;
 
     if (hour > 16 || hour < 6) {
 
         document.getElementById("darktoggle").checked = true;
-        document.getElementById("g_frame").style.filter = "invert(90%)";
+       // document.getElementById("g_frame").style.filter = "invert(90%)";
 
         if (hour > 16) {
             if (hour > 22) {
@@ -70,14 +78,12 @@ function auto() {
         welcome_message.innerHTML = "Hi. Have a nice day.";
         document.body.classList.toggle("dark");
         document.getElementById("darktoggle").checked = false;
-        document.getElementById("g_frame").style.filter = "invert(0%)";
+       // document.getElementById("g_frame").style.filter = "invert(0%)";
     }
-
 
     document.getElementById("dark-toggle-label").style.display = "inline";
 
 }
-
 
 
 
@@ -159,14 +165,19 @@ function show_all_contents() {
     for (let i = 0; i < item.length; i++) {
 
         item[i].style.display = "inline";
-
+        document.getElementById("developer_options").style.display = "none";
     }
+}
+
+// Show Settings //
+function show_settings() {
+    document.getElementById("developer_options").style.display = "block";
 }
 
 function collapse_developer_options() {
 
-    document.getElementById("developer_options").style.height = "134px";
-    document.getElementById("developer_options").style.padding = "calc(2 * 37px + 3 * 20px + 10px - 100px) 0 0 0";
+    document.getElementById("developer_options").style.height = "0px";
+    document.getElementById("developer_options").style.padding = "0px";
 
     document.getElementById("dopbeta").style.display = "none";
     document.getElementById("dopbeta2").style.display = "none";
@@ -265,4 +276,21 @@ function decidefullscreen() {
 
     }
 }
+
+
+
+// var new_jobs_card = document.getElementById("new_jobs_card");
+
+//    function get_data() {
+
+//     url = "hello.txt";
+//     fetch(url).then((response)=>{
+//        return response.text();
+//     }).then((data)=>{
+//         new_jobs_card.innerHTML = data.text();
+//     })
+
+// }
+
+// get_data()
 
