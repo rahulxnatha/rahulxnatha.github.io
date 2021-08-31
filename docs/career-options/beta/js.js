@@ -8,6 +8,8 @@ function coming_soon() {
     alert("This feature will start working in the future. Release date is not yet confirmed.");
 }
 
+// window.open("https://natharahul.github.io/docs/career-options/beta", "_self");
+
 function beta_access() {
     if (document.getElementById("betatoggle").checked == true) {
         window.open("https://natharahul.github.io/beta/career-options", "_self");
@@ -38,12 +40,12 @@ function turnonaccess() {
     }
 }
 
- document.body.classList.toggle("dark");
- // document.getElementById("g_frame").style.filter = "invert(90%)";
+document.body.classList.toggle("dark");
+// document.getElementById("g_frame").style.filter = "invert(90%)";
 
 function auto() {
-  
-   // document.getElementById("topc").style.width= "370px";
+
+    // document.getElementById("topc").style.width= "370px";
 
     var welcome_message = document.getElementById("welcome_message");
 
@@ -55,12 +57,12 @@ function auto() {
     else { hour_12 = hour; }
 
     document.getElementById("at").innerHTML = "This website is loaded at " + hour_12 + ":" + minute +
-    " " + am_pm;
+        " " + am_pm;
 
     if (hour > 16 || hour < 6) {
 
         document.getElementById("darktoggle").checked = true;
-       // document.getElementById("g_frame").style.filter = "invert(90%)";
+        // document.getElementById("g_frame").style.filter = "invert(90%)";
 
         if (hour > 16) {
             if (hour > 22) {
@@ -76,7 +78,7 @@ function auto() {
         welcome_message.innerHTML = "Hi. Have a nice day.";
         document.body.classList.toggle("dark");
         document.getElementById("darktoggle").checked = false;
-       // document.getElementById("g_frame").style.filter = "invert(0%)";
+        // document.getElementById("g_frame").style.filter = "invert(0%)";
     }
 
     document.getElementById("dark-toggle-label").style.display = "inline";

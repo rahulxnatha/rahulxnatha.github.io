@@ -1,24 +1,18 @@
-/* Top bar ------------------------ */
-.top-bar {
-    position: fixed;
-    top: 20px;
-    left: 20px;
-    float: left;
-  
-    width: calc(100% - 40px - 320px);
-    width: 370px;
-    border-radius: 50vmin;
-    margin: 0;
-    height: 37px;
-    padding: 0px;
-  
-    z-index: 9999;
-  
-    transition: 400ms;
-    transition-delay: 0.8s;
-  
-    animation-name: bar-elongate;
-    animation-duration: 2s;
-  }
+/* border box fix 
+---------------------------------------*/
+html {
+box-sizing: border-box;
+}
+
+*, *:before, *:after {
+  box-sizing: inherit;
+}
+
+/* body 
+----------------------------------------*/
+body {
+  margin: 0;
+  padding: 0;
+}
   
 
