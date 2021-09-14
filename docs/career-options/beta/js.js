@@ -300,34 +300,50 @@ function decidefullscreen() {
 // on scroll
 // -------------------------------------
 
-var prevScrollpos = window.pageYOffset;
-
-window.onscroll = function () {
-    var currentScrollPos = window.pageYOffset;
-    if (prevScrollpos > currentScrollPos) {
-
-        document.getElementById("topc").style.width = "calc(100% - 40px - 320px)";
-        document.getElementById("topc").style.transitionDelay = "0ms";
-        document.getElementById("dark-toggle-label").style.transitionDelay = "400ms";
-        document.getElementById("beta-toggle-label").style.transitionDelay = "400ms";
-
-        document.getElementById("dark-toggle-label").style.visibility = "visible";
-        document.getElementById("beta-toggle-label").style.visibility = "visible";
+function myFunction_forwidth(x_width_check) {
+    if (x_width_check.matches) { // If media query matches
 
     } else {
+        var prevScrollpos = window.pageYOffset;
 
-        if (currentScrollPos > 0) {
-
-            document.getElementById("topc").style.width = "360px";
-            document.getElementById("topc").style.transitionDelay = "400ms";
-            document.getElementById("dark-toggle-label").style.transitionDelay = "0ms";
-            document.getElementById("beta-toggle-label").style.transitionDelay = "0ms";
-
-            document.getElementById("dark-toggle-label").style.visibility = "hidden";
-            document.getElementById("beta-toggle-label").style.visibility = "hidden";
+        window.onscroll = function () {
+            var currentScrollPos = window.pageYOffset;
+            if (prevScrollpos > currentScrollPos) {
 
 
+
+
+
+                document.getElementById("topc").style.width = "calc(100% - 40px - 320px)";
+                document.getElementById("topc").style.transitionDelay = "0ms";
+                document.getElementById("dark-toggle-label").style.transitionDelay = "400ms";
+                document.getElementById("beta-toggle-label").style.transitionDelay = "400ms";
+
+                document.getElementById("dark-toggle-label").style.visibility = "visible";
+                document.getElementById("beta-toggle-label").style.visibility = "visible";
+
+            } else {
+
+                if (currentScrollPos > 0) {
+
+                    document.getElementById("topc").style.width = "360px";
+                    document.getElementById("topc").style.transitionDelay = "400ms";
+                    document.getElementById("dark-toggle-label").style.transitionDelay = "0ms";
+                    document.getElementById("beta-toggle-label").style.transitionDelay = "0ms";
+
+                    document.getElementById("dark-toggle-label").style.visibility = "hidden";
+                    document.getElementById("beta-toggle-label").style.visibility = "hidden";
+
+
+                }
+            }
+            prevScrollpos = currentScrollPos;
         }
     }
-    prevScrollpos = currentScrollPos;
 }
+
+var x_width_check = window.matchMedia("(max-width: 650px)")
+myFunction_forwidth(x_width_check) // Call listener function at run time
+x_width_check.addListener(myFunction_forwidth) // Attach listener function on state changes
+
+
