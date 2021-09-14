@@ -35,6 +35,20 @@
   /* top and bottom bars 
 ---------------------------------------- */
 
+@keyframes bar-elongate {
+  0% {
+    width: 370px;
+  }
+
+  80% {
+    width: calc(100% - 40px - 0px -30px);
+  }
+
+  100% {
+    width: calc(100% - 40px - 0px);
+  }
+}
+
   .top-bar {
     display: block;
     left: 20px;
