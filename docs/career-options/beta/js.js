@@ -41,7 +41,7 @@ function turnonaccess() {
 }
 
 document.body.classList.toggle("dark");
-// document.getElementById("g_frame").style.filter = "invert(90%)";
+document.getElementById("g_frame").style.filter = "invert(90%)";
 
 function auto() {
 
@@ -62,7 +62,9 @@ function auto() {
     if (hour > 16 || hour < 6) {
 
         document.getElementById("darktoggle").checked = true;
-        // document.getElementById("g_frame").style.filter = "invert(90%)";
+
+        document.getElementById("g_frame").style.filter = "invert(90%)";
+
 
         if (hour > 16) {
             if (hour > 22) {
@@ -78,7 +80,8 @@ function auto() {
         welcome_message.innerHTML = "Hi. Have a nice day.";
         document.body.classList.toggle("dark");
         document.getElementById("darktoggle").checked = false;
-        // document.getElementById("g_frame").style.filter = "invert(0%)";
+        document.getElementById("g_frame").style.filter = "invert(0%)";
+
     }
 
     document.getElementById("dark-toggle-label").style.display = "inline";
@@ -294,3 +297,37 @@ function decidefullscreen() {
 
 // get_data()
 
+// on scroll
+// -------------------------------------
+
+var prevScrollpos = window.pageYOffset;
+
+window.onscroll = function () {
+    var currentScrollPos = window.pageYOffset;
+    if (prevScrollpos > currentScrollPos) {
+
+        document.getElementById("topc").style.width = "calc(100% - 40px - 320px)";
+        document.getElementById("topc").style.transitionDelay = "0ms";
+        document.getElementById("dark-toggle-label").style.transitionDelay = "400ms";
+        document.getElementById("beta-toggle-label").style.transitionDelay = "400ms";
+
+        document.getElementById("dark-toggle-label").style.visibility = "visible";
+        document.getElementById("beta-toggle-label").style.visibility = "visible";
+
+    } else {
+
+        if (currentScrollPos > 0) {
+
+            document.getElementById("topc").style.width = "360px";
+            document.getElementById("topc").style.transitionDelay = "400ms";
+            document.getElementById("dark-toggle-label").style.transitionDelay = "0ms";
+            document.getElementById("beta-toggle-label").style.transitionDelay = "0ms";
+
+            document.getElementById("dark-toggle-label").style.visibility = "hidden";
+            document.getElementById("beta-toggle-label").style.visibility = "hidden";
+
+
+        }
+    }
+    prevScrollpos = currentScrollPos;
+}
