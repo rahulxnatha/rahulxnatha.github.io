@@ -1,0 +1,242 @@
+li {
+  padding: 10px;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  font-family: "Roboto Condensed", sans-serif;
+  margin: 0px;
+  padding: 0px;
+  overflow-y: scroll;
+  background-color: #bfbfbf;
+}
+
+.splash_screen2323 {position:fixed; top:0; left:0; width:100%; height:100%; background-color: black;color:#fff; z-index: 999;}
+
+.a:link {
+  color: #073763;
+}
+.a:visited {
+  color: #073763;
+}
+.a:hover {
+  color: #073763;
+}
+.a:active {
+  color: #073763;
+}
+
+table {
+  width: 100%;
+}
+#t02,
+th,
+td {
+  border: 0px;
+  border-collapse: collapse;
+}
+
+#t01,
+table,
+th,
+td {
+  border: 1px solid gray;
+  border-collapse: collapse;
+}
+#t01,
+.dark-mode th,
+.dark-mode td {
+  border: 1px solid grey;
+}
+
+td a {
+  color: white;
+  text-decoration: none;
+  background-color: black;
+  border-top: 3px solid black;
+  border-left: 10px solid black;
+  border-right: 10px solid black;
+  border-bottom: 3px solid black;
+}
+td a:hover {
+  color: white;
+  text-decoration: none;
+  background-color: #121212;
+
+  border-top: 3px solid #121212;
+  border-left: 10px solid #121212;
+  border-right: 10px solid #121212;
+  border-bottom: 3px solid #121212;
+}
+
+th,
+td {
+  padding: 10px;
+  vertical-align: top;
+  text-align: left;
+}
+#t01 tr:nth-child(even) {
+  background-color: none;
+}
+#t01 tr:nth-child(odd) {
+  background-color: none;
+}
+.dark-mode #t01 th {
+  background-color: none;
+  color: white;
+}
+#t01 th {
+  background-color: none;
+  color: black;
+  font-weight: 700;
+}
+
+path {
+  fill: black;
+}
+.dark-mode path {
+  fill: white;
+}
+
+.button {
+  outline: none;
+}
+.button1 {
+  background-color: white;
+  color: black;
+  border: 3px solid #073763ff;
+}
+.button1:hover {
+  background-color: #073763ff;
+  color: white;
+}
+
+.button2 {
+  background-color: white;
+  color: black;
+  border: 3px solid #073763ff;
+}
+.button2:hover {
+  background-color: #073763ff;
+  color: white;
+}
+
+.button3 {
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 100%;
+  cursor: pointer;
+  height: 100%;
+  padding: 5px 14px;
+  background-color: #eee;
+  color: darkslategray;
+  border: 3px solid #eee;
+  outline: none;
+}
+.button3:hover {
+  border: 3px solid #000000;
+  outline: none;
+  color: black;
+}
+
+.button5 {
+  background-color: #fff;
+  color: #111;
+  border: 0;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 100%;
+  transition-duration: 0.4s;
+  cursor: pointer;
+  margin: 0px 0px 0 0;
+  padding: 5px 14px;
+  position: absolute;
+  top: 0;
+  right: 25px;
+  text-decoration: none;
+  font-size: 36px;
+  margin-left: 50px;
+}
+.button5:hover {
+  background-color: #fff;
+  color: black;
+  outline: none;
+}
+.dark-mode .button5 {
+  background-color: #111;
+  color: #eee;
+}
+.button5:hover {
+  background-color: #111;
+  color: white;
+  outline: none;
+  transition-duration: 0.5s;
+}
+
+input[type="text"] {
+  min-width: 400px;
+  padding: 12px 20px;
+  margin: 8px 0;
+  box-sizing: border-box;
+  border: 3px solid #073763ff;
+  -webkit-transition: 0.5s;
+  transition: 0.5s;
+  outline: none;
+  font-size: 20px;
+}
+
+.dark-mode input[type="text"] {
+  border: 3px solid #eee;
+  background-color: #111;
+  color: white;
+}
+.dark-mode input[type="text"]:focus {
+  border: 3px solid aqua;
+  background-color: #121212;
+  color: white;
+}
+input[type="text"]:focus {
+  border: 3px solid #073763ff;
+}
+
+textarea {
+  width: 100%;
+  height: 50px;
+  padding: 12px 20px;
+  box-sizing: border-box;
+  border: 2px solid #ccc;
+  border-radius: 4px;
+  background-color: #f8f8f8;
+}
+
+.align-right {
+  text-align: right;
+}
+
+/* width */
+::-webkit-scrollbar {
+  width: 14px;
+}
+
+/* Track */
+::-webkit-scrollbar-track {
+  box-shadow: inset 0 0 0px none;
+  background-color: grey;
+  border-radius: 0px;
+}
+
+/* Handle */
+::-webkit-scrollbar-thumb {
+  background: rgb(216, 216, 216);
+  border-radius: 0px;
+}
+
+/* Handle on hover */
+::-webkit-scrollbar-thumb:hover {
+  background: rgb(233, 233, 233);
+}
