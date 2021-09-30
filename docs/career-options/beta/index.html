@@ -38,9 +38,17 @@
     <link rel="stylesheet" content="X-Content-Type-Options: nosniff" href="icon_colors.css" />
     <link rel="stylesheet" content="X-Content-Type-Options: nosniff" href="light_theme.css" />
 
+    <link href="https://unpkg.com/material-components-web@latest/dist/material-components-web.min.css" rel="stylesheet">
+
+
+    <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+    <link href="https://fonts.googleapis.com/css?family=Roboto:300,400,500" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css?family=Roboto+Condensed:300,400,500" rel="stylesheet">
+
+
 </head>
 
-<body class="light" onload="auto()">
+<body class="light mdc-typography" onload="auto()">
 
     <!-- Header -->
     <div class="header_background"> </div>
@@ -50,9 +58,28 @@
 
         <!-- <input class="" id="dopbeta" type="search" name="search_bar" id="" placeholder="Search" /> -->
 
-        <button class="" id="dopbeta2" style="float: right;" onclick="collapse_developer_options()">Collapse</button>
 
-        <span style="font-size: 20px; font-weight: 600;">Settings</span>
+
+        <span style="font-size: 20px; font-weight: 600; ">Settings</span>
+
+        <label class="mdc-text-field mdc-text-field--filled">
+            <span class="mdc-text-field__ripple"></span>
+            <span class="mdc-floating-label" id="my-label">Label</span>
+            <input type="text" class="mdc-text-field__input" aria-labelledby="my-label">
+            <span class="mdc-line-ripple"></span>
+        </label>
+
+        <button class="mdc-button mdc-button--unelevated"> <span class="mdc-button__ripple"></span> Learn Mor</button>
+
+
+        <!-- collapse button 
+        ---------------------------------------- -->
+        <button class="mdc-button foo-button mdc-button--unelevated" id="dopbeta2" style="float: right;"
+            onclick="collapse_developer_options()">
+            <div class="mdc-button__ripple"></div>
+            <span class="mdc-button__label">Collapse</span>
+        </button>
+
 
         <div class="shadow"
             style=" padding: 20px; width: calc((100% - 40px)/3);border-radius: 20px; margin-top: 20px; line-height: 37px;">
@@ -83,6 +110,8 @@
         </div>
 
 
+
+
     </div>
 
 
@@ -111,11 +140,12 @@
 
 
     <!--The 'top bar' : starts-->
-    <div class="top-bar shadow transition" id="topc">
+    <div class="top-bar NOshadow transition" id="topc">
 
 
-        <span class="top-bar-item" style="margin: 0px 10px 0px 0px;">
-            <svg width="37px" style="margin:0;padding:0;" viewBox="0.0 0.0 758.1286089238845 758.2073490813648"
+        <span class="top-bar-item" style="margin: 0px 10px 0px 5px;">
+
+            <!-- <svg width="37px" style="margin:0;padding:0;" viewBox="0.0 0.0 758.1286089238845 758.2073490813648"
                 fill="none" stroke="none" stroke-linecap="square" stroke-miterlimit="10">
                 <clipPath id="p.0">
                     <path d="m0 0l758.1286 0l0 758.20734l-758.1286 0l0 -758.20734z" clip-rule="nonzero" />
@@ -133,12 +163,19 @@
                         d="m379.0643 600.77295l0 0c-79.33154 0 -152.6152 -42.394714 -192.16231 -111.16623c-39.547104 -68.771545 -39.327835 -153.43414 0.5749359 -221.99991c39.90277 -68.565765 113.40503 -110.58035 192.7355 -110.16945l-0.3237915 62.514328l0 0c-56.957703 -0.29501343 -109.730835 29.87062 -138.38025 79.09946c-28.649384 49.22885 -28.806808 110.01492 -0.41278076 159.39151c28.394012 49.376556 81.01022 79.815155 137.96869 79.815155z"
                         fill-rule="evenodd" />
                 </g>
-            </svg>
+            </svg> -->
+
+            <img src="images/co.png" height="33px" alt="logo" />
+
         </span>
 
+
+
+
+
         <!--Version number and branding-->
-        <span class="top-bar-item" contenteditable="false">
-            Career Options - 2.9.98.71 (Beta)</span>
+        <span class="top-bar-item" contenteditable="false" style="color:#777; margin-top: 6px; font-size: 110%; font-family: 'Roboto Condensed';" >
+            Version 2.9.98.89 (Beta)</span>
 
 
         <!--Dark theme manual toggle-->
@@ -185,6 +222,20 @@
 
 
     <!--The 'top menu bar' : starts-->
+    <div class="top-bar2-1  transition" id="topc2-1">
+
+
+        <span class="menu_option hidden" id="dopbeta">
+            <input type="search" name="search_bar" id="search_this_query" placeholder="Type to search" />
+        </span>
+
+
+
+    </div>
+    <!--The 'top menu bar' : ends-->
+
+
+    <!--The 'top menu bar' : starts-->
     <div class="top-bar3  transition" id="topc3">
 
         <span class="menu_option" onclick="show_all_contents()">All</span>
@@ -193,28 +244,28 @@
         <span class="menu_option " onclick="show_skills()">Learn skills</span>
         <span class="menu_option " onclick="show_education()">Search education center</span>
 
-        <span class="menu_option hidden" onclick="show_settings()">Settings</span>
 
-        <span class="menu_option hidden" style="margin-right:0;   cursor:auto;">
-            <input id="dopbeta" type="search" style="width: calc(100% - 742px); margin-right: 0;" name="search_bar"
-                id="" placeholder="Type to search" />
-        </span>
 
+
+
+        <!-- <span class="menu_option hidden " style="margin-right:0;   " onclick="show_settings()">Settings</span> -->
 
     </div>
     <!--The 'top menu bar' : ends-->
 
     <!--The 'bottom bar' : starts-->
-    <div class="bottom-bar shadow transition " id="bottomc">
+    <div class="bottom-bar NOshadow transition " id="bottomc">
         <a href="#">
-              <img height="25px" style="margin:5px 5px 5px 2px; float: left"
-                src="https://docs.google.com/drawings/d/e/2PACX-1vQA4iiyPJ8Py6UjOW524b3qVO8LRSsglJVuLPbldYkJ9td08uvFLAWs1sGukrMnTgmdvkiBCbTap_jD/pub?w=280&amp;h=42"> 
+            <!-- <img height="25px" style="margin:5px 5px 5px 2px; float: left"
+                src="https://docs.google.com/drawings/d/e/2PACX-1vQA4iiyPJ8Py6UjOW524b3qVO8LRSsglJVuLPbldYkJ9td08uvFLAWs1sGukrMnTgmdvkiBCbTap_jD/pub?w=280&amp;h=42"> -->
 
-            <p style=" margin: 6px 2px 5px 10px;  float: left"> from Rahul Natha</p>
+                <img src="images/rd.png" height="33px" alt="logo" />
+
+            
         </a>
 
-        <p style="float: right; margin: 6px 2px 5px 0px" id="at">Wait a moment.</p>
-        <p style="float: right; margin: 6px 2px 5px 0px" id="att"></p>
+        <p style="float: right; margin: 4px 2px 5px 0px" id="at">Wait a moment.</p>
+        <p style="float: right; margin: 4px 2px 5px 0px" id="att"></p>
     </div>
 
 
@@ -255,7 +306,7 @@
 
 
 
-         <div class="item no_pointer jobs">
+        <div class="item no_pointer jobs">
             <h1>Glance</h1>
             <p>
             <ul>
@@ -268,9 +319,9 @@
 
 
             <p id="answer"></p>
-        </div> 
+        </div>
 
-         <div class="youtube_embed item" style="position: relative; padding-bottom: 56.25%;">
+        <div class="youtube_embed item" style="position: relative; padding-bottom: 56.25%;">
             <iframe class="iframe_youtube" width="100%" height="100%" frameborder="0"
                 src="https://www.youtube.com/embed/videoseries?list=UUnKlI8bIoRdgzrPUNvxqflQ" allowfullscreen>
 
@@ -285,9 +336,9 @@
 
         <div class="youtube_embed item" style="position: relative; padding-bottom: 56.25%;">
             <iframe class="iframe_youtube" width="100%" height="100%" frameborder="0"
-                src="https://www.youtube.com/embed/videoseries?list=UU4ZfW_-pmfjkkZciu5BFzNA" allowfullscreen>
+                src="https://www.youtube.com/embed/videoseries?list=UUk4ZfW_-pmfjkkZciu5BFzNA" allowfullscreen>
             </iframe>
-        </div> 
+        </div>
 
 
         <div class=" item skills" aria="">
@@ -335,6 +386,8 @@
                 you are in your domain. If you want a job, knowing little to moderate in your domain is more than
                 enough. You get trained from the ground up. What you need to do, is STAND OUT!</p>
         </div>
+
+
 
 
         <!-- <div class="item jobs">
@@ -390,6 +443,10 @@
             features</a>
 
     </footer>
+
+
+
+    <script src="https://unpkg.com/material-components-web@latest/dist/material-components-web.min.js"></script>
 
     <script src="js.js"></script>
     <script src="theme.js"></script>

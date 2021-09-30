@@ -40,8 +40,14 @@ function turnonaccess() {
     }
 }
 
-document.body.classList.toggle("dark");
-document.getElementById("g_frame").style.filter = "invert(90%)";
+
+
+
+// document.body.classList.toggle("dark");
+// document.getElementById("g_frame").style.filter = "invert(90%)";
+
+mdc.ripple.MDCRipple.attachTo(document.querySelector('.foo-button'));
+mdc.textField.MDCTextField.attachTo(document.querySelector('.mdc-text-field'));
 
 function auto() {
 
@@ -63,7 +69,7 @@ function auto() {
 
         document.getElementById("darktoggle").checked = true;
 
-        document.getElementById("g_frame").style.filter = "invert(90%)";
+        // document.getElementById("g_frame").style.filter = "invert(90%)";
 
 
         if (hour > 16) {
@@ -78,13 +84,13 @@ function auto() {
     }
     else {
         welcome_message.innerHTML = "Hi. Have a nice day.";
-        document.body.classList.toggle("dark");
+        // document.body.classList.toggle("dark");
         document.getElementById("darktoggle").checked = false;
-        document.getElementById("g_frame").style.filter = "invert(0%)";
+        // document.getElementById("g_frame").style.filter = "invert(0%)";
 
     }
 
-    document.getElementById("dark-toggle-label").style.display = "inline";
+    document.getElementById("dark-toggle-label").style.display = "none";
 
 }
 
@@ -308,11 +314,8 @@ function myFunction_forwidth(x_width_check) {
 
         window.onscroll = function () {
             var currentScrollPos = window.pageYOffset;
-            if (prevScrollpos > currentScrollPos) {
-
-
-
-
+            // if (prevScrollpos > currentScrollPos) {
+                if (prevScrollpos == currentScrollPos) {
 
                 document.getElementById("topc").style.width = "calc(100% - 40px - 320px)";
                 document.getElementById("topc").style.transitionDelay = "0ms";
@@ -327,7 +330,7 @@ function myFunction_forwidth(x_width_check) {
                 if (currentScrollPos > 0) {
 
                     document.getElementById("topc").style.width = "360px";
-                    document.getElementById("topc").style.transitionDelay = "400ms";
+                    document.getElementById("topc").style.transitionDelay = "0ms";
                     document.getElementById("dark-toggle-label").style.transitionDelay = "0ms";
                     document.getElementById("beta-toggle-label").style.transitionDelay = "0ms";
 
@@ -337,7 +340,7 @@ function myFunction_forwidth(x_width_check) {
 
                 }
             }
-            prevScrollpos = currentScrollPos;
+            // prevScrollpos = currentScrollPos;
         }
     }
 }
