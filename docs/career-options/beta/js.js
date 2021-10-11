@@ -67,7 +67,7 @@ function auto() {
 
     if (hour > 16 || hour < 6) {
 
-        document.getElementById("darktoggle").checked = true;
+        // document.getElementById("darktoggle").checked = true;
 
         // document.getElementById("g_frame").style.filter = "invert(90%)";
 
@@ -85,7 +85,7 @@ function auto() {
     else {
         welcome_message.innerHTML = "Hi. Have a nice day.";
         // document.body.classList.toggle("dark");
-        document.getElementById("darktoggle").checked = false;
+        // document.getElementById("darktoggle").checked = false;
         // document.getElementById("g_frame").style.filter = "invert(0%)";
 
     }
@@ -94,7 +94,27 @@ function auto() {
 
 }
 
+if (window.matchMedia('(prefers-color-scheme)').media !== 'not all') {
+    console.log('🎉 Dark mode is supported');
+    welcome_message.innerHTML = "Hi. What time is it?";
+    
+}
 
+const userPrefersDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+
+const userPrefersLight = window.matchMedia && window.matchMedia('(prefers-color-scheme: light)').matches;
+
+if (userPrefersDark) {
+    console.log("User prefers a dark interface");
+    document.getElementById('logo_co').src = 'images/dco.png';
+    document.getElementById("darktoggle").checked = true;
+}
+
+if (userPrefersLight) {
+    console.log("User prefers a dark interface");
+    document.getElementById('logo_co').src = 'images/dco.png';
+    document.getElementById("darktoggle").checked = false;
+}
 
 function widen() {
     document.getElementById("widen").style.gridColumnStart = 1;
@@ -315,7 +335,7 @@ function myFunction_forwidth(x_width_check) {
         window.onscroll = function () {
             var currentScrollPos = window.pageYOffset;
             // if (prevScrollpos > currentScrollPos) {
-                if (prevScrollpos == currentScrollPos) {
+            if (prevScrollpos == currentScrollPos) {
 
                 document.getElementById("topc").style.width = "calc(100% - 40px - 320px)";
                 document.getElementById("topc").style.transitionDelay = "0ms";

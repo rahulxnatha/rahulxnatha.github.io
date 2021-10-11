@@ -43,6 +43,11 @@ p {
   line-height: 25px;
 }
 
+h1 {
+  font-size: 27px;
+  font-weight: 400;
+}
+
 li {
   margin-bottom: 8px;
 }
@@ -133,6 +138,7 @@ input[type="search"]:focus {
 
 .header_background {
   height: calc(3 * 37px + 4 * 20px);
+  
 }
 
 /* developer options 
@@ -149,21 +155,21 @@ input[type="search"]:focus {
 ------------------------------------------- */
 #webpage {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(400px, 1fr));
+  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
 
   float: none;
 
   grid-auto-rows: minmax(200px, auto);
   grid-auto-columns: minmax(200px, auto);
 
-  column-gap: 20px;
-  row-gap: 20px;
+  column-gap: 50px;
+  row-gap: 50px;
 
-  margin: 0px 20px 20px 20px;
+  margin: 30px 5% 50px 5%;
   padding: 0px;
 
   border-radius: 18.5px;
-  background-color: transparent;
+  background-color: #00800000;
 }
 
 /* items 
@@ -196,9 +202,7 @@ input[type="search"]:focus {
   cursor: default;
 } */
 
-.main_item {
-  display: inline;
-}
+
 
 .youtube_embed {
   position: relative;

@@ -10,6 +10,12 @@ body {
   color: var(--font_color);
 }
 
+
+.header_background {
+  
+  background-color: var(--item_background_color);
+}
+
 .bottom-bar:hover,
 .top-bar:hover,
 .menu_option {

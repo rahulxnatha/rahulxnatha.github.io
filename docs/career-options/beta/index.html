@@ -50,6 +50,8 @@
 
 <body class="light mdc-typography" onload="auto()">
 
+    <div class="hidden" style="height:100px; width: 100%;"> With internet, education is free of cost. </div>
+
     <!-- Header -->
     <div class="header_background"> </div>
 
@@ -142,10 +144,10 @@
     <!--The 'top bar' : starts-->
     <div class="top-bar NOshadow transition" id="topc">
 
+        <a href="#">
+            <span class="top-bar-item" style="margin: 0px 10px 0px 5px;">
 
-        <span class="top-bar-item" style="margin: 0px 10px 0px 5px;">
-
-            <!-- <svg width="37px" style="margin:0;padding:0;" viewBox="0.0 0.0 758.1286089238845 758.2073490813648"
+                <!-- <svg width="37px" style="margin:0;padding:0;" viewBox="0.0 0.0 758.1286089238845 758.2073490813648"
                 fill="none" stroke="none" stroke-linecap="square" stroke-miterlimit="10">
                 <clipPath id="p.0">
                     <path d="m0 0l758.1286 0l0 758.20734l-758.1286 0l0 -758.20734z" clip-rule="nonzero" />
@@ -165,21 +167,23 @@
                 </g>
             </svg> -->
 
-            <img src="images/co.png" height="33px" alt="logo" />
+                <img src="images/co.png" height="33px" alt="logo" id="logo_co" />
 
-        </span>
-
+            </span>
+        </a>
 
 
 
 
         <!--Version number and branding-->
-        <span class="top-bar-item" contenteditable="false" style="color:#777; margin-top: 6px; font-size: 110%; font-family: 'Roboto Condensed';" >
-            Version 2.9.98.89 (Beta)</span>
+        <span class="top-bar-item" contenteditable="false"
+            style="color:#777; margin-top: 6px; font-size: 110%; font-family: 'Roboto Condensed';">
+            Version 2.9.98.91 (Beta)</span>
 
 
         <!--Dark theme manual toggle-->
-        <label class="top-bar-item expand hidden expand2" id="dark-toggle-label">Dark
+        <label class="top-bar-item expand NOhidden expand2" id="dark-toggle-label"
+            style="visibility: visible; display: inline-block;">Dark
             <div class="tooltip" class="expand">
 
                 <label class="switch">
@@ -248,7 +252,7 @@
 
 
 
-        <!-- <span class="menu_option hidden " style="margin-right:0;   " onclick="show_settings()">Settings</span> -->
+        <span class="menu_option hidden " style="margin-right:0;   " onclick="show_settings()">Settings</span>
 
     </div>
     <!--The 'top menu bar' : ends-->
@@ -259,9 +263,9 @@
             <!-- <img height="25px" style="margin:5px 5px 5px 2px; float: left"
                 src="https://docs.google.com/drawings/d/e/2PACX-1vQA4iiyPJ8Py6UjOW524b3qVO8LRSsglJVuLPbldYkJ9td08uvFLAWs1sGukrMnTgmdvkiBCbTap_jD/pub?w=280&amp;h=42"> -->
 
-                <img src="images/rd.png" height="33px" alt="logo" />
+            <img src="images/rd.png" height="33px" alt="logo" />
 
-            
+
         </a>
 
         <p style="float: right; margin: 4px 2px 5px 0px" id="at">Wait a moment.</p>
@@ -378,6 +382,22 @@
 
         <div class="item education">
             <h1>Search education centers</h1>
+        </div>
+
+        <div class="item jobs">
+            <h1>Union Public Service Commission</h1>
+
+            <p>The Union Public Service Commission, commonly abbreviated as UPSC, is India's premier central recruiting
+                agency for central government public servants. It is responsible for appointments to and examinations
+                for Group A and Group B posts under civil services cadre and defence services cadre of the union
+                government.</p>
+            <a href="https://www.upsc.gov.in/" target="_blank" rel="noopener noreferrer">
+
+                <button class="mdc-button foo-button mdc-button--unelevated">
+                    <div class="mdc-button__ripple"></div>
+                    <span class="mdc-button__label">Details</span>
+                </button>
+            </a>
         </div>
 
         <div class="item jobs" id="new_jobs_card">

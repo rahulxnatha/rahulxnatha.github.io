@@ -13,8 +13,6 @@
   --dark3_075: #333333bf;
 }
 
-
-
 @media (prefers-color-scheme: dark) {
   /* Dark theme styles go here */
 
@@ -24,13 +22,27 @@
     --bar_color: var(--dark3_075);
     --bar_color_hover: var(--dark3_100);
     --item_background_color: var(--dark3_100);
-  
-    --menu-option-border: #999;
 
-    
+    --menu-option-border: #999;
   }
 
-  #g_frame {filter : invert(90%);}
+  #g_frame {
+    filter: invert(90%);
+  }
+
+  .top-bar > a > span > img {
+    filter: grayscale(100%);
+    filter: invert(100%);
+  }
+
+  .bottom-bar > a > img {
+    filter: invert(100%);
+  }
+
+  .item > #icon_fscreen_gframe > #gframe_fulls,
+  .item > #icon_fscreen_gframe > #gframe_fulls_off {
+    filter: invert(100%);
+  }
 }
 
 @media (prefers-color-scheme: light) {
@@ -39,21 +51,15 @@
   .light {
     --background_color: var(--light2_100);
     --font_color: var(--dark1_100);
-  
+
     --bar_color: var(--light1_075);
     --bar_color_hover: var(--light1_100);
-  
+
     --item_background_color: var(--light1_100);
-  
+
     --menu-option-border: #555;
   }
-
-
 }
-
-
-
-
 
 .magic {
   --background_color: red;
