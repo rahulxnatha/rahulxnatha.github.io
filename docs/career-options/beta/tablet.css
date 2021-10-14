@@ -44,7 +44,7 @@
 ------------------------------------- */
 
   .top-bar3 {
-    display: none;
+    display: inline;
   }
   .menu_option {
     display: inline;
@@ -54,7 +54,7 @@
 --------------------------------------- */
 
   .top-bar {
-    width: calc(100% - 40px);
+    width: calc(100% - 40px - 50px);
     right: 20px;
     padding-left: 0px;
     left: 20px;
@@ -71,7 +71,7 @@
     }
 
     100% {
-      width: calc(100% - 40px - 0px);
+      width: calc(100% - 40px - 50px);
     }
   }
 
@@ -89,4 +89,29 @@
     top: calc(40px + 37px);
     right: 20px;
   }
+
+  /* search bar 
+  ---------------------------- */
+  
+  .top-bar2-1 {
+    display: inline;
+    position: absolute;
+    top: calc(1 * 37px + 40px);
+    left: 20px;
+    float: left;
+  
+    width: calc(100% - 40px);
+  }
+
+  #dopbeta {
+    width: calc(100%);
+    margin-left: calc(0px);
+    cursor:auto;
+  }
+
+  #search_this_query {
+    width: calc(100% - 300px);
+    margin-left: 0;
+  }
+
 }

@@ -1,7 +1,7 @@
 @media screen and (max-width: 650px) {
   /* web page 
   ----------------------------- */
-  #webpage {
+  /* #webpage {
     
 
     grid-auto-rows: minmax(200px, auto);
@@ -15,7 +15,7 @@
 
     border-radius: 18.5px;
     background-color: transparent;
-  }
+  } */
 
   /* items 
   ---------------------------------- */
@@ -45,7 +45,7 @@
   }
 
   100% {
-    width: calc(100% - 40px - 0px);
+    width: calc(100% - 40px - 50px);
   }
 }
 
@@ -53,7 +53,7 @@
     display: block;
     left: 20px;
     top: 20px;
-    width: calc(100% - 40px);
+    width: calc(100% - 40px - 50px);
     transition: 400ms;
   }
 
@@ -107,7 +107,7 @@
   ---------------------------------- */
   .top-bar3,
   .menu_option {
-    display: none;
+    display: inline;
   }
 
   /* message bar 
@@ -116,5 +116,11 @@
   .top-bar2 {
     top: calc(40px + 37px);
     right: 20px;
+  }
+
+  /* search bar 
+  ---------------------------- */
+  #topc2-1-what {
+    display: none;
   }
 }

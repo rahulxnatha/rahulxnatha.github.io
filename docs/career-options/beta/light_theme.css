@@ -41,6 +41,6 @@ p {
 }
 
 .developer_options {
-  background-color: var(--item_background_color);
+  background-color: var(--dev-background-color);
 }
 

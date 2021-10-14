@@ -4,6 +4,9 @@
 
   --light2_100: #eeeeee;
 
+  --light3_100: rgb(255, 228, 169);
+
+
   --dark1_100: #000000;
   --dark1_075: #000000bf;
 
@@ -24,6 +27,7 @@
     --item_background_color: var(--dark3_100);
 
     --menu-option-border: #999;
+    --dev-background-color: var(--dark1_100);
   }
 
   #g_frame {
@@ -58,6 +62,9 @@
     --item_background_color: var(--light1_100);
 
     --menu-option-border: #555;
+
+    
+    --dev-background-color: var(--light3_100);
   }
 }
 

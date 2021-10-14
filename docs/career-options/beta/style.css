@@ -149,6 +149,7 @@ input[type="search"]:focus {
   height: fit-content;
   padding: calc(20px);
   margin-bottom: 20px;
+  
 }
 
 /* web page
@@ -420,12 +421,18 @@ input:checked + .slider:before {
 /* message bar 
 ---------------------------------- */
 
+.settings_icon_cus89 {
+  position: absolute;
+  top: 25px;
+  right: 20px;
+}
+
 .top-bar2 {
   position: absolute;
   top: 20px;
-  right: 20px;
+  right: 70px;
   float: left;
-  width: 300px;
+  width: 250px;
 
   border-radius: 50vmin;
   border-radius: 7px;

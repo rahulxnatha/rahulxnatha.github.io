@@ -1,8 +1,14 @@
 var item = document.getElementsByClassName("item");
+var hide = document.getElementsByClassName("hide");
 
 for (let i = 3; i < item.length; i++) {
     item[i].addEventListener("click", coming_soon);
 }
+
+for (let i = 0; i < hide.length; i++) {
+    hide[i].style.display = "none";
+}
+
 
 function coming_soon() {
     alert("This feature will start working in the future. Release date is not yet confirmed.");
@@ -45,6 +51,8 @@ function turnonaccess() {
 
 // document.body.classList.toggle("dark");
 // document.getElementById("g_frame").style.filter = "invert(90%)";
+
+
 
 mdc.ripple.MDCRipple.attachTo(document.querySelector('.foo-button'));
 mdc.textField.MDCTextField.attachTo(document.querySelector('.mdc-text-field'));
@@ -91,6 +99,7 @@ function auto() {
     }
 
     document.getElementById("dark-toggle-label").style.display = "none";
+   
 
 }
 
@@ -201,15 +210,16 @@ function show_all_contents() {
 // Show Settings //
 function show_settings() {
     document.getElementById("developer_options").style.display = "block";
+    document.getElementById("topc2").style.width = "300px";
+    document.getElementById("topc2").style.right = "20px";
+    document.getElementById("settings_iconcus89").style.display = "none";
 }
 
 function collapse_developer_options() {
-
-    document.getElementById("developer_options").style.height = "0px";
-    document.getElementById("developer_options").style.padding = "0px";
-
-    document.getElementById("dopbeta").style.display = "none";
-    document.getElementById("dopbeta2").style.display = "none";
+    document.getElementById("topc2").style.width = "250px";
+    document.getElementById("topc2").style.right = "70px";
+    document.getElementById("settings_iconcus89").style.display = "inline";
+    document.getElementById("developer_options").style.display = "none";
 
 }
 
