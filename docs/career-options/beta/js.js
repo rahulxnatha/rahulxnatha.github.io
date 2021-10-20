@@ -98,32 +98,18 @@ function auto() {
 
     }
 
-    document.getElementById("dark-toggle-label").style.display = "none";
-   
+    document.getElementById("dark-toggle-label").style.display = "inline";
+
 
 }
 
 if (window.matchMedia('(prefers-color-scheme)').media !== 'not all') {
     console.log('🎉 Dark mode is supported');
     welcome_message.innerHTML = "Hi. What time is it?";
-    
+
 }
 
-const userPrefersDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
 
-const userPrefersLight = window.matchMedia && window.matchMedia('(prefers-color-scheme: light)').matches;
-
-if (userPrefersDark) {
-    console.log("User prefers a dark interface");
-    document.getElementById('logo_co').src = 'images/dco.png';
-    document.getElementById("darktoggle").checked = true;
-}
-
-if (userPrefersLight) {
-    console.log("User prefers a dark interface");
-    document.getElementById('logo_co').src = 'images/dco.png';
-    document.getElementById("darktoggle").checked = false;
-}
 
 function widen() {
     document.getElementById("widen").style.gridColumnStart = 1;
