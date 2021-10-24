@@ -1,6 +1,6 @@
 var item = document.getElementsByClassName("item");
 var hide = document.getElementsByClassName("hide");
-
+var settings_button_pressed = 0;
 for (let i = 3; i < item.length; i++) {
     item[i].addEventListener("click", coming_soon);
 }
@@ -66,11 +66,13 @@ function auto() {
     let hour = new Date().getHours();
     let minute = new Date().getMinutes();
     am_pm = "am";
+    update_date = " today";
 
     if (hour > 12) { var hour_12 = hour - 12; am_pm = "pm"; }
     else { hour_12 = hour; }
 
-    document.getElementById("at").innerHTML = "This website is loaded at " + hour_12 + ":" + minute +
+    document.getElementById("at").innerHTML =
+        "The contents in this website are updated" + update_date + " at " + hour_12 + ":" + minute +
         " " + am_pm;
 
     if (hour > 16 || hour < 6) {
@@ -196,17 +198,46 @@ function show_all_contents() {
 // Show Settings //
 function show_settings() {
     document.getElementById("developer_options").style.display = "block";
-    document.getElementById("topc2").style.width = "300px";
-    document.getElementById("topc2").style.right = "20px";
     document.getElementById("settings_iconcus89").style.display = "none";
+
+    settings_button_pressed++;
+
+    const topbar_anim_control = window.matchMedia("(min-width: 1300px)");
+
+    if (topbar_anim_control.matches) {
+        // desktop
+        document.getElementById("topc2").style.width = "300px";
+        document.getElementById("topc2").style.right = "20px";
+
+    } else {
+        // tablets and phones
+        document.getElementById("topc").style.width = "calc(100% - 40px)";
+        document.getElementById("topc").style.right = "20px";
+
+    }
+
 }
 
 function collapse_developer_options() {
-    document.getElementById("topc2").style.width = "250px";
-    document.getElementById("topc2").style.right = "70px";
+
     document.getElementById("settings_iconcus89").style.display = "inline";
     document.getElementById("developer_options").style.display = "none";
+    const topbar_anim_control = window.matchMedia("(min-width: 1300px)");
 
+    settings_button_pressed = 0;
+
+    if (topbar_anim_control.matches) {
+        // desktop
+        document.getElementById("topc2").style.width = "250px";
+        document.getElementById("topc2").style.right = "70px";
+
+    } else {
+        // tablets and phones
+        document.getElementById("topc").style.width = "calc(100% - 40px - 50px)";
+        document.getElementById("topc").style.right = "70px";
+
+
+    }
 }
 
 function navbar_style() {
@@ -333,7 +364,22 @@ function myFunction_forwidth(x_width_check) {
             // if (prevScrollpos > currentScrollPos) {
             if (prevScrollpos == currentScrollPos) {
 
-                document.getElementById("topc").style.width = "calc(100% - 40px - 320px)";
+                const topbar_anim_control = window.matchMedia("(min-width: 1300px)");
+
+                if (topbar_anim_control.matches) {
+                    // desktop
+                    document.getElementById("topc").style.width = "calc(100% - 40px - 320px)";
+
+
+                } else {
+                    // tablets and phones
+
+                    if (settings_button_pressed > 0) {
+                        document.getElementById("topc").style.width = "calc(100% - 40px - 0px)";
+                    }
+                    else { document.getElementById("topc").style.width = "calc(100% - 40px - 0px - 50px)"; }
+                }
+
                 document.getElementById("topc").style.transitionDelay = "0ms";
                 document.getElementById("dark-toggle-label").style.transitionDelay = "400ms";
                 document.getElementById("beta-toggle-label").style.transitionDelay = "400ms";

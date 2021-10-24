@@ -484,6 +484,8 @@ input:checked + .slider:before {
 
   transition: 400ms;
   transition-delay: 0.8s;
+  
+  
 }
 
 .menu_option {
@@ -548,7 +550,7 @@ input:checked + .slider:before {
   right: 20px;
   height: 37px;
 
-  width: 300px;
+  width: 156px;
 
   border-width: 0px;
   border-style: solid;

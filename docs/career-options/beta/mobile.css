@@ -37,11 +37,11 @@
 
 @keyframes bar-elongate {
   0% {
-    width: 370px;
+    width: calc(100% - 40px - 50px - 30px);
   }
 
   80% {
-    width: calc(100% - 40px - 0px -30px);
+    width: calc(100% - 40px - 50px - 10px);
   }
 
   100% {
@@ -99,6 +99,11 @@
     transition: 0s;
   }
 
+  .bottom-bar:hover {
+    width: 156px;
+    transition-delay: 0s;
+  }
+
   .tooltiptext {
     display: none;
   }
@@ -109,6 +114,19 @@
   .menu_option {
     display: inline;
   }
+
+  .top-bar3 { 
+
+    overflow-x: scroll;
+    overflow-y: hidden;
+   
+    height: 50px;
+    
+  }
+
+.top-bar3inside {
+  width: 650px;
+}
 
   /* message bar 
 ----------------------------- */

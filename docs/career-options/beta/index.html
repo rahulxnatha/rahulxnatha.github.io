@@ -174,7 +174,7 @@
                 </g>
             </svg> -->
 
-                <img src="images/co.png" height="33px" alt="logo" id="logo_co" />
+                <img src="images/co_default_dark.png" height="33px" alt="logo" id="logo_co" />
 
             </span>
         </a>
@@ -189,12 +189,11 @@
 
 
         <!--Dark theme manual toggle-->
-        <label class="top-bar-item expand NOhidden expand2" id="dark-toggle-label"
-            style="visibility: visible; display: inline-block;">Dark
+        <label class="top-bar-item expand expand2" id="dark-toggle-label">Dark
             <div class="tooltip" class="expand">
 
                 <label class="switch">
-                    <input id="darktoggle" class="expand darktoggle" type="checkbox">
+                    <input id="darktoggle" class="expand2 darktoggle" type="checkbox">
                     <span class="slider"></span>
                 </label>
 
@@ -207,7 +206,7 @@
             <div class="tooltip" class="expand">
 
                 <label class="switch">
-                    <input id="betatoggle" class="expand" type="checkbox" checked onclick="beta_access()">
+                    <input id="betatoggle" class="expand1" type="checkbox" checked onclick="beta_access()">
                     <span class="slider"></span>
                 </label>
 
@@ -254,13 +253,14 @@
     <!--The 'top menu bar' : starts-->
     <div class="top-bar3  transition" id="topc3">
 
+        <div class="top-bar3inside">
         <span class="menu_option" onclick="show_all_contents()">All</span>
         <span class="menu_option" onclick="show_jobs()">Jobs</span>
         <span class="menu_option o_active" id="youtube_option" onclick=" show_YouTube_videos()">YouTube</span>
         <span class="menu_option " onclick="show_skills()">Learn skills</span>
         <span class="menu_option " onclick="show_education()">Search education center</span>
 
-
+    </div>
 
 
 
