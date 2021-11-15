@@ -1,7 +1,19 @@
+document.getElementById("version-number").innerHTML = "2.9.99.01";
+
+function view_announcement() {
+    // if (announcement_view_status == close) {
+        document.getElementById("announcement_bar").style.display = "none";
+    // }
+
+    // else {
+        // document.getElementById("announcement_bar").style.display = "block";
+    // }
+}
+
 var item = document.getElementsByClassName("item");
 var hide = document.getElementsByClassName("hide");
 var settings_button_pressed = 0;
-for (let i = 3; i < item.length; i++) {
+for (let i = 6; i < item.length; i++) {
     item[i].addEventListener("click", coming_soon);
 }
 
@@ -11,10 +23,16 @@ for (let i = 0; i < hide.length; i++) {
 
 
 function coming_soon() {
+
+
+    for (let i = 6; i < item.length; i++) {
+        item[i].style.backgroundColor = "#777";
+    }
+
     alert("This feature will start working in the future. Release date is not yet confirmed.");
 }
 
-// window.open("https://natharahul.github.io/docs/career-options/beta", "_self");
+
 
 function beta_access() {
     if (document.getElementById("betatoggle").checked == true) {
@@ -29,22 +47,39 @@ function beta_access() {
 
 }
 
-function turnonaccess() {
-    var keyentered = document.getElementById("accesskey").value;
-    if (keyentered == "prep") {
-        document.getElementById("accesspage").style.display = "none";
-    }
-    else {
-        document.getElementById("accessreply").innerHTML = "Access denied!";
-    }
-    if (keyentered == "ea") {
-        document.getElementById("accesspage").style.display = "none";
-        document.getElementById("versiond").innerHTML = "Career Options Beta";
-    }
-    else {
-        document.getElementById("accessreply").innerHTML = "Access denied!";
-    }
+
+var access = 0;
+// document.getElementById("body").style.display = "none";
+
+// for (let i = 1; i < item.length; i++) {
+//     item[i].style.display = "none";
+// }
+
+function turn_on_access() {
+
+var keyentered = document.getElementById("accesskey").value;
+if (keyentered == "prep") {
+    access = 1;
 }
+else {
+    document.getElementById("accessreply").innerHTML = "Access denied! Enter the correct accesskey. In case you don't have an accesskey, <u>contact me</u>.";
+}
+
+
+
+if (access == 1) {
+    // window.open("index.html", "_self");
+    // document.getElementById("accesspage2").style.display = "none";
+
+    for (let i = 1; i < item.length; i++) {
+        item[i].style.display = "inline";
+    }
+
+}
+
+}
+
+document.getElementById("accesspage").style.display = "none";
 
 
 
@@ -353,11 +388,16 @@ function decidefullscreen() {
 // on scroll
 // -------------------------------------
 
+var x_width_check = window.matchMedia("max-width: 650px")
+myFunction_forwidth(x_width_check) // Call listener function at run time
+// x_width_check.addListener(myFunction_forwidth) // Attach listener function on state changes
+
+var prevScrollpos = window.pageYOffset;
 function myFunction_forwidth(x_width_check) {
     if (x_width_check.matches) { // If media query matches
 
     } else {
-        var prevScrollpos = window.pageYOffset;
+
 
         window.onscroll = function () {
             var currentScrollPos = window.pageYOffset;
@@ -379,6 +419,8 @@ function myFunction_forwidth(x_width_check) {
                     }
                     else { document.getElementById("topc").style.width = "calc(100% - 40px - 0px - 50px)"; }
                 }
+
+
 
                 document.getElementById("topc").style.transitionDelay = "0ms";
                 document.getElementById("dark-toggle-label").style.transitionDelay = "400ms";
@@ -407,8 +449,5 @@ function myFunction_forwidth(x_width_check) {
     }
 }
 
-var x_width_check = window.matchMedia("(max-width: 650px)")
-myFunction_forwidth(x_width_check) // Call listener function at run time
-x_width_check.addListener(myFunction_forwidth) // Attach listener function on state changes
 
 

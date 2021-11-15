@@ -4,10 +4,15 @@ body {
 }
 
 .bottom-bar,
-.top-bar,
-.menu_option {
+.top-bar, .menu-pane,
+.menu_option, .blur_backdrop, .menu-pane {
   background-color: var(--bar_color);
   color: var(--font_color);
+
+  /* background: rgb(7 7 7  / 50%) !important; */
+  
+  -webkit-backdrop-filter: blur(13px);
+  backdrop-filter: blur(13px);
 }
 
 
@@ -20,6 +25,13 @@ body {
 .top-bar:hover,
 .menu_option {
   background-color: var(--bar_color_hover);
+  
+  /* background: rgb(243 243 243 / 50%) !important; */
+  
+  -webkit-backdrop-filter: blur(13px);
+  backdrop-filter: blur(13px);
+
+
 }
 
 .item {

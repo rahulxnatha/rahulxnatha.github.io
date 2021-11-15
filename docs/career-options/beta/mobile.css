@@ -125,13 +125,14 @@
   }
 
 .top-bar3inside {
-  width: 650px;
+  min-width: 660px;
 }
 
   /* message bar 
 ----------------------------- */
 
   .top-bar2 {
+    position: absolute;
     top: calc(40px + 37px);
     right: 20px;
   }

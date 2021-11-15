@@ -20,13 +20,30 @@ if (userPrefersLight) {
 }
 
 
-
+let isDark = true;
 switcher.addEventListener('click', function manual_theme() {
 
+    
+    // remove scrollbars
+    document.documentElement.style.overflow = "hidden";
+    // trigger reflow so that overflow style is applied
+    document.body.clientWidth;
+    // change scheme
+    document.documentElement.setAttribute(
+        "data-color-scheme",
+        isDark ? "light" : "dark"
+    );
+    // remove overflow style, which will bring back the scrollbar with the correct scheme 
+    document.documentElement.style.overflow = "";
+
+    isDark = !isDark;
 
     if (document.getElementById("darktoggle").checked == true) {
         document.getElementById("g_frame").style.filter = "invert(90%)";
         document.body.classList.toggle('light_color_theme');
+
+
+
         document.getElementById('logo_co').src = 'images/co_manual_dark.png';
     }
     if (document.getElementById("darktoggle").checked == false) {
@@ -41,3 +58,13 @@ switcher.addEventListener('click', function manual_theme() {
 });
 
 document.getElementById("splash_screen").style.display = "none";
+
+
+document.body.classList.toggle('border_dia_equals_width');
+
+
+
+
+
+
+

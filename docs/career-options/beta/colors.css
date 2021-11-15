@@ -6,7 +6,6 @@
 
   --light3_100: rgb(255, 228, 169);
 
-
   --dark1_100: #000000;
   --dark1_075: #000000bf;
 
@@ -14,42 +13,50 @@
 
   --dark3_100: #333333;
   --dark3_075: #333333bf;
+
+  
+}
+
+[data-color-scheme="dark"] {
+  color-scheme: dark;
+}
+
+[data-color-scheme="light"] {
+  color-scheme: light;
 }
 
 /* dark color theme 
 -------------------------------------- */
 
 .dark_color_theme {
-    --background_color: var(--dark2_100);
-    --font_color: var(--light1_100);
-    --bar_color: var(--dark3_075);
-    --bar_color_hover: var(--dark3_100);
-    --item_background_color: var(--dark3_100);
+  --background_color: var(--dark2_100);
+  --font_color: var(--light1_100);
+  --bar_color: var(--dark3_075);
+  --bar_color_hover: var(--dark3_075);
+  --item_background_color: var(--dark3_100);
 
-    --menu-option-border: #999;
-    --dev-background-color: var(--dark1_100);
-  }
+  --menu-option-border: #999;
+  --dev-background-color: var(--dark1_100);
+ 
+}
 
+#g_frame {
+  filter: invert(90%);
+}
 
-  
-  #g_frame {
-    filter: invert(90%);
-  }
+.top-bar > a > span > img {
+  filter: grayscale(0%);
+  filter: invert(0%);
+}
 
-  .top-bar > a > span > img {
-    filter: grayscale(0%);
-    filter: invert(0%);
-  }
+.bottom-bar > a > img {
+  filter: invert(100%);
+}
 
-  .bottom-bar > a > img {
-    filter: invert(100%);
-  }
-
-  .item > #icon_fscreen_gframe > #gframe_fulls,
-  .item > #icon_fscreen_gframe > #gframe_fulls_off {
-    filter: invert(100%);
-  }
-
+.item > #icon_fscreen_gframe > #gframe_fulls,
+.item > #icon_fscreen_gframe > #gframe_fulls_off {
+  filter: invert(100%);
+}
 
 /* light color theme
 ------------------------------------- */
@@ -77,9 +84,6 @@
 .light_color_theme .item > #icon_fscreen_gframe > #gframe_fulls_off {
   filter: invert(0%);
 }
-
-
-
 
 .magic {
   --background_color: red;
