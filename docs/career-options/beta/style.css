@@ -1,82 +1,11 @@
-/* border box fix, print
----------------------------------------*/
-html {
-  box-sizing: border-box;
-}
-
-*,
-*:before,
-*:after {
-  box-sizing: inherit;
-  color-scheme: dark;
-}
-
-@media print {
-  html,
-  body {
-    display: none;
-    /* hide whole page */
-  }
-}
-
-@font-face {
-  font-family: "Material Icons";
-  font-style: normal;
-  font-weight: 400;
-  src: url(https://example.com/MaterialIcons-Regular.eot); /* For IE6-8 */
-  src: local("Material Icons"), local("MaterialIcons-Regular"),
-    url(https://example.com/MaterialIcons-Regular.woff2) format("woff2"),
-    url(https://example.com/MaterialIcons-Regular.woff) format("woff"),
-    url(https://example.com/MaterialIcons-Regular.ttf) format("truetype");
-}
-
-.material-icons {
-  font-family: "Material Icons";
-  font-weight: normal;
-  font-style: normal;
-  font-size: 24px; /* Preferred icon size */
-  display: inline-block;
-  line-height: 1;
-  text-transform: none;
-  letter-spacing: normal;
-  word-wrap: normal;
-  white-space: nowrap;
-  direction: ltr;
-
-  /* Support for all WebKit browsers. */
-  -webkit-font-smoothing: antialiased;
-  /* Support for Safari and Chrome. */
-  text-rendering: optimizeLegibility;
-
-  /* Support for Firefox. */
-  -moz-osx-font-smoothing: grayscale;
-
-  /* Support for IE. */
-  font-feature-settings: "liga";
-}
-
-/* body 
-----------------------------------------*/
-body {
-  margin: 0;
-  padding: 0;
-  transition: 800ms;
-}
-
-/* default font and style and symantic elements
-------------------------------------------*/
-
 * {
-  box-sizing: border-box;
-
-  color: var(--fontColor);
-
-  -webkit-tap-highlight-color: transparent;
+  font-family: Calibri, sans-serif;
+  font-size: 16px;
+  padding: 0;
+  margin: 0;
+  font-weight: 200;
 }
 
-body {
-  color-scheme: dark;
-}
 
 a,
 p {
@@ -94,13 +23,13 @@ li {
 }
 
 button {
-  padding: 10px 15px;
+  padding: 5px 15px;
   border-radius: 50vmin;
 
   border: 2px solid var(--font_color);
   color: var(--font_color);
   background-color: var(--background_color);
-  margin: 10px 10px;
+  margin: 0px;
   cursor: pointer;
 }
 
@@ -145,14 +74,6 @@ input[type="search"]:focus {
   outline: none;
   background-image: none;
 }
-
-/* special classes
------------------------------------------ */
-
-/* div.sticky {
-  position: -webkit-sticky;
-  position: sticky;
-  } */
 
 /* border radius  */
 .top-bar,
@@ -207,66 +128,7 @@ input[type="search"]:focus {
   resize: vertical;
 }
 
-/* header 
--------------------------------------- */
-
-.header_background {
-  height: calc(2 * 37px + 3 * 20px);
-}
-
-/* developer options 
----------------------------------------*/
-
-.developer_options {
-  min-height: calc(2 * 37px + 3 * 20px);
-  height: fit-content;
-  padding: calc(20px);
-  margin-bottom: 0px;
-}
-
-/* menu pane  */
-.menu-pane {
-  width: 300px;
-  height: calc(100vh - 2 * 37px - 3 * 20px);
-  padding: 20px;
-
-  position: sticky;
-  left: 0px;
-  border-radius: 0;
-  float: left;
-}
-
-.content-pane {
-  width: calc(100% - 300px);
-
-  float: left;
-  overflow: auto;
-}
-
-/* web page
-------------------------------------------- */
-#webpage {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-
-  grid-auto-rows: minmax(100px, auto);
-  grid-auto-columns: minmax(200px, auto);
-
-  column-gap: 50px;
-  row-gap: 50px;
-
-  margin: 30px 5% 50px 5%;
-  padding: 0px;
-
-  border-radius: 18.5px;
-  background-color: #00800000;
-}
-
-/* items 
---------------------------------------- */
-
 .item {
-  padding: 20px;
   cursor: auto;
   overflow: auto;
 }
@@ -280,15 +142,6 @@ input[type="search"]:focus {
   border-bottom: dashed 2px grey;
   padding-bottom: 20px;
 }
-
-/* .main_item {
-  grid-column-start: 1;
-  grid-column-end: 3;
-
-  min-height: 275px;
-  resize: vertical;
-  cursor: default;
-} */
 
 .youtube_embed {
   position: relative;
@@ -373,7 +226,7 @@ input[type="search"]:focus {
   right: 0;
   bottom: 0;
   background-color: none;
-  border: 2px solid #777;
+  border: 3px solid #777;
   -webkit-transition: 0s;
   transition: 0s;
 
@@ -388,9 +241,6 @@ input[type="search"]:focus {
   left: 5px;
   bottom: 22%;
   background-color: var(--font_color);
-  /* -webkit-transition: 0.5s;
-  transition: 0.5s; */
-
   -webkit-transition: 0s;
   transition: 0s;
 
@@ -421,13 +271,29 @@ input:checked + .slider:before {
 
 @keyframes bar-elongate {
   0% {
-    width: 370px;
+    width: 165px;
+    background-color: rgb(88, 88, 88);
+  }
+
+  90% {
+    width: calc(100% - 400px + 50px);
+  }
+  100% {
+    width: 165px;
+  }
+}
+
+@keyframes hover-bar-elongate {
+  0% {
+    width: 165px;
+    background-color: rgb(88, 88, 88);
   }
 
   100% {
-    width: calc(100% - 40px - 320px);
+    width: calc(100% - 400px);
   }
 }
+
 
 @keyframes bottom-bar {
   0% {
@@ -447,224 +313,22 @@ input:checked + .slider:before {
   }
 }
 
-/* top bar
----------------------------------------- */
 
-.top-bar {
-  position: sticky;
-  top: 20px;
-  left: 20px;
-  float: left;
-
-  width: calc(100% - 40px - 320px);
-  /* width: 370px; */
-
-  border: 2px solid #777;
-  margin: 20px 0 0 0;
-  height: 37px;
-  padding: 0px;
-
-  z-index: 9999;
-
-  transition: 400ms;
-  transition-delay: 0s;
-
-  animation-name: bar-elongate;
-  animation-duration: 2s;
+/* design principles */
+#top_bar, #status_bar {
+  border-radius: 50vmin;
+  border: 3px solid #777;
+  float:left;
+  height: 38px;
+  padding: 0px 10px 0 15px;
 }
 
-.top-bar > .expand {
-  float: right;
-  transition-delay: 0s;
-
-  animation-name: options-bar-elongate;
-  animation-duration: 2s;
+#top_bar {
+  width: calc(165px);
+  margin-right: 20px;
+  padding: 0;
 }
 
-.top-bar:hover > .expand {
-  visibility: visible;
-  transition-delay: 0ms;
+#top_bar:hover {
+  width: calc(100% - 400px + 50px);
 }
-
-.top-bar:hover {
-  /* width: calc(100% - 40px - 320px); */
-  transition-delay: 0s;
-  transition: 400ms;
-}
-
-.top-bar-item {
-  float: left;
-  margin-right: 15px;
-  margin-top: 6px;
-}
-
-/* message bar 
----------------------------------- */
-
-/* .settings_icon_cus89 { */
-/* position: absolute;
-  top: calc(25px + 37px + 40px);
-  right: 20px; */
-/* display: inline;
-  float:right;
-  margin:0; padding:0; */
-
-/* } */
-
-.top-bar2 {
-  position: sticky;
-  top: 20px;
-  right: 20px;
-  float: right;
-  width: 300px;
-
-  border: 2px solid #777;
-  margin-top: 20px;
-  height: 37px;
-  padding: 6px 10px 0 15px;
-
-  z-index: 999;
-  transition: 0;
-  transition-delay: 0ms;
-}
-
-.top-bar2 > .expand {
-  visibility: hidden;
-  float: right;
-  transition-delay: 0s;
-}
-
-.top-bar2:hover > .expand {
-  visibility: visible;
-  transition-delay: 0ms;
-}
-
-.top-bar2:hover {
-  /*width: calc(100% - 360px);*/
-
-  transition-delay: 0s;
-}
-
-/* menu bar 
--------------------------------------- */
-.top-bar3 {
-  left: 20px;
-  float: left;
-
-  width: calc(100% - 40px);
-
-  margin: 20px 20px;
-  height: 37px;
-  padding: 8px 0px 0px 0px;
-
-  z-index: 999;
-
-  transition: 400ms;
-  transition-delay: 0.8s;
-}
-
-.menu_option {
-  display: inline;
-  margin: 2px 20px 0px 0px;
-  border: 2px solid #cccccc;
-  padding: 5px 15px;
-}
-
-.menu_option:hover {
-  border: 2px solid var(--menu-option-border);
-  cursor: pointer;
-}
-
-.o_active {
-  display: inline;
-}
-
-/* search bar 
--------------------------------------- */
-.top-bar2-1 {
-  display: inline;
-  position: absolute;
-  top: calc(1 * 37px + 40px);
-  left: 20px;
-  float: left;
-
-  width: calc(100% - 40px);
-
-  margin: 0;
-  height: 37px;
-  padding: 8px 0px 0px 0px;
-
-  z-index: 999;
-
-  transition: 400ms;
-  transition-delay: 0.8s;
-}
-
-#dopbeta {
-  width: calc(100% - 800px);
-  margin-left: calc(400px);
-  cursor: auto;
-}
-
-.search_this_query {
-  width: calc(100% - 800px);
-  margin-left: 0;
-}
-
-/* bottom bar 
---------------------------------------- */
-
-.bottom-bar {
-  position: fixed;
-  bottom: 20px;
-  display: none;
-  right: 20px;
-  height: 37px;
-
-  width: 156px;
-
-  border-width: 0px;
-  border-style: solid;
-
-  transition-delay: 800ms;
-  border: 2px solid #777;
-  z-index: 99;
-  overflow: hidden;
-  padding: 0px 20px 10px 2px;
-
-  animation-name: bottom-bar;
-  animation-duration: 2s;
-}
-
-.bottom-bar > p {
-  visibility: hidden;
-
-  transition-delay: 0.6s;
-}
-
-.bottom-bar:hover > p {
-  visibility: visible;
-  transition-delay: 0s;
-}
-
-.bottom-bar:hover {
-  width: calc(100% - 40px);
-  transition-delay: 0s;
-}
-
-/* Footer 
------------------------------------- */
-footer {
-  padding: 40px;
-  display: block;
-  clear: both;
-}
-
-footer a {
-  margin: 0 0 20px 0;
-  display: block;
-  color: #ccc;
-}
-
-/* import CSS
------------------------------------------ */

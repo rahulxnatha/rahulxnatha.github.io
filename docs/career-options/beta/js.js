@@ -1,14 +1,20 @@
-document.getElementById("version-number").innerHTML = "2.9.99.01";
+document.getElementById("version").innerHTML = "2.9.99.02";
 
-function view_announcement() {
-    // if (announcement_view_status == close) {
-        document.getElementById("announcement_bar").style.display = "none";
-    // }
 
-    // else {
-        // document.getElementById("announcement_bar").style.display = "block";
-    // }
+document.getElementById("button__close_announcement_bar").addEventListener("click", close_announcement_bar);
+function close_announcement_bar() {
+    document.getElementById("announcement_bar").style.display = "none";
 }
+
+close_announcement_bar();
+close_developer_options();
+
+document.getElementById("button__close_developer_options").addEventListener("click", close_developer_options);
+function close_developer_options() {
+    document.getElementById("developer_options").style.display = "none";
+}
+
+
 
 var item = document.getElementsByClassName("item");
 var hide = document.getElementsByClassName("hide");
@@ -57,25 +63,25 @@ var access = 0;
 
 function turn_on_access() {
 
-var keyentered = document.getElementById("accesskey").value;
-if (keyentered == "prep") {
-    access = 1;
-}
-else {
-    document.getElementById("accessreply").innerHTML = "Access denied! Enter the correct accesskey. In case you don't have an accesskey, <u>contact me</u>.";
-}
-
-
-
-if (access == 1) {
-    // window.open("index.html", "_self");
-    // document.getElementById("accesspage2").style.display = "none";
-
-    for (let i = 1; i < item.length; i++) {
-        item[i].style.display = "inline";
+    var keyentered = document.getElementById("accesskey").value;
+    if (keyentered == "prep") {
+        access = 1;
+    }
+    else {
+        document.getElementById("accessreply").innerHTML = "Access denied! Enter the correct accesskey. In case you don't have an accesskey, <u>contact me</u>.";
     }
 
-}
+
+
+    if (access == 1) {
+        // window.open("index.html", "_self");
+        // document.getElementById("accesspage2").style.display = "none";
+
+        for (let i = 1; i < item.length; i++) {
+            item[i].style.display = "inline";
+        }
+
+    }
 
 }
 
@@ -96,7 +102,7 @@ function auto() {
 
     // document.getElementById("topc").style.width= "370px";
 
-    var welcome_message = document.getElementById("welcome_message");
+    var welcome_message = document.getElementById("status");
 
     let hour = new Date().getHours();
     let minute = new Date().getMinutes();

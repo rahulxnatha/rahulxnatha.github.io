@@ -19,11 +19,27 @@
 
 [data-color-scheme="dark"] {
   color-scheme: dark;
+  
+  
+  
+
 }
 
 [data-color-scheme="light"] {
   color-scheme: light;
+  
+
 }
+::-moz-selection { /* Code for Firefox */
+  color: rgb(0, 0, 0);
+  background: rgb(255, 255, 255);
+}
+
+::selection {
+  color: rgb(0, 0, 0);
+  background: rgb(255, 255, 255);
+}
+
 
 /* dark color theme 
 -------------------------------------- */
