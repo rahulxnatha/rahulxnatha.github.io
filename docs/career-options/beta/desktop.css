@@ -61,38 +61,53 @@ header {
   display: block;
 }
 
+.menu_pane {
+  float: left;
+}
+
+.menu-pane button {
+    margin-right: 20px;
+    margin-bottom: 10px;
+    margin-top: 10px;
+}
+
+.menu-pane .active {
+    background-color: rgb(0, 109, 109);
+}
+
 .menu-pane {
   width: 300px;
   height: calc(100vh - 2 * 37px - 3 * 20px);
   height:auto;
   padding: 20px;
 margin: 20px 0 0 20px;
-
-border: 3px solid #777;
+display: block;
+border: 0px solid #777;
   border-radius: 6px;
-  float: left;
+  
 }
 
 
 
 .menu-pane-option {
-  border-left: 3px solid #777;
+  border-left: 5px solid #777;
   height: 38px;
-  background-color: rgb(34, 34, 34);
-  border-radius: 6px;
+  
+  border-radius: 0px;
   margin: 10px 0px;
-  padding: 9px 0 0 20px;
+  padding: 9px 0 0 10px;
   cursor:pointer;
 }
 
 .menu-pane-option:hover {
-  border: 3px solid #777;
-  padding-top: 6px;
- 
+  border-left: 5px solid rgb(206, 206, 206);
+  /* padding-top: 6px; */
+  
+  background-color: rgb(53, 53, 53);
 }
 
 .active-menu-pane-option { 
-  background-color: rgb(39, 81, 95);
+  border-left: 5px solid rgb(34, 120, 146);
 }
 
 .content-pane {
@@ -116,7 +131,7 @@ border: 3px solid #777;
   padding: 0px;
 
   border-radius: 18.5px;
-  background-color: #00800000;
+  /* background-color: #00800000; */
 }
 
 .item {
@@ -125,6 +140,30 @@ border: 3px solid #777;
   cursor:pointer;
 }
 
+.item:hover, .main-item:hover {
+  
+  border: 3px solid rgb(150, 149, 149);
+  background-color: rgb(56, 56, 56);
+  cursor:pointer;
+}
+
+.main-item {
+  grid-column-start: 1;
+  grid-column-end: 5;
+height: 200px;
+
+  padding: 20px;
+  border: 3px solid #777;
+  cursor:pointer;
+
+  
+
+  background:linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7)), url(https://images.unsplash.com/photo-1490730141103-6cac27aaab94?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxleHBsb3JlLWZlZWR8MTZ8fHxlbnwwfHx8fA%3D%3D&w=1000&q=80);
+
+
+  background-repeat: no-repeat;
+  background-size: 100%;
+}
 
 /* top bar
 ---------------------------------------- */

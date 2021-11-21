@@ -1,6 +1,6 @@
 'use strict'
 
-const switcher = document.querySelector('.darktoggle');
+const switcher = document.querySelector('#dark_toggle');
 
 const userPrefersDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
 
@@ -9,13 +9,13 @@ const userPrefersLight = window.matchMedia && window.matchMedia('(prefers-color-
 if (userPrefersDark) {
     console.log("User prefers a dark interface");
     document.getElementById('logo_co').src = 'images/co_default_dark.png';
-    document.getElementById("darktoggle").checked = true;
+    document.getElementById("dark_toggle").checked = true;
 }
 
 if (userPrefersLight) {
     console.log("User prefers a dark interface");
     document.getElementById('logo_co').src = 'images/co_default_light.png';
-    document.getElementById("darktoggle").checked = false;
+    document.getElementById("dark_toggle").checked = false;
     document.body.classList.toggle('light_color_theme');
 }
 
@@ -38,15 +38,13 @@ switcher.addEventListener('click', function manual_theme() {
 
     isDark = !isDark;
 
-    if (document.getElementById("darktoggle").checked == true) {
+    if (document.getElementById("dark_toggle").checked == true) {
         document.getElementById("g_frame").style.filter = "invert(90%)";
         document.body.classList.toggle('light_color_theme');
 
-
-
         document.getElementById('logo_co').src = 'images/co_manual_dark.png';
     }
-    if (document.getElementById("darktoggle").checked == false) {
+    if (document.getElementById("dark_toggle").checked == false) {
         document.getElementById("g_frame").style.filter = "invert(0%)";
         document.body.classList.toggle('light_color_theme');
         document.getElementById('logo_co').src = 'images/co_manual_light.png';
@@ -60,7 +58,6 @@ switcher.addEventListener('click', function manual_theme() {
 document.getElementById("splash_screen").style.display = "none";
 
 
-document.body.classList.toggle('border_dia_equals_width');
 
 
 

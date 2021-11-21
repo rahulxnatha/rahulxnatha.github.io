@@ -139,9 +139,12 @@ input[type="search"]:focus {
 }
 
 .item h1 {
-  border-bottom: dashed 2px grey;
+  /* border-bottom: dashed 2px grey; */
   padding-bottom: 20px;
 }
+
+
+
 
 .youtube_embed {
   position: relative;

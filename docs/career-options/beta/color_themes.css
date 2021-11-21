@@ -13,9 +13,9 @@ body {
   color-scheme: dark;
 }
 
-.bottom-bar,
-.top-bar, .menu-pane,
-.menu_option, .blur_backdrop, .menu-pane, header {
+#bottom_bar,
+#top_bar, 
+.menu_option, .blur_backdrop,  header {
   background-color: var(--bar_color);
   color: var(--font_color);
 
@@ -32,8 +32,8 @@ header {
  
 }
 
-.bottom-bar:hover,
-.top-bar:hover,
+#bottom_bar:hover,
+#top_bar:hover,
 .menu_option {
   background-color: var(--bar_color_hover);
   
@@ -63,7 +63,7 @@ p {
   color: var(--font_color);
 }
 
-.developer_options {
+#developer_options {
   background-color: var(--dev-background-color);
 }
 
