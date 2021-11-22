@@ -6,8 +6,8 @@ function close_announcement_bar() {
     document.getElementById("announcement_bar").style.display = "none";
 }
 
-// close_announcement_bar();
-// close_developer_options();
+close_announcement_bar();
+close_developer_options();
 
 document.getElementById("button__close_developer_options").addEventListener("click", close_developer_options);
 function close_developer_options() {
