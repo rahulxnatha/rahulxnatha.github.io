@@ -8,7 +8,7 @@ function coming_soon() {
     alert("This feature will start working in the future. Release date is not yet confirmed.");
 }
 
-window.open("https://natharahul.github.io/docs/career-options", "_self");
+// window.open("https://natharahul.github.io/docs/career-options", "_self");
 
 function beta_access() {
     if (document.getElementById("betatoggle").checked == true) {
