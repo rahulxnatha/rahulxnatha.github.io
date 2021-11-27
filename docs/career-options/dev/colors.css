@@ -56,6 +56,8 @@
 
   --menu-option-border: #999;
   --dev-background-color: var(--dark1_100);
+
+  --header_background: rgb(42, 64, 83, 50%);
  
 }
 
@@ -88,6 +90,8 @@
   --item_background_color: var(--light1_100);
   --menu-option-border: #555;
   --dev-background-color: var(--light3_100);
+
+  --header_background: rgba(255, 255, 255, 0.7);
 }
 
 .light_color_theme .top-bar > a > span > img {

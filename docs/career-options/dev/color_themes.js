@@ -1,5 +1,5 @@
 'use strict'
-
+var isDark = true;
 const switcher = document.querySelector('#dark_toggle');
 
 const userPrefersDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
@@ -8,19 +8,32 @@ const userPrefersLight = window.matchMedia && window.matchMedia('(prefers-color-
 
 if (userPrefersDark) {
     console.log("User prefers a dark interface");
-    document.getElementById('logo_co').src = 'images/co_default_dark.png';
+    document.getElementById('logo').src = 'images/co_default_dark.png';
     document.getElementById("dark_toggle").checked = true;
 }
 
 if (userPrefersLight) {
-    console.log("User prefers a dark interface");
-    document.getElementById('logo_co').src = 'images/co_default_light.png';
+    console.log("User prefers a light interface");
+    document.getElementById('logo').src = 'images/co_default_light.png';
     document.getElementById("dark_toggle").checked = false;
     document.body.classList.toggle('light_color_theme');
+
+    
+    
+     
+     // change scheme
+     document.documentElement.setAttribute(
+         "data-color-scheme",
+         isDark ? "light" : "dark"
+     );
+    
+    
+     isDark = !isDark;
+
 }
 
 
-let isDark = true;
+// var isDark = true;
 switcher.addEventListener('click', function manual_theme() {
 
     
@@ -39,15 +52,15 @@ switcher.addEventListener('click', function manual_theme() {
     isDark = !isDark;
 
     if (document.getElementById("dark_toggle").checked == true) {
-        document.getElementById("g_frame").style.filter = "invert(90%)";
+        // document.getElementById("g_frame").style.filter = "invert(90%)";
         document.body.classList.toggle('light_color_theme');
 
-        document.getElementById('logo_co').src = 'images/co_manual_dark.png';
+        document.getElementById('logo').src = 'images/co_manual_dark.png';
     }
     if (document.getElementById("dark_toggle").checked == false) {
-        document.getElementById("g_frame").style.filter = "invert(0%)";
+        // document.getElementById("g_frame").style.filter = "invert(0%)";
         document.body.classList.toggle('light_color_theme');
-        document.getElementById('logo_co').src = 'images/co_manual_light.png';
+        document.getElementById('logo').src = 'images/co_manual_light.png';
 
     }
 

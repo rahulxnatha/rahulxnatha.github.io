@@ -321,7 +321,7 @@ input:checked + .slider:before {
 
 
 /* design principles */
-#top_bar, #status_bar {
+#top_bar {
   border-radius: 50vmin;
   
   float:left;

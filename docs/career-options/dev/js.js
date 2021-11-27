@@ -1,4 +1,4 @@
-document.getElementById("version").innerHTML = "2.9.99.02";
+document.getElementById("version").innerHTML = "2.9.99.03 Dev";
 
 
 document.getElementById("button__close_announcement_bar").addEventListener("click", close_announcement_bar);
@@ -14,6 +14,16 @@ function close_developer_options() {
     document.getElementById("developer_options").style.display = "none";
 }
 
+
+function item_1_content() {
+    const xhttp = new XMLHttpRequest();
+    xhttp.onload = function () {
+        document.getElementById("item_1").innerHTML =
+            this.responseText;
+    }
+    xhttp.open("GET", "item_1.txt");
+    xhttp.send();
+}
 
 
 var item = document.getElementsByClassName("item");
