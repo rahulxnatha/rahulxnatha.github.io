@@ -1,4 +1,4 @@
-document.getElementById("version").innerHTML = "2.9.99.03 Dev";
+document.getElementById("version").innerHTML = "2.9.99.04 Dev";
 
 
 document.getElementById("button__close_announcement_bar").addEventListener("click", close_announcement_bar);
@@ -25,6 +25,31 @@ function item_1_content() {
     xhttp.send();
 }
 
+var menu_x = 0;
+function menu(menu_x) {
+    if (menu_x == 1) {
+        document.getElementById("headline").innerHTML = "Career Options";
+    }
+    if (menu_x == 2) {
+        document.getElementById("headline").innerHTML = "Potential Problems Registry";
+    }
+    if (menu_x == 3) {
+        document.getElementById("headline").innerHTML = "Latest releases";
+    }
+    if (menu_x == 4) {
+        document.getElementById("headline").innerHTML = "How's it going";
+    }
+    if (menu_x == 5) {
+        document.getElementById("headline").innerHTML = "Skills & hobbies";
+    }
+    
+
+
+
+
+
+
+}
 
 var item = document.getElementsByClassName("item");
 var hide = document.getElementsByClassName("hide");
