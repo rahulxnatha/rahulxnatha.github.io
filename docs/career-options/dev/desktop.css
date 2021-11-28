@@ -84,7 +84,7 @@ margin: 20px 0 0 20px;
 display: block;
 border: 0px solid #777;
   border-radius: 6px;
-  
+  background-color: rgb(10, 10, 10);
 }
 
 
@@ -115,6 +115,7 @@ border: 0px solid #777;
 
   float: left;
   overflow: auto;
+  margin-bottom: 20px;
 }
 
 #webpage {
@@ -124,14 +125,30 @@ border: 0px solid #777;
   grid-auto-rows: minmax(100px, auto);
   grid-auto-columns: minmax(200px, auto);
 
-  column-gap: 50px;
-  row-gap: 50px;
+  column-gap: 20px;
+  row-gap: 20px;
 
-  margin: 40px 5% 50px 5%;
+  margin: 20px 5% 40px 5%;
   padding: 0px;
 
   border-radius: 18.5px;
   /* background-color: #00800000; */
+}
+
+.blog {
+
+  margin: 20px 5% 50px 5%;
+  padding: 0px;
+
+  border-radius: 18.5px;
+  /* background-color: #00800000; */
+}
+
+.blog p {
+
+  margin-top: 10px;
+  
+ 
 }
 
 .item {
@@ -140,12 +157,19 @@ border: 0px solid #777;
   cursor:pointer;
 }
 
+.item:hover {
+
+  background-color: black;
+}
+
 .item:hover, .main-item:hover {
   
   border: 3px solid rgb(150, 149, 149);
-  background-color: rgb(56, 56, 56);
+  
   cursor:pointer;
 }
+
+
 
 .main-item {
   grid-column-start: 1;
@@ -160,7 +184,7 @@ height: 200px;
 
   /* background:linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7)), url(https://images.unsplash.com/photo-1490730141103-6cac27aaab94?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxleHBsb3JlLWZlZWR8MTZ8fHxlbnwwfHx8fA%3D%3D&w=1000&q=80); */
 
-  background:linear-gradient(rgba(255, 255, 255, 0.808), rgba(80, 80, 80, 0.404)), url(https://images.unsplash.com/photo-1490730141103-6cac27aaab94?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxleHBsb3JlLWZlZWR8MTZ8fHxlbnwwfHx8fA%3D%3D&w=1000&q=80);
+  background:linear-gradient(rgba(0, 0, 0, 0.808), rgba(80, 80, 80, 0.404)), url(https://images.unsplash.com/photo-1490730141103-6cac27aaab94?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxleHBsb3JlLWZlZWR8MTZ8fHxlbnwwfHx8fA%3D%3D&w=1000&q=80);
 
 
 
@@ -168,6 +192,14 @@ height: 200px;
 
   background-repeat: no-repeat;
   background-size: 100%;
+}
+
+.main-item:hover {
+  background:linear-gradient(rgba(0, 0, 0, 0.808), rgba(0, 0, 0, 0.404)), url(https://images.unsplash.com/photo-1490730141103-6cac27aaab94?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxleHBsb3JlLWZlZWR8MTZ8fHxlbnwwfHx8fA%3D%3D&w=1000&q=80);
+
+  background-repeat: no-repeat;
+  background-size: 100%;
+
 }
 
 /* top bar
@@ -370,6 +402,7 @@ header  #top_bar {
     padding: 40px;
     display: block;
     clear: both;
+    margin-top: 20px;
   }
   
   footer a {
