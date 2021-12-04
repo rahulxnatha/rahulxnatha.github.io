@@ -6,7 +6,6 @@
   font-weight: 200;
 }
 
-
 a,
 p {
   text-decoration: none;
@@ -142,9 +141,6 @@ input[type="search"]:focus {
   /* border-bottom: dashed 2px grey; */
   padding-bottom: 20px;
 }
-
-
-
 
 .youtube_embed {
   position: relative;
@@ -286,7 +282,6 @@ input:checked + .slider:before {
     padding: 0px;
     background-color: rgba(35, 64, 90, 0);
   }
-  
 }
 
 @keyframes hover-bar-elongate {
@@ -299,7 +294,6 @@ input:checked + .slider:before {
     width: calc(100% - 400px);
   }
 }
-
 
 @keyframes bottom-bar {
   0% {
@@ -319,12 +313,11 @@ input:checked + .slider:before {
   }
 }
 
-
 /* design principles */
 #top_bar {
   border-radius: 50vmin;
-  
-  float:left;
+
+  float: left;
   height: 38px;
   padding: 0px 10px 0 15px;
 }
@@ -335,7 +328,6 @@ input:checked + .slider:before {
   margin-right: 20px;
   padding: 0px;
   border: 3px solid rgba(119, 119, 119, 0);
-  
 }
 
 #top_bar:hover {
