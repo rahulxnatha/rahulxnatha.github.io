@@ -68,4 +68,6 @@ p {
 
 .menu-pane .active {
   background-color: var(--accent-color);
+  color: aliceblue;
+  
 }

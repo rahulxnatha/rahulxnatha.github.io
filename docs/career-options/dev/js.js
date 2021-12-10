@@ -1,5 +1,5 @@
-document.getElementById("version").innerHTML = "2.9.99.05 Dev";
-
+// document.getElementById("version").innerHTML = "299.905";
+document.getElementById("version").innerHTML = "";
 
 document.getElementById("button__close_announcement_bar").addEventListener("click", close_announcement_bar);
 function close_announcement_bar() {
@@ -154,6 +154,7 @@ function auto() {
 
     setTimeout(function () { welcome_message.innerHTML = "What's up?"; }, 2000);
     setTimeout(function () { welcome_message.innerHTML = "Take a look at the new stuff here!"; }, 4000);
+    setTimeout(function () { welcome_message.innerHTML = ""; }, 70000);
 
     if (hour > 16 || hour < 6) {
 

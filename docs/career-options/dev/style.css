@@ -1,20 +1,38 @@
+@import url("https://fonts.googleapis.com/css2?family=Comfortaa:wght@300&family=Comforter+Brush&family=Roboto:ital,wght@0,100;0,400;1,300&display=swap");
+
 * {
-  font-family: Calibri, sans-serif;
+  font-family: "Roboto", sans-serif;
   font-size: 16px;
   padding: 0;
   margin: 0;
-  font-weight: 200;
+  font-weight: 400;
 }
 
 a,
 p {
   text-decoration: none;
   line-height: 25px;
+  font-family: "Roboto", sans-serif;
+}
+
+/* blog css */
+.blog p {
+  margin: 20px 0 20px 0;
+}
+.author {
+  color: var(--dim-font);
+  margin-bottom: 20px;
+}
+.blog h1 {
+  font-size: 70px;
+
+  font-family: "Comforter Brush", cursive;
 }
 
 h1 {
-  font-size: 27px;
-  font-weight: 400;
+  font-size: 56px;
+
+  margin: 20px 0 20px 0px;
 }
 
 li {
@@ -118,10 +136,10 @@ input[type="search"]:focus {
   transition: 400ms;
 }
 
-.shadow {
+/* .shadow {
   border: 0px solid black;
   box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.2), 0 3px 15px 0 rgba(0, 0, 0, 0.19);
-}
+} */
 
 .resize {
   resize: vertical;
@@ -332,6 +350,6 @@ input:checked + .slider:before {
 
 #top_bar:hover {
   width: calc(100% - 400px + 50px);
-  border: 3px solid rgba(119, 119, 119, 0);
+  border: 3px solid rgba(119, 119, 119, 0.26);
   padding: 0px;
 }

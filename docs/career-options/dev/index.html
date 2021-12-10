@@ -43,7 +43,7 @@
 
     <header>
 
-        <div id="top_bar" >
+        <div id="top_bar">
 
             <span>
                 <img id="logo" src="images/co_default_dark.png" height="32px" alt="Logo" />
@@ -51,16 +51,23 @@
 
             <span id="version" class="show_on_expand" style="float: left;"> loading</span>
 
-            <label class="bar_switch show_on_expand hide">Dark theme
+            <label class="bar_switch show_on_expand ">Dark theme
                 <span class="switch">
-                    <input id="dark_toggle" type="checkbox" >
+                    <input id="dark_toggle" type="checkbox">
                     <span class="slider"></span>
                 </span>
             </label>
 
-            <label class="bar_switch show_on_expand hide">Beta
+            <label class="bar_switch show_on_expand">Dev
                 <span class="switch">
-                    <input id="beta_toggle" type="checkbox" >
+                    <input id="beta_toggle" type="checkbox">
+                    <span class="slider"></span>
+                </span>
+            </label>
+
+            <label class="bar_switch show_on_expand">Stable
+                <span class="switch">
+                    <input id="beta_toggle" type="checkbox">
                     <span class="slider"></span>
                 </span>
             </label>
@@ -120,16 +127,16 @@
     <div>
         <div class="menu_pane">
             <div class="menu-pane">
-                <h1>Menu</h1>
+                <div>Menu</div>
                 <div class="active-menu-pane-option menu-pane-option" onclick="menu(1)">Career Options</div>
                 <div class="menu-pane-option" onclick="menu(2)">Potential Problems Registry</div>
-                <div class="menu-pane-option"onclick="menu(3)">Latest releases</div>
-                <div class="menu-pane-option"onclick="menu(4)">How's it going</div>
-                <div class="menu-pane-option"onclick="menu(5)">Skills & hobbies</div>
+                <div class="menu-pane-option" onclick="menu(3)">Latest releases</div>
+                <div class="menu-pane-option" onclick="menu(4)">How's it going</div>
+                <div class="menu-pane-option" onclick="menu(5)">Skills & hobbies</div>
             </div>
 
             <div class="menu-pane">
-                <h1>Filters</h1>
+                <div>Filters</div>
                 <button>Higher Education</button>
                 <button class="active">Indian Government Jobs</button>
                 <button class="active">PSU Jobs</button>
@@ -141,49 +148,52 @@
 
         <div class="content-pane">
 
-            
-            <div id="webpage">
 
-                <div class="main-item item" >
+            <div id="webpage" class="hide">
+
+                <div class="main-item item">
 
                     <h1 id="headline">Career Options</h1>
-                    <p>Career Options is about different types of research, jobs, higher education, occupations, and resources for them.</p>
+                    <p>Career Options is about different types of research, jobs, higher education, occupations, and
+                        resources for them.</p>
 
                 </div>
 
-                <a class="item" href="http://employmentnews.gov.in/NewEmp/AnnualSubcription.aspx" target="_blank" rel="noopener noreferrer">
-                <div  id="item_1"  > Subscribe to Employment News </div></a>
+                <a class="item" href="http://employmentnews.gov.in/NewEmp/AnnualSubcription.aspx" target="_blank"
+                    rel="noopener noreferrer">
+                    <div id="item_1"> Subscribe to Employment News </div>
+                </a>
 
                 <div class="item">Jobs at Defence Research & Development Laboratory</div>
                 <div class="item">Indian Railways</div>
                 <div class="item">Union Public Service Commission</div>
-                
-               
-                
+
+
+
 
             </div>
 
             <div class="blog">
 
                 <h1>The First Blog on this Website</h1>
-                <p>You are reading the first ever blog that's going to be published later from a preview screenshot shared to you by Rahul. Do let know him if you fell anything might be better. Your feedback is appreciated. </p>
-                <p>You are reading the first ever blog that's going to be published later from a preview screenshot shared to you by Rahul. Do let know him if you fell anything might be better. Your feedback is appreciated. </p>
-                <p>You are reading the first ever blog that's going to be published later from a preview screenshot shared to you by Rahul. Do let know him if you fell anything might be better. Your feedback is appreciated. </p>
-                <p>You are reading the first ever blog that's going to be published later from a preview screenshot shared to you by Rahul. Do let know him if you fell anything might be better. Your feedback is appreciated. </p>
-                <p>You are reading the first ever blog that's going to be published later from a preview screenshot shared to you by Rahul. Do let know him if you fell anything might be better. Your feedback is appreciated. </p>
-                <p>You are reading the first ever blog that's going to be published later from a preview screenshot shared to you by Rahul. Do let know him if you fell anything might be better. Your feedback is appreciated. </p>
-                <p>You are reading the first ever blog that's going to be published later from a preview screenshot shared to you by Rahul. Do let know him if you fell anything might be better. Your feedback is appreciated. </p>
-                <p>You are reading the first ever blog that's going to be published later from a preview screenshot shared to you by Rahul. Do let know him if you fell anything might be better. Your feedback is appreciated. </p>
 
+                <div class="author">Author: Rahul Natha | 7 Dec 2021</div>
 
+                <p>You are reading the first ever blog that's going to be published later from a preview screenshot
+                    shared to you by Rahul. Do let know him if you fell anything might be better. Your feedback is
+                    appreciated. </p>
 
-
-
-
+                <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Unde earum voluptatem, consectetur totam
+                    perferendis quidem incidunt placeat porro molestiae fugit, sint harum laudantium ex, assumenda
+                    eligendi natus itaque? Nam eum et ducimus, accusamus veritatis ipsum in voluptatem dolor animi
+                    exercitationem? Lorem ipsum dolor sit amet consectetur adipisicing elit. Adipisci tempore modi facere nesciunt ducimus officiis omnis saepe? Vel unde dolores animi? Reiciendis ducimus dolore illo vero recusandae, corporis dolores hic cum nihil vel ipsa suscipit nulla dolorem, qui debitis numquam alias nobis! Adipisci quasi repellat ad itaque. Quos inventore odio quasi nam facilis? Necessitatibus corporis id quasi reiciendis asperiores unde distinctio enim blanditiis recusandae in, corrupti quidem, aliquid impedit consequatur dolore voluptas facilis non. Soluta omnis consequatur at sint quibusdam officiis consequuntur culpa rerum accusamus aliquam error voluptatum exercitationem laudantium, vel explicabo harum, molestiae enim corporis architecto, laboriosam voluptate deleniti!</p>
+                <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Unde earum voluptatem, consectetur totam
+                    perferendis quidem incidunt placeat porro molestiae fugit, sint harum laudantium ex, assumenda
+                    eligendi natus itaque? Nam eum et ducimus, accusamus veritatis ipsum in voluptatem dolor animi
+                    exercitationem? Lorem ipsum dolor sit amet consectetur adipisicing elit. Adipisci tempore modi facere nesciunt ducimus officiis omnis saepe? Vel unde dolores animi? Reiciendis ducimus dolore illo vero recusandae, corporis dolores hic cum nihil vel ipsa suscipit nulla dolorem, qui debitis numquam alias nobis! Adipisci quasi repellat ad itaque. Quos inventore odio quasi nam facilis? Necessitatibus corporis id quasi reiciendis asperiores unde distinctio enim blanditiis recusandae in, corrupti quidem, aliquid impedit consequatur dolore voluptas facilis non. Soluta omnis consequatur at sint quibusdam officiis consequuntur culpa rerum accusamus aliquam error voluptatum exercitationem laudantium, vel explicabo harum, molestiae enim corporis architecto, laboriosam voluptate deleniti!</p>
 
             </div>
 
-           
 
         </div>
     </div>

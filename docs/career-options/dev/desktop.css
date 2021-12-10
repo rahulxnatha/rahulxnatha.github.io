@@ -76,7 +76,7 @@ header {
   display: block;
   border: 0px solid #777;
   border-radius: 6px;
-  /* background-color: rgb(10, 10, 10); */
+  background-color: rgba(95, 95, 95, 0.137);
 }
 
 .menu-pane-option {
@@ -91,15 +91,17 @@ header {
 
 .menu-pane-option:hover {
   border-left: 5px solid rgb(206, 206, 206);
-  background-color: rgb(53, 53, 53);
+  background-color: rgba(255, 255, 255, 0.301);
 }
 
 .content-pane {
-  width: calc(100% - 300px - 40px);
+  width: calc(100% - 300px - 20px);
 
   float: left;
   overflow: auto;
-  margin-bottom: 20px;
+  
+  /* background-color: hsla(300, 100%, 25%, 0.233); */
+
 }
 
 #webpage {
@@ -116,7 +118,7 @@ header {
   padding: 0px;
 
   border-radius: 18.5px;
-  /* background-color: #00800000; */
+  /* background-color: #008000; */
 }
 
 .blog {
@@ -200,6 +202,9 @@ header #top_bar {
   transition: 0.5s; /* time for shrinking */
   transition-delay: 3s; /* delay in bar before shrinking */
 
+  /* transition: 0s;
+  transition-delay: 0s; */
+
   animation-name: bar-elongate;
   animation-duration: 2s;
 }
@@ -208,6 +213,9 @@ header #top_bar {
 header:hover #top_bar {
   transition: 0.5s; /* time for elongation */
   transition-delay: 0.2s; /* delay in bar before elongation */
+
+  transition: 0s;
+  transition-delay: 0s;
 
   /* animation-name: hover-bar-elongate;
     animation-duration: 0.5s;
@@ -224,6 +232,9 @@ header > #top_bar > .show_on_expand {
   transition: 0s;
   transition-delay: 2.9s; /* delay in switches before shrinking */
 
+  /* transition: 0s;
+  transition-delay: 0s; */
+
   animation-name: options-bar-elongate;
   animation-duration: 2s;
 }
@@ -232,6 +243,10 @@ header > #top_bar > .show_on_expand {
 header:hover > #top_bar > .show_on_expand {
   transition: 0s;
   transition-delay: 0.8s; /* delay in switches before elongation */
+
+  /* transition: 0s;
+  transition-delay: 0s; */
+
 }
 
 /* hj */
