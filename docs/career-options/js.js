@@ -1,3 +1,56 @@
+// document.getElementById("version").innerHTML = "299.905";
+document.getElementById("version").innerHTML = "Dev";
+
+document.getElementById("button__close_announcement_bar").addEventListener("click", close_announcement_bar);
+function close_announcement_bar() {
+    document.getElementById("announcement_bar").style.display = "none";
+}
+
+close_announcement_bar();
+close_developer_options();
+
+document.getElementById("button__close_developer_options").addEventListener("click", close_developer_options);
+function close_developer_options() {
+    document.getElementById("developer_options").style.display = "none";
+}
+
+
+function item_1_content() {
+    const xhttp = new XMLHttpRequest();
+    xhttp.onload = function () {
+        document.getElementById("item_1").innerHTML =
+            this.responseText;
+    }
+    xhttp.open("GET", "item_1.txt");
+    xhttp.send();
+}
+
+var menu_x = 0;
+function menu(menu_x) {
+    if (menu_x == 1) {
+        document.getElementById("headline").innerHTML = "Career Options";
+    }
+    if (menu_x == 2) {
+        document.getElementById("headline").innerHTML = "Potential Problems Registry";
+    }
+    if (menu_x == 3) {
+        document.getElementById("headline").innerHTML = "Latest releases";
+    }
+    if (menu_x == 4) {
+        document.getElementById("headline").innerHTML = "How's it going";
+    }
+    if (menu_x == 5) {
+        document.getElementById("headline").innerHTML = "Skills & hobbies";
+    }
+
+
+
+
+
+
+
+}
+
 var item = document.getElementsByClassName("item");
 var hide = document.getElementsByClassName("hide");
 var settings_button_pressed = 0;
@@ -45,25 +98,25 @@ var access = 0;
 
 function turn_on_access() {
 
-var keyentered = document.getElementById("accesskey").value;
-if (keyentered == "prep") {
-    access = 1;
-}
-else {
-    document.getElementById("accessreply").innerHTML = "Access denied! Enter the correct accesskey. In case you don't have an accesskey, <u>contact me</u>.";
-}
-
-
-
-if (access == 1) {
-    // window.open("index.html", "_self");
-    // document.getElementById("accesspage2").style.display = "none";
-
-    for (let i = 1; i < item.length; i++) {
-        item[i].style.display = "inline";
+    var keyentered = document.getElementById("accesskey").value;
+    if (keyentered == "prep") {
+        access = 1;
+    }
+    else {
+        document.getElementById("accessreply").innerHTML = "Access denied! Enter the correct accesskey. In case you don't have an accesskey, <u>contact me</u>.";
     }
 
-}
+
+
+    if (access == 1) {
+        // window.open("index.html", "_self");
+        // document.getElementById("accesspage2").style.display = "none";
+
+        for (let i = 1; i < item.length; i++) {
+            item[i].style.display = "inline";
+        }
+
+    }
 
 }
 
@@ -84,7 +137,7 @@ function auto() {
 
     // document.getElementById("topc").style.width= "370px";
 
-    var welcome_message = document.getElementById("welcome_message");
+    var welcome_message = document.getElementById("status");
 
     let hour = new Date().getHours();
     let minute = new Date().getMinutes();
@@ -97,6 +150,10 @@ function auto() {
     document.getElementById("at").innerHTML =
         "The contents in this website are updated" + update_date + " at " + hour_12 + ":" + minute +
         " " + am_pm;
+
+    setTimeout(function () { welcome_message.innerHTML = "What's up?"; }, 200);
+    setTimeout(function () { welcome_message.innerHTML = "Take a look at the new stuff here!"; }, 400);
+    setTimeout(function () { welcome_message.innerHTML = "Here are your search results."; }, 2000);
 
     if (hour > 16 || hour < 6) {
 
@@ -111,6 +168,7 @@ function auto() {
             }
             else {
                 welcome_message.innerHTML = "Hi. Good evening.";
+
             }
 
         }
@@ -125,6 +183,7 @@ function auto() {
 
     document.getElementById("dark-toggle-label").style.display = "inline";
 
+    // setInterval(function () { welcome_message.innerHTML = "What's up?"; }, 5000);
 
 }
 
@@ -133,6 +192,9 @@ if (window.matchMedia('(prefers-color-scheme)').media !== 'not all') {
     welcome_message.innerHTML = "Hi. What time is it?";
 
 }
+
+
+
 
 
 
