@@ -6,15 +6,26 @@ const userPrefersDark = window.matchMedia && window.matchMedia('(prefers-color-s
 
 const userPrefersLight = window.matchMedia && window.matchMedia('(prefers-color-scheme: light)').matches;
 
+
+//  comment when not testing light theme 
+// document.body.classList.toggle('light_color_theme');
+// document.documentElement.setAttribute(
+//     "data-color-scheme",
+//     isDark ? "light" : "dark"
+// );
+
+
+
+
 if (userPrefersDark) {
     console.log("User prefers a dark interface");
-    document.getElementById('logo').src = 'images/co_default_dark.png';
+    // document.getElementById('logo').src = 'images/co_default_dark.png';
     document.getElementById("dark_toggle").checked = true;
 }
 
 if (userPrefersLight) {
     console.log("User prefers a light interface");
-    document.getElementById('logo').src = 'images/co_default_light.png';
+    // document.getElementById('logo').src = 'images/co_default_light.png';
     document.getElementById("dark_toggle").checked = false;
     document.body.classList.toggle('light_color_theme');
 
@@ -55,12 +66,12 @@ switcher.addEventListener('click', function manual_theme() {
         // document.getElementById("g_frame").style.filter = "invert(90%)";
         document.body.classList.toggle('light_color_theme');
 
-        document.getElementById('logo').src = 'images/co_manual_dark.png';
+        // document.getElementById('logo').src = 'images/co_manual_dark.png';
     }
     if (document.getElementById("dark_toggle").checked == false) {
         // document.getElementById("g_frame").style.filter = "invert(0%)";
         document.body.classList.toggle('light_color_theme');
-        document.getElementById('logo').src = 'images/co_manual_light.png';
+        // document.getElementById('logo').src = 'images/co_manual_light.png';
 
     }
 

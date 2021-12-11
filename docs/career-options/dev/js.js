@@ -1,5 +1,5 @@
 // document.getElementById("version").innerHTML = "299.905";
-document.getElementById("version").innerHTML = "";
+document.getElementById("version").innerHTML = "Dev";
 
 document.getElementById("button__close_announcement_bar").addEventListener("click", close_announcement_bar);
 function close_announcement_bar() {
@@ -13,7 +13,6 @@ document.getElementById("button__close_developer_options").addEventListener("cli
 function close_developer_options() {
     document.getElementById("developer_options").style.display = "none";
 }
-
 
 
 function item_1_content() {
@@ -152,9 +151,9 @@ function auto() {
         "The contents in this website are updated" + update_date + " at " + hour_12 + ":" + minute +
         " " + am_pm;
 
-    setTimeout(function () { welcome_message.innerHTML = "What's up?"; }, 2000);
-    setTimeout(function () { welcome_message.innerHTML = "Take a look at the new stuff here!"; }, 4000);
-    setTimeout(function () { welcome_message.innerHTML = ""; }, 70000);
+    setTimeout(function () { welcome_message.innerHTML = "What's up?"; }, 200);
+    setTimeout(function () { welcome_message.innerHTML = "Take a look at the new stuff here!"; }, 400);
+    setTimeout(function () { welcome_message.innerHTML = "Here are your search results."; }, 2000);
 
     if (hour > 16 || hour < 6) {
 

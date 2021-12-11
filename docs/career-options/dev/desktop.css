@@ -59,6 +59,7 @@ header {
 
 .menu_pane {
   float: left;
+  /* display:none; */
 }
 
 .menu-pane button {
@@ -72,7 +73,7 @@ header {
   height: calc(100vh - 2 * 37px - 3 * 20px);
   height: auto;
   padding: 20px;
-  margin: 20px 0 0 20px;
+  margin: 20px 0 20px 20px;
   display: block;
   border: 0px solid #777;
   border-radius: 6px;
@@ -95,9 +96,9 @@ header {
 }
 
 .content-pane {
-  width: calc(100% - 300px - 20px);
-
-  float: left;
+  width: calc(100% - 300px - 20px );
+  /* margin-right: 320px; */
+  float: right;
   overflow: auto;
   
   /* background-color: hsla(300, 100%, 25%, 0.233); */
@@ -265,9 +266,14 @@ header:hover > #top_bar > .show_on_expand {
 header:hover > #top_bar > .show_on_expand {
   visibility: visible;
 }
-
+/* 
 #top_bar #logo {
   margin-left: 4px;
+  float: left;
+} */
+
+.brand_name {
+  margin: 6.5px 18px 0 18px;
   float: left;
 }
 
@@ -281,8 +287,8 @@ header:hover > #top_bar > .show_on_expand {
 
 #version {
   float: left;
-  margin-top: 6px;
-  margin-left: 15px;
+  margin-top: 6.5px;
+  margin-left: 0px;
 }
 
 /* status bar 
