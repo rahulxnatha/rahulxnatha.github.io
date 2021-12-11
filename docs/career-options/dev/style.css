@@ -77,6 +77,7 @@ input[type="search"] {
   background-repeat: no-repeat;
   padding: 0;
   height: inherit;
+  width: 100%;
   -webkit-transition: width 0.4s ease-in-out;
   transition: width 0.4s ease-in-out;
   outline: none;
@@ -291,7 +292,7 @@ input:checked + .slider:before {
 
 @keyframes bar-elongate {
   0% {
-    width: 165px;
+    width: 200px;
     background-color: rgb(35, 64, 90);
     border: 3px solid #777;
     padding: 0px;
