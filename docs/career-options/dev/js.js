@@ -1,5 +1,5 @@
 // document.getElementById("version").innerHTML = "299.905";
-document.getElementById("version").innerHTML = "Dev";
+document.getElementById("version").innerHTML = "Beta";
 
 document.getElementById("button__close_announcement_bar").addEventListener("click", close_announcement_bar);
 function close_announcement_bar() {
