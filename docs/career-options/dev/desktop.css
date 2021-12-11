@@ -277,6 +277,11 @@ header:hover > #top_bar > .show_on_expand {
   float: left;
 }
 
+#global_search_bar {
+  margin: 6.5px 18px 0 18px;
+  height: 20px;
+}
+
 .bar_switch,
 #version {
   margin-right: 20px;
