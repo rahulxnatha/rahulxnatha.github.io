@@ -6,6 +6,8 @@ const userPrefersDark = window.matchMedia && window.matchMedia('(prefers-color-s
 
 const userPrefersLight = window.matchMedia && window.matchMedia('(prefers-color-scheme: light)').matches;
 
+// document.getElementById("dark_toggle_w").style.display = "none";
+document.getElementById("beta_toggle_w").style.display = "none";
 
 //  comment when not testing light theme 
 // document.body.classList.toggle('light_color_theme');
@@ -19,13 +21,15 @@ const userPrefersLight = window.matchMedia && window.matchMedia('(prefers-color-
 
 if (userPrefersDark) {
     console.log("User prefers a dark interface");
-    // document.getElementById('logo').src = 'images/co_default_dark.png';
+    document.getElementById('logo').src = 'images/co_default_dark.png';
+    document.getElementById('brand_logo').style.filter = "invert(100%)";
     document.getElementById("dark_toggle").checked = true;
 }
 
 if (userPrefersLight) {
     console.log("User prefers a light interface");
-    // document.getElementById('logo').src = 'images/co_default_light.png';
+    document.getElementById('logo').src = 'images/co_default_light.png';
+    document.getElementById('brand_logo').style.filter = "invert(0)";
     document.getElementById("dark_toggle").checked = false;
     document.body.classList.toggle('light_color_theme');
 
@@ -65,13 +69,14 @@ switcher.addEventListener('click', function manual_theme() {
     if (document.getElementById("dark_toggle").checked == true) {
         // document.getElementById("g_frame").style.filter = "invert(90%)";
         document.body.classList.toggle('light_color_theme');
-
-        // document.getElementById('logo').src = 'images/co_manual_dark.png';
+        document.getElementById('brand_logo').style.filter = "invert(100%)";
+        document.getElementById('logo').src = 'images/co_manual_dark.png';
     }
     if (document.getElementById("dark_toggle").checked == false) {
         // document.getElementById("g_frame").style.filter = "invert(0%)";
         document.body.classList.toggle('light_color_theme');
-        // document.getElementById('logo').src = 'images/co_manual_light.png';
+        document.getElementById('logo').src = 'images/co_manual_light.png';
+        document.getElementById('brand_logo').style.filter = "invert(0%)";
 
     }
 

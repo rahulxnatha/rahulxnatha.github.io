@@ -1,6 +1,8 @@
 :root {
   --light1_100: #ffffff;
   --light1_075: #ffffffbf;
+  --light-dim: rgb(90, 90, 90);
+  --light1_025: hsla(0, 0%, 100%, 0.25);
 
   --light2_100: #eeeeee;
 
@@ -8,13 +10,16 @@
 
   --dark1_100: #000000;
   --dark1_075: #000000bf;
+  --dark-dim: rgb(138, 138, 138);
+  --dark1_025: hsla(0, 0%, 0%, 0.25);
 
-  --dark2_100: #222222;
+  --dark2_100: #121212;
 
   --dark3_100: #333333;
   --dark3_075: #333333bf;
 
-  
+  --accent-color: rgb(34, 120, 146);
+  --accent-color: rgb(19, 97, 110);
 }
 
 [data-color-scheme="dark"] {
@@ -23,6 +28,20 @@
 
 [data-color-scheme="light"] {
   color-scheme: light;
+}
+::-moz-selection {
+  
+  color: rgb(0, 0, 0);
+  background: #cccccc;
+  -webkit-backdrop-filter: blur(13px);
+  backdrop-filter: blur(13px);
+}
+
+::selection {
+  color: rgb(0, 0, 0);
+  background: #cccccc;
+  -webkit-backdrop-filter: blur(13px);
+  backdrop-filter: blur(13px);
 }
 
 /* dark color theme 
@@ -37,7 +56,14 @@
 
   --menu-option-border: #999;
   --dev-background-color: var(--dark1_100);
- 
+
+  --header_background: rgb(42, 64, 83, 50%);
+
+  --dim-font: var(--dark-dim);
+
+  --top-read-color: var(--dark1_075);
+  --bottom-read-color: var(--dark1_025);
+  --bottom-read-color-hover: var(--dark1_075);
 }
 
 #g_frame {
@@ -69,7 +95,30 @@
   --item_background_color: var(--light1_100);
   --menu-option-border: #555;
   --dev-background-color: var(--light3_100);
+
+  --header_background: rgba(255, 255, 255, 0.7);
+
+  --dim-font: var(--light-dim);
+
+  --top-read-color: var(--light1_075);
+  --bottom-read-color: var(--light1_025);
+  --bottom-read-color-hover: var(--light1_075);
 }
+
+
+ .light_color_theme ::-moz-selection {
+  color: rgb(0, 0, 0);
+  background: rgb(190, 190, 190);
+  -webkit-backdrop-filter: blur(13px);
+  backdrop-filter: blur(13px);
+}
+
+.light_color_theme ::selection {
+  color: rgb(0, 0, 0);
+  background: rgb(190, 190, 190);
+  -webkit-backdrop-filter: blur(13px);
+  backdrop-filter: blur(13px);
+} 
 
 .light_color_theme .top-bar > a > span > img {
   filter: grayscale(0%);

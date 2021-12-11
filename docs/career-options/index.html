@@ -1,499 +1,242 @@
-<!DOCTYPE html>
-
-<!-- html starts with Indian English language and left to right direction -->
-<html lang="en-IN" dir="ltr" data-color-scheme="dark">
-
-<!-- head starts -->
+<!doctype html>
+<html lang="en-in" dir="ltr" data-color-scheme="dark">
 
 <head>
-
-    <!-- meta data
-    ----------------------------------------------------------------------- -->
     <meta charset="utf-8" />
-    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta http-equiv="x-ua-compatible" content="ie=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
 
-    <!-- Fav_icon for this webpage  -->
     <link rel="icon" href="images/fav.png" />
+    <title>Resource Manager</title>
 
-    <!-- Title for this webpage -->
-    <title>Career Options</title>
-
-    <!-- Descriptions 
-    ------------------------------------------------------------>
     <meta property="og:image" content="images/co.png" />
-
     <meta property="og:title" content="Career Options" />
     <meta name="description" content="Career Options" />
 
     <meta property="og:description"
-        content="This website is a search engine that can be used to explore the ways in which you can skill yourself for the future, and to know various career options that suit you based on your true intentions." />
-
+        content="This web app is an engine that searches and filters the content, and it can be used to explore the ways in which you can skill yourself for the future, and to know various career options that suit you based on your true intentions." />
     <meta property="og:url" content="https://natharahul.github.io/docs/career-options" />
 
-
-    <!-- CSS styling
-    ------------------------------------------------>
-    <link rel="stylesheet" content="X-Content-Type-Options: nosniff" href="style2.css" />
+    <!-- stylesheet  -->
     <link rel="stylesheet" content="X-Content-Type-Options: nosniff" href="style.css" />
-
     <link rel="stylesheet" content="X-Content-Type-Options: nosniff" href="desktop.css" />
     <link rel="stylesheet" content="X-Content-Type-Options: nosniff" href="tablet.css" />
     <link rel="stylesheet" content="X-Content-Type-Options: nosniff" href="mobile.css" />
+    <link rel="stylesheet" content="X-Content-Type-Options: nosniff" href="print.css" />
 
     <link rel="stylesheet" content="X-Content-Type-Options: nosniff" href="colors.css" />
-    <link rel="stylesheet" content="X-Content-Type-Options: nosniff" href="icon_colors.css" />
-    <link rel="stylesheet" content="X-Content-Type-Options: nosniff" href="light_theme.css" />
-
-    <!-- external links
-    -------------------------------------->
-    <link href="https://unpkg.com/material-components-web@latest/dist/material-components-web.min.css" rel="stylesheet">
-
-    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
-
-    <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
-
-    <link href="https://fonts.googleapis.com/css?family=Roboto:300,400,500" rel="stylesheet">
-
-    <link href="https://fonts.googleapis.com/css?family=Roboto+Condensed:300,400,500" rel="stylesheet">
+    <link rel="stylesheet" content="X-Content-Type-Options: nosniff" href="color_themes.css" />
+    <link rel="stylesheet" content="X-Content-Type-Options: nosniff" href="icons.css" />
 
 </head>
 
-<!-- body start 
------------------------------------------------------------------------------>
+<body id="body" class="dark_color_theme" onload="auto()">
 
-<body class="dark_color_theme mdc-typography" onload="auto()" id="body">
+    <div id="announcement_bar">
+        <p id="announcement_message">
+            Welcome to the new Career Options website. This site will receive beta updates regularly for user interface
+            and
+            other testing.</p>
+
+        <button id="button__close_announcement_bar">Close</button>
+    </div>
+
+    <header>
+
+        <div id="top_bar">
 
 
-    <!--The 'top bar' : starts-->
-    <div class="top-bar NOshadow transition sticky" id="topc">
 
-        <a href="#">
-            <span class="top-bar-item" style="margin: 0px 4px 0px 5px;">
-
-                <img src="images/co_default_dark.png" height="33px" alt="logo" id="logo_co" />
-
+            <span class="brand_name ">
+                Resource Manager
             </span>
-        </a>
 
+            <span id="version" class="show_on_expand" style="float: left;"> loading</span>
 
-        <!--Version number and branding-->
-        <span class="top-bar-item" contenteditable="false"
-            style="color:#777; margin-top: 6px; font-size: 110%; font-family: 'Roboto Condensed';">
-            2.9.98.98</span>
+            <input type="search" name="global_search" id="global_search_bar" placeholder="Search" class="always_show">
 
-
-        <!--Dark theme manual toggle-->
-        <label class="top-bar-item expand expand2" id="dark-toggle-label">Dark
-            <div class="tooltip" class="expand">
-
-                <label class="switch">
-                    <input id="darktoggle" class="expand2 darktoggle" type="checkbox">
+            <label class="bar_switch show_on_expand " id="dark_toggle_w">Dark theme
+                <span class="switch">
+                    <input id="dark_toggle" type="checkbox">
                     <span class="slider"></span>
-                </label>
+                </span>
+            </label>
 
-                <span class="tooltiptext">Dark theme</span>
-            </div>
-        </label>
 
-        <!--Beta toggle-->
-        <label class="top-bar-item expand expand1" id="beta-toggle-label">Beta
-            <div class="tooltip" class="expand">
 
-                <label class="switch">
-                    <input id="betatoggle" class="expand1" type="checkbox" unchecked onclick="beta_access()">
+            <label class="bar_switch show_on_expand" id="beta_toggle_w">Test
+                <span class="switch">
+                    <input id="beta_toggle" type="checkbox">
                     <span class="slider"></span>
-                </label>
+                </span>
+            </label>
 
-                <span class="tooltiptext">Beta</span>
-            </div>
-        </label>
+        </div>
 
+        <div id="status_bar">
+            <span id="status">Loading. Please wait.</span>
 
-    </div>
-    <!--The 'top bar' : ends-->
-
-    <!-- The login page : starts -->
-
-    <!-- <div class="iframe-sheet-2 " id="accesspage"
-        style="position:fixed; top:0px; left:0px; bottom:0px; right:0px; width:100%; height: 100%; border:none; margin: 0px; padding:80px; overflow:hidden; z-index:99999; background-color: rgb(29, 29, 29); color: white;">
-
-        <h1>Enter accesskey to log in</h1>
-
-        <input id="accesskey2" type="text" placeholder="Enter accesskey" autofocus="autofocus"
-            style=" width: inherit; max-width: 400px; margin: 10px 0 20px 0 ;">
+        </div>
         <br>
-        <button onclick="turnonaccess()" id="accessbutton" style="margin-left:0;">Get access</button>
-        <p id="accessreply"></p>
+        <br>
 
-    </div> -->
-    <!--The login page : ends -->
+        <!-- 
+        <button id="button__show_settings">Settings</button>
 
-    <!-- <div class="hidden" style="height:100px; width: 100%;"> With internet, education is free of cost. </div> -->
+        <div id="search_bar">
+            <input type="search" id="search_bar" placeholder="Type to search" />
+            <button onclick="search()">Search</button>
+        </div> 
 
-    <!--The splash screen : starts -->
-
-    <!-- <div id="splash_screen"
-        style="position: fixed; top:0;left:0; bottom:0px; right:0; width:100%; height: calc(100% - 0px); border:none; margin: 0px 0px 0px 0px; padding:0; overflow:hidden; z-index:9999999; background-color: rgb(36, 36, 36); display:block;">
-
-        <div style="position: fixed;top: calc(50% - 100px); left: calc(50% - 100px);">
-            <img style="animation: rotate 2s infinite;" width="200px"
-                src="https://docs.google.com/drawings/d/e/2PACX-1vTsISpsKu-Hn0EdJePBw_UC3y5GBIL-4S-dauzSMiG3Ys3oksH13kBv2qcQLgWSBwhRNPkKgOmPcazN/pub?w=379&amp;h=379">
-        </div>
-    </div> -->
-
-    <!--The 'top message bar' : starts-->
-    <div class="top-bar2  transition sticky blur_backdrop" id="topc2">
-
-        <span id="welcome_message" style="width: 250px">Loading. Please wait.</span>
-        <p id="alert"></p>
-
-    </div>
-
-    <span id="settings_iconcus89" class="material-icons settings_icon_cus89" onclick="show_settings()"
-        style="cursor: pointer; ">
-        settings
-    </span>
-    <!--The 'top message bar' : ends-->
-
-
-
-
-
-    <!--The 'top search bar' : starts-->
-    <div class="top-bar2-1  transition" id="topc2-1-what">
-
-
-        <!-- <span class="menu_option hidden" id="dopbeta">
-            <input type="search" name="search_bar" id="accesskey" class="search_this_query" placeholder="Type to search" />
-        </span> -->
-
-        <!-- <button onclick="turn_on_access()" >Get access</button> -->
-
-
-    </div>
-    <!--The 'top search bar' : ends-->
-
-
-    <!--The 'top menu bar' : starts-->
-    <div class="top-bar3  transition" id="topc3">
-
-        <div class="top-bar3inside">
-            <span class="menu_option" onclick="show_all_contents()">All</span>
-            <span class="menu_option" onclick="show_jobs()">Jobs</span>
-            <span class="menu_option o_active" id="youtube_option" onclick=" show_YouTube_videos()">YouTube</span>
-            <span class="menu_option " onclick="show_skills()">Learn skills</span>
-            <span class="menu_option " onclick="show_education()">Search education center</span>
+        <div id="menu_bar">
+            <button>Filter 1</button>
+            <button>Filter 1</button>
+            <button>Filter 1</button>
+            <button>Filter 1</button>
+            <button>Filter 1</button>
 
         </div>
+-->
+    </header>
 
 
+    <div id="developer_options">
 
-
-    </div>
-    <!--The 'top menu bar' : ends-->
-
-    <!-- Header -->
-    <div class="header_background"> </div>
-
-    <!-- Developer options -->
-    <div id="developer_options" class="developer_options hidden">
-
-        <!-- <input class="" id="dopbeta" type="search" name="search_bar" id="" placeholder="Search" /> -->
-
-        <!-- collapse button 
-    ---------------------------------------- -->
-        <button class="mdc-button foo-button mdc-button--unelevated" id="dopbeta2" style="position:absolute;right:20px;"
-            onclick="collapse_developer_options()">
-            <div class="mdc-button__ripple"></div>
-            <span class="mdc-button__label">Collapse</span>
-        </button>
-
-
-        <span>
+        <div class="the_content">
             <h1 style="display: inline-block;">Settings</h1>
-            <p>Nothing here yet.</p>
-        </span>
 
-        <div class="shadow hide"
-            style=" padding: 20px; width: calc((100% - 40px)/3);border-radius: 20px; margin-top: 20px; line-height: 37px;">
+            <label class="setting">Set theme based on
+                <select id="cars">
+                    <option value="system_preference">Device settings (Default)</option>
+                    <option value="environment">Time and ambience</option>
+                    <option value="manual_decision">Do not change until I manually change</option>
+                </select>
+            </label>
+        </div>
 
-            <span style="margin:0px; line-height: 00px; ">Appearance settings</span>
+        <button id="button__close_developer_options">Close</button>
+    </div>
 
+    <div class="bottom-bar" id="bottom_bar">
+        <img src="images/rd.png" height="26px" alt="logo" style="filter: invert(100%);" id="brand_logo" />
+        <p style="float: right; margin: 1px 2px 5px 0px" id="at">Wait a moment.</p>
 
+    </div>
 
-            <p>hi</p>
+    <div>
+        <div class=" menu_pane">
+            <div class="menu-pane">
+                <div>Menu</div>
+                <div class="active-menu-pane-option menu-pane-option" onclick="menu(1)">Career Options</div>
+                <div class="menu-pane-option" onclick="menu(2)">Potential Problems Registry</div>
+                <div class="menu-pane-option" onclick="menu(3)">Latest releases</div>
+                <div class="menu-pane-option" onclick="menu(4)">How's it going</div>
+                <div class="menu-pane-option" onclick="menu(5)">Skills & hobbies</div>
+            </div>
 
+            <div class="menu-pane">
+                <div>Filters</div>
+                <button>Higher Education</button>
+                <button class="active">Indian Government Jobs</button>
+                <button class="active">PSU Jobs</button>
+                <button>Product Company Jobs</button>
+                <button>Searching Jobs</button>
+            </div>
+        </div>
 
+        <div class="aside">
 
-            <div style="margin-top: 10px;">
-                &nbsp;
-                <input type="radio">
-                  <label>Set theme based on time and ambience</label>
-
-                <br>
-
-                  <input type="radio">
-                  <label>Set theme based on device settings</label>
-
-                <br>
-
-                  <input type="radio">
-                  <label>Always be on light theme</label>
-                <br>
-                  <input type="radio">
-                  <label>Always be on dark theme</label>
+            <div class="iaside">
+                content at the side
 
             </div>
 
 
+            <div class="iaside">
+                content at the side, maybe ad
+
+            </div>
+            <div class="iaside">
+                content at the side
+
+            </div>
+            <div class="iaside">
+                content at the side
+
+            </div>
+
         </div>
 
 
+        <div class="content-pane">
+
+            <div id="webpage" class="hide">
+
+                <div class="main-item item">
+
+                    <h1 id="headline" class="hide">Career Options</h1>
+                    <span class="donthide">
+                        <img id="logo" src="images/co_default_dark.png" height="90px" alt="Logo" />
+                    </span>
+                    <p>Career Options is about different types of research, jobs, higher education, occupations, and
+                        resources for them.</p>
+
+                </div>
+
+                <a class="item" href="http://employmentnews.gov.in/NewEmp/AnnualSubcription.aspx" target="_blank"
+                    rel="noopener noreferrer">
+                    <div id="item_1"> Subscribe to Employment News </div>
+                </a>
+
+                <div class="item">Jobs at Defence Research & Development Laboratory</div>
+                <div class="item">Indian Railways llllllllllllll lllllllllllllll llllllllllllllllll lllllllllllllllllll
+                    llllllllllllllllll</div>
+                <div class="item">Union Public Service Commission</div>
 
 
-    </div>
-
-    <!--The 'bottom bar' : starts-->
-    <div class="bottom-bar NOshadow transition " id="bottomc">
-        <a href="#">
-            <!-- <img height="25px" style="margin:5px 5px 5px 2px; float: left"
-                src="https://docs.google.com/drawings/d/e/2PACX-1vQA4iiyPJ8Py6UjOW524b3qVO8LRSsglJVuLPbldYkJ9td08uvFLAWs1sGukrMnTgmdvkiBCbTap_jD/pub?w=280&amp;h=42"> -->
-
-            <img src="images/rd.png" height="33px" alt="logo" />
 
 
-        </a>
+            </div>
 
-        <p style="float: right; margin: 4px 2px 5px 0px" id="at">Wait a moment.</p>
-        <p style="float: right; margin: 4px 2px 5px 0px" id="att"></p>
+            <div class="blog">
 
+                <h1>The First Blog on this Website</h1>
 
-    </div>
+                <div class="author">Rahul Natha • 7 Dec 2021</div>
 
+                <p>Hi there. Last week I have sent some screenshots previewing this blog to few people and those
+                    previews have had the following text in them.
+                    "You are reading the first ever blog, that's going to be published later, from a preview screenshot
+                    shared to you by Rahul. Do let know him if you fell anything might be better. Your feedback is
+                    appreciated." </p>
 
-    <div id="webpage" class="noselect_off">
-
-        <!-- <div class="hidden item" aria="">
-            <h1>Hi user, give some input</h1>
-            <p>You can either type or speak.</p>
-
-            <div style="background-color: brown; height:calc(100% - 135px); border-radius: 7px;">
-
+                <p>And today, the fist blog, which is this, is finally published. </p>
                 
 
             </div>
-        </div> -->
-
-        <div class=" main_item  item hidden" id="item" style="position: relative;">
-
-            <iframe id="g_frame"
-                style="border:none; height: calc(100% - 10px); width:calc(100% - 40px);margin:0 20px;padding:0;"
-                src="https://docs.google.com/spreadsheets/d/e/2PACX-1vTL5ZyxcOsOpcdYAdbQWjCgUJvJ1fone0C3o7MVW3B7jfty9VpJi6tzv71ikK6FpKhvCJod87722dkV/pubhtml?widget=false&amp;headers=false">
-
-
-            </iframe>
-
-            <span id="icon_fscreen_gframe"
-                style="position: absolute;bottom:10px;left:10px; cursor: pointer; background-color: none;">
-
-                <svg id="gframe_fulls" onclick="g_frame_fullscreen()" xmlns="http://www.w3.org/2000/svg"
-                    enable-background="new 0 0 24 24" height="24px" viewBox="0 0 24 24" width="24px" fill="#000000">
-                    <rect fill="none" height="24" width="24" />
-                    <path
-                        d="M21,8.59V4c0-0.55-0.45-1-1-1h-4.59c-0.89,0-1.34,1.08-0.71,1.71l1.59,1.59l-10,10l-1.59-1.59C4.08,14.08,3,14.52,3,15.41 V20c0,0.55,0.45,1,1,1h4.59c0.89,0,1.34-1.08,0.71-1.71l-1.59-1.59l10-10l1.59,1.59C19.92,9.92,21,9.48,21,8.59z" />
-                </svg>
-
-                <svg id="gframe_fulls_off" style="display: none;" onclick="g_frame_fullscreen_off()"
-                    xmlns="http://www.w3.org/2000/svg" enable-background="new 0 0 24 24" height="24px"
-                    viewBox="0 0 24 24" width="24px" fill="#000000">
-                    <rect fill="none" height="24" width="24" />
-                    <path
-                        d="M21.29,4.12l-4.59,4.59l1.59,1.59c0.63,0.63,0.18,1.71-0.71,1.71H13c-0.55,0-1-0.45-1-1V6.41c0-0.89,1.08-1.34,1.71-0.71 l1.59,1.59l4.59-4.59c0.39-0.39,1.02-0.39,1.41,0v0C21.68,3.1,21.68,3.73,21.29,4.12z M4.12,21.29l4.59-4.59l1.59,1.59 c0.63,0.63,1.71,0.18,1.71-0.71V13c0-0.55-0.45-1-1-1H6.41c-0.89,0-1.34,1.08-0.71,1.71l1.59,1.59l-4.59,4.59 c-0.39,0.39-0.39,1.02,0,1.41l0,0C3.1,21.68,3.73,21.68,4.12,21.29z" />
-                </svg>
-
-            </span>
-        </div>
-
-
-        <!-- Beta features -->
 
 
 
-        <div class="item no_pointer jobs">
-            <h1>Glance</h1>
-            <p>
-            <ul>
-                <li>Majority of the exams are going to start from next week.</li>
-                <li>New applications are being added, you can ideally check them tomorrow.</li>
-                <li>Application deadlines of 1 exam is very near.</li>
-            </ul>
-            </p>
-            <br>
 
-
-            <p id="answer"></p>
-        </div>
-
-        <div class="youtube_embed item" style="position: relative; padding-bottom: 56.25%;">
-            <iframe class="iframe_youtube" width="100%" height="100%" frameborder="0"
-                src="https://www.youtube.com/embed/videoseries?list=UUnKlI8bIoRdgzrPUNvxqflQ" allowfullscreen>
-
-            </iframe>
-        </div>
-
-        <div class="youtube_embed item" style="position: relative; padding-bottom: 56.25%;">
-            <iframe class="iframe_youtube" width="100%" height="100%" frameborder="0"
-                src="https://www.youtube.com/embed/videoseries?list=UUCKEJ5MYyOaKM1gGksrZEJw" allowfullscreen>
-            </iframe>
-        </div>
-
-        <!-- <div class="youtube_embed item" style="position: relative; padding-bottom: 56.25%;">
-            <iframe class="iframe_youtube" width="100%" height="100%" frameborder="0"
-                src="https://www.youtube.com/embed/videoseries?list=UUk4ZfW_-pmfjkkZciu5BFzNA" allowfullscreen>
-            </iframe>
-        </div> -->
-
-
-        <div class=" item skills" aria="">
-            <h1>Practice skills</h1>
-            <p>The new skills</p>
         </div>
 
 
 
-
-        <div class="item jobs">
-            <h1>Graduate Aptitude Test in Engineering</h1>
-
-            <p>An examination that primarily tests the comprehensive understanding of various undergraduate subjects in
-                engineering and science for admission into the Masters Program and Job in Public Sector Companies.</p>
-
-            <a href="https://gate.iitkgp.ac.in/index.html" target="_blank" rel="noopener noreferrer">
-                <button>Details</button></a>
-            <br>
-            <a href="https://gate.iitkgp.ac.in/apps.html" target="_blank" rel="noopener noreferrer">
-                <button>Apply</button></a>
-
-            <span>by&nbsp;24&nbsp;September&nbsp;2021</span>
-        </div>
-
-        <!-- <div class="item jobs">
-            <h1>Bharat Dynamics Limited</h1>
-            
-
-            <p>Management Trainee for missiles manufacturing unit. The job requires <a href="#"> management skills</a>.
-                Lorem ipsum dolor sit amet consectetur adipisicing elit. Reprehenderit expedita et inventore dolores
-                iusto temporibus nobis maiores, autem, at nihil officia debitis possimus nesciunt dolorum similique quam
-                ab cupiditate sed quae aut alias suscipit laudantium, sint ea?</p>
-
-
-            <button>Details</button>
-            |
-            <button style="margin-right:5px; margin-left: 20px;">Apply</button>
-            <span>by 20 August 2021</span>
-        </div> -->
-
-
-        <div class="item education">
-            <h1>Search education centers</h1>
-        </div>
-
-        <div class="item jobs">
-            <h1>Union Public Service Commission</h1>
-
-            <p>The Union Public Service Commission, commonly abbreviated as UPSC, is India's premier central recruiting
-                agency for central government public servants. It is responsible for appointments to and examinations
-                for Group A and Group B posts under civil services cadre and defence services cadre of the union
-                government.</p>
-            <a href="https://www.upsc.gov.in/" target="_blank" rel="noopener noreferrer">
-
-                <button class="mdc-button foo-button mdc-button--unelevated">
-                    <div class="mdc-button__ripple"></div>
-                    <span class="mdc-button__label">Details</span>
-                </button>
-            </a>
-        </div>
-
-        <div class="item jobs" id="new_jobs_card">
-            <h1>Interview tips</h1>
-            <p>The interviewers are sick of listening to candidates speak about their families, grades and how strong
-                you are in your domain. If you want a job, knowing little to moderate in your domain is more than
-                enough. You get trained from the ground up. What you need to do, is STAND OUT!</p>
-        </div>
-
-
-
-
-        <!-- <div class="item jobs">
-
-            <p>
-                0. If the interview is in person, always start with a FIRM handshake, ALWAYS! This is how you intrigue
-                them, and wake them up from their previous boring interviews.
-
-            </p>
-
-            <p>
-                1. Introduce yourself not with family names, education, grades, etc. but with your personal attributes/
-                qualities/ strengths. etc. This way you won't be asked to speak of you strengths later on which is a
-                tricky question since it almost always follows up with a rebuttal from the interviewer, and you wont' be
-                experienced/ prepared enough to answer.
-
-            </p>
-            <p>
-                2. Don't speak on things such as Brand Name, Work-Life Balance, Good salary, Growth, Job Security, etc.
-                as reasons to join. You're in college, you know nothing of these things.</p>
-            <p>
-                3. Speak less on what motivates you to join the company (such as aforementioned points), and more on
-                what you bring to the table and how you would be an asset to the company.</p>
-            <p>
-                4. Speak firmly on your decision to work and develop your skills/ core knowledge and not on things such
-                as higher studies, or leaving the company for a higher salary. They don't want to invest time and money
-                on someone who's gonna leave them.</p>
-            <p>
-                5. Every Fresher who applies to a company, for Heaven's sake just spend 5 mins on Wikipedia to to read
-                through about them before the interview. Things such as recent mergers, news, top clients, accolades,
-                current CEO, etc. And most importantly their Vision and what makes them stand out in the industry.</p>
-            <p>
-                6. Speak in full sentences. (When I ask you if you're hungry, don't answer with "yes", answer with "yes
-                I am, and I'd love to have lunch now"). Avoid using Umm, huh, ahhh, etc. Take time if you have to in
-                between sentences, but don't be informal. This shows your professional etiquette while conversing. And
-                no, you don't need to speak in 4 syllable words, just plain and simple English will suffice.</p>
-            <p>
-                7. Finally, have at-least 2-3 questions for the Interviewer, things such as how easy/ difficult it'll be
-                to both learn and deliver at the same time, on their opinion/ experience of working in said company, on
-                what the company's expectations are from a trainee, etc. Ask questions that will always demand a
-                positive answer, so the Interviewer ever so slightly sways to you side.</p>
-        </div> -->
 
     </div>
 
     <footer style="background-color: var(--dark1_100); height:300px;">
 
-        <a href="http://sites.google.com/view/rahuldocs" target="_blank" rel="noopener noreferrer">RAHUL DOCS Web
-            Portal</a>
-        <a href="http://sites.google.com/view/rahuldocs" target="_blank" rel="noopener noreferrer">Add content</a>
-        <a href="http://sites.google.com/view/rahuldocs" target="_blank" rel="noopener noreferrer">Feedback</a>
-        <a href="http://sites.google.com/view/rahuldocs" target="_blank" rel="noopener noreferrer">Experimental
-            features</a>
+        <a href="http://t.me/rahulnatha" target="_blank" rel="noopener noreferrer">Made by Rahul</a>
+        <br>
+        <a href="http://t.me/rahulnatha" target="_blank" rel="noopener noreferrer">Feedback</a>
 
     </footer>
 
-
-
-    <script src="https://unpkg.com/material-components-web@latest/dist/material-components-web.min.js"></script>
-
-
-
     <script src="js.js"></script>
-    <script src="theme.js"></script>
+    <script src="color_themes.js"></script>
 
-    <script>
-
-
-    </script>
-
-    <noscript>You need to enable JavaScript to view the full site.</noscript>
+    <noscript>You need to enable JavaScript to use this website.</noscript>
 
 </body>
 

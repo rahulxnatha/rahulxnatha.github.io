@@ -3,6 +3,10 @@
   /* web page 
   ------------------------------ */
 
+  .content-pane {
+    width: calc(100% - 300px - 20px - 0px);
+    margin-right: 0px;}
+
   #webpage {
     grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
 
@@ -24,6 +28,10 @@
    
     
   }
+
+  .main-item {
+    grid-column-start: 1;
+    grid-column-end: 3;}
 
 /* items 
 --------------------------------- */

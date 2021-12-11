@@ -1,5 +1,5 @@
 // document.getElementById("version").innerHTML = "299.905";
-document.getElementById("version").innerHTML = "Dev";
+document.getElementById("version").innerHTML = "Beta";
 
 document.getElementById("button__close_announcement_bar").addEventListener("click", close_announcement_bar);
 function close_announcement_bar() {
@@ -151,9 +151,9 @@ function auto() {
         "The contents in this website are updated" + update_date + " at " + hour_12 + ":" + minute +
         " " + am_pm;
 
-    setTimeout(function () { welcome_message.innerHTML = "What's up?"; }, 200);
-    setTimeout(function () { welcome_message.innerHTML = "Take a look at the new stuff here!"; }, 400);
-    setTimeout(function () { welcome_message.innerHTML = "Here are your search results."; }, 2000);
+    setTimeout(function () { welcome_message.innerHTML = "What's up?"; }, 3000);
+    setTimeout(function () { welcome_message.innerHTML = "Take a look at the new stuff here!"; }, 6000);
+    setTimeout(function () { welcome_message.innerHTML = "Excited to see you read the blog."; }, 9000);
 
     if (hour > 16 || hour < 6) {
 
