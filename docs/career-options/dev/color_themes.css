@@ -45,8 +45,9 @@ header {
   color: var(--font_color);
 }
 
+
 .item:hover {
-  background-color: none;
+  background-color: var(--item_background_color_hover);
 }
 
 .main_item:hover {

@@ -1,11 +1,19 @@
 @media screen and (max-width: 1300px) {
-
   /* web page 
   ------------------------------ */
 
+  .menu_pane {
+    visibility: hidden;
+    display: none;
+  }
+  .aside {
+    visibility: hidden;
+    display: none;
+  }
   .content-pane {
-    width: calc(100% - 300px - 20px - 0px);
-    margin-right: 0px;}
+    width: calc(100%);
+    margin-right: 0px;
+  }
 
   #webpage {
     grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
@@ -18,26 +26,22 @@
 
     margin: 0px 20px 20px 20px;
     padding: 0px;
-  
+
     column-gap: 50px;
     row-gap: 50px;
-  
+
     margin: 30px 5% 50px 5%;
-    
-  
-   
-    
   }
 
   .main-item {
     grid-column-start: 1;
-    grid-column-end: 3;}
+    grid-column-end: 3;
+  }
 
-/* items 
+  /* items 
 --------------------------------- */
 
   .item {
-    
     padding: 20px;
     cursor: pointer;
     overflow: auto;
@@ -48,7 +52,7 @@
     grid-column-end: 3;
   }
 
-/* menu bar 
+  /* menu bar 
 ------------------------------------- */
 
   .top-bar3 {
@@ -94,33 +98,32 @@
 ------------------------------------ */
 
   .top-bar2 {
-   position: absolute;
+    position: absolute;
     top: calc(40px + 37px);
     right: 20px;
   }
 
   /* search bar 
   ---------------------------- */
-  
+
   .top-bar2-1 {
     display: inline;
     position: absolute;
     top: calc(1 * 37px + 40px);
     left: 20px;
     float: left;
-  
+
     width: calc(100% - 40px);
   }
 
   #dopbeta {
     width: calc(100%);
     margin-left: calc(0px);
-    cursor:auto;
+    cursor: auto;
   }
 
   #search_this_query {
     width: calc(100% - 300px);
     margin-left: 0;
   }
-
 }

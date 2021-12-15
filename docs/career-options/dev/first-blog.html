@@ -30,7 +30,7 @@
 
 </head>
 
-<body id="body" class="dark_color_theme " onload="auto()">
+<body id="body" class="dark_color_theme" onload="auto()">
 
     <div id="announcement_bar">
         <p id="announcement_message">
@@ -43,7 +43,7 @@
 
     <header>
 
-        <div id="top_bar">
+        <div id="top_bar" class="top-bar">
 
 
 
@@ -73,7 +73,7 @@
 
         </div>
 
-        <div id="status_bar" class="backgrounds">
+        <div id="status_bar">
             <span id="status">Loading. Please wait.</span>
 
         </div>
@@ -127,15 +127,14 @@
         <div class=" menu_pane">
             <div class="menu-pane">
                 <div>Menu</div>
-                <div class="active-menu-pane-option menu-pane-option" onclick="menu(0)">Blogs</div>
-                <div class="menu-pane-option" onclick="menu(1)">Career Options</div>
+                <div class="active-menu-pane-option menu-pane-option" onclick="menu(1)">Career Options</div>
                 <div class="menu-pane-option" onclick="menu(2)">Potential Problems Registry</div>
                 <div class="menu-pane-option" onclick="menu(3)">Latest releases</div>
                 <div class="menu-pane-option" onclick="menu(4)">How's it going</div>
                 <div class="menu-pane-option" onclick="menu(5)">Skills & hobbies</div>
             </div>
 
-            <div class="hide menu-pane ">
+            <div class="menu-pane">
                 <div>Filters</div>
                 <button>Higher Education</button>
                 <button class="active">Indian Government Jobs</button>
@@ -169,53 +168,37 @@
         </div>
 
 
-        <div class="content-pane backgr">
+        <div class="content-pane">
 
-            <div id="webpage" class="donthide">
+            <div id="webpage" class="hide">
 
-                <div class="  item main-item" style="background: transparent;">
+                <div class="main-item item">
 
-                    <h1 id="headline" class="hide">Blogs</h1>
+                    <h1 id="headline" class="hide">Career Options</h1>
                     <span class="donthide">
                         <img id="logo" src="images/co_default_dark.png" height="90px" alt="Logo" />
-
                     </span>
-
-                    <p>The things that cover the important things.</p>
-                    <!-- <p>Career Options is about different types of research, jobs, higher education, occupations, and
-                        resources for them.</p> -->
+                    <p>Career Options is about different types of research, jobs, higher education, occupations, and
+                        resources for them.</p>
 
                 </div>
 
-                <div class="item">How many SIM cards do you own as per Government records?</div>
-                <div class="item">Know how to make best use of WhatsApp local backups in case you can't use Cloud backup?</div>
-                <div class="item">Staying safe on WhatsApp</div>
-                <div class="item">Identity documents</div>
-
-
-                <a class="hidden item" href="http://employmentnews.gov.in/NewEmp/AnnualSubcription.aspx"
-                    target="_blank">
-                    <div> Subscribe to Employment News </div>
+                <a class="item" href="http://employmentnews.gov.in/NewEmp/AnnualSubcription.aspx" target="_blank"
+                    rel="noopener noreferrer">
+                    <div id="item_1"> Subscribe to Employment News </div>
                 </a>
 
-                <a class="hidden item" href="http://rac.gov.in" target="_blank">
-                    <div>Defence Research & Development Laboratory</div>
-                </a>
+                <div class="item">Jobs at Defence Research & Development Laboratory</div>
+                <div class="item">Indian Railways llllllllllllll lllllllllllllll llllllllllllllllll lllllllllllllllllll
+                    llllllllllllllllll</div>
+                <div class="item">Union Public Service Commission</div>
 
-                <a class="hidden item" href="http://ssc.nic.in" target="_blank">
-                    Staff Selection Commission
-                </a>
-
-
-                <a class="hidden item" href="https://www.upsc.gov.in/" target="_blank">
-                    <div>Union Public Service Commission</div>
-                </a>
 
 
 
             </div>
 
-            <div class="hidden blog">
+            <div class="blog">
 
                 <h1>The First Blog on this Website</h1>
 
@@ -227,18 +210,15 @@
                     shared to you by Rahul. Do let know him if you fell anything might be better. Your feedback is
                     appreciated." </p>
 
-                <p>And today, the fist blog, which is this, is finally published. </p>
+                <p>And today, the fist blog, which is this, is finally published. This website is still in the
+                    development stage, however, some of the features that you see now are functional. For instance, you
+                    can toggle dark theme using the switch that appears at the top, in the header. The search bar, in case if it appears, isn't functional as of now. So, there will be active development going on.</p>
 
+                    <p>You can test the new features in any of the two channels: Dev and Beta. Dev gets regular updates and Beta gets less regular updates. Dev channel is focused on adding new features and Beta channel is focused on fixing bugs. </p>
 
             </div>
 
-
-
-
         </div>
-
-
-
 
     </div>
 

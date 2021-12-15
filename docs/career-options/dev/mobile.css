@@ -17,6 +17,26 @@
     background-color: transparent;
   } */
 
+.menu_pane {
+  display: none;
+}
+
+.aside {
+  display: none;
+  background-color: antiquewhite;
+}
+
+.iaside {
+  display: none;
+}
+
+.content-pane {
+  width: 100%;
+}
+
+.blog h1 {
+  font-size: 50px;
+}
   /* items 
   ---------------------------------- */
 
@@ -39,27 +59,28 @@
 
 @keyframes bar-elongate {
   0% {
-    width: calc(100% - 40px - 50px - 30px);
+    width: calc(100% - 40px );
   }
 
   80% {
-    width: calc(100% - 40px - 50px - 10px);
+    width: calc(100% - 40px );
   }
 
   100% {
-    width: calc(100% - 40px - 50px);
+    width: calc(100% - 40px );
   }
 }
 
-  .top-bar {
+  #top_bar {
     display: block;
     left: 20px;
     top: 20px;
     width: calc(100% - 40px - 50px);
+    width: calc(100% - 40px );
     transition: 400ms;
   }
 
-  .top-bar:hover
+  #top_bar:hover
    {
     width: calc(100% - 40px);
     right: 20px;
@@ -68,7 +89,7 @@
     padding-left: 0px;
   }
 
-  .top-bar > .expand1 {
+  #top_bar > .expand1 {
     visibility: hidden;
     margin-top: 10px;
     transition-delay: 0s;
@@ -115,6 +136,7 @@
   .top-bar3,
   .menu_option {
     display: inline;
+    display: none;
   }
 
   .top-bar3 { 
@@ -137,11 +159,12 @@
     position: absolute;
     top: calc(40px + 37px);
     right: 20px;
+    display: none;
   }
 
   /* search bar 
   ---------------------------- */
-  #topc2-1-what {
+  #status_bar {
     display: none;
   }
 }
