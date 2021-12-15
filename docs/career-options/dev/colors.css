@@ -106,6 +106,8 @@
   --top-read-color: var(--light1_075);
   --bottom-read-color: var(--light1_025);
   --bottom-read-color-hover: var(--light1_075);
+
+  --bottom_bar_correction: white;
 }
 
 

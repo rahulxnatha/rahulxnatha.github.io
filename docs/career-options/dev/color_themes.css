@@ -13,7 +13,7 @@ body {
 }
 
 #bottom_bar,
-.menu_option,
+.menu_option, .item, .menu-pane,
 .blur_backdrop,
 header {
   /* background-color: var(--bar_color); */
@@ -41,7 +41,7 @@ header {
 }
 
 .item {
-  background-color: var(--item_background_color);
+  /* background-color: var(--item_background_color); */
   color: var(--font_color);
 }
 
@@ -68,7 +68,11 @@ p {
 }
 
 .menu-pane .active {
-  background-color: var(--accent-color);
+  /* background-color: var(--accent-color); */
   color: aliceblue;
   
+}
+
+#bottom_bar {
+  background: var(--bottom_bar_correction);
 }

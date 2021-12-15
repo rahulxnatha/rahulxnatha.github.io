@@ -27,6 +27,10 @@ function item_1_content() {
 
 var menu_x = 0;
 function menu(menu_x) {
+    if (menu_x == 0) {
+        document.getElementById("headline").innerHTML = "Blogs";
+    }
+
     if (menu_x == 1) {
         document.getElementById("headline").innerHTML = "Career Options";
     }
@@ -45,11 +49,28 @@ function menu(menu_x) {
 
 
 
-
-
-
-
 }
+
+document.getElementById("B1").addEventListener("click", function B1(){
+    window.open("https://sites.google.com/view/rahuldocs/basic/sim-cards-you-own", "_blank" )}
+);
+
+document.getElementById("B2").addEventListener("click", function B2(){
+    window.open("https://sites.google.com/view/rahuldocs/basic/whatsapp/whatsapp-local-backup", "_blank" )}
+);
+
+document.getElementById("B3").addEventListener("click", function B3(){
+    window.open("https://sites.google.com/view/rahuldocs/basic/whatsapp/stay-safe-on-whatsapp", "_blank" )}
+);
+
+document.getElementById("B4").addEventListener("click", function B4(){
+    window.open("https://sites.google.com/view/rahuldocs/basic/id", "_blank" )}
+);
+
+
+
+
+
 
 var item = document.getElementsByClassName("item");
 var hide = document.getElementsByClassName("hide");
