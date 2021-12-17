@@ -1,33 +1,35 @@
 *,
 *:before,
 *:after {
-  color: var(--fontColor);
-  color-scheme: dark;
   -webkit-tap-highlight-color: transparent;
 }
 
 body {
   background-color: var(--background_color);
   color: var(--font_color);
-  color-scheme: dark;
 }
 
+#top_bar {
+  
+  border: 3px solid transparent;
+
+}
+
+
 #bottom_bar,
-.menu_option, .item, .menu-pane,
+.menu_option,
+.item,
+.menu-pane,
 .blur_backdrop,
 header {
-  /* background-color: var(--bar_color); */
   color: var(--font_color);
-
-  /* background: rgb(7 7 7  / 50%) !important; */
-
   -webkit-backdrop-filter: blur(13px);
   backdrop-filter: blur(13px);
 }
 
 header {
-  background-color: var(--item_background_color);
-  background-color: var(--item_background_color);
+  
+  background-color: var(--accent-color-theme-based);
 }
 
 #bottom_bar:hover,
@@ -40,19 +42,6 @@ header {
   backdrop-filter: blur(13px);
 }
 
-.item {
-  /* background-color: var(--item_background_color); */
-  color: var(--font_color);
-}
-
-
-.item:hover {
-  background-color: var(--item_background_color_hover);
-}
-
-.main_item:hover {
-  color: var(--font_color);
-}
 
 a,
 p {
@@ -61,6 +50,7 @@ p {
 
 #developer_options {
   background-color: var(--dev-background-color);
+  
 }
 
 .active-menu-pane-option {
@@ -70,7 +60,6 @@ p {
 .menu-pane .active {
   /* background-color: var(--accent-color); */
   color: aliceblue;
-  
 }
 
 #bottom_bar {

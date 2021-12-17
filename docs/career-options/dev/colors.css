@@ -1,25 +1,19 @@
 :root {
-  --light1_100: #ffffff;
-  --light1_075: #ffffffbf;
-  --light-dim: rgb(90, 90, 90);
-  --light1_025: hsla(0, 0%, 100%, 0.25);
+  --white_100: #ffffff;
+  --white_075: #ffffffbf;
+  --white_025: hsla(0, 0%, 100%, 0.25);
 
-  --light2_100: #eeeeee;
+  --black_100: hsla(0, 0, 0, 1);
+  --black_075: hsla(0, 0, 0, 0.75);
+  --black_025: hsla(0, 0%, 0%, 0.25);
 
-  --light3_100: rgb(255, 228, 169);
+  --light-color: #e8eef2;
+  --dark-color: #121212;
 
-  --dark1_100: #000000;
-  --dark1_075: #000000bf;
-  --dark-dim: rgb(138, 138, 138);
-  --dark1_025: hsla(0, 0%, 0%, 0.25);
-
-  --dark2_100: #121212;
-
-  --dark3_100: #333333;
-  --dark3_075: #333333bf;
-
-  --accent-color: rgb(34, 120, 146);
-  --accent-color: rgb(19, 97, 110);
+  --theme-color: #000000;
+  --accent-color: #273e47;
+  --caution-color: #fc9e4f;
+  --danger-color: #bf0603;
 }
 
 [data-color-scheme="dark"] {
@@ -29,89 +23,68 @@
 [data-color-scheme="light"] {
   color-scheme: light;
 }
-::-moz-selection {
-  
-  color: rgb(0, 0, 0);
-  background: #cccccc;
-  -webkit-backdrop-filter: blur(13px);
-  backdrop-filter: blur(13px);
-}
-
-::selection {
-  color: rgb(0, 0, 0);
-  background: #cccccc;
-  -webkit-backdrop-filter: blur(13px);
-  backdrop-filter: blur(13px);
-}
-
-/* dark color theme 
--------------------------------------- */
 
 .dark_color_theme {
-  --background_color: var(--dark2_100);
-  --font_color: var(--light1_100);
-  --bar_color: var(--dark3_075);
-  --bar_color_hover: var(--dark3_075);
-  --item_background_color: var(--dark3_100);
+  --background_color: var(--dark-color);
+  --font_color: var(--light-color);
+
+  --item_background_color: var(--dark1_100);
   --item_background_color_hover: var(--dark3_075);
 
-  --menu-option-border: #999;
-  --dev-background-color: var(--dark1_100);
+  --accent-color-theme-based: rgba(39, 62, 71, 0.25);
 
-  --header_background: rgb(42, 64, 83, 50%);
+  --dev-background-color:  #c95c03;
 
-  --dim-font: var(--dark-dim);
+  --dim-font: var(--white_075);
 
   --top-read-color: var(--dark1_075);
   --bottom-read-color: var(--dark1_025);
   --bottom-read-color-hover: var(--dark1_075);
 }
 
-#g_frame {
-  filter: invert(90%);
+.dark_color_theme ::-moz-selection {
+  color: rgb(0, 0, 0);
+  background: #cccccc;
+  -webkit-backdrop-filter: blur(13px);
+  backdrop-filter: blur(13px);
 }
 
-.top-bar > a > span > img {
-  filter: grayscale(0%);
-  filter: invert(0%);
+.dark_color_theme ::selection {
+  color: rgb(0, 0, 0);
+  background: #cccccc;
+  -webkit-backdrop-filter: blur(13px);
+  backdrop-filter: blur(13px);
 }
 
-.bottom-bar > a > img {
-  filter: invert(100%);
+.dark_color_theme *,
+.dark_color_theme *:before,
+.dark_color_theme *:after {
+  color-scheme: dark;
 }
-
-.item > #icon_fscreen_gframe > #gframe_fulls,
-.item > #icon_fscreen_gframe > #gframe_fulls_off {
-  filter: invert(100%);
-}
-
-/* light color theme
-------------------------------------- */
 
 .light_color_theme {
-  --background_color: var(--light2_100);
+  --background_color: var(--light-background);
+
   --font_color: var(--dark1_100);
-  --bar_color: var(--light1_075);
-  --bar_color_hover: var(--light1_100);
+
   --item_background_color: var(--light1_100);
   --item_background_color_hover: var(--light3_100);
 
-  --menu-option-border: #555;
-  --dev-background-color: var(--light3_100);
+  --accent-color-theme-based: hsla(204, 28%, 93%, 0.50);
 
-  --header_background: rgba(255, 255, 255, 0.7);
 
-  --dim-font: var(--light-dim);
+  --dev-background-color: var(--caution-color);
+
+  --dim-font: var(--black_075);
 
   --top-read-color: var(--light1_075);
   --bottom-read-color: var(--light1_025);
   --bottom-read-color-hover: var(--light1_075);
 
-  --bottom_bar_correction: white;
+  --bottom_bar_correction: var(--light-color);
 }
 
-
- .light_color_theme ::-moz-selection {
+.light_color_theme ::-moz-selection {
   color: rgb(0, 0, 0);
   background: rgb(190, 190, 190);
   -webkit-backdrop-filter: blur(13px);
@@ -123,26 +96,10 @@
   background: rgb(190, 190, 190);
   -webkit-backdrop-filter: blur(13px);
   backdrop-filter: blur(13px);
-} 
-
-.light_color_theme .top-bar > a > span > img {
-  filter: grayscale(0%);
-  filter: invert(0%);
 }
 
-.light_color_theme .bottom-bar > a > img {
-  filter: invert(0%);
-}
-
-.light_color_theme .item > #icon_fscreen_gframe > #gframe_fulls,
-.light_color_theme .item > #icon_fscreen_gframe > #gframe_fulls_off {
-  filter: invert(0%);
-}
-
-.magic {
-  --background_color: red;
-  --font_color: blue;
-  --bar_color: green;
-  --bar_color_hover: yellow;
-  --item_background_color: orange;
+.light_color_theme *,
+.light_color_theme *:before,
+.light_color_theme *:after {
+  color-scheme: light;
 }
