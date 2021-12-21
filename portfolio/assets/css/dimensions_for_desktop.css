@@ -1,7 +1,10 @@
 @media screen and (max-width: 15000px) {
+  @import url('https://fonts.googleapis.com/css2?family=Comfortaa:wght@300&family=Comforter+Brush&family=Roboto:ital,wght@0,100;0,300;0,400;1,300&display=swap');
 
   .bblack .name_size {
-    font-size: 100px;
+    font-size: 50px;
+    font-weight: 300;
+    font-family: 'Roboto', sans-serif;
   }
   .bblack .profile_pic {
     width: 150px;
@@ -83,12 +86,24 @@
   background-color: transparent;
 }
 
+.big  {
+  grid-column-start: 1;
+  grid-column-end: 3;
+}
+
 .left-pane-grid .content {
   border: 3px solid rgb(80, 80, 80);
 }
 
 .left-pane-grid .content:hover {
-  background-color: antiquewhite;
+  background-color: rgb(255, 255, 255);
+  color: rgb(19, 19, 19);
+  cursor: pointer;
+}
+
+.dark-mode .left-pane-grid .content:hover {
+  background-color: rgb(19, 19, 19);
+  color: rgb(238, 238, 238);
   cursor: pointer;
 }
 
@@ -108,7 +123,7 @@
   border-radius: 10px;
   border: 0px solid grey;
   float: left;
-  background-color: #fafafa;
+  background-color: #eeeeee;
   margin: 20px 20px 0px 0px;
   padding: 20px;
 }

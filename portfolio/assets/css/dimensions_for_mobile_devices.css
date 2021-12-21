@@ -1,5 +1,3 @@
-
-
 @media screen and (max-width: 1000px) {
   .bblack .name_size {
     font-size: 100px;
@@ -166,12 +164,44 @@
 
   .footer {
     background-color: white;
-    width: 100%; display: block;
+    width: 100%;
+    display: block;
     height: 30px;
     float: left;
     color: black;
     margin: 0px;
     text-align: center;
     padding: 20px 40px 20px 40px;
+  }
+
+  .big {
+    grid-column-start: 1;
+    grid-column-end: 2;
+  }
+
+  @import url("https://fonts.googleapis.com/css2?family=Comfortaa:wght@300&family=Comforter+Brush&family=Roboto:ital,wght@0,100;0,300;0,400;1,300&display=swap");
+
+  .bblack .name_size {
+    font-size: 16px;
+    font-weight: 300;
+    font-family: "Roboto", sans-serif;
+  }
+
+  .tell-content {
+    margin: 20px 20px 20px 20px;
+    border-radius: 10px;
+    background-color: white;
+
+    opacity: 90%;
+    float: right;
+    color: black;
+    height: auto;
+    padding: 2px 30px 2px 30px;
+    border: 0px solid grey;
+    animation: mymove 1s 5;
+
+    display: none;
+
+    width: 200px !important;
   }
 }

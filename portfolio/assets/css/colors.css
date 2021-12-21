@@ -15,25 +15,28 @@
 .dark-mode .navbar {
   background-color: rgb(33, 33, 33);
 }
-.dark-mode .navbar a {
+
+.dark-mode .navbar a, .dark-mode .navbar span {
   border: 3px solid #333333;
   color: white;
 }
-.dark-mode .navbar a:hover {
+.dark-mode .navbar a:hover, .dark-mode .navbar span:hover {
   border: 3px solid white;
   color: white;
 }
-.dark-mode .navbar a.active {
+.dark-mode .navbar a.active, .dark-mode .navbar span.active {
   background-color: white;
   color: black;
   border: 3px solid white;
 }
 
-.dark-mode .sub-menu a.active {
+.dark-mode .sub-menu a.active, .dark-mode .sub-menu span.active {
   background-color: white;
   color: black;
   border: 3px solid white;
 }
+
+
 .dark-mode .button3 {
   border: 3px solid #333;
   background-color: #333;
