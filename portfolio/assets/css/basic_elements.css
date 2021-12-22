@@ -4,6 +4,7 @@ li {
 
 * {
   box-sizing: border-box;
+  transition-duration: 90ms;
 }
 
 body {
@@ -103,6 +104,7 @@ path {
 
 .button {
   outline: none;
+  cursor: pointer;
 }
 .button1 {
   background-color: white;
