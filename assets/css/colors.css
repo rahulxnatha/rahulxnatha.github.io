@@ -15,25 +15,28 @@
 .dark-mode .navbar {
   background-color: rgb(33, 33, 33);
 }
-.dark-mode .navbar a {
+
+.dark-mode .navbar a, .dark-mode .navbar span {
   border: 3px solid #333333;
   color: white;
 }
-.dark-mode .navbar a:hover {
+.dark-mode .navbar a:hover, .dark-mode .navbar span:hover {
   border: 3px solid white;
   color: white;
 }
-.dark-mode .navbar a.active {
+.dark-mode .navbar a.active, .dark-mode .navbar span.active {
   background-color: white;
   color: black;
   border: 3px solid white;
 }
 
-.dark-mode .sub-menu a.active {
+.dark-mode .sub-menu a.active, .dark-mode .sub-menu span.active {
   background-color: white;
   color: black;
   border: 3px solid white;
 }
+
+
 .dark-mode .button3 {
   border: 3px solid #333;
   background-color: #333;
@@ -52,7 +55,7 @@
 }
 
 .dark-mode {
-  background-color: rgb(22, 22, 22);
+  background-color: #161616;
 }
 
 .dark body {
@@ -88,14 +91,14 @@
   text-decoration: underline;
 }
 
-.dark-mode .footer {
-  color: white;
-}
+
 .dark-mode .tell-content {
   background-color: black;
   color: white;
 }
 
 .dark-mode .webpage {
-  background-color: black;
+  background-color: rgb(0, 0, 0);
 }
+
+.special_background1 {background-color: coral;}

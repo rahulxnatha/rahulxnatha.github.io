@@ -4,6 +4,7 @@ li {
 
 * {
   box-sizing: border-box;
+  transition-duration: 90ms;
 }
 
 body {
@@ -12,6 +13,17 @@ body {
   padding: 0px;
   overflow-y: scroll;
   background-color: #bfbfbf;
+}
+
+.splash_screen2323 {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: black;
+  color: #fff;
+  z-index: 999;
 }
 
 .a:link {
@@ -101,6 +113,7 @@ path {
 
 .button {
   outline: none;
+  cursor: pointer;
 }
 .button1 {
   background-color: white;
@@ -212,36 +225,40 @@ textarea {
   background-color: #f8f8f8;
 }
 
-.footer {
-  background-color: white;
-  width: 100%;
-  min-height: 200px;
-  float: left;
-  color: black;
-  margin: 0px 0px 0px 0px;
-  text-align: center;
-  padding: 20px 40px 20px 40px;
+.align-right {
+  text-align: right;
 }
 
 /* width */
 ::-webkit-scrollbar {
-  width: 14px;
+  width: 16px;
 }
 
 /* Track */
 ::-webkit-scrollbar-track {
   box-shadow: inset 0 0 0px none;
-  background-color: grey;
-  border-radius: 0px;
+  background-color: #121212;
 }
 
 /* Handle */
 ::-webkit-scrollbar-thumb {
-  background: rgb(216, 216, 216);
-  border-radius: 0px;
+  background: #777;
+  border-radius: 50vmin;
+  border: 4px solid #121212;
 }
 
 /* Handle on hover */
 ::-webkit-scrollbar-thumb:hover {
-  background: rgb(255, 255, 255);
+  background: #505050;
+}
+
+:root {
+  color-scheme: light dark;
+}
+
+::-moz-selection {
+  background: #cccccc6e;
+}
+::selection {
+  background: #cccccc94;
 }

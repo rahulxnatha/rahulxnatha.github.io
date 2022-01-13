@@ -58,15 +58,16 @@
   margin: 20px 20px 20px 20px;
   border-radius: 10px;
   background-color: white;
-  max-width: 400px;
-  min-width: 400px;
-  opacity: 70%;
+  
+  opacity: 90%;
   float: right;
   color: black;
   height: auto;
   padding: 2px 30px 2px 30px;
   border: 0px solid grey;
   animation: mymove 1s 5;
+
+  width:400px;
 }
 
 .switch {
