@@ -1,25 +1,43 @@
 function automatic_dark_switch() {
-    var hour = new Date().getHours();
-    if (hour > 16) {
-        document.getElementById("tell-user-about-theme").innerHTML = "Good evening. Press d to toggle the dark theme.";
-        document.body.classList.toggle("dark-mode");
-        document.getElementById("dark-toggle").checked = true;
-    } else {
-        if (hour > 11) { document.getElementById("tell-user-about-theme").innerHTML = "Good afternoon. Press d to toggle the dark theme."; }
-        else {
-            if (hour < 6) {
-                document.getElementById("tell-user-about-theme").innerHTML = "Late night! Press d to toggle the dark theme.";
-                document.body.classList.toggle("dark-mode");
-                document.getElementById("dark-toggle").checked = true;
-            }
+
+    setTimeout(function () {
+        var hour = new Date().getHours();
+
+        if (hour > 16) {
+            document.getElementById("tell-user-about-theme").innerHTML = "Good evening. Press d to toggle the dark theme.";
+            document.body.classList.toggle("dark-mode");
+            document.getElementById("dark-toggle").checked = true;
+        } else {
+            if (hour > 11) { document.getElementById("tell-user-about-theme").innerHTML = "Good afternoon. Press d to toggle the dark theme."; }
             else {
-                document.getElementById("tell-user-about-theme").innerHTML = "Good morning. Press d to toggle the dark theme.";
+                if (hour < 6) {
+                    document.getElementById("tell-user-about-theme").innerHTML = "Late night! Press d to toggle the dark theme.";
+                    document.body.classList.toggle("dark-mode");
+                    document.getElementById("dark-toggle").checked = true;
+                }
+                else {
+                    document.getElementById("tell-user-about-theme").innerHTML = "Good morning. Press d to toggle the dark theme.";
+                }
             }
         }
-    }
-    setTimeout(function () { document.getElementById("low_opacity_branding").style.display = "block"; }, 0);
+    }, 0);
+
+    setTimeout(function () {
+        document.getElementById("low_opacity_branding").style.display = "block";
+
+    }, 0);
+
+
     setTimeout(function () { document.getElementById("low_opacity_branding").style.display = "none"; }, 3000);
     setTimeout(function () { document.getElementById("settings_on").style.display = "block"; }, 3000);
+
+    setTimeout(function () {
+        document.getElementById("splash_screen2323").style.display = "none";
+    }, 0);
+
+    document.getElementById("status_message").innerHTML = "Hello. I am an engineer. I make possible things practical. Connect with me on LinkedIn, Twitter, and Telegram." ;
+
+
 }
 
 function manual_dark() {
@@ -36,3 +54,4 @@ function manual_dark() {
         }
     }
 }
+

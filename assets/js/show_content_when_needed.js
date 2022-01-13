@@ -17,6 +17,7 @@ window.onscroll = function () {
       document.getElementById("site_header").style.top = "-80px";
 
       document.getElementById("low_opacity_branding").style.top = "0";
+      
       document.getElementById("low_opacity_branding").style.display = "none";
 
       document.getElementById("branding_that_appears_on_scroll").style.top = "0";
@@ -33,9 +34,9 @@ window.onscroll = function () {
   prevScrollpos = currentScrollPos;
 }
 
+
+
 function display_settings_now() {
-
-
 
   if (document.getElementById("setting_button_mode").checked == false) {
 
@@ -62,10 +63,6 @@ function display_settings_now() {
     else {
       document.getElementById("settings_on").style.border = "3px solid #eee";
     }
-
-
-
-
 
     document.getElementById("low_opacity_branding").style.display = "none";
   }
