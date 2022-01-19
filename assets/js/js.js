@@ -21,7 +21,7 @@ for (let i = 0; i < menuOption.length; i++) {
         var showSettings = false;
         function display_settings_now() {
 
-            
+
             if (showSettings == false) {
                 showSettings = true;
             } else {
@@ -60,25 +60,34 @@ for (let i = 0; i < menuOption.length; i++) {
 }
 
 
-// window.addEventListener("keydown", function (event) {
-//     if (event.defaultPrevented) {
-//       return; // Should do nothing if the default action has been cancelled
-//     }
-  
-//     var handled = false;
-//     if (event.key === 68) {
-//       // Handle the event with KeyboardEvent.key and set handled true.
-//         document.getElementById("dark-toggle").click();
-//         handled = true;
-//     } else if (event.keyCode === 68) {
-//       // Handle the event with KeyboardEvent.keyCode and set handled true.
-//         document.getElementById("dark-toggle").click();
-//         handled = true;
-//     }
-  
-//     if (handled) {
-//       // Suppress "double action" if event handled
-//       event.preventDefault();
-//     }
-//   }, true);
-  
+window.addEventListener("keydown", function (event) {
+    if (event.defaultPrevented) {
+        return; // Should do nothing if the default action has been cancelled
+    }
+
+    var handled = false;
+    if (
+        event.key.toLowerCase() === "d"
+        && event.altKey
+        
+    ) {
+        // Handle the event with KeyboardEvent.key and set handled true.
+        document.getElementById("dark-toggle").click();
+        handled = true;
+
+    } else if (
+        event.keyCode.toLowerCase() === "d"
+        && event.altKey
+        
+    ) {
+        // Handle the event with KeyboardEvent.keyCode and set handled true.
+        document.getElementById("dark-toggle").click();
+        handled = true;
+    }
+
+    if (handled) {
+        // Suppress "double action" if event handled
+        event.preventDefault();
+    }
+}, true);
+
