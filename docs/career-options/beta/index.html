@@ -250,6 +250,41 @@
     <script src="js.js"></script>
     <script src="color_themes.js"></script>
 
+    <script> 
+window.addEventListener("keydown", function (event) {
+    if (event.defaultPrevented) {
+        return; // Should do nothing if the default action has been cancelled
+    }
+
+    var handled = false;
+    if (
+        event.key.toLowerCase() === "d"
+        && event.altKey
+        
+    ) {
+        // Handle the event with KeyboardEvent.key and set handled true.
+        document.getElementById("dark-toggle").click();
+        handled = true;
+
+    } else if (
+        event.keyCode.toLowerCase() === "d"
+        && event.altKey
+        
+    ) {
+        // Handle the event with KeyboardEvent.keyCode and set handled true.
+        document.getElementById("dark-toggle").click();
+        handled = true;
+    }
+
+    if (handled) {
+        // Suppress "double action" if event handled
+        event.preventDefault();
+    }
+}, true);
+
+    </script>
+    
+    
     <noscript>You need to enable JavaScript to use this website.</noscript>
 
 </body>
