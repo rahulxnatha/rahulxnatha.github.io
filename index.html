@@ -19,6 +19,7 @@
   <!-- stylesheet  -->
 
   <link rel="stylesheet" type="text/css" content="X-Content-Type-Options: nosniff" href="assets/css/style.css">
+  <link rel="stylesheet" type="text/css" content="X-Content-Type-Options: nosniff" href="assets/css/custom.css">
 
   <link rel="stylesheet" type="text/css" content="X-Content-Type-Options: nosniff" href="assets/css/colors.css">
   <link rel="stylesheet" type="text/css" content="X-Content-Type-Options: nosniff" href="assets/css/themes.css">
@@ -31,35 +32,24 @@
   <link rel="stylesheet" type="text/css" content="X-Content-Type-Options: nosniff" href="assets/css/fonts.css">
   <link rel="stylesheet" type="text/css" content="X-Content-Type-Options: nosniff" href="assets/css/icons.css">
 
-  <link rel="stylesheet" type="text/css" content="X-Content-Type-Options: nosniff" href="assets/css/id.css">
-  <link rel="stylesheet" type="text/css" content="X-Content-Type-Options: nosniff" href="assets/css/remaining_styling.css">
   <link rel="stylesheet" type="text/css" content="X-Content-Type-Options: nosniff" href="assets/css/print.css">
 
 </head>
 
 <body onload="auto()" class="dark_color_theme">
 
+  <!-- splash screen -->
   <div class="splash_screen" id="splash_screen">
     <br>
     <br>
     <p id="splash_screen_status">Loading</p>
   </div>
 
+  <!-- the main webpage -->
   <div class="webpage" id="webpage" style="display:none;">
 
-    <div id="announcement_bar" class="hidden">
-      <p>
-        Welcome to the new Career Options website. This site will receive beta updates regularly for user interface
-        and other testing.
-      </p>
-
-      <button id="">Close</button>
-    </div>
-
-    <div id="site_header" class="site_header noselect">
+    <header id="site_header" class="site_header">
       <div class="navbar" id="navbar">
-
-        <a onclick="display_settings_now()" id="settings_on" style="display:none">Settings</a>
 
         <span class="menuOption" id="MO1"></span>
         <span class="menuOption" id="MO2"></span>
@@ -83,25 +73,16 @@
       <div class="tell-content hidden" id="low_opacity_branding">
         <p id="tell-user-about-theme">Loading. Please Wait.</p>
 
-        <!--div class="nav-bar-option" button class="button3" onclick="manual_dark()" Change theme/buttondiv -->
-
-        <!-- <input id="setting_button_mode" type="checkbox" unchecked class="hidden"> -->
         <label class="dark-switch">
           <input id="dark-toggle" type="checkbox" onclick="manual_dark()">
           <span class="slider round"></span>
         </label>
 
-        <script>
-          document.addEventListener("keyup", function (event) {
-            if (event.keyCode === 68) {
-              event.preventDefault();
-              document.getElementById("dark-toggle").click();
-            }
-          });
-        </script>
+       
 
       </div>
-    </div>
+
+    </header>
 
     <div class="under_the_navbar"></div>
 
@@ -109,8 +90,8 @@
 
       <img class="" style="margin: 20px; float:left;  border-radius: 10px; display:none" src="#" alt="">
 
-      <p style="margin: 20px; float: left;"> 
-         <span style="font-size: 5em;">Rahul Natha</span>
+      <p style="margin: 20px; float: left;">
+        <span style="font-size: 5em;">Rahul Natha</span>
         <br>
         Scientist & Engineer
       </p>
@@ -119,15 +100,16 @@
 
     <div class="page animate-bottom" id="page">
 
+      <p class="left-panel" style="color: white; margin-top: 20px;"> Root / Theoretical education / Primary school</p>
+
       <div class="left-panel left-pane-grid">
+
         <div class="content"></div>
         <div class="content"></div>
         <div class="content"></div>
         <div class="content"></div>
         <div class="content"></div>
       </div>
-
-
 
       <div class="right-panel">
         <div class="content">
@@ -137,94 +119,13 @@
           <p>Good boy</p>
         </div>
 
-
-
-
       </div>
 
-
       <div class="left-panel">
-
-
         <div class="content">
 
           <h1>The first heading</h1>
           <p class="greymatter">Hi</p>
-
-          <p>Lorem ipsum dolor sit amet consectetur, adipisicing elit. Ex laudantium molestiae reprehenderit, nihil
-            laborum nesciunt suscipit, perferendis explicabo atque corrupti a. Aliquam placeat rerum eveniet iusto
-            exercitationem amet illum quo. Impedit facere molestiae aliquam, atque commodi, nihil rem quasi ducimus
-            deserunt rerum eveniet? Maxime dignissimos laborum adipisci earum, quam consequuntur aspernatur magnam
-            doloremque ex atque optio cum, perferendis officia error ipsum ad temporibus quod sint? Impedit recusandae
-            repellendus aut facere deserunt repellat numquam ea voluptates nisi! Nihil quae officiis earum quos ratione
-            amet eligendi explicabo nobis molestias praesentium tempora impedit quisquam quasi dicta unde optio itaque
-            expedita molestiae voluptates nesciunt error similique, a sed neque? Impedit incidunt et quo nihil ipsam
-            sed, placeat doloremque saepe fuga quae aut nulla similique aliquid distinctio, sunt facere cumque
-            aspernatur. Fugit, asperiores in inventore laudantium tempora quod dignissimos minus dolorem! Adipisci,
-            aliquid repellendus iusto exercitationem possimus esse temporibus. Placeat ab iste natus aut perspiciatis.
-            Inventore qui voluptate minima quae exercitationem eaque ipsum incidunt aut illo ducimus, debitis explicabo
-            ratione! Consequatur sed commodi expedita, tenetur enim quasi nesciunt laboriosam dolore voluptas at
-            distinctio cupiditate harum! Sunt excepturi voluptates tempora? Illum repellat voluptas necessitatibus, aut
-            voluptatibus nemo corporis ad facere veniam amet maxime modi, illo minus, nesciunt cum eligendi possimus
-            quisquam! Aliquid, ullam maxime accusamus officia nulla ipsam. Molestiae incidunt minima architecto aperiam
-            labore amet sequi veniam doloribus obcaecati, dolorem ex maxime accusantium, praesentium, repellendus
-            veritatis sapiente officia commodi quam animi ipsam quos autem! Laborum corrupti sed facilis eveniet
-            voluptate optio ex harum totam porro fugiat aliquam ullam minus labore quae, vitae autem in voluptatibus
-            alias cupiditate! Voluptatem voluptate facere natus facilis debitis asperiores ullam cupiditate consequatur
-            illum, eligendi fugiat amet at quae perferendis minima! Eos enim soluta perferendis praesentium at saepe
-            officiis labore accusantium nostrum, excepturi ex laborum ut reprehenderit repudiandae recusandae?
-            Doloremque dolore non vel a quo impedit, ipsam illo odit voluptate eos rem itaque odio placeat voluptas
-            minima earum soluta harum possimus dignissimos molestias saepe laboriosam. Quasi animi vel tenetur in veniam
-            ducimus? Soluta fugit numquam praesentium voluptatem consectetur culpa cupiditate consequuntur natus
-            mollitia necessitatibus, quo error in ratione nisi, placeat vitae, ea voluptatibus doloremque. Architecto
-            nesciunt, quam dolorem nostrum vel molestiae autem ipsum quo consequuntur vero officiis iste reprehenderit
-            tempora? Aperiam atque autem ipsa quisquam, soluta tempore? Eius esse ipsam pariatur? Maxime distinctio sint
-            eveniet quas libero tenetur earum, illo saepe, quae ab repellendus, quis laborum asperiores exercitationem
-            architecto voluptate sit soluta. Sequi, veritatis, dignissimos vitae repellendus voluptatem at illum,
-            obcaecati quidem dicta vel ipsam. Ducimus laboriosam dolorem soluta qui maiores blanditiis, in nisi
-            voluptatibus quas inventore, officia molestiae praesentium dolor aliquid, vitae commodi voluptates nesciunt
-            vel. Possimus consequuntur dignissimos blanditiis pariatur aperiam nesciunt quae, laudantium harum. Aperiam
-            quos, molestiae, accusamus itaque libero nulla fugit eius cupiditate eaque excepturi nostrum quasi voluptate
-            nihil quisquam deleniti! Corrupti rem sint sit pariatur nam adipisci quibusdam. Possimus nihil amet delectus
-            consectetur eum eligendi error laborum fuga, temporibus distinctio dolores adipisci eveniet dolorem
-            repellendus quasi eaque quis! Rerum animi porro minus doloribus earum adipisci unde nihil ut debitis aperiam
-            dolore perspiciatis, modi accusantium temporibus velit corrupti, quaerat asperiores incidunt, quae hic
-            mollitia! Tempore nobis illo, consectetur cum accusamus earum enim, tenetur voluptas fugit optio numquam
-            sequi odio dolore facilis aspernatur ducimus saepe iure fuga distinctio expedita sapiente. Quisquam
-            architecto provident illum atque eum, sed aliquid sequi earum, placeat eaque ut distinctio cum animi.
-            Consectetur, fuga! Est, doloremque explicabo odio magni dolorum sed, alias, tenetur nulla rem qui numquam
-            ipsa debitis quod tempore? Reiciendis, quam! Numquam quasi repudiandae nemo? Reprehenderit quam adipisci vel
-            provident assumenda labore ex, obcaecati ullam, inventore nemo pariatur cumque laudantium ipsa sunt. Sunt
-            voluptatum velit autem praesentium repellat. Doloribus inventore eum necessitatibus labore minima itaque
-            recusandae quam aliquid nesciunt, fuga dolorum iste eos debitis fugiat consequuntur beatae tempore rem
-            laudantium qui magni exercitationem vero. Dignissimos nesciunt commodi nobis laudantium quas voluptas,
-            tenetur voluptatem fuga rerum voluptatum voluptate quod. Architecto quos dolores harum magnam laboriosam
-            recusandae! Eveniet cum eos atque ipsum? Repellendus fugiat ad facilis excepturi a. Aspernatur atque quidem
-            ipsa veniam aperiam excepturi animi? Dolores veniam aliquam nihil vel pariatur debitis aperiam eius. Hic,
-            atque nostrum sapiente necessitatibus eum vero similique nobis consequuntur distinctio maxime corporis error
-            iusto quas sint minus recusandae, possimus fugiat eligendi doloremque, voluptate aliquid minima. Modi fugiat
-            accusantium totam tempore molestiae facilis iure neque eveniet similique exercitationem accusamus, soluta
-            nesciunt, ullam maxime corporis praesentium, illum voluptatum est illo? Corrupti magnam commodi
-            exercitationem accusamus quasi laboriosam et error a vero maxime necessitatibus voluptatum aspernatur optio
-            suscipit, natus quae consequuntur quidem velit, est voluptatibus doloremque? Esse rem voluptatum libero
-            soluta laudantium incidunt facilis quisquam veniam cumque, excepturi blanditiis ducimus fuga vel assumenda
-            repellendus debitis explicabo, vitae minima eos nihil placeat. Sit dolor ea at eaque consectetur. Quasi,
-            reprehenderit. Debitis qui nam fuga consequatur, quas accusantium quia eveniet obcaecati voluptas rerum.
-            Doloremque nihil eius ullam harum qui distinctio, quibusdam praesentium nemo commodi eum beatae sequi
-            tempore minima aliquid, quam molestias obcaecati voluptatibus ut debitis non facere repudiandae labore.
-            Incidunt fugiat itaque magnam accusamus ex eum nostrum ab quaerat, vero perspiciatis corrupti consequatur
-            vel unde quibusdam aperiam modi esse, labore corporis perferendis nobis ad, voluptatum veritatis odit
-            molestiae. Consequatur magni esse excepturi? Quasi aliquid delectus possimus error sed facere asperiores
-            vitae nostrum doloribus repudiandae veniam veritatis, suscipit atque accusamus nesciunt quam illo qui velit
-            aliquam hic. Ipsum ducimus sapiente aliquam rem ipsam maxime error inventore voluptatem qui. Animi eveniet
-            debitis, rerum sunt tempora repellat nisi autem ratione vel quae alias dolorem id possimus voluptatem libero
-            cupiditate veniam minima neque nam. Ad, minima? Fuga error reiciendis, iste ab dignissimos doloremque in
-            dolores ipsum reprehenderit iure et autem est, nam earum hic tenetur soluta incidunt libero velit. Libero
-            fugit, harum porro, illo quaerat ratione ducimus nisi perferendis nemo, ullam nostrum at est? Inventore rem
-            nostrum illum repellendus iste autem dolorem cupiditate magni, provident accusantium alias architecto
-            molestias expedita odit voluptates. Accusamus aut dolor ut maxime exercitationem veritatis placeat nemo,
-            natus aliquid illum recusandae temporibus ullam esse nisi ipsam rem hic tenetur id eligendi quasi.
-            Consequatur!</p>
 
         </div>
 
