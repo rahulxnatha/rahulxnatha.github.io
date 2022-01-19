@@ -1,3 +1,7 @@
+:root {
+  font-family: monospace;
+}
+
 h1,
 h2,
 h3,
@@ -19,7 +23,7 @@ p {
   font-size: 14px;
   line-height: 1.6;
   font-weight: 400;
-  font-family: sans-serif;
+  
 }
 
 .greymatter {
