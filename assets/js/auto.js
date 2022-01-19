@@ -34,7 +34,7 @@ function auto() {
     }, 0);
 
 
-    setTimeout(function () { document.getElementById("low_opacity_branding").style.display = "none"; }, 3000);
+    setTimeout(function () { document.getElementById("low_opacity_branding").style.display = "none"; }, 10);
     // setTimeout(function () {
     // document.getElementById("settings_on").style.display = "block";
     // document.getElementById("settings_on").style.visibility = "hidden";
