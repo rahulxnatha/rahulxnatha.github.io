@@ -16,21 +16,21 @@
   background-color: rgb(33, 33, 33);
 }
 
-.dark-mode .navbar a, .dark-mode .navbar span {
+.dark-mode .navbar span {
   border: 3px solid #333333;
   color: white;
 }
-.dark-mode .navbar a:hover, .dark-mode .navbar span:hover {
+.dark-mode .navbar span:hover {
   border: 3px solid white;
   color: white;
 }
-.dark-mode .navbar a.active, .dark-mode .navbar span.active {
+.dark-mode .navbar span.active {
   background-color: white;
   color: black;
   border: 3px solid white;
 }
 
-.dark-mode .sub-menu a.active, .dark-mode .sub-menu span.active {
+.dark-mode .sub-menu span.active {
   background-color: white;
   color: black;
   border: 3px solid white;
@@ -47,9 +47,12 @@
   outline: none;
   color: white;
 }
-.dark-mode .tweets {
-  background-color: #333333;
+
+.dark-mode .navbar {
+  background-color: #12121275;
 }
+
+
 .dark-mode .navbar .only-phone {
   color: #ffffff;
 }
@@ -63,16 +66,16 @@
 }
 
 .dark-mode a:link {
-  color: white;
+  color: white;text-decoration: none;
 }
 .dark-mode a:visited {
-  color: white;
+  color: white;text-decoration: none;
 }
 .dark-mode a:hover {
-  color: white;
+  color: white;text-decoration: none;
 }
 .dark-mode a:active {
-  color: white;
+  color: white;text-decoration: none;
 }
 
 .dark-mode .footer {

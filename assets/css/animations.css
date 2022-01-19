@@ -21,14 +21,15 @@
   -webkit-animation-name: animatebottom;
   -webkit-animation-duration: 1s;
   animation-name: animatebottom;
-  animation-duration: 1s;
+  animation-duration: 400ms;
 }
 
 @-webkit-keyframes animatebottom {
   from {
-    bottom: -100px;
+    bottom:-100vh;
     opacity: 0;
-  }
+  } 
+  
   to {
     bottom: 0px;
     opacity: 1;
@@ -37,7 +38,7 @@
 
 @keyframes animatebottom {
   from {
-    bottom: -100px;
+    bottom: -100vh;
     opacity: 0;
   }
   to {
