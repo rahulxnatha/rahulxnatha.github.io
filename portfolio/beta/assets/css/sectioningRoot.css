@@ -1,0 +1,90 @@
+*,
+*:before,
+*:after {
+  box-sizing: inherit;
+  box-sizing: border-box;
+
+  z-index: 1;
+}
+
+:root {
+  color-scheme: light dark;
+
+  --lightBackground: #F8F9FA;
+  --darkBackground: #121212;
+
+  --lightWindowBackground: #e9ecef50;
+  --darkWindowBackground: #343A4050;
+
+  --lightFont: #34252f;
+  --darkFont: #f1faee;
+
+  --lightAnchor: #234e97;
+  --darkAnchor: #5fbcbf;
+
+  --lightSelection: #457b9d50;
+  --darkSelection: #a8dadc50;
+
+  /* font-family: monospace; */
+}
+
+@media (prefers-color-scheme: light) {
+  :root {
+    --background: var(--lightBackground);
+    --font: var(--lightFont);
+    --windowBackground: var(--lightWindowBackground);
+    --a: var(--lightAnchor);
+    --selection: var(--lightSelection);
+  }
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --background: var(--darkBackground);
+    --font: var(--darkFont);
+    --windowBackground: var(--darkWindowBackground);
+    --a: var(--darkAnchor);
+    --selection: var(--darkSelection);
+  }
+}
+
+::-moz-selection {
+  background: var(--selection);
+}
+::selection {
+  background: var(--selection);
+}
+
+/* ::-webkit-scrollbar {
+  width: 18px;
+}
+
+::-webkit-scrollbar-track {
+  box-shadow: inset 0 0 0px none;
+  background-color: var(--background);
+}
+
+::-webkit-scrollbar-thumb {
+  background: #88888888;
+  border-radius: 50vmin;
+  border: 4px solid var(--background);
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #888888;
+} */
+
+body {
+  margin: 0px;
+  padding: 0px;
+
+  background-color: var(--background);
+  color: var(--font);
+}
+
+@media print {
+  html,
+  body {
+    display: none; /* hide whole page while printing */
+  }
+}

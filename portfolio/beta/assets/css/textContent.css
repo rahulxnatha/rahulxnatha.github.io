@@ -1,0 +1,39 @@
+p {
+  font-size: 16px;
+
+  line-height: 25px;
+  font-family: 'Raleway', sans-serif;
+font-family: 'Work Sans', sans-serif;
+}
+
+blockquote p::before {
+  content: "\201C";
+}
+
+blockquote p::after {
+  content: "\201D";
+}
+
+li {
+  line-height: 32px;
+  font-family: 'Work Sans', sans-serif;
+}
+
+figure {
+  border: 0px #c0c0c0 solid;
+  display: flex;
+  flex-flow: column;
+  padding: 0px;
+  width: 100%;
+  margin: auto;
+}
+
+
+
+figcaption {
+  /* background-color: #222; */
+  /* color: #fff; */
+  font: italic smaller sans-serif;
+  padding: 3px;
+  text-align: center;
+}

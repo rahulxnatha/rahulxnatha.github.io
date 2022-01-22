@@ -1,0 +1,42 @@
+details {
+  border: 2px solid grey;
+  border-radius: 4px;
+  padding: 0.5em 0.5em 0;
+}
+
+summary {
+  font-weight: bold;
+  margin: -0.5em -0.5em 0;
+  padding: 0.5em;
+}
+
+details[open] {
+  padding: 0.5em;
+}
+
+details[open] summary {
+  border-bottom: 2px solid grey;
+  margin-bottom: 0.5em;
+}
+
+dialog {
+  z-index: 3;
+  position: fixed;
+  top: 20vh;
+  left: 0;
+  min-width: 60vw;
+  min-height: 60vh;
+  background-color: var(--windowBackground);
+  color: var(--font);
+  border: 2px solid grey;
+
+  box-shadow: 0 4px 8px rgb(0 0 0 / 14%);
+  border-radius: 7px;
+
+  -webkit-backdrop-filter: blur(13px);
+  backdrop-filter: blur(13px);
+}
+
+dialog p {
+  text-align: center;
+}
