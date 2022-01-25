@@ -2,8 +2,11 @@ p {
   font-size: 16px;
 
   line-height: 25px;
-  font-family: 'Raleway', sans-serif;
-font-family: 'Work Sans', sans-serif;
+ 
+}
+
+article p {
+  font-size: 14px;
 }
 
 blockquote p::before {
@@ -16,7 +19,13 @@ blockquote p::after {
 
 li {
   line-height: 32px;
-  font-family: 'Work Sans', sans-serif;
+  font-family: "Work Sans", sans-serif;
+ 
+  
+}
+
+nav li {
+  cursor: pointer;
 }
 
 figure {
@@ -27,8 +36,6 @@ figure {
   width: 100%;
   margin: auto;
 }
-
-
 
 figcaption {
   /* background-color: #222; */

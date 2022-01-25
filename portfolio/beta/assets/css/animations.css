@@ -53,3 +53,30 @@
   margin-left: calc(50% - 70px);
   margin-top: 60px;
 } */
+/* 
+@-webkit-keyframes border {
+  from {
+    border-image-slice: 1;
+    border-image-source: linear-gradient(to left, #743ad5, #d53a9d);
+    
+  }
+
+  to {
+    border-image-slice: 2;
+    border-image-source: linear-gradient(to left, #743ad5, #d53a9d);
+    
+  }
+}
+
+@keyframes border {
+  from {
+    border-image-slice: 1;
+    border-image-source: linear-gradient(to left, #743ad5, #d53a9d);
+    
+  }
+  to {
+    border-image-slice: 2;
+    border-image-source: linear-gradient(to left, #743ad5, #d53a9d);
+    
+  }
+} */

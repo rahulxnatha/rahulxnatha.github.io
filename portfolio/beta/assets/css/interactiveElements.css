@@ -1,40 +1,86 @@
 details {
-  border: 2px solid grey;
-  border-radius: 4px;
-  padding: 0.5em 0.5em 0;
+  padding: 0 0.5em;
+  /* overflow-y: scroll; */
 }
 
 summary {
-  font-weight: bold;
-  margin: -0.5em -0.5em 0;
-  padding: 0.5em;
+  /* font-weight: bold; */
+  /* margin: -0.5em -0.5em 0; */
+  padding: 0 0 0.5em 0;
+  cursor: pointer;
+  font-size: 20px;
+  margin: 0;
 }
 
-details[open] {
-  padding: 0.5em;
+summary h1 {
+  /* font-weight: bold; */
+  /* margin: -0.5em -0.5em 0; */
+  padding: 0 0 0.5em 0em;
+  cursor: pointer;
+  font-size: 20px;
+  margin: 0;
+  display: inline;
 }
+
+/* details[open] {
+  padding: 0.5em;
+} */
 
 details[open] summary {
   border-bottom: 2px solid grey;
-  margin-bottom: 0.5em;
+  /* margin-bottom: 0.5em; */
+  cursor: pointer;
 }
 
 dialog {
-  z-index: 3;
-  position: fixed;
-  top: 20vh;
-  left: 0;
-  min-width: 60vw;
-  min-height: 60vh;
-  background-color: var(--windowBackground);
-  color: var(--font);
-  border: 2px solid grey;
+  width: 100%;
 
+  display: block;
+  position: fixed;
+
+  top: 100px;
+  background-color: transparent;
+  border: 0px solid grey;
+
+  z-index: 3;
+
+  padding: 1px;
+}
+
+dialog > div > div {
+  width: 90%;
+  justify-content: center;
+  margin-left: 5%;
+  border: 2px solid grey;
+  border-radius: 7px;
+  margin-bottom: 20px;
+
+  padding: 10px 10px 0 10px;
+
+  border-radius: 7px;
+}
+
+dialog > div {
+  width: 66%;
+  height: calc((100vh - 100px) * 0.8);
+ 
+
+  justify-content: center;
+  margin-left: 17%;
+  border: 2px solid grey;
+  border-radius: 7px;
+  margin-bottom: 20px;
+
+  padding-top: 10px;
+
+  background-color: var(--windowBackground);
+  -webkit-backdrop-filter: blur(13px);
+  backdrop-filter: blur(13px);
   box-shadow: 0 4px 8px rgb(0 0 0 / 14%);
   border-radius: 7px;
 
-  -webkit-backdrop-filter: blur(13px);
-  backdrop-filter: blur(13px);
+  overflow-y: auto;
+
 }
 
 dialog p {

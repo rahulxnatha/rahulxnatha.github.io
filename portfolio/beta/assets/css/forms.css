@@ -3,6 +3,10 @@ button {
   cursor: pointer;
 }
 
+header button {
+  float: right;
+}
+
 input[type="text"] {
   min-width: 400px;
   padding: 12px 20px;

@@ -10,11 +10,11 @@
 :root {
   color-scheme: light dark;
 
-  --lightBackground: #F8F9FA;
+  --lightBackground: #f8f9fa;
   --darkBackground: #121212;
 
   --lightWindowBackground: #e9ecef50;
-  --darkWindowBackground: #343A4050;
+  --darkWindowBackground: #343a4050;
 
   --lightFont: #34252f;
   --darkFont: #f1faee;
@@ -26,6 +26,34 @@
   --darkSelection: #a8dadc50;
 
   /* font-family: monospace; */
+}
+
+:root {
+  --background: var(--lightBackground);
+  --font: var(--lightFont);
+  --windowBackground: var(--lightWindowBackground);
+  --a: var(--lightAnchor);
+  --selection: var(--lightSelection);
+}
+
+body {
+  margin: 0px;
+  padding: 0px;
+
+  background-color: #f8f9fa;
+  color: #34252f;
+
+  font-family: "Work Sans", sans-serif;
+}
+
+dialog > div {
+
+  background-color: #e9ecef;
+
+}
+
+header {
+  background-color: #e9ecef;
 }
 
 @media (prefers-color-scheme: light) {
@@ -86,5 +114,12 @@ body {
   html,
   body {
     display: none; /* hide whole page while printing */
+  }
+}
+
+
+@supports not (display: grid) {
+  main div {
+    float: right;
   }
 }
