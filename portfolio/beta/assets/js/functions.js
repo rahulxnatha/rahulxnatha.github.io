@@ -80,7 +80,7 @@
 //     if (
 //         event.key.toLowerCase() === "d"
 //         && event.altKey
-        
+
 //     ) {
 //         // Handle the event with KeyboardEvent.key and set handled true.
 //         document.getElementById("dark-toggle").click();
@@ -89,7 +89,7 @@
 //     } else if (
 //         event.keyCode.toLowerCase() === "d"
 //         && event.altKey
-        
+
 //     ) {
 //         // Handle the event with KeyboardEvent.keyCode and set handled true.
 //         document.getElementById("dark-toggle").click();
@@ -101,4 +101,7 @@
 //         event.preventDefault();
 //     }
 // }, true);
+
+
+const articles = document.getElementsByTagName("article");
 

@@ -73,45 +73,80 @@
 // yourFunction();
 
 
-// var prevScrollpos = window.pageYOffset;
+var prevScrollpos = window.pageYOffset;
 
-// window.onscroll = function () {
-//   var currentScrollPos = window.pageYOffset;
+window.onscroll = function () {
+  var currentScrollPos = window.pageYOffset;
 
-//   if (prevScrollpos > currentScrollPos) {
-//     // while scrolling towards the top of the webpage
-//     document.getElementsByTagName("header")[0].style.top = "0";
-//     document.getElementsByClassName("branding")[0].style.display = "none";
+  if (prevScrollpos > currentScrollPos) {
+    // while scrolling towards the top of the webpage
+    document.getElementsByTagName("header")[0].style.top = "0";
+    // document.getElementsByClassName("branding")[0].style.display = "none";
 
-//     if (showSettings == true) {
-//       document.getElementById("assistant").style.display = "block";
-//     }
+    // if (showSettings == true) {
+    // document.getElementById("assistant").style.display = "block";
+    // }
 
-//     if (document.getElementById("dark-toggle").checked == false) {
-//       document.getElementById("status").innerHTML = "Dark theme was turned off.";
-//     } else {
-//       document.getElementById("status").innerHTML = "Dark theme was turned on.";
-//     }
+    // if (document.getElementById("dark-toggle").checked == false) {
+    //   document.getElementById("status").innerHTML = "Dark theme was turned off.";
+    // } else {
+    //   document.getElementById("status").innerHTML = "Dark theme was turned on.";
+    // }
 
-//   } else {
+  } else {
 
-//     if (currentScrollPos > 80) {
-//       // while scrolling towards the bottom of the webpage
-//       document.getElementsByTagName("header")[0].style.top = "-80px";
-//       document.getElementById("assistant").style.top = "0";
-//       document.getElementById("assistant").style.display = "none";
-//       document.getElementsByClassName("branding")[0].style.top = "0";
-//       document.getElementsByClassName("branding")[0].style.display = "block";
+    if (currentScrollPos > 60) {
+      // while scrolling towards the bottom of the webpage
+      document.getElementsByTagName("header")[0].style.top = "-60px";
+      //   document.getElementById("assistant").style.top = "0";
+      // document.getElementById("assistant").style.display = "none";
+      //   document.getElementsByClassName("branding")[0].style.top = "0";
+      //   document.getElementsByClassName("branding")[0].style.display = "block";
 
-//       if (document.getElementById("dark-toggle").checked == false) {
-//         document.getElementById("status").innerHTML = "Dark theme was turned on off.";
-//       } else {
-//         document.getElementById("status").innerHTML = "Dark theme was turned on.";
-//       }
-//     }
-//   }
-//   prevScrollpos = currentScrollPos;
-// }
+      //   if (document.getElementById("dark-toggle").checked == false) {
+      //     document.getElementById("status").innerHTML = "Dark theme was turned on off.";
+      //   } else {
+      //     document.getElementById("status").innerHTML = "Dark theme was turned on.";
+      //   }
+    }
+  }
+  prevScrollpos = currentScrollPos;
+}
 
 
+function hasNetwork(online) {
+  const element = document.querySelector(".status");
+  const element2 = document.querySelector(".status2");
+  // Update the DOM to reflect the current status
+  if (online) {
+    element.classList.remove("offline");
+    element.classList.add("online");
+    // element.innerText = "Online";
+  } else {
+    element.classList.remove("online");
+    element.classList.add("offline");
+    // element.innerText = "Offline";
+  }
 
+  if (online) {
+  
+    element2.innerText = "nline";
+  } else {
+   
+    element2.innerText = "ffline";
+  }
+}
+
+window.addEventListener("load", () => {
+  hasNetwork(navigator.onLine);
+
+  window.addEventListener("online", () => {
+    // Set hasNetwork to online when they change to online.
+    hasNetwork(true);
+  });
+
+  window.addEventListener("offline", () => {
+    // Set hasNetwork to offline when they change to offline.
+    hasNetwork(false);
+  });
+});
