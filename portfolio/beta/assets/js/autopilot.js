@@ -81,6 +81,12 @@ window.onscroll = function () {
   if (prevScrollpos > currentScrollPos) {
     // while scrolling towards the top of the webpage
     document.getElementsByTagName("header")[0].style.top = "0";
+
+    document.getElementById("nav").style.top = "60px";
+    document.getElementById("viewPort").style.top = "60px";
+    document.getElementById("viewPort").style.height = "calc(100vh - 100px)";
+    document.getElementById("viewport").style.height = "calc(100vh - 100px - 40px)";
+
     // document.getElementsByClassName("branding")[0].style.display = "none";
 
     // if (showSettings == true) {
@@ -98,6 +104,12 @@ window.onscroll = function () {
     if (currentScrollPos > 60) {
       // while scrolling towards the bottom of the webpage
       document.getElementsByTagName("header")[0].style.top = "-60px";
+
+      document.getElementById("nav").style.top = "0px";
+      document.getElementById("viewPort").style.top = "0px";
+      document.getElementById("viewPort").style.height = "calc(100vh - 40px)";
+      document.getElementById("viewport").style.height = "calc(100vh - 80px)";
+
       //   document.getElementById("assistant").style.top = "0";
       // document.getElementById("assistant").style.display = "none";
       //   document.getElementsByClassName("branding")[0].style.top = "0";
