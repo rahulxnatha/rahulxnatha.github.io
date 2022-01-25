@@ -107,11 +107,11 @@ const articles = document.getElementsByTagName("article");
 
 
 
-for (let i = 0, j = 0; i, j < articles.length; i++, j++) {
+for (let i = 0; i < articles.length; i++) {
 
     articles[i].addEventListener("click", () => {
         articles[i].classList.toggle("active");
-        articles[j].classList.remove("active", i != j);
+      
 
       
     });
