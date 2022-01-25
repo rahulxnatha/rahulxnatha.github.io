@@ -162,10 +162,16 @@ input:checked + .slider:before {
 } */
 
 
+#main {
+  background-color: transparent;
+}
+
 .status2 {
   float: right;
   margin-left: -3px;
   padding: 0;
+
+  
 }
 
 .status {
@@ -176,14 +182,25 @@ input:checked + .slider:before {
   margin: 0;
   font-size: 36px;
   line-height: 0.6em;
+  color: transparent;
+
+  
 }
 
 .status.online {
   border: 0px solid #41a700;
   color: #41a700;
+ 
 }
 
 .status.offline {
   border: 0px solid #f15c4f;
   color: #f15c4f;
+
+}
+
+
+.active {
+ outline: solid thistle;
+ outline-offset: 6px;
 }
