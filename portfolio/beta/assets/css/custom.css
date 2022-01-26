@@ -170,8 +170,6 @@ input:checked + .slider:before {
   float: right;
   margin-left: -3px;
   padding: 0;
-
-  
 }
 
 .status {
@@ -201,6 +199,6 @@ input:checked + .slider:before {
 
 
 .active {
- outline: solid thistle;
+ outline: solid #aaa;
  outline-offset: 6px;
 }
