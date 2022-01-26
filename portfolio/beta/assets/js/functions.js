@@ -111,12 +111,24 @@ for (let i = 0; i < articles.length; i++) {
 
     articles[i].addEventListener("click", () => {
         articles[i].classList.toggle("active");
-      
 
-      
+
+        console.log(i + " is the key");
+        removeActive(i);
     });
 
     // element.classList.remove("offline");
+
+}
+
+function removeActive(j) {
+    for (let i = 0; i < articles.length; i++) {
+
+        if (i !== j) {
+            articles[i].classList.remove("active");
+        }
+        console.log(j + " is the second key");
+    };
 
 
 }
