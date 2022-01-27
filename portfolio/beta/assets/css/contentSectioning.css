@@ -34,11 +34,11 @@ nav {
   padding: 0;
 }
 
-nav li {
+nav a {
   float: left;
   list-style-type: none;
   padding: 0;
-  margin: -6px 20px 0 0;
+  margin: 0px 20px 0 0;
   float: left;
   font-size: 16px;
 }
@@ -171,6 +171,12 @@ main span h1 {
   margin: 0;
   padding: 0;
   padding-top: 30px;
+}
+main span h2 {
+  font-size: 20px;
+  margin: 0;
+  padding: 0;
+  padding-top: 20px;
 }
 
 article h1 {
