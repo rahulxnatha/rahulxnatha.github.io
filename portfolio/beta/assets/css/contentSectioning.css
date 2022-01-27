@@ -29,7 +29,7 @@ nav {
   transition-duration: 500ms;
   display: inline;
   float: right;
- 
+
   margin: 0;
   padding: 0;
 }
@@ -85,7 +85,7 @@ aside {
   float: right;
 
   margin: 20px 20px 20px 0;
-  padding: 20px 0 20px 20px;
+  padding: 20px 0px 20px 20px;
 
   border: 2px solid grey;
   border-radius: 7px;
@@ -98,6 +98,7 @@ aside section {
   height: calc(100vh - 100px - 40px);
   overflow-y: auto;
   transition-duration: 500ms;
+  padding-right: 20px;
 }
 
 aside section::-webkit-scrollbar {
@@ -119,9 +120,10 @@ aside section::-webkit-scrollbar-thumb:hover {
   background: #888888;
 }
 
-article {
+article,
+aside section div a {
   margin: 0;
-  padding: 20px 20px 0 20px;
+  padding: 20px 20px 20px 20px;
 
   border: 0px solid grey;
   cursor: pointer;
@@ -137,6 +139,14 @@ article {
   outline-offset: 6px;
 }
 
+aside section div a:hover {
+  
+  background-color: #88888880;
+}
+
+aside section div {
+  margin-top: 40px;
+}
 h1,
 h2,
 h3,
@@ -153,12 +163,10 @@ header h1 {
   font-size: 20px;
   display: inline;
   float: left;
-
- 
 }
 
 header span {
-  float : right;
+  float: right;
 }
 
 main span {
@@ -187,7 +195,6 @@ aside h1 {
   font-size: 25px;
   font-weight: 300;
 }
-
 
 address {
   margin-top: 20px;
