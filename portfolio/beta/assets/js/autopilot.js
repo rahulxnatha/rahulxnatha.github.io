@@ -134,10 +134,12 @@ function hasNetwork(online) {
     element.classList.remove("offline");
     element.classList.add("online");
     // element.innerText = "Online";
+    document.getElementById("internetDisconnectionAlert").style.display = "none";
   } else {
     element.classList.remove("online");
     element.classList.add("offline");
     // element.innerText = "Offline";
+    document.getElementById("internetDisconnectionAlert").style.display = "block";
   }
 
   if (online) {
