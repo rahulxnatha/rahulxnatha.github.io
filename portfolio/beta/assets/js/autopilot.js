@@ -126,7 +126,9 @@ window.onscroll = function () {
 }
 
 
+var internetConnection = true;
 function hasNetwork(online) {
+  internetConnection = online;
   const element = document.querySelector(".status");
   const element2 = document.querySelector(".status2");
   // Update the DOM to reflect the current status
@@ -134,21 +136,24 @@ function hasNetwork(online) {
     element.classList.remove("offline");
     element.classList.add("online");
     // element.innerText = "Online";
-    document.getElementById("internetDisconnectionAlert").style.display = "none";
+   
+    element2.innerText = "nline";
+
+    document.getElementById("offlineAlert").style.display = "none";
+
+    
+
   } else {
     element.classList.remove("online");
     element.classList.add("offline");
     // element.innerText = "Offline";
-    document.getElementById("internetDisconnectionAlert").style.display = "block";
-  }
-
-  if (online) {
-  
-    element2.innerText = "nline";
-  } else {
-   
+    
+    document.getElementById("offlineAlert").style.display = "block";
+    document.getElementById("alertUI").style.display = "none";
+    
     element2.innerText = "ffline";
   }
+
 }
 
 window.addEventListener("load", () => {
@@ -164,3 +169,17 @@ window.addEventListener("load", () => {
     hasNetwork(false);
   });
 });
+
+
+function alertUI(show) {
+
+  if (internetConnection && show) {
+    
+    document.getElementById("alertUI").style.display = "block";
+    document.getElementById("alertUser").innerText = "Wanna change color theme?";
+    document.getElementById("themeDescription").style.display = "block";
+  } else {
+    document.getElementById("alertUI").style.display = "none";
+  }
+}
+
