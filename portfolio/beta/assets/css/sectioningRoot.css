@@ -58,6 +58,7 @@ header {
 
 @media (prefers-color-scheme: light) {
   :root {
+    --base: #ffffff;
     --background: var(--lightBackground);
     --font: var(--lightFont);
     --windowBackground: var(--lightWindowBackground);
@@ -68,6 +69,7 @@ header {
 
 @media (prefers-color-scheme: dark) {
   :root {
+    --base: #000000;
     --background: var(--darkBackground);
     --font: var(--darkFont);
     --windowBackground: var(--darkWindowBackground);

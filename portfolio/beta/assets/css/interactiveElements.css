@@ -32,6 +32,21 @@ details[open] summary {
   cursor: pointer;
 }
 
+#alertUI {
+  width: 100%;
+
+  display: block;
+  position: fixed;
+
+  top: 100px;
+  background-color: transparent;
+  border: 0px solid grey;
+
+  z-index:4;
+
+  padding: 1px;
+}
+
 dialog {
   width: 100%;
 
@@ -42,12 +57,12 @@ dialog {
   background-color: transparent;
   border: 0px solid grey;
 
-  z-index: 3;
+  z-index:5;
 
   padding: 1px;
 }
 
-dialog > div > div {
+dialog > div > div, #alertUI > div > div {
   width: 90%;
   justify-content: center;
   margin-left: 5%;
@@ -60,7 +75,7 @@ dialog > div > div {
   border-radius: 7px;
 }
 
-dialog > div {
+dialog > div, #alertUI > div {
   width: 66%;
   height: calc((100vh - 100px) * 0.8);
  
@@ -83,6 +98,6 @@ dialog > div {
 
 }
 
-dialog p {
+dialog p, #alertUI p {
   text-align: center;
 }

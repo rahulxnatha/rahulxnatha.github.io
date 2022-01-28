@@ -54,10 +54,60 @@
   margin-top: 60px;
 } */
 /* 
-@-webkit-keyframes border {
+*/
+
+.microinteraction {
+  -webkit-animation-name: microinteraction;
+  -webkit-animation-duration: 0.3s;
+  -webkit-animation-iteration-count: 1;
+  -webkit-animation-timing-function: ease;
+  -webkit-animation-fill-mode: forwards;
+
+  animation-name: microinteraction;
+  animation-duration: 0.3s;
+  animation-iteration-count: 1;
+  animation-timing-function: ease;
+  animation-fill-mode: forwards;
+}
+
+@-webkit-keyframes microinteraction {
+  0% {
+    
+  }
+
+  50% {
+    -ms-transform: scale(0.8); /* IE 9 */
+    -webkit-transform: scale(0.8); /* Safari 3-8 */
+    transform: scale(0.8);
+    z-index: 1;
+  }
+
+  100% {
+    
+  }
+}
+
+@keyframes microinteraction {
+  0% {
+   
+  }
+
+  50% {
+    -ms-transform: scale(0.8); /* IE 9 */
+    -webkit-transform: scale(0.8); /* Safari 3-8 */
+    transform: scale(0.8);
+    z-index: 1;
+  }
+
+  100% {
+    
+  }
+}
+
+/* @-webkit-keyframes click {
   from {
-    border-image-slice: 1;
-    border-image-source: linear-gradient(to left, #743ad5, #d53a9d);
+    scale: ;
+    
     
   }
 
@@ -68,7 +118,7 @@
   }
 }
 
-@keyframes border {
+@keyframes click {
   from {
     border-image-slice: 1;
     border-image-source: linear-gradient(to left, #743ad5, #d53a9d);
@@ -79,4 +129,4 @@
     border-image-source: linear-gradient(to left, #743ad5, #d53a9d);
     
   }
-} */
+}  */
