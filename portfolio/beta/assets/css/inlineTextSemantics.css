@@ -23,6 +23,10 @@ a[href^="tel"]::before {
   content: "📞 ";
 }
 
+a[href^="http"]::before {
+  content: "🔗 ";
+}
+
 i {
   color: var(--a);
 }

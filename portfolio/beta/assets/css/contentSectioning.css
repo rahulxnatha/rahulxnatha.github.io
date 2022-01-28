@@ -85,7 +85,7 @@ aside {
   float: right;
 
   margin: 20px 20px 20px 0;
-  padding: 20px 0px 20px 20px;
+  padding: 20px 0px 20px 0px;
 
   border: 2px solid grey;
   border-radius: 7px;
@@ -93,12 +93,22 @@ aside {
   max-width: 600px;
 }
 
+@media screen and (max-width: 1360px) {
+  aside {
+    display: none;
+  }
+
+  main {
+    max-width: calc(100% - 200px);
+  }
+}
+
 aside section {
   display: block;
   height: calc(100vh - 100px - 40px);
   overflow-y: auto;
   transition-duration: 500ms;
-  padding-right: 20px;
+  padding: 0 20px;
 }
 
 aside section::-webkit-scrollbar {
@@ -121,7 +131,7 @@ aside section::-webkit-scrollbar-thumb:hover {
 }
 
 article,
-aside section div a {
+aside section a, #contact a {
   margin: 0;
   padding: 20px 20px 20px 20px;
 
@@ -139,13 +149,19 @@ aside section div a {
   outline-offset: 6px;
 }
 
-aside section div a:hover {
+aside section a, #contact a {
+  display: inline-block;
+  margin: 0 20px 20px 0;
   
-  background-color: #88888880;
+}
+
+article:hover, #contact a:hover,
+aside section a:hover {
+  background-color: #88888831;
 }
 
 aside section div {
-  margin-top: 40px;
+  margin: 40px 8px;
 }
 h1,
 h2,
