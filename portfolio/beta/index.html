@@ -76,6 +76,12 @@
 
 <body>
 
+  <div id="splashScreen"
+    style="position:fixed;top:0;left:0;display: none; z-index: 6; background-color: var(--background); height: 100%; width: 100%; padding: 30px;">
+    Splash screen</div>
+
+  <script>document.getElementById("splashScreen").style.display = "block";</script>
+
   <header class="select_disabled">
     <h1 onclick="alertUI(1)" style="cursor: pointer;">Rahul Natha</h1>
 
@@ -84,7 +90,7 @@
     <span style="color:#77777780">&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
 
     <nav>
-      <a href="#education">Education &amp; certifications</a>
+      <a href="#education">Education</a>
       <a href="#skills">Skills</a>
       <a href="#projects">Projects</a>
       <a href="#work"> Work experience</a>
@@ -100,6 +106,7 @@
   <div class="space"></div>
   <div class="space"></div>
   <div class="space"></div>
+  
 
   <noscript>
     <dialog open>
@@ -141,10 +148,10 @@
         <details>
 
           <summary>
-            <h1 >You are offline!</h1>
+            <h1>You are offline!</h1>
           </summary>
 
-          <ul >
+          <ul>
             <li>It looks like you're disconnected from the internet.</li>
             <li>Try checking your network cables, modem, and routers, or reconnecting to your wireless network.</li>
 
@@ -171,9 +178,10 @@
           </summary>
 
           <ul id="themeDescription">
-            <li>This website adapts to the color theme settings of your browser. To change color theme on this website to dark or light, consider changing it on your browser settings.</li>
-            <li>If you use <a
-              href="https://www.microsoft.com/en-us/edge" target="_blank">Microsoft Edge</a>, you can change the theme at <i>edge://settings/appearance</i>.</li>
+            <li>This website adapts to the color theme settings of your browser. To change color theme on this website
+              to dark or light, consider changing it on your browser settings.</li>
+            <li>If you use <a href="https://www.microsoft.com/en-us/edge" target="_blank">Microsoft Edge</a>, you can
+              change the theme at <i>edge://settings/appearance</i>.</li>
 
           </ul>
 
@@ -184,352 +192,354 @@
   </div>
 
 
-  <section>
 
 
 
-    <main id="main">
+  <main id="main">
 
-      <section>
+    <section class="backgroundHover">
 
-        <span>
-          <h1 id="education">Education &amp; certifications</h1>
-        </span>
+      <span>
+        <h1 id="education">Education</h1>
+      </span>
 
-        <span>
-          <h2>Education</h2>
-        </span>
-
-
-        <article tabindex="0">
-
-          <h1>Bachelor of Technology in Mechanical Engineering</h1>
-          <p>2020 &#8226; CMR College of Engineering &amp; Technology, Hyderabad</p>
-          <p>8.91 GPA</p>
+      <span>
+        <h2>School and degree</h2>
+      </span>
 
 
-        </article>
+      <article tabindex="0">
 
-        <article tabindex="0">
+        <h1>Bachelor of Technology in Mechanical Engineering</h1>
+        <p>2020 &#8226; CMR College of Engineering &amp; Technology, Hyderabad</p>
+        <p>8.91 GPA</p>
 
-          <h1>Higher Secondary School Education</h1>
-          <p>2016 &#8226; Sri SanJEEvni Junior College &amp; IIT Academy, Hyderabad </p>
 
-          <!-- <p>I have completed the eleventh and twelfth standard in 2016. I have chosen mathematics, physics and chemistry
+      </article>
+
+      <article tabindex="0">
+
+        <h1>Higher Secondary School Education</h1>
+        <p>2016 &#8226; Sri SanJEEvni Junior College &amp; IIT Academy, Hyderabad </p>
+
+        <!-- <p>I have completed the eleventh and twelfth standard in 2016. I have chosen mathematics, physics and chemistry
           as the main subjects for the academic exams. I studied at Sri SanJEEvni Junior College & IIT Academy between
           2014 and 2016.</p> -->
 
-        </article>
-        <article tabindex="0">
+      </article>
+      <article tabindex="0">
 
-          <h1>Secondary School Education, Andhra Pradesh State Board</h1>
-          <p>2014 &#8226; St. Augustine High School, Hyderabad</p>
-          <!-- <p>I have passed my secondary school education, also called as matriculation with GPA of 8.8 in the year 2014.
+        <h1>Secondary School Education, Andhra Pradesh State Board</h1>
+        <p>2014 &#8226; St. Augustine High School, Hyderabad</p>
+        <!-- <p>I have passed my secondary school education, also called as matriculation with GPA of 8.8 in the year 2014.
         </p> -->
 
-        </article>
+      </article>
 
 
-        <span>
-          <h2>Certifications</h2>
-        </span>
+      <span>
+        <h2>Certifications</h2>
+      </span>
 
-        <article tabindex="0">
+      <article tabindex="0">
 
-          <h1>Autodesk Fusion 360 Certified User</h1>
-          <p>Autodesk</p>
+        <h1>Autodesk Fusion 360 Certified User</h1>
+        <p>Autodesk</p>
 
-        </article>
+      </article>
 
-        <article tabindex="0">
+      <article tabindex="0">
 
-          <h1>Build your Analytical Skills with Statistical Analysis</h1>
-          <p>Coursera Learning Path</p>
+        <h1>Build your Analytical Skills with Statistical Analysis</h1>
+        <p>Coursera Learning Path</p>
 
-        </article>
+      </article>
 
-        <span>
-          <h2>Courses</h2>
-        </span>
+      <span>
+        <h2>Courses</h2>
+      </span>
 
-        <article tabindex="0">
+      <article tabindex="0" id="course_linkedin_6830070522202718208">
 
-          <h1>Programming Foundations: Fundamentals</h1>
-          <p>By: Annyce Davis</p>
+        <h1>Programming Foundations: Fundamentals</h1>
+        <p>By: Annyce Davis</p>
 
-        </article>
+      </article>
 
-        <article tabindex="0">
+      <article tabindex="0">
 
-          <h1>Introduction to Thermodynamics: Transferring Energy from Here to There</h1>
-          <p>University of Michigan</p>
+        <h1>Introduction to Thermodynamics: Transferring Energy from Here to There</h1>
+        <p>University of Michigan</p>
 
-        </article>
+      </article>
 
-        <article tabindex="0">
+      <article tabindex="0">
 
-          <h1>Introduction to Engineering Mechanics</h1>
-          <p>Georgia Institute of Technology</p>
+        <h1>Introduction to Engineering Mechanics</h1>
+        <p>Georgia Institute of Technology</p>
 
-        </article>
+      </article>
 
-        <article tabindex="0">
+      <article tabindex="0">
 
-          <h1>Mathematics for Machine Learning: Linear Algebra</h1>
-          <p>Imperial College London</p>
+        <h1>Mathematics for Machine Learning: Linear Algebra</h1>
+        <p>Imperial College London</p>
 
-        </article>
+      </article>
 
-        <article tabindex="0">
+      <article tabindex="0">
 
-          <h1>Engineering Drawing for Manufacturing</h1>
-          <p>By: Tarkka</p>
+        <h1>Engineering Drawing for Manufacturing</h1>
+        <p>By: Tarkka</p>
 
-        </article>
+      </article>
 
-        <article tabindex="0">
+      <article tabindex="0">
 
-          <h1>Introduction to Geometric Dimensioning &amp; Tolerancing</h1>
-          <p>By: Kipp Bradford</p>
+        <h1>Introduction to Geometric Dimensioning &amp; Tolerancing</h1>
+        <p>By: Kipp Bradford</p>
 
-        </article>
+      </article>
 
-        <article tabindex="0">
+      <article tabindex="0">
 
-          <h1>Statistics Foundations: The Basics</h1>
-          <p>By: Eddie Davila</p>
+        <h1>Statistics Foundations: The Basics</h1>
+        <p>By: Eddie Davila</p>
 
-        </article>
+      </article>
 
-        <article tabindex="0">
+      <article tabindex="0">
 
-          <h1>Statistics Foundations: Probability</h1>
-          <p>By: Eddie Davila</p>
+        <h1>Statistics Foundations: Probability</h1>
+        <p>By: Eddie Davila</p>
 
-        </article>
+      </article>
 
-        <article tabindex="0">
+      <article tabindex="0">
 
-          <h1>Introduction to Artificial Intelligence</h1>
-          <p>IBM</p>
+        <h1>Introduction to Artificial Intelligence</h1>
+        <p>IBM</p>
 
-        </article>
-        <article tabindex="0">
+      </article>
+      <article tabindex="0">
 
-          <h1>Grammar &amp; Punctuation</h1>
-          <p>University of California, Irvine</p>
+        <h1>Grammar &amp; Punctuation</h1>
+        <p>University of California, Irvine</p>
 
-        </article>
-        <article tabindex="0">
+      </article>
+      <article tabindex="0">
 
-          <h1>Introduction to HTML5</h1>
-          <p>University of Michigan</p>
+        <h1>Introduction to HTML5</h1>
+        <p>University of Michigan</p>
 
-        </article>
-        <article tabindex="0">
+      </article>
+      <article tabindex="0">
 
-          <h1>Crash Course on Python</h1>
-          <p>Google</p>
+        <h1>Crash Course on Python</h1>
+        <p>Google</p>
 
-        </article>
-        <article tabindex="0">
+      </article>
+      <article tabindex="0">
 
-          <h1>Foundations: Data, Data, Everywhere</h1>
-          <p>Google</p>
+        <h1>Foundations: Data, Data, Everywhere</h1>
+        <p>Google</p>
 
-        </article>
-        <article tabindex="0">
+      </article>
+      <article tabindex="0">
 
-          <h1>Technical Support Fundamentals</h1>
-          <p></p>
+        <h1>Technical Support Fundamentals</h1>
+        <p></p>
 
-        </article>
-        <article tabindex="0">
+      </article>
+      <article tabindex="0">
 
-          <h1>Programming Foundations: Web Security</h1>
-          <p>By: Kevin Skoglund</p>
+        <h1>Programming Foundations: Web Security</h1>
+        <p>By: Kevin Skoglund</p>
 
-        </article>
-        <article tabindex="0">
+      </article>
+      <article tabindex="0">
 
-          <h1>Programming Foundations: Databases</h1>
-          <p>By: Scott Simpson</p>
+        <h1>Programming Foundations: Databases</h1>
+        <p>By: Scott Simpson</p>
 
-        </article>
-        <article tabindex="0">
+      </article>
+      <article tabindex="0">
 
-          <h1>Security Tips: Protecting Sensitive Information</h1>
-          <p>By: Scott Simpson</p>
+        <h1>Security Tips: Protecting Sensitive Information</h1>
+        <p>By: Scott Simpson</p>
 
-        </article>
-        <article tabindex="0">
+      </article>
+      <article tabindex="0">
 
-          <h1>Blockchain Basics</h1>
-          <p>By: Jonathan Reichental</p>
+        <h1>Blockchain Basics</h1>
+        <p>By: Jonathan Reichental</p>
 
-        </article>
-        <article tabindex="0">
+      </article>
+      <article tabindex="0">
 
-          <h1>HTML Essential Training</h1>
-          <p>By: Jen Simmons</p>
+        <h1>HTML Essential Training</h1>
+        <p>By: Jen Simmons</p>
 
-        </article>
-        <article tabindex="0">
+      </article>
+      <article tabindex="0">
 
-          <h1>CSS Essential Training</h1>
-          <p>By: Christina Truong</p>
+        <h1>CSS Essential Training</h1>
+        <p>By: Christina Truong</p>
 
-        </article>
-        <article tabindex="0">
+      </article>
+      <article tabindex="0">
 
-          <h1>Succeeding in Web Development: Full Stack and Front End</h1>
-          <p>By: Ray Villalobos</p>
+        <h1>Succeeding in Web Development: Full Stack and Front End</h1>
+        <p>By: Ray Villalobos</p>
 
-        </article>
+      </article>
 
-        <article tabindex="0">
+      <article tabindex="0">
 
-          <h1>What is Graphic Design</h1>
-          <p>By: Sean Adams</p>
+        <h1>What is Graphic Design</h1>
+        <p>By: Sean Adams</p>
 
-        </article>
+      </article>
 
-        <article tabindex="0">
+      <article tabindex="0">
 
-          <h1>Beating Procastination</h1>
-          <p>By: Pete Mockaitis</p>
+        <h1>Beating Procastination</h1>
+        <p>By: Pete Mockaitis</p>
 
-        </article>
+      </article>
 
-      </section>
+    </section>
 
-      <section>
+    <section>
 
-        <span>
-          <h1 id="skills">Skills</h1>
-        </span>
+      <span>
+        <h1 id="skills">Skills</h1>
+      </span>
 
-        <span>
-          <h2>Tools &amp; Technologies</h2>
-        </span>
+      <span>
+        <h2>Tools &amp; Technologies</h2>
+      </span>
 
-        <article>
+      <article>
 
-          <h1>Fusion 360</h1>
-          <p>#CAD/CAM</p>
+        <h1>Fusion 360</h1>
+        <p>#CAD/CAM</p>
 
-        </article>
+      </article>
 
-        <article>
+      <article>
 
-          <h1>AutoCAD</h1>
-          <p>#CAD/CAM</p>
+        <h1>AutoCAD</h1>
+        <p>#CAD/CAM</p>
 
-        </article>
+      </article>
 
-        <article>
+      <article>
 
-          <h1>CATIA</h1>
-          <p>#CAD/CAM</p>
+        <h1>CATIA</h1>
+        <p>#CAD/CAM</p>
 
-        </article>
+      </article>
 
-        <article>
+      <article>
 
-          <h1>HTML</h1>
-          <p>#WebDevelopment</p>
+        <h1>HTML</h1>
+        <p>#WebDevelopment</p>
 
-        </article>
+      </article>
 
 
-        <article>
+      <article>
 
-          <h1>CSS</h1>
-          <p>#WebDevelopment</p>
+        <h1>CSS</h1>
+        <p>#WebDevelopment</p>
 
 
-        </article>
+      </article>
 
-        <article tabindex="0">
+      <article tabindex="0">
 
-          <h1>JavaScript</h1>
-          <p>#WebDevelopment</p>
+        <h1>JavaScript</h1>
+        <p>#WebDevelopment</p>
 
-        </article>
-      
-     
+      </article>
 
-      </section>
-      <section>
 
-        <span>
-          <h1 id="projects">Projects</h1>
-        </span>
 
-      </section>
+    </section>
+    <section>
 
-      <section>
+      <span>
+        <h1 id="projects">Projects</h1>
+      </span>
 
-        <span>
-          <h1 id="work">Experience of work</h1>
-        </span>
+    </section>
 
+    <section>
 
-      </section>
+      <span>
+        <h1 id="work">Experience of work</h1>
+      </span>
 
-      <section>
 
-        <span id="contact">
+    </section>
 
-          <h1 >Contact details</h1>
+    <section>
 
+      <span id="contact">
 
-          <address>
-            <a href="mailto:Mr.RahulNatha@gmail.com" target="_blank">Mr.RahulNatha@gmail.com</a><br>
-            <a href="tel:+919849249677" target="_blank">+91 9849249677</a>
-          </address>
+        <h1>Contact details</h1>
 
-        </span>
 
+        <address>
+          <a href="mailto:Mr.RahulNatha@gmail.com" target="_blank">Mr.RahulNatha@gmail.com</a><br>
+          <a href="tel:+919849249677" target="_blank">+91 9849249677</a>
+        </address>
 
-      </section>
+      </span>
 
 
-    </main>
+    </section>
 
-    <aside id="viewPort">
 
+  </main>
 
+  <aside id="viewPort">
 
-      <section id="viewport">
 
+
+    <section id="viewport">
+
+      <div id="defaultView" class="viewportContent">
 
         <h1 style="font-size: 5vmax;">Introducing myself</h1>
 
-        <p> My name's Rahul and I'm a 22-year-old engineering graduate from Hyderabad, India. I work as an engineer, and
+        <p> My name's Rahul and I'm a 22-year-old engineering graduate from Hyderabad, India. I now work as an
+          engineer, and
           I'm a big fan of science and predictions.</p>
 
         <p>Fun fact: I can write super fast.</p>
 
         <p style="margin-bottom: 30px;">Connect with me on</p>
 
-     
-
-          <a href="https://www.linkedin.com/in/rahulnatha/" target="_blank">LinkedIn</a>
-          <a href="https://github.com/natharahul/" target="_blank">GitHub</a>
-          <a href="https://g.dev/rah" target="_blank">Google Developers</a>
-          <a href="https://twitter.com/rahul_natha" target="_blank">Twitter</a>
 
 
+        <a href="https://www.linkedin.com/in/rahulnatha/" target="_blank">LinkedIn</a>
+        <a href="https://github.com/natharahul/" target="_blank">GitHub</a>
+        <a href="https://g.dev/rah" target="_blank">Google Developers</a>
+        <a href="https://twitter.com/rahul_natha" target="_blank">Twitter</a>
 
-       
+      </div>
+
+      <iframe class="viewportContent" id="linkedin_6830070522202718208"
+        style="filter: invert(0%); display:none;margin-top: 0px;"
+        class="os-win artdeco windows theme--dark-lix theme--dark"
+        src="https://www.linkedin.com/embed/feed/update/urn:li:ugcPost:6830070522202718208" height="739" width="100%"
+        frameborder="0" allowfullscreen="" title="Embedded post"></iframe>
 
 
 
-        <!-- 
-        <iframe style="filter: invert(0%);" src="https://www.linkedin.com/embed/feed/update/urn:li:ugcPost:6830070522202718208" height="739" width="556" frameborder="0" allowfullscreen="" title="Embedded post"></iframe> -->
-
-        <!-- <h1>Bachelor of Technology in Mechanical Engineering</h1>
+      <!-- <h1>Bachelor of Technology in Mechanical Engineering</h1>
 
         <p>I have completed Bachelor's in Technology in Mechanical Engineering from CMR College of Engineering &amp;
           Technology.</p>
@@ -542,9 +552,9 @@
           <img width="556px" src="assets/images/first.jpg" alt="Merit certificate awarded to Rahul" />
           <figcaption>Merit certificate awarded at CMRCET</figcaption>
         </figure> -->
-      </section>
-    </aside>
-  </section>
+    </section>
+  </aside>
+
 
 
 
