@@ -137,3 +137,29 @@ function removeActive(j) {
 
 
 }
+
+
+// viewport functions
+
+// document.getElementsByClassName("backgroundHover")[0].addEventListener("mouseover", () => {
+
+//     document.getElementById("defaultView").style.display = "block";
+//     document.getElementById("linkedin_6830070522202718208").style.display = "none";
+
+
+// });
+
+document.getElementById("course_linkedin_6830070522202718208").addEventListener("mouseover", () => {
+
+    document.getElementById("defaultView").style.display = "none";
+    document.getElementById("linkedin_6830070522202718208").style.display = "block";
+
+    // if (true) {
+    //     document.getElementById("linkedin_6830070522202718208").style.filter = "invert(100%)";
+    // os-win artdeco windows theme--dark-lix
+    // }
+
+});
+
+
+

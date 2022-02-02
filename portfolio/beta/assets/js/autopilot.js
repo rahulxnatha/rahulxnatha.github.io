@@ -183,3 +183,8 @@ function alertUI(show) {
   }
 }
 
+
+
+
+document.getElementById("splashScreen").style.display = "none";
+document.getElementById("splashScreen").innerText = "Loading";
