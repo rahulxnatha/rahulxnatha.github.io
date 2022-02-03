@@ -70,6 +70,7 @@ main section {
   margin: 0 ;
 
   border: 0px solid grey;
+  border-radius: 7px;
 
 }
 
@@ -143,7 +144,7 @@ aside section a, #contact a {
   outline-style: hidden;
   outline-offset: 6px;
   transition: transform .2s;
-  box-shadow: 0 4px 8px rgb(0 0 0 / 14%);
+  box-shadow: 0 4px 8px var(--shadow);
 }
 
 article:hover, #contact a:hover {

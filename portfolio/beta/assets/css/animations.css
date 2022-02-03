@@ -148,50 +148,50 @@
 
 @-webkit-keyframes focus_element {
   0% {
-    border-radius: 7px;
+  
   }
 
   30% {
     box-shadow: 0 4px 8px var(--shadow);
-    border-radius: 7px;
+   
   }
 
   50% {
-    border-radius: 7px;
+    
     box-shadow: 0 0 0 var(--shadow);
   }
 
   70% {
     box-shadow: 0 4px 8px var(--shadow);
-    border-radius: 7px;
+   
   }
 
   100% {
-    border-radius: 7px;
+    
   }
 }
 
 @keyframes focus_element {
   0% {
-    border-radius: 7px;
+    
   }
 
   30% {
     box-shadow: 0 4px 8px var(--shadow);
-    border-radius: 7px;
+   
   }
 
   50% {
-    border-radius: 7px;
+    
     box-shadow: 0 0 0  var(--shadow);
   }
 
   70% {
     box-shadow: 0 4px 8px var(--shadow);
-    border-radius: 7px;
+    
   }
 
   100% {
-    border-radius: 7px;
+   
   }
 }

@@ -25,6 +25,9 @@
   --lightSelection: #457b9d50;
   --darkSelection: #a8dadc50;
 
+  --lightShadow: hsla(0, 0%, 0%, 0.14);
+  --darkShadow: rgba(0,0,0, 0.86);
+
   /* font-family: monospace; */
 }
 
@@ -64,7 +67,7 @@ header {
     --windowBackground: var(--lightWindowBackground);
     --a: var(--lightAnchor);
     --selection: var(--lightSelection);
-    --shadow: var(--darkWindowBackground);
+    --shadow: var(--lightShadow);
   }
 }
 
@@ -76,7 +79,7 @@ header {
     --windowBackground: var(--darkWindowBackground);
     --a: var(--darkAnchor);
     --selection: var(--darkSelection);
-    --shadow:var(--lightWindowBackground);
+    --shadow:var(--darkShadow);
   }
 }
 
