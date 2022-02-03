@@ -80,7 +80,7 @@
     style="position:fixed;top:0;left:0;display: none; z-index: 6; background-color: var(--background); height: 100%; width: 100%; padding: 30px;">
     Splash screen</div>
 
- 
+  <script>document.getElementById("splashScreen").style.display = "block";</script>
 
   <header class="select_disabled">
     <h1 onclick="alertUI(1)" style="cursor: pointer;">Rahul Natha</h1>
@@ -484,7 +484,7 @@
 
     </section>
 
-    <section>
+    <section id="contact_section" >
 
       <span id="contact">
 
@@ -501,6 +501,10 @@
 
     </section>
 
+
+    <section>
+
+    </section>
 
   </main>
 
@@ -528,6 +532,9 @@
         <a href="https://github.com/natharahul/" target="_blank">GitHub</a>
         <a href="https://g.dev/rah" target="_blank">Google Developers</a>
         <a href="https://twitter.com/rahul_natha" target="_blank">Twitter</a>
+        <a href="#contact" id="contact_focus_trigger">Email or phone</a>
+
+
 
       </div>
 
