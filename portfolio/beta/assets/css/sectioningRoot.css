@@ -10,13 +10,13 @@
 :root {
   color-scheme: light dark;
 
-  --lightBackground: #ececec;
+  --lightBackground: #f7f7f7;
   --darkBackground: #121212;
 
   --lightWindowBackground: #ffffff80;
   --darkWindowBackground: #343a4050;
 
-  --lightFont: #34252f;
+  --lightFont: #272727;
   --darkFont: #f1faee;
 
   --lightAnchor: #234e97;
@@ -64,6 +64,7 @@ header {
     --windowBackground: var(--lightWindowBackground);
     --a: var(--lightAnchor);
     --selection: var(--lightSelection);
+    --shadow: var(--darkWindowBackground);
   }
 }
 
@@ -75,6 +76,7 @@ header {
     --windowBackground: var(--darkWindowBackground);
     --a: var(--darkAnchor);
     --selection: var(--darkSelection);
+    --shadow:var(--lightWindowBackground);
   }
 }
 

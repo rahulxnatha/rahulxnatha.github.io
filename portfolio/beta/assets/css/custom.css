@@ -201,3 +201,9 @@ input:checked + .slider:before {
  outline: solid #aaa;
  outline-offset: 6px;
 }
+
+#contact_section {
+  
+  box-shadow: 0 0px 0px #00000024;
+}
+
