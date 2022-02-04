@@ -191,7 +191,7 @@ var i = setInterval(function () {
   if (counter % 2 == 0) {
     document.getElementById("online_what").innerText = "portfolio";
     document.getElementById("online_what_was").innerText = "résumé";
-    document.getElementById("online_what_was").style.display = "inline";
+    document.getElementById("online_what_was").style.display = "block";
 
     document.getElementById("online_what").classList.toggle("come_from_bottom");
     document.getElementById("online_what_was").classList.toggle("go_up");
@@ -200,14 +200,14 @@ var i = setInterval(function () {
       document.getElementById("online_what").classList.toggle("come_from_bottom");
       document.getElementById("online_what_was").classList.toggle("go_up");
       document.getElementById("online_what_was").style.display = "none";
-    }, 1000);
+    }, 999);
 
   }
 
   else {
     document.getElementById("online_what").innerText = "résumé";
     document.getElementById("online_what_was").innerText = "portfolio";
-    document.getElementById("online_what_was").style.display = "inline";
+    document.getElementById("online_what_was").style.display = "block";
 
 
     document.getElementById("online_what").classList.toggle("come_from_bottom");
@@ -218,7 +218,7 @@ var i = setInterval(function () {
       document.getElementById("online_what").classList.toggle("come_from_bottom");
       document.getElementById("online_what_was").classList.toggle("go_up");
       document.getElementById("online_what_was").style.display = "none";
-    }, 1000);
+    }, 999);
   }
 
 
