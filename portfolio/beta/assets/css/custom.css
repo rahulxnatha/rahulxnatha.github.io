@@ -207,3 +207,24 @@ input:checked + .slider:before {
   box-shadow: 0 0px 0px #00000024;
 }
 
+#online_what {
+  display:inline;
+  
+  position: relative;
+  /* background-color: lightcoral; */
+}
+
+#contain_online_what {
+  
+  display:inline-block;
+  height: 1em;
+  overflow: hidden;
+}
+
+#online_what_was {
+
+  position: relative;
+  /* display: none; */
+  /* background-color: lightblue; */
+}
+
