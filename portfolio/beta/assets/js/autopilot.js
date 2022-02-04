@@ -136,21 +136,21 @@ function hasNetwork(online) {
     element.classList.remove("offline");
     element.classList.add("online");
     // element.innerText = "Online";
-   
+
     element2.innerText = "nline";
 
     document.getElementById("offlineAlert").style.display = "none";
 
-    
+
 
   } else {
     element.classList.remove("online");
     element.classList.add("offline");
     // element.innerText = "Offline";
-    
+
     document.getElementById("offlineAlert").style.display = "block";
     document.getElementById("alertUI").style.display = "none";
-    
+
     element2.innerText = "ffline";
   }
 
@@ -174,7 +174,7 @@ window.addEventListener("load", () => {
 function alertUI(show) {
 
   if (internetConnection && show) {
-    
+
     document.getElementById("alertUI").style.display = "block";
     document.getElementById("alertUser").innerText = "Wanna change color theme?";
     document.getElementById("themeDescription").style.display = "block";
@@ -185,6 +185,48 @@ function alertUI(show) {
 
 
 
+var counter = 0;
+var i = setInterval(function () {
+
+  if (counter % 2 == 0) {
+    document.getElementById("online_what").innerText = "portfolio";
+    document.getElementById("online_what_was").innerText = "résumé";
+    document.getElementById("online_what_was").style.display = "inline";
+
+    document.getElementById("online_what").classList.toggle("come_from_bottom");
+    document.getElementById("online_what_was").classList.toggle("go_up");
+
+    setTimeout(function () {
+      document.getElementById("online_what").classList.toggle("come_from_bottom");
+      document.getElementById("online_what_was").classList.toggle("go_up");
+      document.getElementById("online_what_was").style.display = "none";
+    }, 1000);
+
+  }
+
+  else {
+    document.getElementById("online_what").innerText = "résumé";
+    document.getElementById("online_what_was").innerText = "portfolio";
+    document.getElementById("online_what_was").style.display = "inline";
+
+
+    document.getElementById("online_what").classList.toggle("come_from_bottom");
+    document.getElementById("online_what_was").classList.toggle("go_up");
+
+
+    setTimeout(function () {
+      document.getElementById("online_what").classList.toggle("come_from_bottom");
+      document.getElementById("online_what_was").classList.toggle("go_up");
+      document.getElementById("online_what_was").style.display = "none";
+    }, 1000);
+  }
+
+
+  counter++;
+  if (counter === 100) {
+    clearInterval(i);
+  }
+}, 2000);
 
 document.getElementById("splashScreen").style.display = "none";
 document.getElementById("splashScreen").innerText = "Loading";

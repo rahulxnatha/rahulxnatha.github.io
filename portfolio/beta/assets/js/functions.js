@@ -140,7 +140,7 @@ function removeActive(j) {
 
 document.getElementById("contact_focus_trigger").addEventListener("click", () => {
     document.getElementById("contact_section").classList.toggle("focus_element");
-    setTimeout(function () { document.getElementById("contact_section").classList.remove("focus_element"); }, 2000);
+    setTimeout(function () { document.getElementById("contact_section").classList.remove("focus_element"); }, 4000);
 });
 
 
