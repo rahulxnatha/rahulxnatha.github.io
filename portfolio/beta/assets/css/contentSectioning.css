@@ -278,11 +278,11 @@ article h1 {
   font-size: 18px;
 }
 
-
+/* 
 aside h1 {
-  font-size: 25px;
-  font-weight: 300;
-}
+  padding:0;
+  margin:0;
+} */
 
 address {
   margin-top: 20px;

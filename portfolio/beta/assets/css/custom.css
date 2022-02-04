@@ -161,7 +161,6 @@ input:checked + .slider:before {
   
 } */
 
-
 #main {
   background-color: transparent;
 }
@@ -181,50 +180,52 @@ input:checked + .slider:before {
   font-size: 36px;
   line-height: 0.6em;
   color: transparent;
-  
 }
 
 .status.online {
   border: 0px solid #41a700;
   color: #41a700;
- 
 }
 
 .status.offline {
   border: 0px solid #f15c4f;
   color: #f15c4f;
-
 }
 
-
 .active {
- outline: solid #aaa;
- outline-offset: 6px;
+  outline: solid #aaa;
+  outline-offset: 6px;
 }
 
 #contact_section {
-  
   box-shadow: 0 0px 0px #00000024;
 }
 
 #online_what {
-  display:inline;
-  
+  display: block;
+  padding: 0;
+  margin: 0;
   position: relative;
-  /* background-color: lightcoral; */
+  
+  height: 1.2em;
 }
 
 #contain_online_what {
-  
-  display:inline-block;
-  height: 1em;
+  padding: 0;
+  margin: 0;
+  display: inline-block;
+  height: 1.2em;
   overflow: hidden;
+  position: relative;
+  top: 0.25em;
+  
 }
 
 #online_what_was {
-
+  padding: 0;
+  margin: 0;
   position: relative;
-  /* display: none; */
-  /* background-color: lightblue; */
+  display: none;
+  
+  height: 1.2em;
 }
-

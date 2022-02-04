@@ -187,8 +187,6 @@
   }
 }
 
-
-
 .come_from_bottom {
   -webkit-animation-name: come_from_bottom;
   -webkit-animation-duration: 1s;
@@ -205,11 +203,11 @@
 
 @-webkit-keyframes come_from_bottom {
   0% {
-    bottom: -1em;
+    bottom: 0;
   }
 
   100% {
-    bottom:0;
+    bottom:1.2em;
   }
 }
 
@@ -219,7 +217,7 @@
   }
 
   100% {
-    bottom:1em;
+    bottom:1.2em;
   }
 }
 
@@ -240,22 +238,24 @@
 
 @-webkit-keyframes go_up {
   0% {
-    bottom: 0;
     
+    top:0;
   }
 
   100% {
-    bottom:1em;
+    top:-1.2em;
+
   }
 }
 
 @keyframes go_up {
   0% {
-    bottom: 0;
     
+    top:0;
   }
 
   100% {
-    bottom:1em;
+    top:-1.2em;
+
   }
 }
