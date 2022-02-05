@@ -200,7 +200,7 @@ var i = setInterval(function () {
       document.getElementById("online_what").classList.toggle("come_from_bottom");
       document.getElementById("online_what_was").classList.toggle("go_up");
       document.getElementById("online_what_was").style.display = "none";
-    }, 999);
+    }, 1000);
 
   }
 
@@ -218,7 +218,7 @@ var i = setInterval(function () {
       document.getElementById("online_what").classList.toggle("come_from_bottom");
       document.getElementById("online_what_was").classList.toggle("go_up");
       document.getElementById("online_what_was").style.display = "none";
-    }, 999);
+    }, 1000);
   }
 
 
@@ -226,7 +226,7 @@ var i = setInterval(function () {
   if (counter === 100) {
     clearInterval(i);
   }
-}, 2000);
+}, 5000);
 
 document.getElementById("splashScreen").style.display = "none";
 document.getElementById("splashScreen").innerText = "Loading";
