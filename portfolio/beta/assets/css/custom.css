@@ -218,6 +218,8 @@ input:checked + .slider:before {
   overflow: hidden;
   position: relative;
   top: 0.25em;
+  width: 320px;
+  /* background-color: #aaa; */
   
 }
 
