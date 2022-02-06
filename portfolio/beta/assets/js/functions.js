@@ -158,6 +158,13 @@ document.getElementById("course_linkedin_6830070522202718208").addEventListener(
 
     document.getElementById("defaultView").style.display = "none";
     document.getElementById("linkedin_6830070522202718208").style.display = "block";
+    document.getElementById("viewPort").style.zIndex = 4;
+    document.getElementById("blurFocusScreen").style.display = "block";
+
+
+    document.getElementById("linkedin_6830070522202718208").src = "https://www.linkedin.com/embed/feed/update/urn:li:ugcPost:6830070522202718208";
+
+
 
     // if (true) {
     //     document.getElementById("linkedin_6830070522202718208").style.filter = "invert(100%)";
@@ -166,5 +173,15 @@ document.getElementById("course_linkedin_6830070522202718208").addEventListener(
 
 });
 
+document.getElementById("course_linkedin_6830070522202718208").addEventListener("mouseout", () => {
 
+    document.getElementById("defaultView").style.display = "block";
+    document.getElementById("linkedin_6830070522202718208").style.display = "none";
+    document.getElementById("blurFocusScreen").style.display = "none";
 
+    // if (true) {
+    //     document.getElementById("linkedin_6830070522202718208").style.filter = "invert(100%)";
+    // os-win artdeco windows theme--dark-lix
+    // }
+
+});
