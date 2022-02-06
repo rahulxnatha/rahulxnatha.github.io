@@ -80,6 +80,10 @@
     style="position:fixed;top:0;left:0;display: none; z-index: 6; background-color: var(--background); height: 100%; width: 100%; padding: 30px;">
     Splash screen</div>
 
+  <div id="blurFocusScreen" style="position:fixed;top:0;left:0;display: none; z-index: 3; background-color: var(--window); height: 100%; width: 100%; padding: 30px;-webkit-backdrop-filter: blur(7px);
+    backdrop-filter: blur(7px);"></div>
+
+
   <script>document.getElementById("splashScreen").style.display = "block";</script>
 
   <header class="select_disabled">
@@ -168,7 +172,11 @@
 
     <div>
       <p>Settings</p>
-      <p style="position: absolute; top: 10px;right:40px;cursor: pointer;" onclick="alertUI(0)">&times;</p>
+
+      <span onclick="alertUI(0)" class="close_alert_button"  style="position: absolute; top: 20px;right:40px;cursor: pointer;  height: 25px; padding:  0 0 18px 4px;">
+        <span >&times; <span class="close_button_suggestion" > Close</span> </span>
+      </span>
+
 
       <div>
         <details>
@@ -473,6 +481,75 @@
           <h1 id="projects">Projects</h1>
         </span>
 
+        <article class="content">
+          <h1>Experimental Study on the Effects of Input Parameters on Machinability of Maraging Steel 250 in Wire
+            Electrical Discharge Machining Process</h1>
+          <p class="greymatter">Guide: Mr. Manish Kumar (Scientist-F)</p>
+          <p class="greymatter">Feb 2020 - Mar 2020</p>
+          <p>We have investigated the effect of input parameters such as, pulse-on time, feed rate, servo control
+            reference mean voltage, on machining performance of the wire electrical discharge machining (WEDM) process
+            by observing the variation in output parameters namely, surface roughness, material removal rate, and
+            average kerf width. </p>
+          <p>
+            The material chosen for study is maraging steel 250, which is extensively used in military applications, for
+            example for missile parts. This project is done at Defence Research & Development Laboratory, Hyderabad.</p>
+          <p>
+            Taguchi method is used to analyse
+            the experiment. Based on the experimental values, a regression model was created. Finally, response
+            optimization was done to get optimum values for a given set of conditions.</p>
+          <p><a href="">View documents</a></p>
+          </article>
+
+        <div class="content">
+          <h1>Design and Analysis of Double Open-Ended Spanner using CATIA V5 R20: Part Design and
+            Ansys R19.1</h1>
+          <p class="greymatter">Guide: Mr. B. Naresh Kumar, Assistant Professor, CMR College of Engineering & Technology
+          </p>
+          <p class="greymatter">May 2019 - Jul 2019</p>
+          <p>Spanner is designed using CATIA product version V5 R20 and ANSYS
+            product version 19.1 Release.</p>
+          <p>
+            A wrench or spanner is a tool used to provide grip and mechanical advantage
+            in applying torque to turn objects—usually rotary fasteners, such as nuts and
+            bolts—or keep them from turning. Higher quality wrenches are typically made from
+            chromium-vanadium alloy tool steels and are often drop-forged. They are frequently
+            chrome-plated to resist corrosion and for ease of cleaning.</p>
+          <p>
+            In this project static structural analysis is conducted on a spanner. A
+            three-dimensional model of the spanner is designed using CATIA V5 R20. The model
+            is designed as a part design in CATIA and then a suitable material is added to it, here
+            we have taken the material as steel.</p>
+          <p>
+            Finite element analysis (FEA) is performed to obtain the variation of stress
+            magnitude at critical locations of spanner. The static analysis is done using ANSYS
+            R19.1. A load of 1 kN is applied to the spanner model in ANSYS R19.1, and
+            boundary conditions are applied according to the most usual way the tool is used. The
+            analysis is done to find the total deformation, equivalent stress and von Mises stress
+            max yields criteria stress acting on the spanner.</p>
+        </div>
+        <div class="content">
+          <h1>Calibration of KUKA (KR 16) Industrial Robot for Drawing</h1>
+          <p class="greymatter">Guides: Mr. Ravi Kishore & Mr. G. Karthik, Professors, Chennai Institute of Technology,
+            Chennai</p>
+          <p class="greymatter">May 2018</p>
+          <p> The art of drawing a simple sketch of a logo is taught to the robot KUKA (KR 16) through
+            an efficient program and calibration. This project is also aimed to show the flexibility of the robot.</p>
+          <h2>
+            Behind the project
+          </h2>
+          <p>
+            We, a total of 15 students from our college went to Chennai Institute of Technology, Chennai and had
+            undergone training on Industrial Robots, Automation and 3D Printing Technology. Calibrated and programmed
+            KUKA KR-16 industrial robot to sketch a character and executed successfully.</p>
+          <p> Then visited Gokul Autotech Pvt. Ltd. (Royal Enfield 350cc, 500cc crankshaft assembly manufacturing plant)
+            as
+            industrial visit.
+          </p>
+          <p><a href="">View documents</a></p>
+        </div>
+
+      
+
       </section>
 
       <section>
@@ -547,7 +624,7 @@
         <iframe class="viewportContent" id="linkedin_6830070522202718208"
           style="filter: invert(0%); display:none;margin-top: 0px;"
           class="os-win artdeco windows theme--dark-lix theme--dark"
-          src="https://www.linkedin.com/embed/feed/update/urn:li:ugcPost:6830070522202718208" height="739" width="100%"
+          src="#" height="739" width="100%"
           frameborder="0" allowfullscreen="" title="Embedded post"></iframe>
 
 
