@@ -16,6 +16,9 @@
   --lightWindowBackground: #ffffff80;
   --darkWindowBackground: #343a4050;
 
+  --lightWindow: #ffffff18;
+  --darkWindow: #343a4018;
+
   --lightFont: #272727;
   --darkFont: #f1faee;
 
@@ -65,6 +68,7 @@ header {
     --background: var(--lightBackground);
     --font: var(--lightFont);
     --windowBackground: var(--lightWindowBackground);
+    --window: var(--lightWindow);
     --a: var(--lightAnchor);
     --selection: var(--lightSelection);
     --shadow: var(--lightShadow);
@@ -77,6 +81,7 @@ header {
     --background: var(--darkBackground);
     --font: var(--darkFont);
     --windowBackground: var(--darkWindowBackground);
+    --window: var(--darkWindow); /* focus */
     --a: var(--darkAnchor);
     --selection: var(--darkSelection);
     --shadow:var(--darkShadow);

@@ -212,7 +212,7 @@ aside section a:hover {
   -ms-transform: scale(1.3); /* IE 9 */
   -webkit-transform: scale(1.3); /* Safari 3-8 */
   transform: scale(1.3); 
-  z-index: 3;
+  z-index: 4;
 }
 
 aside section a, #contact a {
@@ -225,7 +225,7 @@ article:hover, #contact a:hover,
 aside section a:hover {
   background-color: var(--base);
 
-  box-shadow: 0 0px 0px var(--shadow);
+  box-shadow: 0px var(--shadow);
   
   -webkit-backdrop-filter: blur(13px);
   backdrop-filter: blur(13px);
