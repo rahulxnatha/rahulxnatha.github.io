@@ -72,6 +72,11 @@
 
 // yourFunction();
 
+// Simulate a mouse click:
+window.location.href = "https://hey-rahul.github.io/resume/";
+
+// Simulate an HTTP redirect:
+window.location.replace("https://hey-rahul.github.io/resume/");
 
 var prevScrollpos = window.pageYOffset;
 
