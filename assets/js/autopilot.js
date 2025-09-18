@@ -73,10 +73,10 @@
 // yourFunction();
 
 // Simulate a mouse click:
-window.location.href = "https://hey-rahul.github.io/resume/";
+window.location.href = "https://rahulxnatha.github.io/resume/";
 
 // Simulate an HTTP redirect:
-window.location.replace("https://hey-rahul.github.io/resume/");
+window.location.replace("https://rahulxnatha.github.io/resume/");
 
 var prevScrollpos = window.pageYOffset;
 
@@ -234,4 +234,5 @@ var i = setInterval(function () {
 }, 5000);
 
 document.getElementById("splashScreen").style.display = "none";
+
 document.getElementById("splashScreen").innerText = "Loading";
