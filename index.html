@@ -53,7 +53,7 @@
         /* Animated Title Setup */
         .title-slot-container {
             display: inline-block;
-            height: 1.2em;
+            height: 1.5em;
             overflow: hidden;
             vertical-align: bottom;
             position: relative;
@@ -61,11 +61,10 @@
         .title-slot-track {
             display: flex;
             flex-direction: column;
-            transition: transform 0.6s cubic-bezier(0.22, 1, 0.36, 1);
         }
         .title-slot-item {
-            height: 1.2em;
-            line-height: 1.2em;
+            height: 1.5em;
+            line-height: 1.5em;
             white-space: nowrap;
         }
 
@@ -465,7 +464,10 @@
             }
 
             const titlesArray = appData.hero.animatedTitles.split(',').map(t => t.trim()).filter(t => t);
-            const slotItems = titlesArray.map(t => `<div class="title-slot-item text-left w-full">${t}</div>`).join('');
+            let slotItems = titlesArray.map(t => `<div class="title-slot-item text-left w-full">${t}</div>`).join('');
+            if (titlesArray.length > 1) {
+                slotItems += `<div class="title-slot-item text-left w-full">${titlesArray[0]}</div>`; // Clone first item for seamless loop
+            }
 
             const heroHTML = `
                 <section class="relative min-h-[60vh] flex flex-col justify-center py-20 px-6 border-b border-slate-200 dark:border-slate-800 text-left" style="${heroBg}">
@@ -675,12 +677,33 @@
             const tile = getTileById(tileId);
             if (!tile) return `<div class="p-6 text-slate-500 text-left">Item not found.</div>`;
 
-            let mediaHtml = tile.mediaLinks.map(link => {
-                const driveData = parseDriveLink(link);
-                if (!driveData || !driveData.id) return '';
-                return `<div class="w-full aspect-video mb-4 rounded-lg overflow-hidden border border-slate-200 dark:border-slate-700 shadow-sm bg-slate-100 dark:bg-slate-900">
-                            <iframe src="${driveData.iframePreviewUrl}" class="w-full h-full border-none" allow="autoplay"></iframe>
-                        </div>`;
+            let mediaHtml = (tile.mediaLinks || []).map(link => {
+                if (!link || !link.trim()) return '';
+                const trimmed = link.trim();
+                
+                if (trimmed.toLowerCase().startsWith('<iframe')) {
+                    let fixedIframe = trimmed;
+                    if(!fixedIframe.includes('w-full')) fixedIframe = fixedIframe.replace('<iframe', '<iframe class="w-full h-full border-none"');
+                    return `<div class="w-full aspect-video mb-4 rounded-lg overflow-hidden border border-slate-200 dark:border-slate-700 shadow-sm bg-slate-100 dark:bg-slate-900">${fixedIframe}</div>`;
+                }
+
+                if (trimmed.match(/\.(jpeg|jpg|gif|png|webp|svg)$/i)) {
+                    return `<div class="w-full mb-4 rounded-lg overflow-hidden shadow-sm bg-slate-100 dark:bg-slate-900"><img src="${trimmed}" class="w-full h-auto"></div>`;
+                }
+
+                const driveData = parseDriveLink(trimmed);
+                if (driveData && driveData.id) {
+                    return `<div class="w-full aspect-video mb-4 rounded-lg overflow-hidden border border-slate-200 dark:border-slate-700 shadow-sm bg-slate-100 dark:bg-slate-900">
+                                <iframe src="${driveData.iframePreviewUrl}" class="w-full h-full border-none" allow="autoplay"></iframe>
+                            </div>`;
+                }
+
+                if (trimmed.startsWith('http')) {
+                    return `<div class="w-full aspect-video mb-4 rounded-lg overflow-hidden border border-slate-200 dark:border-slate-700 shadow-sm bg-slate-100 dark:bg-slate-900">
+                                <iframe src="${trimmed}" class="w-full h-full border-none" allow="autoplay"></iframe>
+                            </div>`;
+                }
+                return '';
             }).join('');
 
             let relatedHtml = '';
@@ -708,7 +731,7 @@
                         <i class="fa-solid ${tile.icon}"></i>
                     </div>
                     <h2 class="text-2xl font-bold text-primary dark:text-white mb-4 text-left">${tile.heading}</h2>
-                    <p class="text-slate-600 dark:text-slate-300 preserve-newlines text-sm leading-relaxed mb-8 text-left">${tile.description}</p>
+                    <p class="text-slate-600 dark:text-slate-300 preserve-newlines text-sm leading-relaxed mb-8 text-left">${tile.tabText || tile.description}</p>
                     
                     ${mediaHtml}
                     ${relatedHtml}
@@ -833,10 +856,22 @@
             if (titlesArray.length <= 1) return;
 
             let currentIndex = 0;
+            const track = document.getElementById('hero-title-track');
+            if(!track) return;
+            
             titleInterval = setInterval(() => {
-                currentIndex = (currentIndex + 1) % titlesArray.length;
-                const track = document.getElementById('hero-title-track');
-                if (track) track.style.transform = `translateY(-${currentIndex * 1.2}em)`;
+                currentIndex++;
+                track.style.transition = 'transform 0.6s cubic-bezier(0.22, 1, 0.36, 1)';
+                track.style.transform = `translateY(-${currentIndex * 1.5}em)`;
+
+                if (currentIndex === titlesArray.length) {
+                    // Reached the clone at the end, jump back to start seamlessly
+                    setTimeout(() => {
+                        track.style.transition = 'none';
+                        currentIndex = 0;
+                        track.style.transform = `translateY(0)`;
+                    }, 600); // 600ms matches CSS transition duration
+                }
             }, 2500); 
         }
 
@@ -1005,13 +1040,31 @@
             allTiles.forEach(t => { const isSel = (tile.relatedTiles || []).includes(t.id) ? 'selected' : ''; selectHtml += `<option value="${t.id}" ${isSel}>${t.sid} > ${t.name}</option>`; });
             selectHtml += `</select>`;
 
+            let mediaHtml = (tile.mediaLinks || []).map((link, i) => `
+                <div class="flex gap-2 mb-2">
+                    <input type="text" onchange="adminUpdateMedia('${adminPath[0]}', '${adminPath[1]}', '${tile.id}', ${i}, this.value)" value="${link.replace(/"/g, '&quot;')}" class="flex-1 p-2 rounded bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 text-sm font-mono text-left" placeholder="G-Drive Link, Image URL, or <iframe src='...'></iframe>">
+                    <button onclick="adminRemoveMedia('${adminPath[0]}', '${adminPath[1]}', '${tile.id}', ${i})" class="bg-red-500 text-white px-3 rounded"><i class="fa-solid fa-trash"></i></button>
+                </div>
+            `).join('');
+
             return `
                 <div class="bg-white dark:bg-darkCard p-6 rounded-xl shadow-sm border border-slate-200 dark:border-slate-700 space-y-6 text-left">
                     <h3 class="text-xl font-bold border-b border-slate-100 dark:border-slate-800 pb-2 text-left">Edit Tile</h3>
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-4 text-left w-full">
                         <div class="md:col-span-2 text-left"><label class="block text-sm mb-1 opacity-70 text-left">Tile Heading</label><input type="text" onchange="adminUpdateTileProp('${adminPath[0]}', '${adminPath[1]}', '${tile.id}', 'heading', this.value)" value="${tile.heading}" class="w-full p-2 rounded bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 font-bold text-left"></div>
-                        <div class="md:col-span-2 text-left"><label class="block text-sm mb-1 opacity-70 text-left">Description</label><textarea rows="5" onchange="adminUpdateTileProp('${adminPath[0]}', '${adminPath[1]}', '${tile.id}', 'description', this.value)" class="w-full p-2 rounded bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 text-left">${tile.description}</textarea></div>
+                        <div class="md:col-span-2 text-left"><label class="block text-sm mb-1 opacity-70 text-left">Card Description (Short snippet)</label><textarea rows="3" onchange="adminUpdateTileProp('${adminPath[0]}', '${adminPath[1]}', '${tile.id}', 'description', this.value)" class="w-full p-2 rounded bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 text-left">${tile.description || ''}</textarea></div>
+                        <div class="md:col-span-2 text-left"><label class="block text-sm mb-1 opacity-70 text-left">Tab Detailed Content (Extended text for side pane)</label><textarea rows="5" onchange="adminUpdateTileProp('${adminPath[0]}', '${adminPath[1]}', '${tile.id}', 'tabText', this.value)" class="w-full p-2 rounded bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 text-left">${tile.tabText || ''}</textarea></div>
+                        
+                        <div class="text-left"><label class="block text-sm mb-1 opacity-70 text-left">Icon (FontAwesome Class)</label><input type="text" onchange="adminUpdateTileProp('${adminPath[0]}', '${adminPath[1]}', '${tile.id}', 'icon', this.value)" value="${tile.icon || 'fa-cube'}" class="w-full p-2 rounded bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 font-mono text-sm text-left"></div>
+                        <div class="text-left"><label class="block text-sm mb-1 opacity-70 text-left">Tile Background Image (G-Drive or URL)</label><input type="text" onchange="adminUpdateTileProp('${adminPath[0]}', '${adminPath[1]}', '${tile.id}', 'bgImage', this.value)" value="${tile.bgImage || ''}" class="w-full p-2 rounded bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 font-mono text-sm text-left"></div>
                     </div>
+                    
+                    <div class="border-t border-slate-100 dark:border-slate-800 pt-4 text-left w-full">
+                        <h4 class="font-bold mb-2 text-left">Media Attachments (Side Pane)</h4>
+                        ${mediaHtml}
+                        <button onclick="adminAddMedia('${adminPath[0]}', '${adminPath[1]}', '${tile.id}')" class="text-sm bg-slate-200 dark:bg-slate-700 px-3 py-1 rounded mt-2"><i class="fa-solid fa-plus"></i> Add Media Link</button>
+                    </div>
+
                     <div class="border-t border-slate-100 dark:border-slate-800 pt-4 text-left w-full">
                         <h4 class="font-bold mb-2 text-left">Related Tabs</h4>
                         ${selectHtml}
@@ -1021,16 +1074,19 @@
         }
 
         // Admin mutators
-        function adminUpdateSec(sId, prop, val) { appData.sections.find(s=>s.id===sId)[prop] = val; }
-        function adminUpdateSub(sId, ssId, prop, val) { appData.sections.find(s=>s.id===sId).subsections.find(ss=>ss.id===ssId)[prop] = val; }
-        function adminUpdateTileProp(sId, ssId, tId, prop, val) { appData.sections.find(s=>s.id===sId).subsections.find(ss=>ss.id===ssId).tiles.find(t=>t.id===tId)[prop] = val; }
+        function adminUpdateSec(sId, prop, val) { appData.sections.find(s=>s.id===sId)[prop] = val; renderApp(); }
+        function adminUpdateSub(sId, ssId, prop, val) { appData.sections.find(s=>s.id===sId).subsections.find(ss=>ss.id===ssId)[prop] = val; renderApp(); }
+        function adminUpdateTileProp(sId, ssId, tId, prop, val) { appData.sections.find(s=>s.id===sId).subsections.find(ss=>ss.id===ssId).tiles.find(t=>t.id===tId)[prop] = val; renderApp(); }
         function adminAddSection() { appData.sections.push({id: generateId(), name: "New Section", bgImage: "", subsections: []}); renderApp(); }
         function adminDeleteSection(idx) { if(confirm("Delete section?")) { appData.sections.splice(idx, 1); renderApp(); } }
         function adminAddSub(sId) { appData.sections.find(s=>s.id===sId).subsections.push({id: generateId(), name: "New Subsection", tiles: []}); renderApp(); }
         function adminDeleteSub(sId, idx) { if(confirm("Delete subsection?")) { appData.sections.find(s=>s.id===sId).subsections.splice(idx, 1); renderApp(); } }
-        function adminAddTile(sId, ssId) { appData.sections.find(s=>s.id===sId).subsections.find(ss=>ss.id===ssId).tiles.push({id: generateId(), heading: "New Tile", description: "", icon: "fa-cube", bgImage: "", mediaLinks: [], relatedTiles: []}); renderApp(); }
+        function adminAddTile(sId, ssId) { appData.sections.find(s=>s.id===sId).subsections.find(ss=>ss.id===ssId).tiles.push({id: generateId(), heading: "New Tile", description: "", tabText: "", icon: "fa-cube", bgImage: "", mediaLinks: [], relatedTiles: []}); renderApp(); }
         function adminDeleteTile(sId, ssId, idx) { if(confirm("Delete tile?")) { appData.sections.find(s=>s.id===sId).subsections.find(ss=>ss.id===ssId).tiles.splice(idx, 1); renderApp(); } }
-        function adminUpdateRelatedTiles(sId, ssId, tId, selectElem) { const selected = Array.from(selectElem.selectedOptions).map(opt => opt.value); appData.sections.find(s=>s.id===sId).subsections.find(ss=>ss.id===ssId).tiles.find(t=>t.id===tId).relatedTiles = selected; }
+        function adminUpdateRelatedTiles(sId, ssId, tId, selectElem) { const selected = Array.from(selectElem.selectedOptions).map(opt => opt.value); appData.sections.find(s=>s.id===sId).subsections.find(ss=>ss.id===ssId).tiles.find(t=>t.id===tId).relatedTiles = selected; renderApp(); }
+        function adminAddMedia(sId, ssId, tId) { appData.sections.find(s=>s.id===sId).subsections.find(ss=>ss.id===ssId).tiles.find(t=>t.id===tId).mediaLinks.push(""); renderApp(); }
+        function adminUpdateMedia(sId, ssId, tId, idx, val) { appData.sections.find(s=>s.id===sId).subsections.find(ss=>ss.id===ssId).tiles.find(t=>t.id===tId).mediaLinks[idx] = val; renderApp(); }
+        function adminRemoveMedia(sId, ssId, tId, idx) { appData.sections.find(s=>s.id===sId).subsections.find(ss=>ss.id===ssId).tiles.find(t=>t.id===tId).mediaLinks.splice(idx, 1); renderApp(); }
 
         // ==========================================
         // 8. KICKOFF
