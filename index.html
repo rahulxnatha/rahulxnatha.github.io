@@ -1,87 +1,1049 @@
-<!doctype html>
-<html lang="en-US" dir="ltr" data-color-scheme="light">
-
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
 <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Rahul Natha | Portfolio</title>
+    
+    <!-- Tailwind CSS with Dark Mode config -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    fontFamily: { sans: ['"Segoe UI"', 'ui-sans-serif', 'system-ui', 'sans-serif'] },
+                    colors: {
+                        primary: '#0f172a',
+                        secondary: '#3b82f6',
+                        accent: '#f59e0b',
+                        darkBg: '#0b1120',
+                        darkCard: '#1e293b'
+                    }
+                }
+            }
+        }
+    </script>
+    
+    <!-- FontAwesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
-  <base href="index.html" target="_self" />
+    <style>
+        /* Scrollbar aesthetics */
+        ::-webkit-scrollbar { width: 6px; height: 6px; }
+        ::-webkit-scrollbar-track { background: transparent; }
+        ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 4px; }
+        .dark ::-webkit-scrollbar-thumb { background: #475569; }
+        ::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
+        
+        /* Hide scrollbar for tabs but allow scrolling */
+        .no-scrollbar::-webkit-scrollbar { display: none; }
+        .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
 
-  <meta charset="utf-8" />
-  <meta http-equiv="x-ua-compatible" content="ie=edge; charset=utf-8" />
-  <!-- <meta http-equiv="refresh" content="...;url=..." /> -->
+        .preserve-newlines { white-space: pre-line; }
+        body { transition: background-color 0.3s, color 0.3s; }
+        
+        .chat-bubble { animation: fadeIn 0.3s ease-out; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
 
-  <meta name="theme-color" content="#FFFFFF00">
-  <meta name="theme-color" media="(prefers-color-scheme: light)" content="#FFFFFF00">
-  <meta name="theme-color" media="(prefers-color-scheme: dark)" content="#FFFFFF00">
-  <link rel="icon" href="#" alt="" type="image/gif">
-  <title>Rahul Natha</title>
+        .loader { border: 4px solid #f3f3f3; border-top: 4px solid #3b82f6; border-radius: 50%; width: 40px; height: 40px; animation: spin 1s linear infinite; }
+        .dark .loader { border-color: #1e293b; border-top-color: #3b82f6; }
+        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+        
+        /* Animated Title Setup */
+        .title-slot-container {
+            display: inline-block;
+            height: 1.2em;
+            overflow: hidden;
+            vertical-align: bottom;
+            position: relative;
+        }
+        .title-slot-track {
+            display: flex;
+            flex-direction: column;
+            transition: transform 0.6s cubic-bezier(0.22, 1, 0.36, 1);
+        }
+        .title-slot-item {
+            height: 1.2em;
+            line-height: 1.2em;
+            white-space: nowrap;
+        }
 
-  <meta property="og:description" content="" />
-  <meta property="og:title" content="" />
-  <meta property="og:url" content="" />
-  <meta property="og:image" content="" />
-
-  <meta name="description" content="" />
-  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
-  <meta name="rating" content="" />
-  <meta name="robots" content="noindex, nofollow" />
-
-
-  <meta name="googlebot" content="noindex, nofollow" />
-  <meta name="googlebot" content="notranslate" />
-  <meta name="googlebot-news" content="noindex, nosnippet" />
-  <meta name="AdsBot-Google" content="noindex, nofollow" />
-  <meta name="google" content="nositelinkssearchbox" />
-  <meta name="google" content="nopagereadaloud" />
-
-  <meta name="google-site-verification" content="" />
-
-  <!-- stylesheet  -->
-
-  <link rel="stylesheet" type="text/css" content="X-Content-Type-Options: nosniff" href="assets/css/sectioningRoot.css">
-  <link rel="stylesheet" type="text/css" content="X-Content-Type-Options: nosniff"
-    href="assets/css/contentSectioning.css">
-
-  <link rel="stylesheet" type="text/css" content="X-Content-Type-Options: nosniff" href="assets/css/textContent.css">
-  <link rel="stylesheet" type="text/css" content="X-Content-Type-Options: nosniff"
-    href="assets/css/inlineTextSemantics.css">
-
-  <link rel="stylesheet" type="text/css" content="X-Content-Type-Options: nosniff"
-    href="assets/css/imageAndMultimedia.css">
-  <link rel="stylesheet" type="text/css" content="X-Content-Type-Options: nosniff"
-    href="assets/css/embeddedContent.css">
-
-  <link rel="stylesheet" type="text/css" content="X-Content-Type-Options: nosniff" href="assets/css/svgAndMathML.css">
-  <link rel="stylesheet" type="text/css" content="X-Content-Type-Options: nosniff" href="assets/css/scripting.css">
-
-  <link rel="stylesheet" type="text/css" content="X-Content-Type-Options: nosniff"
-    href="assets/css/demarcatingEdits.css">
-  <link rel="stylesheet" type="text/css" content="X-Content-Type-Options: nosniff" href="assets/css/tableContent.css">
-
-  <link rel="stylesheet" type="text/css" content="X-Content-Type-Options: nosniff" href="assets/css/forms.css">
-  <link rel="stylesheet" type="text/css" content="X-Content-Type-Options: nosniff"
-    href="assets/css/interactiveElements.css">
-
-  <link rel="stylesheet" type="text/css" content="X-Content-Type-Options: nosniff" href="assets/css/webComponents.css">
-  <link rel="stylesheet" type="text/css" content="X-Content-Type-Options: nosniff" href="assets/css/custom.css">
-
-  <link rel="stylesheet" type="text/css" content="X-Content-Type-Options: nosniff" href="assets/css/animations.css">
-
-  <style>
-    @import url('https://fonts.googleapis.com/css2?family=Work+Sans:wght@300;400&display=swap');
-    @import url('https://fonts.googleapis.com/css2?family=Raleway:wght@300&family=Work+Sans:wght@300;400&display=swap');
-  </style>
-
-
+        /* Fixed Layout */
+        #main-wrapper { display: flex; height: 100vh; overflow: hidden; }
+        #left-content { flex: 1; overflow-y: auto; scroll-behavior: smooth; position: relative; }
+        
+        /* Aside States */
+        #right-aside { transition: all 0.3s ease; display: flex; flex-direction: column; border-left-width: 1px; }
+        #right-aside.aps-dock { width: 100%; max-width: 450px; }
+        #right-aside.aps-min { position: fixed; bottom: 1.5rem; right: 1.5rem; width: 320px; height: 50px; z-index: 50; border-radius: 0.5rem; overflow: hidden; box-shadow: 0 10px 25px -5px rgba(0,0,0,0.2); }
+        #right-aside.aps-max { position: fixed; inset: 0; width: 100%; max-width: 100%; z-index: 50; border-left-width: 0; }
+        #right-aside.aps-closed { display: none; }
+        
+        @media (max-width: 768px) {
+            #main-wrapper { flex-direction: column; }
+            #right-aside.aps-dock { position: fixed; inset: 0; z-index: 50; transform: translateX(100%); max-width: 100%; }
+            #right-aside.aps-dock.open { transform: translateX(0); }
+        }
+    </style>
 </head>
-<body>
+<body class="font-sans text-left text-slate-800 bg-slate-50 dark:bg-darkBg dark:text-slate-200 antialiased selection:bg-blue-200 selection:text-blue-900">
 
-  <script src="assets/js/functions.js"></script>
-  <script src="assets/js/autopilot.js"></script>
+    <div id="app-container" class="h-screen w-full text-left">
+        <div class="h-full w-full flex flex-col items-center justify-center">
+            <div class="loader mb-4"></div>
+            <p class="text-slate-500 dark:text-slate-400 font-medium text-left">Loading environment...</p>
+        </div>
+    </div>
 
+    <script>
+        // ==========================================
+        // 1. CONFIGURATION & STATE
+        // ==========================================
+        const GOOGLE_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbyrkPTKCVNyKSmR0jFbjKpdJfJ019fce37Kvv9oWqQh8cS__ILtv7eFN98TwuRFBI9nAg/exec"; 
+        let passcode = ""; 
+        
+        // Tab & Navigation State
+        let openTabs = ["chatbot"];
+        let activeAsideTab = "chatbot"; 
+        let aps = "dock"; // aside pane state: dock, min, max, closed
+        let isAsideOpenMobile = false; // Used strictly for mobile sliding
+        
+        let adminPath = []; 
+        let chatHistory = [{ sender: 'bot', text: "Hello! I am Virtual Rahul. I can help you navigate the portfolio or answer quick questions." }];
+        let titleInterval;
+        let profileBlobShape = "50%"; // Default
 
+        // ==========================================
+        // 2. DEFAULT DATA STRUCTURE 
+        // ==========================================
+        let appData = {
+            uiText: {
+                siteTitle: "Rahul Natha",
+                botName: "Virtual Rahul",
+                relatedTabsBtn: "See Related Items",
+                contactEmail: "rahulnatha.pro@gmail.com",
+                contactPhone: "+91 98492 49677",
+                linkedinLink: "https://linkedin.com/in/rahulnatha",
+                githubLink: "https://rahulxnatha.github.io"
+            },
+            hero: {
+                name: "Rahul Natha",
+                animatedTitles: "Mechanical Engineer., Mechanical Design Engineer., Electromechanical Systems Specialist.",
+                bio: "5 years of experience across precision mechanical systems R&D and transportation industry. Specialised in electromechanical system design, 3D CAD, and structural analysis.",
+                profileImageLink: "",
+                bgImageLink: ""
+            },
+            sections: [
+                {
+                    id: "sec_exp",
+                    name: "Work & Experience",
+                    bgImage: "",
+                    subsections: [
+                        {
+                            id: "subsec_drdo",
+                            name: "DRDO (Research Centre Imarat)",
+                            tiles: [
+                                {
+                                    id: "tile_exp_1",
+                                    heading: "Senior Research Fellow",
+                                    description: "Designed and developed mechanical systems for closed-loop electromechanical actuation focusing on high-precision motion control.\n\nLed 3D CAD modelling of multi-component assemblies. Performed static structural analysis in ANSYS Mechanical.",
+                                    icon: "fa-rocket",
+                                    bgImage: "",
+                                    mediaLinks: [],
+                                    relatedTiles: ["tile_skill_1", "tile_skill_2"]
+                                }
+                            ]
+                        },
+                        {
+                            id: "subsec_cyient",
+                            name: "Cyient",
+                            tiles: [
+                                {
+                                    id: "tile_exp_2",
+                                    heading: "Mechanical Engineer",
+                                    description: "Created high-fidelity technical illustrations in IsoDraw for Bombardier train systems. Digitized legacy 2D hardware drawings into parametric 3D CAD models.",
+                                    icon: "fa-train",
+                                    bgImage: "",
+                                    mediaLinks: [],
+                                    relatedTiles: []
+                                }
+                            ]
+                        }
+                    ]
+                },
+                {
+                    id: "sec_skills",
+                    name: "Skills",
+                    bgImage: "",
+                    subsections: [
+                        {
+                            id: "subsec_core_skills",
+                            name: "Technical Core",
+                            tiles: [
+                                {
+                                    id: "tile_skill_1",
+                                    heading: "CAD / CAE",
+                                    description: "SolidWorks, ANSYS Mechanical, CATIA, Siemens NX, Creo Parametric, KISSsoft, Fusion 360, AutoCAD.",
+                                    icon: "fa-cube",
+                                    bgImage: "",
+                                    mediaLinks: [],
+                                    relatedTiles: ["tile_exp_1"]
+                                },
+                                {
+                                    id: "tile_skill_2",
+                                    heading: "Design Specialisation",
+                                    description: "Precision gear trains, electromechanical actuation systems, packaging of electronics, bearing selection, sheet metal.",
+                                    icon: "fa-gears",
+                                    bgImage: "",
+                                    mediaLinks: [],
+                                    relatedTiles: ["tile_exp_1"]
+                                }
+                            ]
+                        }
+                    ]
+                }
+            ]
+        };
 
+        // ==========================================
+        // 3. UTILITIES & DATA PARSING
+        // ==========================================
+        function generateId() { return 'id_' + Math.random().toString(36).substr(2, 9); }
+        
+        function parseDriveLink(url) {
+            if (!url) return null;
+            const match = url.match(/\/file\/d\/([a-zA-Z0-9_-]+)/) || url.match(/id=([a-zA-Z0-9_-]+)/);
+            if (!match || !match[1]) return { type: 'unknown', original: url };
+            return {
+                id: match[1],
+                imageViewUrl: `https://drive.google.com/thumbnail?id=${match[1]}&sz=w2000`,
+                iframePreviewUrl: `https://drive.google.com/file/d/${match[1]}/preview`
+            };
+        }
 
+        function getTileById(id) {
+            for (let sec of appData.sections) {
+                for (let sub of sec.subsections) {
+                    for (let tile of sub.tiles) {
+                        if (tile.id === id) return tile;
+                    }
+                }
+            }
+            return null;
+        }
 
+        function generateRandomBlob() {
+            const r = () => Math.floor(Math.random() * 40) + 30; // 30% to 70%
+            return `${r()}% ${r()}% ${r()}% ${r()}% / ${r()}% ${r()}% ${r()}% ${r()}%`;
+        }
+
+        // --- URL State Encoders/Decoders ---
+        // Format: s-ss-t (1-based indices)
+        function encodeTileToPath(tileId) {
+            if (tileId === 'chatbot') return 'chatbot';
+            if (tileId.startsWith('newtab_')) return tileId;
+            for(let s=0; s<appData.sections.length; s++) {
+                for(let ss=0; ss<appData.sections[s].subsections.length; ss++) {
+                    for(let t=0; t<appData.sections[s].subsections[ss].tiles.length; t++) {
+                        if(appData.sections[s].subsections[ss].tiles[t].id === tileId) return `${s+1}-${ss+1}-${t+1}`;
+                    }
+                }
+            }
+            return 'chatbot';
+        }
+
+        function decodePathToTile(path) {
+            if (path === 'chatbot') return 'chatbot';
+            if (path.startsWith('newtab_')) return path;
+            const parts = path.split('-');
+            if(parts.length === 3) {
+                const s = parseInt(parts[0])-1; const ss = parseInt(parts[1])-1; const t = parseInt(parts[2])-1;
+                try { return appData.sections[s].subsections[ss].tiles[t].id; } catch(e){}
+            }
+            return 'chatbot';
+        }
+
+        function syncStateToURL() {
+            if(window.location.hash === '#admin') return;
+            
+            try {
+                const url = new URL(window.location);
+                
+                // Tile & Tab logic
+                url.searchParams.set('tile', encodeTileToPath(activeAsideTab));
+                const tabPaths = openTabs.map(t => encodeTileToPath(t)).join('_');
+                url.searchParams.set('tab', tabPaths);
+                
+                // State logic
+                url.searchParams.set('aps', aps);
+                url.searchParams.set('theme', document.documentElement.classList.contains('dark') ? 'dark' : 'light');
+                
+                window.history.replaceState({}, '', url);
+            } catch (e) {
+                // Silently fail in environments that restrict history modification (like this preview sandbox)
+                console.warn("URL state syncing is disabled in this preview environment.");
+            }
+        }
+
+        function loadStateFromURL() {
+            const params = new URLSearchParams(window.location.search);
+            
+            // Parse Tabs
+            const tabParam = params.get('tab');
+            if(tabParam) {
+                const paths = tabParam.split('_');
+                openTabs = paths.map(p => decodePathToTile(p)).filter(id => id === 'chatbot' || id.startsWith('newtab_') || getTileById(id));
+                if(openTabs.length === 0) openTabs = ['chatbot'];
+            }
+            
+            // Parse Active Tile
+            const tileParam = params.get('tile');
+            if(tileParam) {
+                const decoded = decodePathToTile(tileParam);
+                if (openTabs.includes(decoded)) activeAsideTab = decoded;
+                else activeAsideTab = openTabs[0];
+            }
+            
+            // Parse Aside State
+            const apsParam = params.get('aps');
+            if(apsParam && ['dock', 'min', 'max', 'closed'].includes(apsParam)) aps = apsParam;
+
+            // Parse Theme & Handle Expiry
+            const themeParam = params.get('theme');
+            const storedTheme = JSON.parse(localStorage.getItem('themePref'));
+            const now = new Date().getTime();
+            
+            if (themeParam === 'dark' || themeParam === 'light') {
+                setTheme(themeParam === 'dark');
+            } else if (storedTheme && (now - storedTheme.time < 24 * 60 * 60 * 1000)) {
+                setTheme(storedTheme.mode === 'dark');
+            } else {
+                setTheme(window.matchMedia('(prefers-color-scheme: dark)').matches);
+            }
+        }
+
+        function setTheme(isDark) {
+            document.documentElement.classList.toggle('dark', isDark);
+            localStorage.setItem('themePref', JSON.stringify({ mode: isDark ? 'dark' : 'light', time: new Date().getTime() }));
+        }
+
+        async function fetchPortfolioData() {
+            if (!GOOGLE_SCRIPT_URL) return appData;
+            try {
+                const response = await fetch(GOOGLE_SCRIPT_URL);
+                const data = await response.json();
+                if (data && data.uiText) return data;
+                return appData;
+            } catch (e) { return appData; }
+        }
+
+        async function savePortfolioData() {
+            if (!GOOGLE_SCRIPT_URL) return alert("Missing Google Script URL.");
+            const btn = document.getElementById('save-btn');
+            if(btn) { btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Saving...'; btn.disabled = true; }
+            try {
+                const response = await fetch(GOOGLE_SCRIPT_URL, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+                    body: JSON.stringify({ passcode: passcode, portfolioData: appData })
+                });
+                const result = await response.json();
+                if (result.success) alert("Saved to Cloud!");
+                else alert("Error: " + (result.error || "Wrong passcode."));
+            } catch (e) { alert("Network error."); }
+            if(btn) { btn.innerHTML = '<i class="fa-solid fa-floppy-disk"></i> Save'; btn.disabled = false; }
+            renderApp();
+        }
+
+        // ==========================================
+        // 4. RENDERING CORE (PUBLIC)
+        // ==========================================
+        function renderApp() {
+            const container = document.getElementById('app-container');
+            const hash = window.location.hash;
+
+            if (hash === '#admin') {
+                container.innerHTML = passcode ? renderAdminDashboard() : renderAdminLogin();
+            } else {
+                if (!document.getElementById('main-wrapper')) {
+                    container.innerHTML = renderPublicShell();
+                    document.getElementById('left-content').innerHTML = renderLeftContent();
+                    setupAnimatedTitles();
+                }
+                updateAsideUI();
+                updateTileHighlights();
+                syncStateToURL();
+            }
+        }
+
+        function renderPublicShell() {
+            return `
+                <div id="main-wrapper" class="bg-slate-100 dark:bg-slate-900 text-left">
+                    <!-- Mobile Nav -->
+                    <div class="fixed top-0 left-0 w-full z-40 bg-white/80 dark:bg-slate-900/80 backdrop-blur-md border-b border-slate-200 dark:border-slate-800 flex justify-between items-center p-4 h-16 md:hidden">
+                        <h1 class="font-bold text-primary dark:text-white text-lg text-left" id="mobile-title">${appData.uiText.siteTitle}</h1>
+                        <div class="flex gap-4 items-center">
+                            <button onclick="toggleUserTheme()" class="text-slate-600 dark:text-slate-300 text-xl"><i class="fa-solid fa-circle-half-stroke"></i></button>
+                            <button onclick="toggleMobileAside()" class="text-slate-600 dark:text-slate-300 text-xl"><i class="fa-solid fa-bars-staggered"></i></button>
+                        </div>
+                    </div>
+
+                    <!-- Desktop Dark Mode -->
+                    <button onclick="toggleUserTheme()" class="hidden md:flex fixed bottom-6 left-6 z-50 w-12 h-12 bg-white dark:bg-slate-800 rounded-full shadow-lg border border-slate-200 dark:border-slate-700 items-center justify-center text-slate-600 dark:text-slate-300 hover:text-secondary transition-colors">
+                        <i class="fa-solid fa-circle-half-stroke text-xl"></i>
+                    </button>
+
+                    <!-- Left Scrolling Content -->
+                    <div id="left-content" class="pt-16 md:pt-0 pb-12 relative flex-1 text-left"></div>
+
+                    <!-- Right Fixed Aside -->
+                    <aside id="right-aside" class="border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 shadow-xl md:shadow-none text-left aps-${aps}">
+                        
+                        <!-- Top Close for Mobile -->
+                        <div class="md:hidden flex justify-end p-2 bg-slate-100 dark:bg-slate-900 border-b border-slate-200 dark:border-slate-700">
+                            <button onclick="toggleMobileAside()" class="text-slate-500 text-xl w-8 h-8 flex items-center justify-center bg-white dark:bg-slate-800 rounded-full"><i class="fa-solid fa-xmark"></i></button>
+                        </div>
+
+                        <!-- Browser-like Tab Bar -->
+                        <div class="flex items-center bg-slate-100 dark:bg-slate-900 border-b border-slate-200 dark:border-slate-700 pr-2">
+                            <div class="flex-1 flex items-center overflow-hidden relative group">
+                                <button onclick="scrollTabs(-150)" class="absolute left-0 top-0 bottom-0 bg-gradient-to-r from-slate-100 dark:from-slate-900 to-transparent w-8 z-10 flex items-center justify-start pl-1 opacity-0 group-hover:opacity-100 transition-opacity"><i class="fa-solid fa-chevron-left text-xs text-slate-500"></i></button>
+                                <div id="aside-tabs" class="flex overflow-x-auto no-scrollbar pt-2 flex-1 scroll-smooth"></div>
+                                <button onclick="scrollTabs(150)" class="absolute right-0 top-0 bottom-0 bg-gradient-to-l from-slate-100 dark:from-slate-900 to-transparent w-8 z-10 flex items-center justify-end pr-1 opacity-0 group-hover:opacity-100 transition-opacity"><i class="fa-solid fa-chevron-right text-xs text-slate-500"></i></button>
+                            </div>
+                            <button onclick="addNewTab()" class="ml-1 w-8 h-8 rounded hover:bg-slate-200 dark:hover:bg-slate-700 flex items-center justify-center text-slate-500 transition-colors flex-shrink-0"><i class="fa-solid fa-plus text-sm"></i></button>
+                            
+                            <!-- Window Controls -->
+                            <div class="flex items-center ml-2 border-l border-slate-300 dark:border-slate-600 pl-2 gap-1 flex-shrink-0">
+                                <button onclick="setAsideState('min')" class="w-8 h-8 rounded hover:bg-slate-200 dark:hover:bg-slate-700 flex items-center justify-center text-slate-500"><i class="fa-solid fa-minus text-sm"></i></button>
+                                <button onclick="setAsideState(aps === 'max' ? 'dock' : 'max')" class="w-8 h-8 rounded hover:bg-slate-200 dark:hover:bg-slate-700 flex items-center justify-center text-slate-500"><i class="fa-regular fa-window-maximize text-sm"></i></button>
+                                <button onclick="setAsideState('closed')" class="w-8 h-8 rounded hover:bg-red-500 hover:text-white dark:hover:bg-red-600 flex items-center justify-center text-slate-500 transition-colors"><i class="fa-solid fa-xmark text-sm"></i></button>
+                            </div>
+                        </div>
+
+                        <!-- Content wrapper (hidden when minified) -->
+                        <div id="aside-body-wrapper" class="flex-col flex-1 overflow-hidden ${aps === 'min' ? 'hidden' : 'flex'} text-left">
+                            <!-- Search Bar -->
+                            <div class="p-3 border-b border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 flex-shrink-0 relative">
+                                <div class="relative">
+                                    <i class="fa-solid fa-search absolute left-3 top-2.5 text-slate-400 text-sm"></i>
+                                    <input type="text" id="aside-search-input" oninput="handleSearch(this.value)" class="w-full bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-lg py-2 pl-9 pr-4 text-sm text-slate-800 dark:text-slate-200 focus:outline-none focus:border-secondary transition-colors text-left" placeholder="Search portfolio headings...">
+                                </div>
+                                <div id="search-results" class="absolute left-3 right-3 top-full mt-1 bg-white dark:bg-darkCard border border-slate-200 dark:border-slate-700 shadow-xl rounded-lg overflow-hidden z-50 hidden max-h-64 overflow-y-auto text-left"></div>
+                            </div>
+                            
+                            <!-- Tab Content -->
+                            <div class="flex-1 overflow-y-auto relative bg-slate-50 dark:bg-slate-900 text-left" id="aside-content"></div>
+                        </div>
+
+                        <!-- Minimized Overlay View -->
+                        <div id="aside-min-view" class="${aps === 'min' ? 'flex' : 'hidden'} flex-1 items-center justify-between px-4 bg-white dark:bg-slate-800 cursor-pointer hover:bg-slate-50 dark:hover:bg-slate-700 text-left" onclick="setAsideState('dock')">
+                            <div class="flex items-center gap-3 truncate">
+                                <i class="fa-solid fa-window-restore text-secondary"></i>
+                                <span class="font-medium text-sm text-slate-700 dark:text-slate-300 truncate" id="min-title-text">Restore Panel</span>
+                            </div>
+                            <button onclick="setAsideState('closed'); event.stopPropagation();" class="text-slate-400 hover:text-red-500"><i class="fa-solid fa-xmark"></i></button>
+                        </div>
+                    </aside>
+                </div>
+            `;
+        }
+
+        function renderLeftContent() {
+            let heroBg = ""; let heroOverlay = "";
+            const hDriveData = parseDriveLink(appData.hero.bgImageLink);
+            if (hDriveData && hDriveData.id) {
+                heroBg = `background-image: url('${hDriveData.imageViewUrl}'); background-size: cover; background-position: center; background-attachment: fixed;`;
+                heroOverlay = `<div class="absolute inset-0 bg-white/90 dark:bg-slate-900/90 backdrop-blur-sm z-0"></div>`;
+            }
+
+            let profileImgHtml = `<div class="w-32 h-32 md:w-40 md:h-40 bg-slate-200 dark:bg-slate-700 border-4 border-white dark:border-slate-800 shadow-xl flex items-center justify-center text-4xl text-slate-400" style="clip-path: polygon(50% 0%, 100% 38%, 82% 100%, 18% 100%, 0% 38%);"><i class="fa-solid fa-user"></i></div>`;
+            const pDriveData = parseDriveLink(appData.hero.profileImageLink);
+            if (pDriveData && pDriveData.id) {
+                profileImgHtml = `<img src="${pDriveData.imageViewUrl}" alt="${appData.hero.name}" class="w-32 h-32 md:w-40 md:h-40 object-cover border-4 border-white dark:border-slate-800 shadow-xl relative z-10" style="border-radius: ${profileBlobShape}; transition: border-radius 0.5s ease;">`;
+            }
+
+            const titlesArray = appData.hero.animatedTitles.split(',').map(t => t.trim()).filter(t => t);
+            const slotItems = titlesArray.map(t => `<div class="title-slot-item text-left w-full">${t}</div>`).join('');
+
+            const heroHTML = `
+                <section class="relative min-h-[60vh] flex flex-col justify-center py-20 px-6 border-b border-slate-200 dark:border-slate-800 text-left" style="${heroBg}">
+                    ${heroOverlay}
+                    <div class="relative z-10 max-w-4xl mx-auto w-full flex flex-col items-start">
+                        <div class="mb-8">${profileImgHtml}</div>
+                        <h1 class="text-5xl md:text-7xl font-bold text-primary dark:text-white tracking-tight mb-4 text-left w-full">${appData.hero.name}</h1>
+                        
+                        <div class="text-2xl md:text-3xl text-secondary font-semibold mb-8 text-left w-full">
+                            <div class="title-slot-container w-full text-left">
+                                <div class="title-slot-track items-start" id="hero-title-track">
+                                    ${slotItems}
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <p class="text-lg text-slate-600 dark:text-slate-300 preserve-newlines leading-relaxed max-w-2xl text-left">${appData.hero.bio}</p>
+                    </div>
+                </section>
+            `;
+
+            const sectionsHTML = appData.sections.map(sec => {
+                let secBg = ""; let secOverlay = "";
+                const sDriveData = parseDriveLink(sec.bgImage);
+                if (sDriveData && sDriveData.id) {
+                    secBg = `background-image: url('${sDriveData.imageViewUrl}'); background-size: cover; background-position: center; background-attachment: fixed;`;
+                    secOverlay = `<div class="absolute inset-0 bg-white/95 dark:bg-slate-900/95 backdrop-blur-sm z-0"></div>`;
+                }
+
+                return `
+                    <section class="relative py-20 px-6 md:px-12 border-b border-slate-200 dark:border-slate-800 text-left" style="${secBg}">
+                        ${secOverlay}
+                        <div class="relative z-10 max-w-4xl mx-auto w-full">
+                            <h2 class="text-3xl font-bold text-primary dark:text-white mb-12 flex items-center gap-4 text-left"><div class="w-8 h-1 bg-secondary rounded"></div> ${sec.name}</h2>
+                            <div class="space-y-12">
+                                ${sec.subsections.map(sub => `
+                                    <div class="text-left w-full">
+                                        <h3 class="text-xl font-semibold text-slate-700 dark:text-slate-300 mb-6 uppercase tracking-wider text-sm text-left">${sub.name}</h3>
+                                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6 w-full">
+                                            ${sub.tiles.map(tile => {
+                                                let tBg = "";
+                                                const tDriveData = parseDriveLink(tile.bgImage);
+                                                if (tDriveData && tDriveData.id) {
+                                                    tBg = `background-image: linear-gradient(rgba(0,0,0,0.6), rgba(0,0,0,0.8)), url('${tDriveData.imageViewUrl}'); background-size: cover; color: white;`;
+                                                }
+                                                const isDarkBg = !!tDriveData && !!tDriveData.id;
+                                                const textClass = isDarkBg ? "text-slate-200" : "text-slate-600 dark:text-slate-400";
+                                                const titleClass = isDarkBg ? "text-white" : "text-primary dark:text-white";
+
+                                                return `
+                                                    <div id="dom-tile-${tile.id}" onclick="tileClicked('${tile.id}')" class="portfolio-tile group cursor-pointer rounded-xl p-6 border shadow-sm transition-all bg-white dark:bg-darkCard relative overflow-hidden text-left" style="${tBg}">
+                                                        <div class="tile-active-indicator absolute top-0 right-0 w-12 h-12 bg-secondary rounded-bl-full flex items-start justify-end p-2 text-white hidden"><i class="fa-solid fa-check text-xs"></i></div>
+                                                        <div class="text-secondary mb-4 text-3xl text-left"><i class="fa-solid ${tile.icon || 'fa-cube'}"></i></div>
+                                                        <h4 class="text-xl font-bold mb-2 text-left ${titleClass}">${tile.heading}</h4>
+                                                        <p class="text-sm line-clamp-3 preserve-newlines text-left ${textClass}">${tile.description}</p>
+                                                    </div>
+                                                `;
+                                            }).join('')}
+                                        </div>
+                                    </div>
+                                `).join('')}
+                            </div>
+                        </div>
+                    </section>
+                `;
+            }).join('');
+
+            const footerHTML = `
+                <footer class="py-10 border-t border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 text-left px-6 md:px-12">
+                    <div class="max-w-4xl mx-auto">
+                        <div class="flex gap-6 mb-4 justify-start">
+                            <a href="mailto:${appData.uiText.contactEmail}" class="text-slate-400 hover:text-secondary text-xl"><i class="fa-solid fa-envelope"></i></a>
+                            <a href="${appData.uiText.linkedinLink}" target="_blank" class="text-slate-400 hover:text-secondary text-xl"><i class="fa-brands fa-linkedin"></i></a>
+                            <a href="${appData.uiText.githubLink}" target="_blank" class="text-slate-400 hover:text-secondary text-xl"><i class="fa-brands fa-github"></i></a>
+                        </div>
+                        <p class="text-sm text-slate-500 dark:text-slate-400 text-left">&copy; ${new Date().getFullYear()} ${appData.uiText.siteTitle}. All rights reserved.</p>
+                    </div>
+                </footer>
+            `;
+
+            return heroHTML + sectionsHTML + footerHTML;
+        }
+
+        // Targeted updates only
+        function updateAsideUI() {
+            const aside = document.getElementById('right-aside');
+            if(!aside) return;
+
+            // Class logic for Window state
+            aside.className = `border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 shadow-xl md:shadow-none text-left aps-${aps}`;
+            if (isAsideOpenMobile) aside.classList.add('open');
+
+            document.getElementById('aside-body-wrapper').className = `flex-col flex-1 overflow-hidden ${aps === 'min' ? 'hidden' : 'flex'} text-left`;
+            document.getElementById('aside-min-view').className = `${aps === 'min' ? 'flex' : 'hidden'} flex-1 items-center justify-between px-4 bg-white dark:bg-slate-800 cursor-pointer hover:bg-slate-50 dark:hover:bg-slate-700 text-left`;
+
+            // Render Tabs
+            const tabsContainer = document.getElementById('aside-tabs');
+            tabsContainer.innerHTML = openTabs.map(tabId => {
+                const isActive = tabId === activeAsideTab;
+                const activeClasses = isActive 
+                    ? "bg-white dark:bg-slate-800 border-t-2 border-secondary font-bold text-secondary dark:text-white pb-3 pt-2 shadow-[0_4px_0_0_#fff] dark:shadow-[0_4px_0_0_#1e293b] z-10" 
+                    : "bg-slate-50 hover:bg-slate-200 dark:bg-slate-800/50 dark:hover:bg-slate-700 border-t-2 border-transparent text-slate-500 pb-2 pt-2";
+                
+                if (tabId === 'chatbot') {
+                    if (isActive) document.getElementById('min-title-text').innerText = `Chat with ${appData.uiText.botName.split(' ')[0]}`;
+                    return `<div onclick="openTab('chatbot')" class="px-4 rounded-t-lg cursor-pointer flex items-center gap-2 whitespace-nowrap transition-colors flex-shrink-0 ${activeClasses}">
+                                <i class="fa-solid fa-robot"></i> <span class="text-sm">Chat with ${appData.uiText.botName.split(' ')[0]}</span>
+                            </div>`;
+                } else if (tabId.startsWith('newtab_')) {
+                    if (isActive) document.getElementById('min-title-text').innerText = `New Tab`;
+                    return `<div onclick="openTab('${tabId}')" class="px-4 rounded-t-lg cursor-pointer flex items-center gap-2 whitespace-nowrap transition-colors group flex-shrink-0 ${activeClasses}">
+                                <i class="fa-solid fa-layer-group text-xs"></i> <span class="text-sm">Explore</span>
+                                <button onclick="closeTab(event, '${tabId}')" class="ml-1 w-5 h-5 rounded-full flex items-center justify-center hover:bg-slate-200 dark:hover:bg-slate-600 text-slate-400 hover:text-red-500 transition-colors"><i class="fa-solid fa-xmark text-xs"></i></button>
+                            </div>`;
+                } else {
+                    const tile = getTileById(tabId);
+                    if (!tile) return '';
+                    if (isActive) document.getElementById('min-title-text').innerText = tile.heading;
+                    return `<div onclick="openTab('${tile.id}')" class="px-4 rounded-t-lg cursor-pointer flex items-center gap-2 whitespace-nowrap transition-colors group flex-shrink-0 ${activeClasses}">
+                                <i class="fa-solid ${tile.icon} text-xs"></i> <span class="text-sm truncate max-w-[120px]">${tile.heading}</span>
+                                <button onclick="closeTab(event, '${tile.id}')" class="ml-1 w-5 h-5 rounded-full flex items-center justify-center hover:bg-slate-200 dark:hover:bg-slate-600 text-slate-400 hover:text-red-500 transition-colors"><i class="fa-solid fa-xmark text-xs"></i></button>
+                            </div>`;
+                }
+            }).join('');
+
+            // Render Tab Content
+            const contentContainer = document.getElementById('aside-content');
+            if (activeAsideTab === 'chatbot') contentContainer.innerHTML = renderChatbotHTML();
+            else if (activeAsideTab.startsWith('newtab_')) contentContainer.innerHTML = renderNewTabHTML();
+            else contentContainer.innerHTML = renderTileDetailsHTML(activeAsideTab);
+        }
+
+        function updateTileHighlights() {
+            document.querySelectorAll('.portfolio-tile').forEach(el => {
+                const isActive = el.id === `dom-tile-${activeAsideTab}`;
+                if (isActive) {
+                    el.classList.add('ring-2', 'ring-secondary', 'scale-[1.02]');
+                    el.classList.remove('border-slate-200', 'dark:border-slate-700', 'hover:-translate-y-1');
+                    el.querySelector('.tile-active-indicator')?.classList.remove('hidden');
+                } else {
+                    el.classList.remove('ring-2', 'ring-secondary', 'scale-[1.02]');
+                    el.classList.add('border-slate-200', 'dark:border-slate-700', 'hover:-translate-y-1');
+                    el.querySelector('.tile-active-indicator')?.classList.add('hidden');
+                }
+            });
+        }
+
+        // ==========================================
+        // 5. ASIDE CONTENT HTML GENERATORS
+        // ==========================================
+        function renderChatbotHTML() {
+            const msgs = chatHistory.map(msg => `
+                <div class="mb-4 flex ${msg.sender === 'user' ? 'justify-end' : 'justify-start'} chat-bubble w-full">
+                    <div class="max-w-[85%] rounded-2xl px-4 py-3 text-sm text-left ${msg.sender === 'user' ? 'bg-secondary text-white rounded-br-none' : 'bg-white dark:bg-darkCard text-slate-700 dark:text-slate-200 border border-slate-200 dark:border-slate-700 rounded-bl-none shadow-sm'}">
+                        ${msg.text}
+                    </div>
+                </div>
+            `).join('');
+
+            return `
+                <div class="flex flex-col h-full absolute inset-0 text-left">
+                    <div class="flex-1 p-4 overflow-y-auto" id="chat-window">${msgs}</div>
+                    <div class="p-4 bg-white dark:bg-darkCard border-t border-slate-200 dark:border-slate-700 shadow-[0_-4px_6px_-1px_rgba(0,0,0,0.05)] w-full">
+                        <form onsubmit="handleChatSubmit(event)" class="flex gap-2 w-full">
+                            <input type="text" id="chat-input" class="flex-1 bg-slate-100 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 text-slate-800 dark:text-slate-200 text-sm rounded-full px-4 py-2 focus:outline-none focus:border-secondary text-left" placeholder="Ask a question...">
+                            <button type="submit" class="bg-secondary hover:bg-blue-600 text-white rounded-full w-10 h-10 flex items-center justify-center transition-colors shadow-sm flex-shrink-0"><i class="fa-solid fa-paper-plane"></i></button>
+                        </form>
+                        <div class="flex flex-wrap gap-2 mt-3 w-full justify-start">
+                            <button onclick="sendQuickMessage('Experience')" class="text-xs bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400 px-3 py-1 rounded-full hover:bg-slate-200 dark:hover:bg-slate-700">Experience</button>
+                            <button onclick="sendQuickMessage('Skills')" class="text-xs bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400 px-3 py-1 rounded-full hover:bg-slate-200 dark:hover:bg-slate-700">Skills</button>
+                            <button onclick="sendQuickMessage('Contact')" class="text-xs bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400 px-3 py-1 rounded-full hover:bg-slate-200 dark:hover:bg-slate-700">Contact</button>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+
+        function renderNewTabHTML() {
+            let allTilesHtml = [];
+            appData.sections.forEach(s => s.subsections.forEach(ss => ss.tiles.forEach(t => {
+                allTilesHtml.push(`
+                    <button onclick="openTab('${t.id}')" class="text-left w-full p-3 bg-white dark:bg-darkCard border border-slate-200 dark:border-slate-700 rounded-lg hover:border-secondary dark:hover:border-secondary mb-2 transition-colors flex items-center gap-3 shadow-sm hover:shadow">
+                        <div class="w-8 h-8 rounded-full bg-blue-50 dark:bg-blue-900/30 flex items-center justify-center flex-shrink-0"><i class="fa-solid ${t.icon} text-secondary text-xs"></i></div>
+                        <span class="font-medium text-sm text-slate-700 dark:text-slate-300 truncate">${t.heading}</span>
+                    </button>
+                `);
+            })));
+
+            return `
+                <div class="p-6 absolute inset-0 overflow-y-auto text-left">
+                    <button onclick="openTab('chatbot')" class="w-full p-6 bg-gradient-to-r from-blue-600 to-indigo-600 rounded-xl text-white shadow-lg mb-8 hover:shadow-xl transition-shadow text-left group flex flex-col justify-center">
+                        <div class="text-3xl mb-2 group-hover:scale-110 transition-transform"><i class="fa-solid fa-robot"></i></div>
+                        <h2 class="text-xl font-bold mb-1 text-left">Chat with ${appData.uiText.botName}</h2>
+                        <p class="text-blue-100 text-sm text-left">Ask questions to quickly find what you're looking for.</p>
+                    </button>
+
+                    <h3 class="text-xs font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider mb-4 text-left"><i class="fa-solid fa-compass mr-2"></i> Explore Portfolio</h3>
+                    <div class="space-y-2 w-full text-left">
+                        ${allTilesHtml.join('')}
+                    </div>
+                    <div class="h-8"></div>
+                </div>
+            `;
+        }
+
+        function renderTileDetailsHTML(tileId) {
+            const tile = getTileById(tileId);
+            if (!tile) return `<div class="p-6 text-slate-500 text-left">Item not found.</div>`;
+
+            let mediaHtml = tile.mediaLinks.map(link => {
+                const driveData = parseDriveLink(link);
+                if (!driveData || !driveData.id) return '';
+                return `<div class="w-full aspect-video mb-4 rounded-lg overflow-hidden border border-slate-200 dark:border-slate-700 shadow-sm bg-slate-100 dark:bg-slate-900">
+                            <iframe src="${driveData.iframePreviewUrl}" class="w-full h-full border-none" allow="autoplay"></iframe>
+                        </div>`;
+            }).join('');
+
+            let relatedHtml = '';
+            if (tile.relatedTiles && tile.relatedTiles.length > 0) {
+                const relatedLinks = tile.relatedTiles.map(relId => {
+                    const relTile = getTileById(relId);
+                    if (!relTile) return '';
+                    return `<button onclick="openTab('${relTile.id}')" class="text-left w-full p-3 bg-white dark:bg-darkCard border border-slate-200 dark:border-slate-700 rounded-lg hover:border-secondary dark:hover:border-secondary mb-2 transition-colors flex items-center gap-3 shadow-sm hover:shadow">
+                                <div class="w-8 h-8 rounded-full bg-blue-50 dark:bg-blue-900/30 flex items-center justify-center flex-shrink-0"><i class="fa-solid ${relTile.icon} text-secondary text-xs"></i></div>
+                                <span class="font-medium text-sm text-slate-700 dark:text-slate-300 truncate text-left">${relTile.heading}</span>
+                            </button>`;
+                }).join('');
+                
+                relatedHtml = `
+                    <div class="mt-8 pt-6 border-t border-slate-200 dark:border-slate-700 text-left w-full">
+                        <h5 class="text-xs font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider mb-4 text-left"><i class="fa-solid fa-link mr-2"></i> ${appData.uiText.relatedTabsBtn}</h5>
+                        ${relatedLinks}
+                    </div>
+                `;
+            }
+
+            return `
+                <div class="p-6 absolute inset-0 overflow-y-auto text-left">
+                    <div class="w-14 h-14 bg-blue-100 dark:bg-blue-900/30 text-secondary rounded-2xl flex items-center justify-center text-2xl mb-6 shadow-sm">
+                        <i class="fa-solid ${tile.icon}"></i>
+                    </div>
+                    <h2 class="text-2xl font-bold text-primary dark:text-white mb-4 text-left">${tile.heading}</h2>
+                    <p class="text-slate-600 dark:text-slate-300 preserve-newlines text-sm leading-relaxed mb-8 text-left">${tile.description}</p>
+                    
+                    ${mediaHtml}
+                    ${relatedHtml}
+                    <div class="h-8"></div>
+                </div>
+            `;
+        }
+
+        // ==========================================
+        // 6. INTERACTIONS & LOGIC
+        // ==========================================
+        function toggleUserTheme() {
+            const isDark = !document.documentElement.classList.contains('dark');
+            setTheme(isDark);
+            syncStateToURL();
+        }
+
+        function toggleMobileAside() {
+            isAsideOpenMobile = !isAsideOpenMobile;
+            updateAsideUI();
+        }
+
+        function tileClicked(tileId) {
+            if (aps === 'closed') aps = 'dock'; // Re-open aside if closed
+            openTab(tileId);
+        }
+
+        function openTab(tabId) {
+            if (!openTabs.includes(tabId)) openTabs.push(tabId);
+            activeAsideTab = tabId;
+            isAsideOpenMobile = true;
+            document.getElementById('search-results').classList.add('hidden');
+            document.getElementById('aside-search-input').value = '';
+            
+            updateAsideUI();
+            updateTileHighlights();
+            syncStateToURL();
+        }
+
+        function closeTab(e, tabId) {
+            e.stopPropagation();
+            openTabs = openTabs.filter(t => t !== tabId);
+            if (activeAsideTab === tabId) activeAsideTab = openTabs[openTabs.length - 1] || 'chatbot';
+            if (openTabs.length === 0) openTabs.push('chatbot');
+            
+            updateAsideUI();
+            updateTileHighlights();
+            syncStateToURL();
+        }
+
+        function addNewTab() {
+            const newId = 'newtab_' + Math.random().toString(36).substr(2, 5);
+            openTab(newId);
+        }
+
+        function setAsideState(newState) {
+            aps = newState;
+            updateAsideUI();
+            syncStateToURL();
+        }
+
+        function scrollTabs(amount) {
+            const container = document.getElementById('aside-tabs');
+            if (container) container.scrollBy({ left: amount, behavior: 'smooth' });
+        }
+
+        function handleSearch(val) {
+            const resultsDiv = document.getElementById('search-results');
+            if(!val.trim()) { resultsDiv.classList.add('hidden'); return; }
+            
+            let results = [];
+            const query = val.toLowerCase();
+            appData.sections.forEach(s => s.subsections.forEach(ss => ss.tiles.forEach(t => {
+                if(t.heading.toLowerCase().includes(query) || t.description.toLowerCase().includes(query)) results.push(t);
+            })));
+
+            if(results.length > 0) {
+                resultsDiv.innerHTML = results.map(t => `
+                    <div onclick="openTab('${t.id}')" class="p-3 border-b border-slate-100 dark:border-slate-700 hover:bg-slate-50 dark:hover:bg-slate-700 cursor-pointer flex items-center gap-3 text-left">
+                        <i class="fa-solid ${t.icon} text-secondary"></i>
+                        <div class="overflow-hidden text-left w-full">
+                            <div class="text-sm font-bold text-slate-800 dark:text-slate-200 truncate text-left w-full">${t.heading}</div>
+                        </div>
+                    </div>
+                `).join('');
+                resultsDiv.classList.remove('hidden');
+            } else {
+                resultsDiv.innerHTML = `<div class="p-4 text-sm text-slate-500 text-left">No matches found.</div>`;
+                resultsDiv.classList.remove('hidden');
+            }
+        }
+
+        function handleChatSubmit(e) {
+            e.preventDefault();
+            const input = document.getElementById('chat-input');
+            const text = input.value.trim();
+            if(text) { sendQuickMessage(text, true); input.value = ''; }
+        }
+
+        function sendQuickMessage(text, isCustom = false) {
+            chatHistory.push({ sender: 'user', text: text });
+            updateAsideUI();
+            setTimeout(() => { const cw = document.getElementById('chat-window'); if (cw) cw.scrollTop = cw.scrollHeight; }, 50);
+            
+            setTimeout(() => {
+                let response = "I'm a simple bot! Try searching the portfolio above, or asking about 'Experience', 'Education', 'Skills', or 'Contact'.";
+                const lower = text.toLowerCase();
+                if (lower.includes('exp') || lower.includes('work')) response = "I have 5 years of experience in electromechanical design. Check the 'Work & Experience' section to your left!";
+                else if (lower.includes('skill') || lower.includes('cad')) response = "My core skills include SolidWorks, ANSYS, and precision mechanism design. Check the 'Skills' section!";
+                else if (lower.includes('edu') || lower.includes('degree')) response = "I hold a B.Tech in Mechanical Engineering (Gold Medalist) from JNTU Hyderabad.";
+                else if (lower.includes('contact') || lower.includes('email')) response = `You can email me at ${appData.uiText.contactEmail} or call ${appData.uiText.contactPhone}.`;
+
+                chatHistory.push({ sender: 'bot', text: response });
+                updateAsideUI();
+                setTimeout(() => { const cw = document.getElementById('chat-window'); if (cw) cw.scrollTop = cw.scrollHeight; }, 50);
+            }, 600);
+        }
+
+        function setupAnimatedTitles() {
+            if (titleInterval) clearInterval(titleInterval);
+            const titlesArray = appData.hero.animatedTitles.split(',').map(t => t.trim()).filter(t => t);
+            if (titlesArray.length <= 1) return;
+
+            let currentIndex = 0;
+            titleInterval = setInterval(() => {
+                currentIndex = (currentIndex + 1) % titlesArray.length;
+                const track = document.getElementById('hero-title-track');
+                if (track) track.style.transform = `translateY(-${currentIndex * 1.2}em)`;
+            }, 2500); 
+        }
+
+        // ==========================================
+        // 7. ADMIN VIEW RENDERING (DRILL-DOWN CMS)
+        // ==========================================
+        function renderAdminLogin() {
+            return `
+                <div class="min-h-screen w-full flex items-center justify-center bg-slate-100 dark:bg-darkBg px-4 text-left">
+                    <div class="bg-white dark:bg-darkCard p-8 rounded-xl shadow-xl w-full max-w-md border border-slate-200 dark:border-slate-700">
+                        <h2 class="text-2xl font-bold mb-6 text-primary dark:text-white text-left"><i class="fa-solid fa-lock text-secondary mr-2"></i> Admin Login</h2>
+                        <input type="password" id="passcode-input" class="w-full px-4 py-3 rounded bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 text-slate-800 dark:text-slate-200 mb-4 focus:border-secondary outline-none text-left" placeholder="Enter Passcode">
+                        <button onclick="passcode=document.getElementById('passcode-input').value; renderApp()" class="w-full bg-secondary text-white font-bold py-3 rounded hover:bg-blue-600 transition-colors">Login</button>
+                        <button onclick="window.location.hash=''" class="w-full mt-3 text-slate-500 text-sm hover:underline text-left">Return to site</button>
+                    </div>
+                </div>
+            `;
+        }
+
+        function adminNavigate(pathArray) { adminPath = pathArray; renderApp(); }
+
+        function renderAdminDashboard() {
+            let breadcrumbs = `<button onclick="adminNavigate([])" class="hover:text-secondary font-medium">Root (Global)</button>`;
+            let currentContext = appData; let currentType = 'root';
+            
+            if (adminPath.length > 0) {
+                const sec = appData.sections.find(s => s.id === adminPath[0]);
+                if (sec) {
+                    breadcrumbs += ` <i class="fa-solid fa-chevron-right text-xs mx-2 text-slate-400"></i> <button onclick="adminNavigate(['${sec.id}'])" class="hover:text-secondary">${sec.name}</button>`;
+                    currentContext = sec; currentType = 'section';
+                    if (adminPath.length > 1) {
+                        const sub = sec.subsections.find(s => s.id === adminPath[1]);
+                        if (sub) {
+                            breadcrumbs += ` <i class="fa-solid fa-chevron-right text-xs mx-2 text-slate-400"></i> <button onclick="adminNavigate(['${sec.id}', '${sub.id}'])" class="hover:text-secondary">${sub.name}</button>`;
+                            currentContext = sub; currentType = 'subsection';
+                            if (adminPath.length > 2) {
+                                const tile = sub.tiles.find(t => t.id === adminPath[2]);
+                                if (tile) {
+                                    breadcrumbs += ` <i class="fa-solid fa-chevron-right text-xs mx-2 text-slate-400"></i> <span class="text-slate-400">${tile.heading}</span>`;
+                                    currentContext = tile; currentType = 'tile';
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+
+            let editorHtml = '';
+            if (currentType === 'root') editorHtml = renderAdminRoot();
+            else if (currentType === 'section') editorHtml = renderAdminSection(currentContext);
+            else if (currentType === 'subsection') editorHtml = renderAdminSubsection(currentContext);
+            else if (currentType === 'tile') editorHtml = renderAdminTile(currentContext);
+
+            return `
+                <div class="min-h-screen bg-slate-50 dark:bg-darkBg text-slate-800 dark:text-slate-200 flex flex-col text-left">
+                    <div class="bg-white dark:bg-darkCard p-4 border-b border-slate-200 dark:border-slate-800 flex justify-between items-center sticky top-0 z-50 shadow-sm text-left">
+                        <div class="text-sm truncate mr-4 text-left flex-1">${breadcrumbs}</div>
+                        <div class="flex gap-3 flex-shrink-0">
+                            <button onclick="window.location.hash=''" class="px-4 py-2 bg-slate-200 dark:bg-slate-700 rounded text-sm font-medium hover:bg-slate-300 dark:hover:bg-slate-600 transition-colors">Exit</button>
+                            <button onclick="savePortfolioData()" id="save-btn" class="px-4 py-2 bg-green-500 text-white rounded text-sm font-bold shadow-md hover:bg-green-600 transition-colors"><i class="fa-solid fa-floppy-disk mr-1"></i> Save</button>
+                        </div>
+                    </div>
+                    <div class="flex-1 max-w-4xl w-full mx-auto p-4 md:p-6 overflow-y-auto pb-20 text-left">
+                        ${editorHtml}
+                    </div>
+                </div>
+            `;
+        }
+
+        // --- Admin Form Generators ---
+        function renderAdminRoot() {
+            const ui = appData.uiText; const hero = appData.hero;
+            let sectionsHtml = appData.sections.map((sec, i) => `
+                <div class="flex justify-between items-center p-3 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded mb-2 text-left">
+                    <span class="font-bold text-left">${sec.name} <span class="text-xs text-slate-400 font-normal ml-2">(${sec.subsections.length} subs)</span></span>
+                    <div class="flex gap-2">
+                        <button onclick="adminNavigate(['${sec.id}'])" class="text-secondary hover:underline text-sm"><i class="fa-solid fa-pen"></i> Edit</button>
+                        <button onclick="adminDeleteSection(${i})" class="text-red-500 hover:underline text-sm"><i class="fa-solid fa-trash"></i></button>
+                    </div>
+                </div>
+            `).join('');
+
+            return `
+                <div class="space-y-8 text-left">
+                    <div class="bg-white dark:bg-darkCard p-6 rounded-xl shadow-sm border border-slate-200 dark:border-slate-700 text-left">
+                        <h3 class="text-xl font-bold mb-4 border-b border-slate-100 dark:border-slate-800 pb-2 text-secondary text-left"><i class="fa-solid fa-image mr-2"></i> Landing Page (Hero)</h3>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4 text-left w-full">
+                            <div class="text-left"><label class="block text-sm mb-1 opacity-70">Full Name</label><input type="text" onchange="appData.hero.name=this.value" value="${hero.name}" class="w-full p-2 rounded bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 font-bold text-left"></div>
+                            <div class="text-left"><label class="block text-sm mb-1 opacity-70">Animated Sentences (Comma separated)</label><input type="text" onchange="appData.hero.animatedTitles=this.value" value="${hero.animatedTitles}" class="w-full p-2 rounded bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 text-sm text-left"></div>
+                            <div class="md:col-span-2 text-left"><label class="block text-sm mb-1 opacity-70">Short Bio</label><textarea rows="3" onchange="appData.hero.bio=this.value" class="w-full p-2 rounded bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 text-left">${hero.bio}</textarea></div>
+                            <div class="text-left"><label class="block text-sm mb-1 opacity-70">Profile Pic (G-Drive Link)</label><input type="text" onchange="appData.hero.profileImageLink=this.value" value="${hero.profileImageLink}" class="w-full p-2 rounded bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 text-sm font-mono text-left"></div>
+                            <div class="text-left"><label class="block text-sm mb-1 opacity-70">Background Image (G-Drive Link)</label><input type="text" onchange="appData.hero.bgImageLink=this.value" value="${hero.bgImageLink}" class="w-full p-2 rounded bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 text-sm font-mono text-left"></div>
+                        </div>
+                    </div>
+                    <!-- Global Texts omitted for brevity, logic identical to previous version -->
+                    <div class="bg-white dark:bg-darkCard p-6 rounded-xl shadow-sm border border-slate-200 dark:border-slate-700 text-left">
+                        <div class="flex justify-between items-center mb-4 border-b border-slate-100 dark:border-slate-800 pb-2 text-left">
+                            <h3 class="text-xl font-bold text-left">Portfolio Sections</h3>
+                            <button onclick="adminAddSection()" class="bg-secondary text-white px-3 py-1 rounded text-sm"><i class="fa-solid fa-plus"></i> Add Section</button>
+                        </div>
+                        ${sectionsHtml || '<p class="text-sm opacity-50 text-left">No sections.</p>'}
+                    </div>
+                </div>
+            `;
+        }
+
+        function renderAdminSection(sec) {
+            let subsHtml = sec.subsections.map((sub, i) => `
+                <div class="flex justify-between items-center p-3 bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded mb-2 text-left">
+                    <span class="font-medium text-left">${sub.name}</span>
+                    <div class="flex gap-2">
+                        <button onclick="adminNavigate(['${sec.id}', '${sub.id}'])" class="text-secondary hover:underline text-sm"><i class="fa-solid fa-pen"></i> Edit</button>
+                        <button onclick="adminDeleteSub('${sec.id}', ${i})" class="text-red-500 hover:underline text-sm"><i class="fa-solid fa-trash"></i></button>
+                    </div>
+                </div>
+            `).join('');
+
+            return `
+                <div class="space-y-6 text-left">
+                    <div class="bg-white dark:bg-darkCard p-6 rounded-xl shadow-sm border border-slate-200 dark:border-slate-700 text-left">
+                        <h3 class="text-xl font-bold mb-4 text-left">Section Properties</h3>
+                        <div class="space-y-4 text-left">
+                            <div class="text-left"><label class="block text-sm mb-1 opacity-70 text-left">Section Name</label><input type="text" onchange="adminUpdateSec('${sec.id}', 'name', this.value)" value="${sec.name}" class="w-full p-2 rounded bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 text-left"></div>
+                        </div>
+                    </div>
+                    <div class="bg-white dark:bg-darkCard p-6 rounded-xl shadow-sm border border-slate-200 dark:border-slate-700 text-left">
+                        <div class="flex justify-between items-center mb-4 text-left">
+                            <h3 class="text-xl font-bold text-left">Subsections</h3>
+                            <button onclick="adminAddSub('${sec.id}')" class="bg-secondary text-white px-3 py-1 rounded text-sm"><i class="fa-solid fa-plus"></i> Add Sub</button>
+                        </div>
+                        ${subsHtml || '<p class="text-sm opacity-50 text-left">No subsections.</p>'}
+                    </div>
+                </div>
+            `;
+        }
+
+        function renderAdminSubsection(sub) {
+            let tilesHtml = sub.tiles.map((tile, i) => `
+                <div class="flex justify-between items-center p-3 bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded mb-2 text-left">
+                    <span class="font-medium text-left"><i class="fa-solid ${tile.icon} text-secondary w-6 text-center"></i> ${tile.heading}</span>
+                    <div class="flex gap-2">
+                        <button onclick="adminNavigate(['${adminPath[0]}', '${sub.id}', '${tile.id}'])" class="text-secondary hover:underline text-sm"><i class="fa-solid fa-pen"></i> Edit</button>
+                        <button onclick="adminDeleteTile('${adminPath[0]}', '${sub.id}', ${i})" class="text-red-500 hover:underline text-sm"><i class="fa-solid fa-trash"></i></button>
+                    </div>
+                </div>
+            `).join('');
+
+            return `
+                <div class="space-y-6 text-left">
+                    <div class="bg-white dark:bg-darkCard p-6 rounded-xl shadow-sm border border-slate-200 dark:border-slate-700 text-left">
+                        <h3 class="text-xl font-bold mb-4 text-left">Tiles (Cards)</h3>
+                        <button onclick="adminAddTile('${adminPath[0]}', '${sub.id}')" class="bg-secondary text-white px-3 py-1 rounded text-sm mb-4"><i class="fa-solid fa-plus"></i> Add Tile</button>
+                        ${tilesHtml || '<p class="text-sm opacity-50 text-left">No tiles.</p>'}
+                    </div>
+                </div>
+            `;
+        }
+
+        function renderAdminTile(tile) {
+            let allTiles = [];
+            appData.sections.forEach(s => s.subsections.forEach(ss => ss.tiles.forEach(t => {
+                if (t.id !== tile.id) allTiles.push({id: t.id, name: t.heading, sid: s.name});
+            })));
+
+            let selectHtml = `<select multiple onchange="adminUpdateRelatedTiles('${adminPath[0]}', '${adminPath[1]}', '${tile.id}', this)" class="w-full p-2 rounded bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 h-32 text-sm text-left">`;
+            allTiles.forEach(t => { const isSel = (tile.relatedTiles || []).includes(t.id) ? 'selected' : ''; selectHtml += `<option value="${t.id}" ${isSel}>${t.sid} > ${t.name}</option>`; });
+            selectHtml += `</select>`;
+
+            return `
+                <div class="bg-white dark:bg-darkCard p-6 rounded-xl shadow-sm border border-slate-200 dark:border-slate-700 space-y-6 text-left">
+                    <h3 class="text-xl font-bold border-b border-slate-100 dark:border-slate-800 pb-2 text-left">Edit Tile</h3>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4 text-left w-full">
+                        <div class="md:col-span-2 text-left"><label class="block text-sm mb-1 opacity-70 text-left">Tile Heading</label><input type="text" onchange="adminUpdateTileProp('${adminPath[0]}', '${adminPath[1]}', '${tile.id}', 'heading', this.value)" value="${tile.heading}" class="w-full p-2 rounded bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 font-bold text-left"></div>
+                        <div class="md:col-span-2 text-left"><label class="block text-sm mb-1 opacity-70 text-left">Description</label><textarea rows="5" onchange="adminUpdateTileProp('${adminPath[0]}', '${adminPath[1]}', '${tile.id}', 'description', this.value)" class="w-full p-2 rounded bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 text-left">${tile.description}</textarea></div>
+                    </div>
+                    <div class="border-t border-slate-100 dark:border-slate-800 pt-4 text-left w-full">
+                        <h4 class="font-bold mb-2 text-left">Related Tabs</h4>
+                        ${selectHtml}
+                    </div>
+                </div>
+            `;
+        }
+
+        // Admin mutators
+        function adminUpdateSec(sId, prop, val) { appData.sections.find(s=>s.id===sId)[prop] = val; }
+        function adminUpdateSub(sId, ssId, prop, val) { appData.sections.find(s=>s.id===sId).subsections.find(ss=>ss.id===ssId)[prop] = val; }
+        function adminUpdateTileProp(sId, ssId, tId, prop, val) { appData.sections.find(s=>s.id===sId).subsections.find(ss=>ss.id===ssId).tiles.find(t=>t.id===tId)[prop] = val; }
+        function adminAddSection() { appData.sections.push({id: generateId(), name: "New Section", bgImage: "", subsections: []}); renderApp(); }
+        function adminDeleteSection(idx) { if(confirm("Delete section?")) { appData.sections.splice(idx, 1); renderApp(); } }
+        function adminAddSub(sId) { appData.sections.find(s=>s.id===sId).subsections.push({id: generateId(), name: "New Subsection", tiles: []}); renderApp(); }
+        function adminDeleteSub(sId, idx) { if(confirm("Delete subsection?")) { appData.sections.find(s=>s.id===sId).subsections.splice(idx, 1); renderApp(); } }
+        function adminAddTile(sId, ssId) { appData.sections.find(s=>s.id===sId).subsections.find(ss=>ss.id===ssId).tiles.push({id: generateId(), heading: "New Tile", description: "", icon: "fa-cube", bgImage: "", mediaLinks: [], relatedTiles: []}); renderApp(); }
+        function adminDeleteTile(sId, ssId, idx) { if(confirm("Delete tile?")) { appData.sections.find(s=>s.id===sId).subsections.find(ss=>ss.id===ssId).tiles.splice(idx, 1); renderApp(); } }
+        function adminUpdateRelatedTiles(sId, ssId, tId, selectElem) { const selected = Array.from(selectElem.selectedOptions).map(opt => opt.value); appData.sections.find(s=>s.id===sId).subsections.find(ss=>ss.id===ssId).tiles.find(t=>t.id===tId).relatedTiles = selected; }
+
+        // ==========================================
+        // 8. KICKOFF
+        // ==========================================
+        async function initApp() {
+            profileBlobShape = generateRandomBlob(); // Generate abstract shape on load
+            appData = await fetchPortfolioData();
+            loadStateFromURL();
+            renderApp();
+            window.addEventListener('hashchange', renderApp);
+        }
+
+        initApp();
+    </script>
 </body>
-
 </html>

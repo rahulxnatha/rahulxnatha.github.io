@@ -1,0 +1,317 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Rahul Natha - Application for Deccan AI Experts</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    
+    <!-- Chosen Palette: Slate Gray, Tech Blue, and Crisp White -->
+    <!-- Application Structure Plan: 
+         This SPA acts as a tailored, interactive digital resume and "Fit Analysis". 
+         1. Header: Quick contact and target role.
+         2. Executive Summary: Tailored pitch specifically for the AI evaluator role.
+         3. Fit Analysis Dashboard: Visual proof of alignment with the JD using a Radar Chart (Chart.js) and progress bars.
+         4. Interactive Experience Timeline: Highlights DRDO experience, but rewrites the bullet points to emphasize "validation," "evaluation," and "calculation checks" which are critical for AI RLHF (Reinforcement Learning from Human Feedback).
+         Why this structure: It immediately answers the recruiter's primary question ("Can this person validate complex engineering data?") visually before they even read the text.
+    -->
+    <!-- Visualization & Content Choices: 
+         - Radar Chart (Chart.js): Maps JD requirements (Calculations, CAD, Reasoning) against Rahul's R&D experience. Goal: Compare/Inform.
+         - Progress Bars (HTML/CSS): Quantifies specific competencies mentioned in the JD. Goal: Inform.
+         - Interactive Tabs (JS): Allows users to toggle between different facets of his experience (Analysis vs. Design vs. Documentation). Goal: Organize.
+    -->
+    <!-- CONFIRMATION: NO SVG graphics used. NO Mermaid JS used. -->
+
+    <style>
+        body { font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; }
+        
+        /* Required Chart Container Styling */
+        .chart-container {
+            position: relative;
+            width: 100%;
+            max-width: 500px;
+            margin-left: auto;
+            margin-right: auto;
+            height: 350px;
+            max-height: 400px;
+        }
+        
+        @media (max-width: 640px) {
+            .chart-container { height: 280px; }
+        }
+
+        .tab-btn { transition: all 0.2s ease-in-out; border-bottom: 3px solid transparent; }
+        .tab-btn.active { border-bottom-color: #2563eb; color: #1e40af; font-weight: 600; }
+        
+        /* Custom Scrollbar for inner content */
+        ::-webkit-scrollbar { width: 6px; }
+        ::-webkit-scrollbar-track { background: #f1f5f9; }
+        ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 10px; }
+        ::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
+    </style>
+</head>
+<body class="bg-slate-50 text-slate-800 antialiased">
+
+    <!-- Top Navigation / Header -->
+    <header class="bg-white shadow-sm sticky top-0 z-50">
+        <div class="max-w-6xl mx-auto px-4 py-4 flex flex-col md:flex-row justify-between items-center">
+            <div>
+                <h1 class="text-3xl font-bold text-slate-900 tracking-tight">Rahul Natha</h1>
+                <p class="text-blue-600 font-medium">Mechanical Engineer | Application: Deccan AI Experts</p>
+            </div>
+            <div class="mt-4 md:mt-0 flex gap-4 text-sm text-slate-600">
+                <a href="mailto:rahulnatha.pro@gmail.com" class="hover:text-blue-600">✉️ rahulnatha.pro@gmail.com</a>
+                <span class="hidden md:inline">•</span>
+                <a href="https://linkedin.com/in/rahulnatha" target="_blank" class="hover:text-blue-600">🔗 LinkedIn</a>
+                <span class="hidden md:inline">•</span>
+                <span>📍 Hyderabad (Remote Ready)</span>
+            </div>
+        </div>
+    </header>
+
+    <main class="max-w-6xl mx-auto px-4 py-8 space-y-8">
+
+        <!-- Section: Executive Summary -->
+        <section class="bg-white rounded-xl shadow-sm p-6 border border-slate-100">
+            <h2 class="text-xl font-bold text-slate-800 mb-4 border-b pb-2">Why I'm a Fit for Deccan AI</h2>
+            <p class="text-slate-600 leading-relaxed text-lg">
+                As a Mechanical Design Engineer with nearly 5 years of rigorous R&D experience at DRDO, I have built my career on <strong>validating complex electromechanical calculations, assessing design feasibility, and establishing structural truth</strong>. The core of my work involves precisely the skills needed to evaluate AI models: identifying errors in mathematical reasoning, cross-verifying CAD/CAE assumptions, and correlating theoretical models (MATLAB/ANSYS) with real-world physics. I am eager to apply my deep domain expertise to help Deccan AI train accurate, reasoning-capable mechanical engineering AI models.
+            </p>
+        </section>
+
+        <!-- Section: Fit Analysis Dashboard -->
+        <section class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+            
+            <!-- Radar Chart: JD Match -->
+            <div class="bg-white rounded-xl shadow-sm p-6 border border-slate-100">
+                <div class="mb-4">
+                    <h3 class="text-xl font-bold text-slate-800">Job Description Alignment Analysis</h3>
+                    <p class="text-sm text-slate-500">Visual mapping of my R&D skills against Deccan AI's core evaluation requirements.</p>
+                </div>
+                <div class="chart-container">
+                    <canvas id="fitRadarChart"></canvas>
+                </div>
+            </div>
+
+            <!-- Specific Requirements Breakdown -->
+            <div class="bg-white rounded-xl shadow-sm p-6 border border-slate-100 flex flex-col justify-center">
+                <h3 class="text-xl font-bold text-slate-800 mb-6">Core Competencies for AI Evaluation</h3>
+                
+                <div class="space-y-5" id="competency-bars">
+                    <!-- Populated by JS -->
+                </div>
+            </div>
+        </section>
+
+        <!-- Section: Tailored Experience (Interactive) -->
+        <section class="bg-white rounded-xl shadow-sm p-6 border border-slate-100">
+            <div class="flex flex-col md:flex-row justify-between items-start md:items-center mb-6">
+                <div>
+                    <h2 class="text-2xl font-bold text-slate-800">Relevant Experience Deep-Dive</h2>
+                    <p class="text-sm text-slate-500">Senior/Junior Research Fellow @ Research Centre Imarat, DRDO (03/2022 - 03/2026)</p>
+                </div>
+                <div class="mt-4 md:mt-0 flex gap-4 border-b border-slate-200 w-full md:w-auto">
+                    <button class="tab-btn active pb-2 px-2 text-slate-600 hover:text-blue-600" onclick="switchTab('evaluation', event)">Calculations & Evaluation</button>
+                    <button class="tab-btn pb-2 px-2 text-slate-600 hover:text-blue-600" onclick="switchTab('cad', event)">CAD & Feasibility</button>
+                    <button class="tab-btn pb-2 px-2 text-slate-600 hover:text-blue-600" onclick="switchTab('systems', event)">Systems Reasoning</button>
+                </div>
+            </div>
+
+            <div id="experience-content" class="min-h-[200px] text-slate-700 bg-slate-50 p-6 rounded-lg border border-slate-100">
+                <!-- Content injected by JS -->
+            </div>
+        </section>
+
+        <!-- Section: Education & Foundation -->
+        <section class="grid grid-cols-1 md:grid-cols-2 gap-8">
+            <div class="bg-white rounded-xl shadow-sm p-6 border border-slate-100">
+                <h3 class="text-lg font-bold text-slate-800 mb-4 border-b pb-2">🎓 Academic Foundation</h3>
+                <div class="space-y-2">
+                    <p class="font-semibold text-slate-800">Bachelor of Technology - Mechanical Engineering</p>
+                    <p class="text-sm text-slate-600">CMR College of Engineering & Technology, JNTUH (08/2016 - 09/2020)</p>
+                    <p class="text-sm font-bold text-blue-600 bg-blue-50 inline-block px-2 py-1 rounded">Grade: 8.91/10.00 CGPA | Gold Medalist</p>
+                </div>
+            </div>
+            
+            <div class="bg-white rounded-xl shadow-sm p-6 border border-slate-100">
+                <h3 class="text-lg font-bold text-slate-800 mb-4 border-b pb-2">📜 Relevant Certifications</h3>
+                <ul class="space-y-3 text-sm text-slate-700">
+                    <li class="flex items-start">
+                        <span class="mr-2">✔️</span>
+                        <span><strong>SOLIDWORKS 3D CAD for Education</strong> (Dassault Systèmes, 2025)</span>
+                    </li>
+                    <li class="flex items-start">
+                        <span class="mr-2">✔️</span>
+                        <span><strong>Autodesk Fusion 360 Certified User</strong> (2019)</span>
+                    </li>
+                    <li class="flex items-start">
+                        <span class="mr-2">✔️</span>
+                        <span><strong>Industrial Robotics Training</strong>: KUKA KR-16 path programming & calibration</span>
+                    </li>
+                </ul>
+            </div>
+        </section>
+
+    </main>
+
+    <footer class="bg-slate-900 text-slate-400 py-6 text-center mt-12">
+        <p class="text-sm">Tailored Application Portfolio for Deccan AI Experts</p>
+        <p class="text-xs mt-2">Built interactively to demonstrate data presentation and analytical structure.</p>
+    </footer>
+
+    <script>
+        // --- Data Storage ---
+        const competencyData = [
+            { label: "Validating Calculations & Models", score: 95, detail: "Extensive use of MATLAB & advanced Excel for mechanical algorithm development." },
+            { label: "Design Feasibility (Materials/Loads)", score: 90, detail: "Daily use of ANSYS Mechanical; experts in DFM, DFA, and DFMEA." },
+            { label: "Identifying Errors in Reasoning", score: 85, detail: "Authored drawing verification checklists and FEA-to-test correlations." },
+            { label: "CAD/CAE Proficiency", score: 95, detail: "SolidWorks certified; managed complex multi-component assembly drawings." }
+        ];
+
+        const experienceTabs = {
+            'evaluation': `
+                <h4 class="text-lg font-bold text-blue-800 mb-3">Mathematical Modelling & Verification</h4>
+                <ul class="list-disc pl-5 space-y-3">
+                    <li><strong>Calculation Validation:</strong> Authored and strictly validated MATLAB-based computational models for custom mechanical components (e.g., custom helical springs), ensuring theoretical accuracy of algorithms prior to physical testing.</li>
+                    <li><strong>Error Identification:</strong> Routinely identified errors in reasoning and modelling assumptions by correlating physical bench-scale test data with ANSYS Finite Element Analysis (FEA) results.</li>
+                    <li><strong>Analytical Review:</strong> Utilized advanced Excel array formulas and mathematical modeling to process complex engineering data, a direct parallel to reviewing AI-generated calculation steps.</li>
+                </ul>
+            `,
+            'cad': `
+                <h4 class="text-lg font-bold text-blue-800 mb-3">CAD Workflow & Design Feasibility Review</h4>
+                <ul class="list-disc pl-5 space-y-3">
+                    <li><strong>Design Assessment:</strong> Assessed design feasibility rigorously related to materials, dynamic loads, and manufacturing limits using ANSYS Mechanical (von Mises, deflection, safety factors).</li>
+                    <li><strong>Workflow Review:</strong> Expert in critiquing CAD models (SolidWorks) and 2D drawing packages against strict DFM, DFA, and GD&T (ASME Y14.5) standards to catch structural flaws early.</li>
+                    <li><strong>Documentation Accuracy:</strong> Established and authored internal "drawing data verification checklists," effectively acting as a human-evaluator for complex engineering outputs.</li>
+                </ul>
+            `,
+            'systems': `
+                <h4 class="text-lg font-bold text-blue-800 mb-3">Systems Engineering & Thermodynamics/Mechanics</h4>
+                <ul class="list-disc pl-5 space-y-3">
+                    <li><strong>Complex Systems Reasoning:</strong> Designed mechanical systems for closed-loop electromechanical actuation, requiring deep reasoning about fluid-structure interactions and precision motion control.</li>
+                    <li><strong>Fundamental Mechanics:</strong> Deep understanding of core mechanics (shaft bending, torsion, spring stiffness) applied in high-reliability environments (DRDO standards).</li>
+                    <li><strong>Root Cause Analysis:</strong> Coordinated environmental testing (thermal cycling, vibration) to isolate faults and troubleshoot system-level mechanical failures.</li>
+                </ul>
+            `
+        };
+
+        // --- Core Interaction & Chart Logic ---
+        document.addEventListener('DOMContentLoaded', () => {
+            renderCompetencyBars();
+            initRadarChart();
+            switchTab('evaluation'); // Programmatic call on load
+        });
+
+        function renderCompetencyBars() {
+            const container = document.getElementById('competency-bars');
+            competencyData.forEach(comp => {
+                container.innerHTML += `
+                    <div>
+                        <div class="flex justify-between text-sm font-medium text-slate-700 mb-1">
+                            <span>${comp.label}</span>
+                            <span>Mapped</span>
+                        </div>
+                        <div class="w-full bg-slate-200 rounded-full h-2.5">
+                            <div class="bg-blue-600 h-2.5 rounded-full" style="width: ${comp.score}%"></div>
+                        </div>
+                        <p class="text-xs text-slate-500 mt-1">↳ ${comp.detail}</p>
+                    </div>
+                `;
+            });
+        }
+
+        function initRadarChart() {
+            const ctx = document.getElementById('fitRadarChart').getContext('2d');
+            new Chart(ctx, {
+                type: 'radar',
+                data: {
+                    labels: [
+                        'Mech. Fundamentals', 
+                        'Calculation Validation', 
+                        'Identify Reasoning Errors', 
+                        'CAD/CAE Workflows', 
+                        'Design Feasibility (DFM)'
+                    ],
+                    datasets: [{
+                        label: 'Rahul Natha Profile Match',
+                        data: [100, 95, 90, 95, 95],
+                        backgroundColor: 'rgba(37, 99, 235, 0.2)', // Tailwind blue-600
+                        borderColor: 'rgba(37, 99, 235, 1)',
+                        pointBackgroundColor: 'rgba(37, 99, 235, 1)',
+                        pointBorderColor: '#fff',
+                        pointHoverBackgroundColor: '#fff',
+                        pointHoverBorderColor: 'rgba(37, 99, 235, 1)',
+                        borderWidth: 2,
+                    },
+                    {
+                        label: 'Deccan AI Baseline Requirement',
+                        data: [75, 80, 80, 75, 70],
+                        backgroundColor: 'rgba(148, 163, 184, 0.2)', // Tailwind slate-400
+                        borderColor: 'rgba(148, 163, 184, 1)',
+                        borderDash: [5, 5],
+                        pointRadius: 0,
+                        borderWidth: 2,
+                    }]
+                },
+                options: {
+                    maintainAspectRatio: false,
+                    scales: {
+                        r: {
+                            angleLines: { color: 'rgba(0, 0, 0, 0.1)' },
+                            grid: { color: 'rgba(0, 0, 0, 0.1)' },
+                            pointLabels: {
+                                font: { family: "'Segoe UI', sans-serif", size: 11 },
+                                color: '#475569' // text-slate-600
+                            },
+                            ticks: { display: false, min: 0, max: 100 }
+                        }
+                    },
+                    plugins: {
+                        legend: { position: 'bottom', labels: { boxWidth: 12, font: { size: 12 } } },
+                        tooltip: {
+                            backgroundColor: 'rgba(15, 23, 42, 0.9)',
+                            titleFont: { size: 13 },
+                            bodyFont: { size: 12 },
+                            padding: 10,
+                            displayColors: false
+                        }
+                    }
+                }
+            });
+        }
+
+        // --- Navigation Logic ---
+        function switchTab(tabId, event) {
+            const buttons = document.querySelectorAll('.tab-btn');
+            
+            // 1. Remove active state from all buttons
+            buttons.forEach(btn => btn.classList.remove('active'));
+
+            // 2. Handle highlighting the correct button
+            if (event && event.currentTarget) {
+                // If triggered by a click event
+                event.currentTarget.classList.add('active');
+            } else {
+                // If called programmatically (e.g., on load), find button matching tabId
+                buttons.forEach(btn => {
+                    const onclickStr = btn.getAttribute('onclick') || "";
+                    if (onclickStr.includes(`'${tabId}'`)) {
+                        btn.classList.add('active');
+                    }
+                });
+            }
+
+            // 3. Update content with fade effect
+            const contentDiv = document.getElementById('experience-content');
+            contentDiv.style.opacity = '0';
+            
+            setTimeout(() => {
+                contentDiv.innerHTML = experienceTabs[tabId] || "";
+                contentDiv.style.transition = 'opacity 0.3s ease-in';
+                contentDiv.style.opacity = '1';
+            }, 150);
+        }
+    </script>
+</body>
+</html>

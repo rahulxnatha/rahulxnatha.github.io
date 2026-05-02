@@ -1,0 +1,354 @@
+<!doctype html>
+<html>
+
+<head>
+    <meta charset="utf-8" />
+    <title>3D Viewer (ESM via esm.sh — works in browser)</title>
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <style>
+        html,
+        body {
+            margin: 0;
+            height: 100%;
+            overflow: hidden;
+            background: #111;
+            color: #fff;
+            font-family: system-ui;
+        }
+
+        #root {
+            width: 100vw;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            position: relative;
+            overflow: hidden;
+        }
+
+        #toolbar {
+            height: 52px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 8px 12px;
+            background: rgba(8, 8, 8, 0.6);
+        }
+
+        #viewer {
+            flex: 1 1 auto;
+            position: relative;
+            width: 100%;
+            height: calc(100vh - 52px);
+            overflow: hidden;
+        }
+
+        button,
+        input[type="range"] {
+            cursor: pointer;
+        }
+
+        #err {
+            position: absolute;
+            left: 18px;
+            top: 70px;
+            background: #b22222;
+            color: #fff;
+            padding: 10px 14px;
+            border-radius: 8px;
+            z-index: 999;
+            display: none;
+            max-width: 640px;
+            white-space: pre-wrap;
+        }
+
+        #info {
+            position: absolute;
+            right: 12px;
+            bottom: 12px;
+            background: rgba(0, 0, 0, 0.45);
+            color: #fff;
+            padding: 8px;
+            border-radius: 8px;
+            z-index: 999;
+            font-size: 12px;
+            display: none;
+            max-width: 360px;
+        }
+
+        button {
+            padding: 6px 12px;
+            font-size: 14px;
+            border: none;
+            border-radius: 6px;
+            background: #222;
+            color: #fff;
+        }
+
+        input[type="checkbox"] {
+            width: 16px;
+            height: 16px;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="root">
+        <div id="toolbar">
+            
+            <br><br>
+            <button id="resetBtn">Reset</button>
+            <label style="display:flex;align-items:center;gap:8px">Auto-rotate <input id="auto" type="checkbox"
+                    checked></label>
+            <label style="display:flex;align-items:center;gap:8px">Speed <input id="speed" type="range" min="-2" max="2"
+                    step="0.01" value="0.35"></label>
+            <div style="margin-left:auto;opacity:.95">Model: <strong id="fileName">.stl file</strong></div>
+        </div>
+        <div id="viewer"></div>
+        <div id="err" role="alert"></div>
+        <div id="info"></div>
+
+
+
+        <div id="controls-hint" style="position:absolute; right:12px; top:62px; background:rgba(0,0,0,0.5); color:#fff; padding:7px 10px; border-radius:6px; font-size:12px; z-index:999;">
+            Model and Model Viewer by Rahul Natha<br>
+  Left: rotate · Middle / wheel: zoom · Right: pan · Press F to fit
+</div>
+
+    </div>
+
+    <script type="module">
+        // Use esm.sh which rewrites imports so bare specifiers are resolved for the browser
+        import * as THREE from "https://esm.sh/three@0.159.0";
+        import { OrbitControls } from "https://esm.sh/three@0.159.0/examples/jsm/controls/OrbitControls.js";
+        import { STLLoader } from "https://esm.sh/three@0.159.0/examples/jsm/loaders/STLLoader.js";
+
+        const MODEL_FILE = 'hspring.stl'; // relative file in same folder as viewer.html
+
+        const viewer = document.getElementById('viewer');
+        const resetBtn = document.getElementById('resetBtn');
+        const autoChk = document.getElementById('auto');
+        const speedRange = document.getElementById('speed');
+        const errEl = document.getElementById('err');
+        const infoEl = document.getElementById('info');
+
+        function showErr(txt) { errEl.style.display = 'block'; errEl.textContent = txt; console.error(txt); }
+        function hideErr() { errEl.style.display = 'none'; errEl.textContent = ''; }
+        function showInfo(txt) { infoEl.style.display = 'block'; infoEl.textContent = txt; console.log(txt); }
+        function hideInfo() { infoEl.style.display = 'none'; infoEl.textContent = ''; }
+
+        // Renderer
+        const renderer = new THREE.WebGLRenderer({ antialias: true });
+        renderer.domElement.style.display = 'block';
+        const DPR = Math.max(1, Math.min(window.devicePixelRatio || 1, 2));
+        renderer.setPixelRatio(DPR);
+        viewer.appendChild(renderer.domElement);
+
+        // Scene & camera
+        const scene = new THREE.Scene();
+        scene.background = new THREE.Color(0x111111);
+
+        const camera = new THREE.PerspectiveCamera(45, 1, 0.01, 10000);
+        camera.position.set(0, 80, 220);
+
+        const controls = new OrbitControls(camera, renderer.domElement);
+        controls.enableDamping = true;
+        controls.dampingFactor = 0.12;
+
+        scene.add(new THREE.HemisphereLight(0x8888aa, 0x222222, 0.6));
+        const dl = new THREE.DirectionalLight(0xffffff, 0.9); dl.position.set(120, 200, 100); scene.add(dl);
+        const dl2 = dl.clone(); dl2.position.set(-80, -120, -160); scene.add(dl2);
+
+        const modelGroup = new THREE.Group();
+        scene.add(modelGroup);
+        window.__embeddedModelGroup = modelGroup;
+
+        function resize() {
+            const r = viewer.getBoundingClientRect();
+            const w = Math.max(1, Math.floor(r.width));
+            const h = Math.max(1, Math.floor(r.height));
+            if (renderer.domElement.width !== w || renderer.domElement.height !== h) {
+                renderer.setSize(w, h, false);
+                camera.aspect = w / h;
+                camera.updateProjectionMatrix();
+            }
+        }
+
+        // REPLACE your existing frame(...) with this improved one
+        function frame(object, offset = 1.15) {
+            // Use bounding sphere for cleaner, symmetric framing
+            const bbox = new THREE.Box3().setFromObject(object);
+            if (bbox.isEmpty()) return false;
+
+            // bounding sphere gives a single radius to fit
+            const sphere = bbox.getBoundingSphere(new THREE.Sphere());
+            const center = sphere.center.clone();
+            const radius = sphere.radius;
+
+            if (!isFinite(radius) || radius <= 0) return false;
+
+            // compute camera distance to comfortably fit the sphere in view
+            const fov = camera.fov * (Math.PI / 180);
+            // account for both vertical and horizontal FOV — use the tighter fit
+            const aspect = renderer.domElement.clientWidth / Math.max(1, renderer.domElement.clientHeight);
+            const vFov = fov;
+            const hFov = 2 * Math.atan(Math.tan(fov / 2) * aspect);
+            // choose the smaller FOV to be conservative
+            const effectiveFov = Math.min(vFov, hFov);
+
+            const distance = Math.abs(radius / Math.sin(effectiveFov / 2)) * offset;
+
+            // position the camera along its current vector but aimed at the model center
+            // We'll place camera at an offset that looks slightly above for nicer presentation
+            const dir = new THREE.Vector3(0, 0, 1); // prefer +Z camera direction
+            // transform dir by camera orientation if needed — here we set absolute position relative to center
+            camera.position.copy(center).add(new THREE.Vector3(0, radius * 0.25, distance + 10));
+
+            // set near/far to sensible values around the model
+            camera.near = Math.max(0.001, distance / 1000);
+            camera.far = distance * 1000;
+            camera.updateProjectionMatrix();
+
+            // point the controls & camera at center
+            controls.target.copy(center);
+            controls.update();
+
+            return { center, radius, distance };
+        }
+
+        function prepareMesh(mesh) {
+            try {
+                if (mesh.geometry && (!mesh.geometry.attributes || !mesh.geometry.attributes.normal) && mesh.geometry.computeVertexNormals) {
+                    mesh.geometry.computeVertexNormals();
+                }
+                if (!mesh.material) mesh.material = new THREE.MeshStandardMaterial({ metalness: 0.25, roughness: 0.45 });
+                mesh.material.side = THREE.DoubleSide;
+                mesh.material.needsUpdate = true;
+            } catch (e) { console.warn('prepareMesh error', e); }
+        }
+
+        async function loadModel(url) {
+            hideErr(); showInfo('Loading model: ' + url + ' ...');
+            try {
+                const resp = await fetch(url, { method: 'GET', cache: 'no-cache' });
+                if (!resp.ok) throw new Error('HTTP ' + resp.status + ' ' + resp.statusText);
+                const ab = await resp.arrayBuffer();
+                let geometry;
+                try {
+                    geometry = (new STLLoader()).parse(ab);
+                } catch (e1) {
+                    if (STLLoader.parse) geometry = STLLoader.parse(ab);
+                    else throw e1;
+                }
+
+                // center
+                try {
+                    geometry.computeBoundingBox();
+                    const center = new THREE.Vector3();
+                    geometry.boundingBox.getCenter(center);
+                    geometry.translate(-center.x, -center.y, -center.z);
+                } catch (e) { console.warn('centering failed', e); }
+
+                const mat = new THREE.MeshStandardMaterial({ color: 0xcccccc, metalness: 0.2, roughness: 0.4, side: THREE.DoubleSide });
+                const mesh = new THREE.Mesh(geometry, mat);
+                mesh.castShadow = true; mesh.receiveShadow = true;
+
+                geometry.computeBoundingBox();
+                const size = geometry.boundingBox.getSize(new THREE.Vector3());
+                let maxDim = Math.max(size.x, size.y, size.z);
+                if (!isFinite(maxDim) || maxDim === 0) maxDim = 1;
+                const TARGET = 140;
+                const scale = TARGET / maxDim;
+                mesh.scale.setScalar(scale);
+
+                prepareMesh(mesh);
+                while (modelGroup.children.length) modelGroup.remove(modelGroup.children[0]);
+                modelGroup.add(mesh);
+
+                // after modelGroup.add(mesh);
+                resize();                       // ensure renderer has correct size
+                const framed = frame(modelGroup, 1.15); // tight fit
+                if (!framed) {
+                    console.warn('Framing failed');
+                }
+                // store this camera/controls state as "reset" target
+                controls.saveState();          // important -> controls.reset() will return to this view
+                modelGroup.rotation.set(0, 0, 0); // ensure rotation zeroed on first view
+
+
+                window.__embeddedModel = mesh;
+                resize();
+                // const framed = frame(modelGroup, 1.25);
+                hideInfo();
+                if (!framed) showInfo('Model loaded but framing failed — try Reset or rotate manually.');
+                else showInfo('Model loaded and framed. Use mouse to orbit/zoom.');
+            } catch (err) {
+                const friendly = 'Failed to load model at ' + url + '\n\nError: ' + (err && err.message ? err.message : String(err)) + '\n\nCommon fixes:\n- Ensure cover.stl is served from the same origin and accessible via HTTP\n- If testing locally run: python -m http.server 8000 in this folder\n- If you see a CORS error, host the model on same origin or enable Access-Control-Allow-Origin\n';
+                showErr(friendly);
+                hideInfo();
+            }
+        }
+
+        // start
+        loadModel(MODEL_FILE);
+
+        // loop
+        let last = performance.now();
+        function animate(now = performance.now()) {
+            requestAnimationFrame(animate);
+            const dt = (now - last) / 1000; last = now;
+            if (autoChk.checked && modelGroup.children.length) {
+                const revPerSec = parseFloat(speedRange.value) || 0;
+                const rad = revPerSec * Math.PI * 2;
+                modelGroup.rotation.y += rad * dt;
+            }
+            resize();
+            controls.update();
+            renderer.render(scene, camera);
+        }
+        animate();
+
+       
+
+        // Reset button: restore framed view + zero model rotation
+        resetBtn.addEventListener('click', () => {
+            // reset any local rotation on the group
+            if (modelGroup && modelGroup.children.length) modelGroup.rotation.set(0, 0, 0);
+            // restore the camera/controls to the saved framed state
+            controls.reset();   // requires a prior controls.saveState() after framing
+            controls.update();
+        });
+
+
+        window.viewerDebug = {
+            rotateX: (r) => { if (modelGroup) modelGroup.rotation.x += r; },
+            rotateY: (r) => { if (modelGroup) modelGroup.rotation.y += r; },
+            rotateZ: (r) => { if (modelGroup) modelGroup.rotation.z += r; },
+            modelExists: () => !!window.__embeddedModel
+        };
+
+        window.addEventListener('keydown', (e) => {
+  if (e.key === 'f' || e.key === 'F') {
+    frame(modelGroup, 1.15);
+    controls.saveState();
+    controls.update();
+  }
+});
+
+
+// add a toggle for help overlay (optional)
+const hint = document.getElementById('controls-hint'); // create the element in HTML first
+const hintBtn = document.createElement('button');
+hintBtn.textContent = '?';
+hintBtn.title = 'Show controls';
+hintBtn.style.marginLeft = '6px';
+hintBtn.onclick = () => {
+  if (!hint) return;
+  hint.style.display = (hint.style.display === 'none' || !hint.style.display) ? 'block' : 'none';
+};
+document.querySelector('#toolbar').appendChild(hintBtn);
+
+
+    </script>
+</body>
+
+</html>
