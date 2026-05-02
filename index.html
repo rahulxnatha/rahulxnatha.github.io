@@ -36,7 +36,6 @@
         .dark ::-webkit-scrollbar-thumb { background: #475569; }
         ::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
         
-        /* Hide scrollbar for tabs but allow scrolling */
         .no-scrollbar::-webkit-scrollbar { display: none; }
         .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
 
@@ -46,54 +45,114 @@
         .chat-bubble { animation: fadeIn 0.3s ease-out; }
         @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
 
-        .loader { border: 4px solid #f3f3f3; border-top: 4px solid #3b82f6; border-radius: 50%; width: 40px; height: 40px; animation: spin 1s linear infinite; }
-        .dark .loader { border-color: #1e293b; border-top-color: #3b82f6; }
-        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
-        
-        /* Animated Title Setup */
-        .title-slot-container {
-            display: inline-block;
-            height: 1.5em;
-            overflow: hidden;
-            vertical-align: bottom;
-            position: relative;
-        }
-        .title-slot-track {
-            display: flex;
-            flex-direction: column;
-        }
-        .title-slot-item {
-            height: 1.5em;
-            line-height: 1.5em;
-            white-space: nowrap;
-        }
-
         /* Fixed Layout */
-        #main-wrapper { display: flex; height: 100vh; overflow: hidden; }
+        #main-wrapper { display: flex; height: 100vh; overflow: hidden; padding-top: 4rem; }
         #left-content { flex: 1; overflow-y: auto; scroll-behavior: smooth; position: relative; }
         
         /* Aside States */
         #right-aside { transition: all 0.3s ease; display: flex; flex-direction: column; border-left-width: 1px; }
         #right-aside.aps-dock { width: 100%; max-width: 450px; }
         #right-aside.aps-min { position: fixed; bottom: 1.5rem; right: 1.5rem; width: 320px; height: 50px; z-index: 50; border-radius: 0.5rem; overflow: hidden; box-shadow: 0 10px 25px -5px rgba(0,0,0,0.2); }
-        #right-aside.aps-max { position: fixed; inset: 0; width: 100%; max-width: 100%; z-index: 50; border-left-width: 0; }
+        #right-aside.aps-max { position: fixed; inset: 0; top: 4rem; width: 100%; max-width: 100%; z-index: 50; border-left-width: 0; }
         #right-aside.aps-closed { display: none; }
         
         @media (max-width: 768px) {
             #main-wrapper { flex-direction: column; }
-            #right-aside.aps-dock { position: fixed; inset: 0; z-index: 50; transform: translateX(100%); max-width: 100%; }
+            #right-aside.aps-dock { position: fixed; inset: 0; top: 4rem; z-index: 50; transform: translateX(100%); max-width: 100%; }
             #right-aside.aps-dock.open { transform: translateX(0); }
         }
     </style>
 </head>
-<body class="font-sans text-left text-slate-800 bg-slate-50 dark:bg-darkBg dark:text-slate-200 antialiased selection:bg-blue-200 selection:text-blue-900">
+<body class="font-sans text-left text-slate-800 bg-slate-50 dark:bg-darkBg dark:text-slate-200 antialiased selection:bg-blue-200 selection:text-blue-900 overflow-hidden">
 
     <div id="app-container" class="h-screen w-full text-left">
-        <div class="h-full w-full flex flex-col items-center justify-center">
-            <div class="loader mb-4"></div>
-            <p class="text-slate-500 dark:text-slate-400 font-medium text-left">Loading environment...</p>
+        <!-- Generative Pre-JS Loading Animation -->
+        <div id="loader-wrapper" class="fixed inset-0 z-[100] bg-slate-50 dark:bg-slate-900 flex flex-col justify-center px-8 md:px-24 overflow-hidden transition-opacity duration-700 text-left">
+            <canvas id="loader-canvas" class="absolute inset-0 w-full h-full z-0"></canvas>
+            
+            <div class="relative z-10 flex flex-col items-start pointer-events-none select-none text-left">
+                <h1 class="text-4xl md:text-6xl font-bold tracking-wider uppercase text-slate-800 dark:text-white mb-6 drop-shadow-sm text-left">Loading<br/>Platform</h1>
+                <div class="flex items-center gap-4 text-left">
+                    <i class="fa-solid fa-circle-notch fa-spin text-secondary text-2xl"></i>
+                    <p class="text-sm font-mono text-secondary tracking-widest uppercase text-left" id="loader-status">Initializing Workspace...</p>
+                </div>
+            </div>
         </div>
     </div>
+
+    <!-- Inline Script for Generative Full-Screen Canvas Loader -->
+    <script>
+        (function initAdvancedLoader() {
+            const canvas = document.getElementById('loader-canvas');
+            if(!canvas) return;
+            const ctx = canvas.getContext('2d');
+            let w, h;
+            let particles = [];
+            
+            function resize() {
+                w = canvas.width = window.innerWidth;
+                h = canvas.height = window.innerHeight;
+            }
+            window.addEventListener('resize', resize);
+            resize();
+
+            // Detect theme naturally
+            const isDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+            const bgTrail = isDark ? 'rgba(15, 23, 42, 0.25)' : 'rgba(248, 250, 252, 0.25)'; // slate-900 / slate-50
+            const lColorRGB = isDark ? '59, 130, 246' : '37, 99, 235'; // secondary blue
+
+            // Create particles
+            for(let i=0; i < (window.innerWidth < 768 ? 40 : 100); i++) {
+                particles.push({
+                    x: Math.random() * w, y: Math.random() * h,
+                    vx: (Math.random() - 0.5) * 1.5, vy: (Math.random() - 0.5) * 1.5,
+                    size: Math.random() * 2 + 1
+                });
+            }
+
+            let animId;
+            function draw() {
+                // Background fade for motion trails
+                ctx.fillStyle = bgTrail;
+                ctx.fillRect(0, 0, w, h);
+
+                particles.forEach((p, i) => {
+                    p.x += p.vx; p.y += p.vy;
+                    if(p.x < 0 || p.x > w) p.vx *= -1;
+                    if(p.y < 0 || p.y > h) p.vy *= -1;
+
+                    ctx.beginPath();
+                    ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
+                    ctx.fillStyle = `rgb(${lColorRGB})`;
+                    ctx.fill();
+
+                    // Connect particles within distance
+                    for(let j=i+1; j<particles.length; j++) {
+                        const p2 = particles[j];
+                        const dist = Math.hypot(p.x - p2.x, p.y - p2.y);
+                        if(dist < 150) {
+                            ctx.beginPath();
+                            ctx.moveTo(p.x, p.y);
+                            ctx.lineTo(p2.x, p2.y);
+                            ctx.strokeStyle = `rgba(${lColorRGB}, ${1 - dist/150})`;
+                            ctx.lineWidth = 0.8;
+                            ctx.stroke();
+                        }
+                    }
+                });
+                
+                // Random technical text updates
+                if(Math.random() < 0.02) {
+                    const statuses = ["Loading Assets...", "Compiling Geometry...", "Syncing Database...", "Preparing Interface...", "Almost Ready..."];
+                    const statusEl = document.getElementById('loader-status');
+                    if(statusEl) statusEl.innerText = statuses[Math.floor(Math.random() * statuses.length)];
+                }
+                animId = requestAnimationFrame(draw);
+            }
+            draw();
+            window._loaderAnimId = animId;
+        })();
+    </script>
 
     <script>
         // ==========================================
@@ -102,22 +161,28 @@
         const GOOGLE_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbyrkPTKCVNyKSmR0jFbjKpdJfJ019fce37Kvv9oWqQh8cS__ILtv7eFN98TwuRFBI9nAg/exec"; 
         let passcode = ""; 
         
-        // Tab & Navigation State
         let openTabs = ["chatbot"];
         let activeAsideTab = "chatbot"; 
-        let aps = "dock"; // aside pane state: dock, min, max, closed
-        let isAsideOpenMobile = false; // Used strictly for mobile sliding
+        let aps = "dock"; 
+        let viewMode = "default"; 
+        let isAsideOpenMobile = false;
+        let isSettingsOpen = false;
+        let isNavMenuOpen = false;
+        let isInitialLoad = true; 
         
+        let activeScrollSec = null;
+        let activeScrollSub = null;
         let adminPath = []; 
         let chatHistory = [{ sender: 'bot', text: "Hello! I am Virtual Rahul. I can help you navigate the portfolio or answer quick questions." }];
         let titleInterval;
-        let profileBlobShape = "50%"; // Default
+        let profileBlobShape = "50%";
 
         // ==========================================
         // 2. DEFAULT DATA STRUCTURE 
         // ==========================================
         let appData = {
             uiText: {
+                brandLogo: "", 
                 siteTitle: "Rahul Natha",
                 botName: "Virtual Rahul",
                 relatedTabsBtn: "See Related Items",
@@ -146,7 +211,11 @@
                                 {
                                     id: "tile_exp_1",
                                     heading: "Senior Research Fellow",
+                                    subtitle: "Mechanical Engineering",
+                                    date: "03/2022 - 03/2026",
+                                    location: "Hyderabad, India",
                                     description: "Designed and developed mechanical systems for closed-loop electromechanical actuation focusing on high-precision motion control.\n\nLed 3D CAD modelling of multi-component assemblies. Performed static structural analysis in ANSYS Mechanical.",
+                                    tabText: "Designed and developed mechanical systems for closed-loop electromechanical actuation focusing on high-precision motion control.\n\nLed 3D CAD modelling of multi-component assemblies. Performed static structural analysis in ANSYS Mechanical.",
                                     icon: "fa-rocket",
                                     bgImage: "",
                                     mediaLinks: [],
@@ -161,7 +230,11 @@
                                 {
                                     id: "tile_exp_2",
                                     heading: "Mechanical Engineer",
+                                    subtitle: "Full Time",
+                                    date: "05/2021 - 03/2022",
+                                    location: "Hyderabad, India",
                                     description: "Created high-fidelity technical illustrations in IsoDraw for Bombardier train systems. Digitized legacy 2D hardware drawings into parametric 3D CAD models.",
+                                    tabText: "Created high-fidelity technical illustrations in IsoDraw for Bombardier train systems. Digitized legacy 2D hardware drawings into parametric 3D CAD models.",
                                     icon: "fa-train",
                                     bgImage: "",
                                     mediaLinks: [],
@@ -183,7 +256,11 @@
                                 {
                                     id: "tile_skill_1",
                                     heading: "CAD / CAE",
+                                    subtitle: "Software Mastery",
+                                    date: "",
+                                    location: "",
                                     description: "SolidWorks, ANSYS Mechanical, CATIA, Siemens NX, Creo Parametric, KISSsoft, Fusion 360, AutoCAD.",
+                                    tabText: "SolidWorks, ANSYS Mechanical, CATIA, Siemens NX, Creo Parametric, KISSsoft, Fusion 360, AutoCAD.",
                                     icon: "fa-cube",
                                     bgImage: "",
                                     mediaLinks: [],
@@ -192,7 +269,11 @@
                                 {
                                     id: "tile_skill_2",
                                     heading: "Design Specialisation",
+                                    subtitle: "Core Domains",
+                                    date: "",
+                                    location: "",
                                     description: "Precision gear trains, electromechanical actuation systems, packaging of electronics, bearing selection, sheet metal.",
+                                    tabText: "Precision gear trains, electromechanical actuation systems, packaging of electronics, bearing selection, sheet metal.",
                                     icon: "fa-gears",
                                     bgImage: "",
                                     mediaLinks: [],
@@ -237,8 +318,13 @@
             return `${r()}% ${r()}% ${r()}% ${r()}% / ${r()}% ${r()}% ${r()}% ${r()}%`;
         }
 
-        // --- URL State Encoders/Decoders ---
-        // Format: s-ss-t (1-based indices)
+        function parseDateForSort(dateStr) {
+            if (!dateStr) return 0;
+            const years = dateStr.match(/\d{4}/g);
+            if (years) return Math.max(...years.map(Number));
+            return 0;
+        }
+
         function encodeTileToPath(tileId) {
             if (tileId === 'chatbot') return 'chatbot';
             if (tileId.startsWith('newtab_')) return tileId;
@@ -265,22 +351,15 @@
 
         function syncStateToURL() {
             if(window.location.hash === '#admin') return;
-            
             try {
                 const url = new URL(window.location);
-                
-                // Tile & Tab logic
                 url.searchParams.set('tile', encodeTileToPath(activeAsideTab));
-                const tabPaths = openTabs.map(t => encodeTileToPath(t)).join('_');
-                url.searchParams.set('tab', tabPaths);
-                
-                // State logic
+                url.searchParams.set('tab', openTabs.map(t => encodeTileToPath(t)).join('_'));
                 url.searchParams.set('aps', aps);
+                url.searchParams.set('view', viewMode);
                 url.searchParams.set('theme', document.documentElement.classList.contains('dark') ? 'dark' : 'light');
-                
                 window.history.replaceState({}, '', url);
             } catch (e) {
-                // Silently fail in environments that restrict history modification (like this preview sandbox)
                 console.warn("URL state syncing is disabled in this preview environment.");
             }
         }
@@ -288,7 +367,6 @@
         function loadStateFromURL() {
             const params = new URLSearchParams(window.location.search);
             
-            // Parse Tabs
             const tabParam = params.get('tab');
             if(tabParam) {
                 const paths = tabParam.split('_');
@@ -296,7 +374,6 @@
                 if(openTabs.length === 0) openTabs = ['chatbot'];
             }
             
-            // Parse Active Tile
             const tileParam = params.get('tile');
             if(tileParam) {
                 const decoded = decodePathToTile(tileParam);
@@ -304,11 +381,12 @@
                 else activeAsideTab = openTabs[0];
             }
             
-            // Parse Aside State
             const apsParam = params.get('aps');
             if(apsParam && ['dock', 'min', 'max', 'closed'].includes(apsParam)) aps = apsParam;
 
-            // Parse Theme & Handle Expiry
+            const viewParam = params.get('view');
+            if(viewParam && ['default', 'timeline'].includes(viewParam)) viewMode = viewParam;
+
             const themeParam = params.get('theme');
             const storedTheme = JSON.parse(localStorage.getItem('themePref'));
             const now = new Date().getTime();
@@ -369,78 +447,162 @@
                     container.innerHTML = renderPublicShell();
                     document.getElementById('left-content').innerHTML = renderLeftContent();
                     setupAnimatedTitles();
+                    setupScrollSpy();
                 }
+                
+                document.getElementById('left-content-dynamic').innerHTML = viewMode === 'timeline' ? renderTimelineView() : renderCategorizedView();
+                
+                updateSettingsMenuHTML();
                 updateAsideUI();
                 updateTileHighlights();
+                updateBreadcrumbs();
                 syncStateToURL();
+
+                if (isInitialLoad && activeAsideTab !== 'chatbot' && !activeAsideTab.startsWith('newtab_')) {
+                    setTimeout(() => {
+                        const activeTileEl = document.getElementById(`dom-tile-${activeAsideTab}`);
+                        if (activeTileEl) activeTileEl.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                        
+                        const activeTabEl = document.getElementById(`tab-btn-${activeAsideTab}`);
+                        if (activeTabEl) activeTabEl.scrollIntoView({ behavior: 'smooth', inline: 'center' });
+                    }, 500);
+                    isInitialLoad = false;
+                }
             }
         }
 
+        function updateSettingsMenuHTML() {
+            const menu = document.getElementById('settings-menu');
+            if(!menu) return;
+
+            const isDark = document.documentElement.classList.contains('dark');
+            const themeToggleKnobClass = isDark ? 'translate-x-6' : 'translate-x-1';
+            const themeToggleBgClass = isDark ? 'bg-secondary' : 'bg-slate-300 dark:bg-slate-600';
+
+            menu.innerHTML = `
+                <h3 class="font-bold text-primary dark:text-white mb-4 border-b border-slate-100 dark:border-slate-800 pb-3 text-left"><i class="fa-solid fa-sliders text-secondary mr-2"></i> Settings</h3>
+                
+                <div class="mb-5 text-left border-b border-slate-100 dark:border-slate-800 pb-5">
+                    <div class="flex items-center justify-between">
+                        <div class="text-left">
+                            <p class="text-sm font-semibold text-slate-700 dark:text-slate-300 text-left">Dark Mode</p>
+                            <p class="text-xs text-slate-500 dark:text-slate-400 mt-0.5 text-left">Toggle application theme</p>
+                        </div>
+                        <button onclick="toggleUserTheme()" class="relative inline-flex h-6 w-12 flex-shrink-0 items-center rounded-full transition-colors focus:outline-none ${themeToggleBgClass}" id="theme-toggle">
+                            <span class="inline-block h-4 w-4 transform rounded-full bg-white transition-transform duration-200 ease-in-out ${themeToggleKnobClass} shadow-sm"></span>
+                        </button>
+                    </div>
+                </div>
+
+                <div class="text-left">
+                    <label class="block text-sm font-semibold text-slate-700 dark:text-slate-300 mb-1 text-left">Layout View</label>
+                    <p class="text-xs text-slate-500 dark:text-slate-400 mb-3 text-left">Select portfolio arrangement</p>
+                    <div class="relative text-left">
+                        <select onchange="setViewMode(this.value)" class="appearance-none w-full bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-lg py-2.5 pl-3 pr-10 text-sm font-medium text-slate-700 dark:text-slate-200 focus:outline-none focus:ring-2 focus:ring-secondary/50 focus:border-secondary transition-colors cursor-pointer text-left shadow-sm">
+                            <option value="default" ${viewMode === 'default' ? 'selected' : ''}>Categorized (Default)</option>
+                            <option value="timeline" ${viewMode === 'timeline' ? 'selected' : ''}>Chronological Timeline</option>
+                        </select>
+                        <i class="fa-solid fa-chevron-down absolute right-3 top-3.5 text-slate-400 text-xs pointer-events-none"></i>
+                    </div>
+                </div>
+            `;
+        }
+
         function renderPublicShell() {
+            let brandHtml = `<span class="font-bold text-primary dark:text-white text-lg truncate text-left">${appData.uiText.siteTitle}</span>`;
+            if (appData.uiText.brandLogo && appData.uiText.brandLogo.trim() !== '') {
+                const bDriveData = parseDriveLink(appData.uiText.brandLogo);
+                const src = bDriveData && bDriveData.id ? bDriveData.imageViewUrl : appData.uiText.brandLogo;
+                brandHtml = `<img src="${src}" alt="${appData.uiText.siteTitle}" class="h-8 max-w-[150px] object-contain">`;
+            }
+
+            let dropdownMenuHtml = `<div class="flex flex-col text-left">`;
+            dropdownMenuHtml += `<div onclick="scrollToNavTarget('top')" class="p-3 border-b border-slate-100 dark:border-slate-800 hover:bg-slate-50 dark:hover:bg-slate-700/50 cursor-pointer font-bold text-primary dark:text-white transition-colors text-left">Overview (Top)</div>`;
+            
+            appData.sections.forEach(sec => {
+                dropdownMenuHtml += `<div onclick="scrollToNavTarget('nav-sec-${sec.id}')" class="p-3 bg-slate-50/50 dark:bg-slate-800/50 hover:bg-slate-100 dark:hover:bg-slate-700 border-b border-slate-100 dark:border-slate-800 cursor-pointer font-semibold text-slate-800 dark:text-slate-200 transition-colors text-left">${sec.name}</div>`;
+                sec.subsections.forEach(sub => {
+                    dropdownMenuHtml += `<div onclick="scrollToNavTarget('nav-sub-${sub.id}')" class="p-3 pl-8 hover:bg-slate-50 dark:hover:bg-slate-800/80 cursor-pointer text-sm text-slate-600 dark:text-slate-400 border-b border-slate-50 dark:border-slate-800/50 transition-colors flex items-center gap-2 text-left">
+                                            <div class="w-1 h-1 rounded-full bg-slate-300 dark:bg-slate-600"></div><span>${sub.name}</span>
+                                         </div>`;
+                });
+            });
+            dropdownMenuHtml += `</div>`;
+
             return `
-                <div id="main-wrapper" class="bg-slate-100 dark:bg-slate-900 text-left">
-                    <!-- Mobile Nav -->
-                    <div class="fixed top-0 left-0 w-full z-40 bg-white/80 dark:bg-slate-900/80 backdrop-blur-md border-b border-slate-200 dark:border-slate-800 flex justify-between items-center p-4 h-16 md:hidden">
-                        <h1 class="font-bold text-primary dark:text-white text-lg text-left" id="mobile-title">${appData.uiText.siteTitle}</h1>
-                        <div class="flex gap-4 items-center">
-                            <button onclick="toggleUserTheme()" class="text-slate-600 dark:text-slate-300 text-xl"><i class="fa-solid fa-circle-half-stroke"></i></button>
-                            <button onclick="toggleMobileAside()" class="text-slate-600 dark:text-slate-300 text-xl"><i class="fa-solid fa-bars-staggered"></i></button>
+                <header class="fixed top-0 left-0 w-full z-40 bg-white/80 dark:bg-slate-900/80 backdrop-blur-md border-b border-slate-200 dark:border-slate-800 flex justify-between items-center p-3 md:px-6 h-16 shadow-sm text-left">
+                    <div class="flex items-center gap-4 md:gap-8 flex-1 overflow-visible text-left">
+                        <div class="flex-shrink-0 flex items-center cursor-pointer text-left" onclick="scrollToNavTarget('top')">
+                            ${brandHtml}
+                        </div>
+                        
+                        <div class="hidden sm:flex relative items-center bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-full py-1.5 px-4 shadow-sm text-sm font-medium text-slate-700 dark:text-slate-200 text-left" id="header-nav-container">
+                            <div id="dynamic-breadcrumbs" class="flex items-center gap-2 mr-2 text-left whitespace-nowrap overflow-hidden max-w-[300px]">
+                                <span onclick="scrollToNavTarget('top')" class="hover:text-secondary cursor-pointer transition-colors text-left font-semibold">Overview</span>
+                            </div>
+                            <button onclick="toggleNavMenu(event)" id="nav-dropdown-btn" class="border-l border-slate-300 dark:border-slate-600 pl-3 text-slate-400 hover:text-secondary transition-colors focus:outline-none flex items-center justify-center">
+                                <i class="fa-solid fa-chevron-down text-xs transition-transform duration-300" id="nav-dropdown-icon"></i>
+                            </button>
+                            
+                            <div id="custom-nav-menu" class="absolute top-[calc(100%+0.75rem)] left-0 w-72 bg-white dark:bg-darkCard rounded-xl shadow-xl border border-slate-200 dark:border-slate-700 overflow-hidden z-50 flex-col max-h-[70vh] overflow-y-auto text-left transform opacity-0 scale-95 transition-all duration-200 origin-top-left invisible">
+                                ${dropdownMenuHtml}
+                            </div>
                         </div>
                     </div>
+                    
+                    <div class="flex gap-4 items-center flex-shrink-0 text-left">
+                        <button onclick="toggleSettings()" class="text-slate-600 dark:text-slate-300 text-xl hover:text-secondary transition-colors relative" id="settings-toggle-btn">
+                            <i class="fa-solid fa-gear"></i>
+                        </button>
+                        <button onclick="toggleMobileAside()" class="text-slate-600 dark:text-slate-300 text-xl hover:text-secondary transition-colors md:hidden">
+                            <i class="fa-solid fa-bars-staggered"></i>
+                        </button>
+                    </div>
 
-                    <!-- Desktop Dark Mode -->
-                    <button onclick="toggleUserTheme()" class="hidden md:flex fixed bottom-6 left-6 z-50 w-12 h-12 bg-white dark:bg-slate-800 rounded-full shadow-lg border border-slate-200 dark:border-slate-700 items-center justify-center text-slate-600 dark:text-slate-300 hover:text-secondary transition-colors">
-                        <i class="fa-solid fa-circle-half-stroke text-xl"></i>
-                    </button>
+                    <!-- Settings Menu -->
+                    <div id="settings-menu" class="hidden absolute top-16 right-4 md:right-6 z-50 w-72 bg-white dark:bg-darkCard rounded-xl shadow-2xl border border-slate-200 dark:border-slate-700 p-5 text-left">
+                        <!-- Populated by JS -->
+                    </div>
+                </header>
 
-                    <!-- Left Scrolling Content -->
-                    <div id="left-content" class="pt-16 md:pt-0 pb-12 relative flex-1 text-left"></div>
+                <div id="main-wrapper" class="bg-slate-100 dark:bg-slate-900 text-left relative">
+                    <div id="left-content" class="pb-12 relative flex-1 text-left"></div>
 
-                    <!-- Right Fixed Aside -->
                     <aside id="right-aside" class="border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 shadow-xl md:shadow-none text-left aps-${aps}">
-                        
-                        <!-- Top Close for Mobile -->
-                        <div class="md:hidden flex justify-end p-2 bg-slate-100 dark:bg-slate-900 border-b border-slate-200 dark:border-slate-700">
+                        <div class="md:hidden flex justify-end p-2 bg-slate-100 dark:bg-slate-900 border-b border-slate-200 dark:border-slate-700 text-left">
                             <button onclick="toggleMobileAside()" class="text-slate-500 text-xl w-8 h-8 flex items-center justify-center bg-white dark:bg-slate-800 rounded-full"><i class="fa-solid fa-xmark"></i></button>
                         </div>
 
-                        <!-- Browser-like Tab Bar -->
-                        <div class="flex items-center bg-slate-100 dark:bg-slate-900 border-b border-slate-200 dark:border-slate-700 pr-2">
-                            <div class="flex-1 flex items-center overflow-hidden relative group">
+                        <div class="flex items-center bg-slate-100 dark:bg-slate-900 border-b border-slate-200 dark:border-slate-700 pr-2 text-left">
+                            <div class="flex-1 flex items-center overflow-hidden relative group text-left">
                                 <button onclick="scrollTabs(-150)" class="absolute left-0 top-0 bottom-0 bg-gradient-to-r from-slate-100 dark:from-slate-900 to-transparent w-8 z-10 flex items-center justify-start pl-1 opacity-0 group-hover:opacity-100 transition-opacity"><i class="fa-solid fa-chevron-left text-xs text-slate-500"></i></button>
-                                <div id="aside-tabs" class="flex overflow-x-auto no-scrollbar pt-2 flex-1 scroll-smooth"></div>
+                                <div id="aside-tabs" class="flex overflow-x-auto no-scrollbar pt-2 flex-1 scroll-smooth text-left"></div>
                                 <button onclick="scrollTabs(150)" class="absolute right-0 top-0 bottom-0 bg-gradient-to-l from-slate-100 dark:from-slate-900 to-transparent w-8 z-10 flex items-center justify-end pr-1 opacity-0 group-hover:opacity-100 transition-opacity"><i class="fa-solid fa-chevron-right text-xs text-slate-500"></i></button>
                             </div>
                             <button onclick="addNewTab()" class="ml-1 w-8 h-8 rounded hover:bg-slate-200 dark:hover:bg-slate-700 flex items-center justify-center text-slate-500 transition-colors flex-shrink-0"><i class="fa-solid fa-plus text-sm"></i></button>
                             
-                            <!-- Window Controls -->
-                            <div class="flex items-center ml-2 border-l border-slate-300 dark:border-slate-600 pl-2 gap-1 flex-shrink-0">
+                            <div class="flex items-center ml-2 border-l border-slate-300 dark:border-slate-600 pl-2 gap-1 flex-shrink-0 text-left">
                                 <button onclick="setAsideState('min')" class="w-8 h-8 rounded hover:bg-slate-200 dark:hover:bg-slate-700 flex items-center justify-center text-slate-500"><i class="fa-solid fa-minus text-sm"></i></button>
                                 <button onclick="setAsideState(aps === 'max' ? 'dock' : 'max')" class="w-8 h-8 rounded hover:bg-slate-200 dark:hover:bg-slate-700 flex items-center justify-center text-slate-500"><i class="fa-regular fa-window-maximize text-sm"></i></button>
                                 <button onclick="setAsideState('closed')" class="w-8 h-8 rounded hover:bg-red-500 hover:text-white dark:hover:bg-red-600 flex items-center justify-center text-slate-500 transition-colors"><i class="fa-solid fa-xmark text-sm"></i></button>
                             </div>
                         </div>
 
-                        <!-- Content wrapper (hidden when minified) -->
                         <div id="aside-body-wrapper" class="flex-col flex-1 overflow-hidden ${aps === 'min' ? 'hidden' : 'flex'} text-left">
-                            <!-- Search Bar -->
-                            <div class="p-3 border-b border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 flex-shrink-0 relative">
-                                <div class="relative">
+                            <div class="p-3 border-b border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 flex-shrink-0 relative text-left">
+                                <div class="relative text-left">
                                     <i class="fa-solid fa-search absolute left-3 top-2.5 text-slate-400 text-sm"></i>
                                     <input type="text" id="aside-search-input" oninput="handleSearch(this.value)" class="w-full bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-lg py-2 pl-9 pr-4 text-sm text-slate-800 dark:text-slate-200 focus:outline-none focus:border-secondary transition-colors text-left" placeholder="Search portfolio headings...">
                                 </div>
                                 <div id="search-results" class="absolute left-3 right-3 top-full mt-1 bg-white dark:bg-darkCard border border-slate-200 dark:border-slate-700 shadow-xl rounded-lg overflow-hidden z-50 hidden max-h-64 overflow-y-auto text-left"></div>
                             </div>
-                            
-                            <!-- Tab Content -->
                             <div class="flex-1 overflow-y-auto relative bg-slate-50 dark:bg-slate-900 text-left" id="aside-content"></div>
                         </div>
 
-                        <!-- Minimized Overlay View -->
                         <div id="aside-min-view" class="${aps === 'min' ? 'flex' : 'hidden'} flex-1 items-center justify-between px-4 bg-white dark:bg-slate-800 cursor-pointer hover:bg-slate-50 dark:hover:bg-slate-700 text-left" onclick="setAsideState('dock')">
-                            <div class="flex items-center gap-3 truncate">
+                            <div class="flex items-center gap-3 truncate text-left">
                                 <i class="fa-solid fa-window-restore text-secondary"></i>
-                                <span class="font-medium text-sm text-slate-700 dark:text-slate-300 truncate" id="min-title-text">Restore Panel</span>
+                                <span class="font-medium text-sm text-slate-700 dark:text-slate-300 truncate text-left" id="min-title-text">Restore Panel</span>
                             </div>
                             <button onclick="setAsideState('closed'); event.stopPropagation();" class="text-slate-400 hover:text-red-500"><i class="fa-solid fa-xmark"></i></button>
                         </div>
@@ -463,82 +625,27 @@
                 profileImgHtml = `<img src="${pDriveData.imageViewUrl}" alt="${appData.hero.name}" class="w-32 h-32 md:w-40 md:h-40 object-cover border-4 border-white dark:border-slate-800 shadow-xl relative z-10" style="border-radius: ${profileBlobShape}; transition: border-radius 0.5s ease;">`;
             }
 
-            const titlesArray = appData.hero.animatedTitles.split(',').map(t => t.trim()).filter(t => t);
-            let slotItems = titlesArray.map(t => `<div class="title-slot-item text-left w-full">${t}</div>`).join('');
-            if (titlesArray.length > 1) {
-                slotItems += `<div class="title-slot-item text-left w-full">${titlesArray[0]}</div>`; // Clone first item for seamless loop
-            }
-
             const heroHTML = `
-                <section class="relative min-h-[60vh] flex flex-col justify-center py-20 px-6 border-b border-slate-200 dark:border-slate-800 text-left" style="${heroBg}">
+                <section id="top" class="relative min-h-[60vh] flex flex-col justify-center py-20 px-6 border-b border-slate-200 dark:border-slate-800 text-left scroll-target" data-name="Overview">
+                    <div class="absolute inset-0 z-0" style="${heroBg}"></div>
                     ${heroOverlay}
-                    <div class="relative z-10 max-w-4xl mx-auto w-full flex flex-col items-start">
-                        <div class="mb-8">${profileImgHtml}</div>
+                    <div class="relative z-10 max-w-4xl mx-auto w-full flex flex-col items-start text-left">
+                        <div class="mb-8 text-left">${profileImgHtml}</div>
                         <h1 class="text-5xl md:text-7xl font-bold text-primary dark:text-white tracking-tight mb-4 text-left w-full">${appData.hero.name}</h1>
-                        
                         <div class="text-2xl md:text-3xl text-secondary font-semibold mb-8 text-left w-full">
-                            <div class="title-slot-container w-full text-left">
-                                <div class="title-slot-track items-start" id="hero-title-track">
-                                    ${slotItems}
-                                </div>
+                            <div id="hero-title-container" class="grid w-full text-left relative">
+                                <!-- Titles generated dynamically by JS grid technique -->
                             </div>
                         </div>
-                        
                         <p class="text-lg text-slate-600 dark:text-slate-300 preserve-newlines leading-relaxed max-w-2xl text-left">${appData.hero.bio}</p>
                     </div>
                 </section>
             `;
 
-            const sectionsHTML = appData.sections.map(sec => {
-                let secBg = ""; let secOverlay = "";
-                const sDriveData = parseDriveLink(sec.bgImage);
-                if (sDriveData && sDriveData.id) {
-                    secBg = `background-image: url('${sDriveData.imageViewUrl}'); background-size: cover; background-position: center; background-attachment: fixed;`;
-                    secOverlay = `<div class="absolute inset-0 bg-white/95 dark:bg-slate-900/95 backdrop-blur-sm z-0"></div>`;
-                }
-
-                return `
-                    <section class="relative py-20 px-6 md:px-12 border-b border-slate-200 dark:border-slate-800 text-left" style="${secBg}">
-                        ${secOverlay}
-                        <div class="relative z-10 max-w-4xl mx-auto w-full">
-                            <h2 class="text-3xl font-bold text-primary dark:text-white mb-12 flex items-center gap-4 text-left"><div class="w-8 h-1 bg-secondary rounded"></div> ${sec.name}</h2>
-                            <div class="space-y-12">
-                                ${sec.subsections.map(sub => `
-                                    <div class="text-left w-full">
-                                        <h3 class="text-xl font-semibold text-slate-700 dark:text-slate-300 mb-6 uppercase tracking-wider text-sm text-left">${sub.name}</h3>
-                                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6 w-full">
-                                            ${sub.tiles.map(tile => {
-                                                let tBg = "";
-                                                const tDriveData = parseDriveLink(tile.bgImage);
-                                                if (tDriveData && tDriveData.id) {
-                                                    tBg = `background-image: linear-gradient(rgba(0,0,0,0.6), rgba(0,0,0,0.8)), url('${tDriveData.imageViewUrl}'); background-size: cover; color: white;`;
-                                                }
-                                                const isDarkBg = !!tDriveData && !!tDriveData.id;
-                                                const textClass = isDarkBg ? "text-slate-200" : "text-slate-600 dark:text-slate-400";
-                                                const titleClass = isDarkBg ? "text-white" : "text-primary dark:text-white";
-
-                                                return `
-                                                    <div id="dom-tile-${tile.id}" onclick="tileClicked('${tile.id}')" class="portfolio-tile group cursor-pointer rounded-xl p-6 border shadow-sm transition-all bg-white dark:bg-darkCard relative overflow-hidden text-left" style="${tBg}">
-                                                        <div class="tile-active-indicator absolute top-0 right-0 w-12 h-12 bg-secondary rounded-bl-full flex items-start justify-end p-2 text-white hidden"><i class="fa-solid fa-check text-xs"></i></div>
-                                                        <div class="text-secondary mb-4 text-3xl text-left"><i class="fa-solid ${tile.icon || 'fa-cube'}"></i></div>
-                                                        <h4 class="text-xl font-bold mb-2 text-left ${titleClass}">${tile.heading}</h4>
-                                                        <p class="text-sm line-clamp-3 preserve-newlines text-left ${textClass}">${tile.description}</p>
-                                                    </div>
-                                                `;
-                                            }).join('')}
-                                        </div>
-                                    </div>
-                                `).join('')}
-                            </div>
-                        </div>
-                    </section>
-                `;
-            }).join('');
-
             const footerHTML = `
-                <footer class="py-10 border-t border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 text-left px-6 md:px-12">
-                    <div class="max-w-4xl mx-auto">
-                        <div class="flex gap-6 mb-4 justify-start">
+                <footer class="py-10 border-t border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 text-left px-6 md:px-12 mt-12">
+                    <div class="max-w-4xl mx-auto text-left">
+                        <div class="flex gap-6 mb-4 justify-start text-left">
                             <a href="mailto:${appData.uiText.contactEmail}" class="text-slate-400 hover:text-secondary text-xl"><i class="fa-solid fa-envelope"></i></a>
                             <a href="${appData.uiText.linkedinLink}" target="_blank" class="text-slate-400 hover:text-secondary text-xl"><i class="fa-brands fa-linkedin"></i></a>
                             <a href="${appData.uiText.githubLink}" target="_blank" class="text-slate-400 hover:text-secondary text-xl"><i class="fa-brands fa-github"></i></a>
@@ -548,22 +655,122 @@
                 </footer>
             `;
 
-            return heroHTML + sectionsHTML + footerHTML;
+            return heroHTML + `<div id="left-content-dynamic" class="text-left w-full"></div>` + footerHTML;
         }
 
-        // Targeted updates only
+        function renderCategorizedView() {
+            return appData.sections.map(sec => {
+                let secBg = ""; let secOverlay = "";
+                const sDriveData = parseDriveLink(sec.bgImage);
+                if (sDriveData && sDriveData.id) {
+                    secBg = `background-image: url('${sDriveData.imageViewUrl}'); background-size: cover; background-position: center; background-attachment: fixed;`;
+                    secOverlay = `<div class="absolute inset-0 bg-white/95 dark:bg-slate-900/95 backdrop-blur-sm z-0"></div>`;
+                }
+
+                return `
+                    <section id="nav-sec-${sec.id}" class="relative py-20 px-6 md:px-12 border-b border-slate-200 dark:border-slate-800 text-left scroll-target nav-sec-container" data-name="${sec.name.replace(/"/g, '&quot;')}" style="${secBg}">
+                        ${secOverlay}
+                        <div class="relative z-10 max-w-4xl mx-auto w-full text-left">
+                            <h2 class="text-3xl font-bold text-primary dark:text-white mb-12 flex items-center gap-4 text-left"><div class="w-8 h-1 bg-secondary rounded"></div> ${sec.name}</h2>
+                            <div class="space-y-12 text-left w-full">
+                                ${sec.subsections.map(sub => `
+                                    <div id="nav-sub-${sub.id}" class="text-left w-full scroll-target nav-sub-container" data-sec-id="nav-sec-${sec.id}" data-name="${sub.name.replace(/"/g, '&quot;')}">
+                                        <h3 class="text-xl font-semibold text-slate-700 dark:text-slate-300 mb-6 uppercase tracking-wider text-sm text-left">${sub.name}</h3>
+                                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6 w-full text-left">
+                                            ${sub.tiles.map(tile => generateTileCardHTML(tile)).join('')}
+                                        </div>
+                                    </div>
+                                `).join('')}
+                            </div>
+                        </div>
+                    </section>
+                `;
+            }).join('');
+        }
+
+        function renderTimelineView() {
+            let allTiles = [];
+            appData.sections.forEach(s => s.subsections.forEach(ss => ss.tiles.forEach(t => {
+                allTiles.push({...t, secName: s.name, subName: ss.name, sortDate: parseDateForSort(t.date)});
+            })));
+
+            const datedTiles = allTiles.filter(t => t.date && t.date.trim() !== '').sort((a, b) => b.sortDate - a.sortDate);
+            const undatedTiles = allTiles.filter(t => !t.date || t.date.trim() === '');
+
+            let html = `
+                <section class="py-20 px-6 md:px-12 text-left bg-slate-50 dark:bg-darkBg relative scroll-target">
+                    <div class="max-w-4xl mx-auto w-full relative text-left">
+                        <h2 class="text-3xl font-bold text-primary dark:text-white mb-12 flex items-center gap-4 text-left"><div class="w-8 h-1 bg-secondary rounded"></div> Timeline View</h2>
+                        <div class="border-l-2 border-slate-200 dark:border-slate-700 ml-4 md:ml-6 pl-8 md:pl-12 space-y-12 relative text-left">
+            `;
+
+            datedTiles.forEach(tile => {
+                html += `
+                    <div class="relative text-left">
+                        <div class="absolute -left-[41px] md:-left-[57px] top-6 w-5 h-5 rounded-full bg-secondary border-4 border-slate-50 dark:border-slate-900"></div>
+                        <div class="text-sm text-slate-500 dark:text-slate-400 mb-3 text-left">
+                            <span class="font-bold text-secondary">${tile.date}</span> ${tile.location ? ` | ${tile.location}` : ''}
+                            <div class="text-xs uppercase tracking-wider mt-1 text-left">${tile.secName} > ${tile.subName}</div>
+                        </div>
+                        <div class="w-full md:w-3/4 text-left">
+                            ${generateTileCardHTML(tile)}
+                        </div>
+                    </div>
+                `;
+            });
+
+            html += `</div></div></section>`;
+
+            if (undatedTiles.length > 0) {
+                html += `
+                    <section class="py-16 px-6 md:px-12 text-left bg-white dark:bg-slate-900 border-t border-slate-200 dark:border-slate-800">
+                        <div class="max-w-4xl mx-auto w-full text-left">
+                            <h3 class="text-2xl font-bold text-slate-700 dark:text-slate-300 mb-8 flex items-center gap-4 text-left"><i class="fa-solid fa-list-ul text-slate-400"></i> Undated Elements</h3>
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-6 w-full text-left">
+                                ${undatedTiles.map(t => generateTileCardHTML(t)).join('')}
+                            </div>
+                        </div>
+                    </section>
+                `;
+            }
+
+            return html;
+        }
+
+        function generateTileCardHTML(tile) {
+            let tBg = "";
+            const tDriveData = parseDriveLink(tile.bgImage);
+            if (tDriveData && tDriveData.id) {
+                tBg = `background-image: linear-gradient(rgba(0,0,0,0.6), rgba(0,0,0,0.8)), url('${tDriveData.imageViewUrl}'); background-size: cover; color: white;`;
+            }
+            const isDarkBg = !!tDriveData && !!tDriveData.id;
+            const textClass = isDarkBg ? "text-slate-200" : "text-slate-600 dark:text-slate-400";
+            const titleClass = isDarkBg ? "text-white" : "text-primary dark:text-white";
+
+            const metaInfo = [tile.subtitle, tile.date, tile.location].filter(v => v).join(' | ');
+            const metaHTML = metaInfo ? `<p class="text-xs font-semibold mb-3 ${isDarkBg ? 'text-blue-300' : 'text-secondary'} text-left">${metaInfo}</p>` : '';
+
+            return `
+                <div id="dom-tile-${tile.id}" onclick="tileClicked('${tile.id}')" class="portfolio-tile group cursor-pointer rounded-xl p-6 border shadow-sm transition-all bg-white dark:bg-darkCard relative overflow-hidden text-left" style="${tBg}">
+                    <div class="tile-active-indicator absolute top-0 right-0 w-12 h-12 bg-secondary rounded-bl-full flex items-start justify-end p-2 text-white hidden"><i class="fa-solid fa-check text-xs"></i></div>
+                    <div class="text-secondary mb-4 text-3xl text-left"><i class="fa-solid ${tile.icon || 'fa-cube'}"></i></div>
+                    <h4 class="text-xl font-bold mb-1 text-left ${titleClass}">${tile.heading}</h4>
+                    ${metaHTML}
+                    <p class="text-sm line-clamp-3 preserve-newlines text-left ${textClass}">${tile.description}</p>
+                </div>
+            `;
+        }
+
         function updateAsideUI() {
             const aside = document.getElementById('right-aside');
             if(!aside) return;
 
-            // Class logic for Window state
             aside.className = `border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 shadow-xl md:shadow-none text-left aps-${aps}`;
             if (isAsideOpenMobile) aside.classList.add('open');
 
             document.getElementById('aside-body-wrapper').className = `flex-col flex-1 overflow-hidden ${aps === 'min' ? 'hidden' : 'flex'} text-left`;
             document.getElementById('aside-min-view').className = `${aps === 'min' ? 'flex' : 'hidden'} flex-1 items-center justify-between px-4 bg-white dark:bg-slate-800 cursor-pointer hover:bg-slate-50 dark:hover:bg-slate-700 text-left`;
 
-            // Render Tabs
             const tabsContainer = document.getElementById('aside-tabs');
             tabsContainer.innerHTML = openTabs.map(tabId => {
                 const isActive = tabId === activeAsideTab;
@@ -573,12 +780,12 @@
                 
                 if (tabId === 'chatbot') {
                     if (isActive) document.getElementById('min-title-text').innerText = `Chat with ${appData.uiText.botName.split(' ')[0]}`;
-                    return `<div onclick="openTab('chatbot')" class="px-4 rounded-t-lg cursor-pointer flex items-center gap-2 whitespace-nowrap transition-colors flex-shrink-0 ${activeClasses}">
+                    return `<div id="tab-btn-chatbot" onclick="openTab('chatbot')" class="px-4 rounded-t-lg cursor-pointer flex items-center gap-2 whitespace-nowrap transition-colors flex-shrink-0 text-left ${activeClasses}">
                                 <i class="fa-solid fa-robot"></i> <span class="text-sm">Chat with ${appData.uiText.botName.split(' ')[0]}</span>
                             </div>`;
                 } else if (tabId.startsWith('newtab_')) {
                     if (isActive) document.getElementById('min-title-text').innerText = `New Tab`;
-                    return `<div onclick="openTab('${tabId}')" class="px-4 rounded-t-lg cursor-pointer flex items-center gap-2 whitespace-nowrap transition-colors group flex-shrink-0 ${activeClasses}">
+                    return `<div id="tab-btn-${tabId}" onclick="openTab('${tabId}')" class="px-4 rounded-t-lg cursor-pointer flex items-center gap-2 whitespace-nowrap transition-colors group flex-shrink-0 text-left ${activeClasses}">
                                 <i class="fa-solid fa-layer-group text-xs"></i> <span class="text-sm">Explore</span>
                                 <button onclick="closeTab(event, '${tabId}')" class="ml-1 w-5 h-5 rounded-full flex items-center justify-center hover:bg-slate-200 dark:hover:bg-slate-600 text-slate-400 hover:text-red-500 transition-colors"><i class="fa-solid fa-xmark text-xs"></i></button>
                             </div>`;
@@ -586,14 +793,13 @@
                     const tile = getTileById(tabId);
                     if (!tile) return '';
                     if (isActive) document.getElementById('min-title-text').innerText = tile.heading;
-                    return `<div onclick="openTab('${tile.id}')" class="px-4 rounded-t-lg cursor-pointer flex items-center gap-2 whitespace-nowrap transition-colors group flex-shrink-0 ${activeClasses}">
+                    return `<div id="tab-btn-${tile.id}" onclick="openTab('${tile.id}')" class="px-4 rounded-t-lg cursor-pointer flex items-center gap-2 whitespace-nowrap transition-colors group flex-shrink-0 text-left ${activeClasses}">
                                 <i class="fa-solid ${tile.icon} text-xs"></i> <span class="text-sm truncate max-w-[120px]">${tile.heading}</span>
                                 <button onclick="closeTab(event, '${tile.id}')" class="ml-1 w-5 h-5 rounded-full flex items-center justify-center hover:bg-slate-200 dark:hover:bg-slate-600 text-slate-400 hover:text-red-500 transition-colors"><i class="fa-solid fa-xmark text-xs"></i></button>
                             </div>`;
                 }
             }).join('');
 
-            // Render Tab Content
             const contentContainer = document.getElementById('aside-content');
             if (activeAsideTab === 'chatbot') contentContainer.innerHTML = renderChatbotHTML();
             else if (activeAsideTab.startsWith('newtab_')) contentContainer.innerHTML = renderNewTabHTML();
@@ -631,14 +837,14 @@
                 <div class="flex flex-col h-full absolute inset-0 text-left">
                     <div class="flex-1 p-4 overflow-y-auto" id="chat-window">${msgs}</div>
                     <div class="p-4 bg-white dark:bg-darkCard border-t border-slate-200 dark:border-slate-700 shadow-[0_-4px_6px_-1px_rgba(0,0,0,0.05)] w-full">
-                        <form onsubmit="handleChatSubmit(event)" class="flex gap-2 w-full">
+                        <form onsubmit="handleChatSubmit(event)" class="flex gap-2 w-full text-left">
                             <input type="text" id="chat-input" class="flex-1 bg-slate-100 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 text-slate-800 dark:text-slate-200 text-sm rounded-full px-4 py-2 focus:outline-none focus:border-secondary text-left" placeholder="Ask a question...">
                             <button type="submit" class="bg-secondary hover:bg-blue-600 text-white rounded-full w-10 h-10 flex items-center justify-center transition-colors shadow-sm flex-shrink-0"><i class="fa-solid fa-paper-plane"></i></button>
                         </form>
-                        <div class="flex flex-wrap gap-2 mt-3 w-full justify-start">
-                            <button onclick="sendQuickMessage('Experience')" class="text-xs bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400 px-3 py-1 rounded-full hover:bg-slate-200 dark:hover:bg-slate-700">Experience</button>
-                            <button onclick="sendQuickMessage('Skills')" class="text-xs bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400 px-3 py-1 rounded-full hover:bg-slate-200 dark:hover:bg-slate-700">Skills</button>
-                            <button onclick="sendQuickMessage('Contact')" class="text-xs bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400 px-3 py-1 rounded-full hover:bg-slate-200 dark:hover:bg-slate-700">Contact</button>
+                        <div class="flex flex-wrap gap-2 mt-3 w-full justify-start text-left">
+                            <button onclick="sendQuickMessage('Experience')" class="text-xs bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400 px-3 py-1 rounded-full hover:bg-slate-200 dark:hover:bg-slate-700 text-left">Experience</button>
+                            <button onclick="sendQuickMessage('Skills')" class="text-xs bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400 px-3 py-1 rounded-full hover:bg-slate-200 dark:hover:bg-slate-700 text-left">Skills</button>
+                            <button onclick="sendQuickMessage('Contact')" class="text-xs bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400 px-3 py-1 rounded-full hover:bg-slate-200 dark:hover:bg-slate-700 text-left">Contact</button>
                         </div>
                     </div>
                 </div>
@@ -651,7 +857,7 @@
                 allTilesHtml.push(`
                     <button onclick="openTab('${t.id}')" class="text-left w-full p-3 bg-white dark:bg-darkCard border border-slate-200 dark:border-slate-700 rounded-lg hover:border-secondary dark:hover:border-secondary mb-2 transition-colors flex items-center gap-3 shadow-sm hover:shadow">
                         <div class="w-8 h-8 rounded-full bg-blue-50 dark:bg-blue-900/30 flex items-center justify-center flex-shrink-0"><i class="fa-solid ${t.icon} text-secondary text-xs"></i></div>
-                        <span class="font-medium text-sm text-slate-700 dark:text-slate-300 truncate">${t.heading}</span>
+                        <span class="font-medium text-sm text-slate-700 dark:text-slate-300 truncate text-left w-full">${t.heading}</span>
                     </button>
                 `);
             })));
@@ -684,22 +890,22 @@
                 if (trimmed.toLowerCase().startsWith('<iframe')) {
                     let fixedIframe = trimmed;
                     if(!fixedIframe.includes('w-full')) fixedIframe = fixedIframe.replace('<iframe', '<iframe class="w-full h-full border-none"');
-                    return `<div class="w-full aspect-video mb-4 rounded-lg overflow-hidden border border-slate-200 dark:border-slate-700 shadow-sm bg-slate-100 dark:bg-slate-900">${fixedIframe}</div>`;
+                    return `<div class="w-full aspect-video mb-4 rounded-lg overflow-hidden border border-slate-200 dark:border-slate-700 shadow-sm bg-slate-100 dark:bg-slate-900 text-left">${fixedIframe}</div>`;
                 }
 
                 if (trimmed.match(/\.(jpeg|jpg|gif|png|webp|svg)$/i)) {
-                    return `<div class="w-full mb-4 rounded-lg overflow-hidden shadow-sm bg-slate-100 dark:bg-slate-900"><img src="${trimmed}" class="w-full h-auto"></div>`;
+                    return `<div class="w-full mb-4 rounded-lg overflow-hidden shadow-sm bg-slate-100 dark:bg-slate-900 text-left"><img src="${trimmed}" class="w-full h-auto"></div>`;
                 }
 
                 const driveData = parseDriveLink(trimmed);
                 if (driveData && driveData.id) {
-                    return `<div class="w-full aspect-video mb-4 rounded-lg overflow-hidden border border-slate-200 dark:border-slate-700 shadow-sm bg-slate-100 dark:bg-slate-900">
+                    return `<div class="w-full aspect-video mb-4 rounded-lg overflow-hidden border border-slate-200 dark:border-slate-700 shadow-sm bg-slate-100 dark:bg-slate-900 text-left">
                                 <iframe src="${driveData.iframePreviewUrl}" class="w-full h-full border-none" allow="autoplay"></iframe>
                             </div>`;
                 }
 
                 if (trimmed.startsWith('http')) {
-                    return `<div class="w-full aspect-video mb-4 rounded-lg overflow-hidden border border-slate-200 dark:border-slate-700 shadow-sm bg-slate-100 dark:bg-slate-900">
+                    return `<div class="w-full aspect-video mb-4 rounded-lg overflow-hidden border border-slate-200 dark:border-slate-700 shadow-sm bg-slate-100 dark:bg-slate-900 text-left">
                                 <iframe src="${trimmed}" class="w-full h-full border-none" allow="autoplay"></iframe>
                             </div>`;
                 }
@@ -713,7 +919,7 @@
                     if (!relTile) return '';
                     return `<button onclick="openTab('${relTile.id}')" class="text-left w-full p-3 bg-white dark:bg-darkCard border border-slate-200 dark:border-slate-700 rounded-lg hover:border-secondary dark:hover:border-secondary mb-2 transition-colors flex items-center gap-3 shadow-sm hover:shadow">
                                 <div class="w-8 h-8 rounded-full bg-blue-50 dark:bg-blue-900/30 flex items-center justify-center flex-shrink-0"><i class="fa-solid ${relTile.icon} text-secondary text-xs"></i></div>
-                                <span class="font-medium text-sm text-slate-700 dark:text-slate-300 truncate text-left">${relTile.heading}</span>
+                                <span class="font-medium text-sm text-slate-700 dark:text-slate-300 truncate text-left w-full">${relTile.heading}</span>
                             </button>`;
                 }).join('');
                 
@@ -725,12 +931,16 @@
                 `;
             }
 
+            const metaInfo = [tile.subtitle, tile.date, tile.location].filter(v => v).join(' | ');
+            const metaHTML = metaInfo ? `<p class="text-sm font-semibold mb-4 text-secondary text-left">${metaInfo}</p>` : '';
+
             return `
                 <div class="p-6 absolute inset-0 overflow-y-auto text-left">
                     <div class="w-14 h-14 bg-blue-100 dark:bg-blue-900/30 text-secondary rounded-2xl flex items-center justify-center text-2xl mb-6 shadow-sm">
                         <i class="fa-solid ${tile.icon}"></i>
                     </div>
-                    <h2 class="text-2xl font-bold text-primary dark:text-white mb-4 text-left">${tile.heading}</h2>
+                    <h2 class="text-2xl font-bold text-primary dark:text-white mb-2 text-left">${tile.heading}</h2>
+                    ${metaHTML}
                     <p class="text-slate-600 dark:text-slate-300 preserve-newlines text-sm leading-relaxed mb-8 text-left">${tile.tabText || tile.description}</p>
                     
                     ${mediaHtml}
@@ -743,10 +953,64 @@
         // ==========================================
         // 6. INTERACTIONS & LOGIC
         // ==========================================
+        function toggleSettings() {
+            isSettingsOpen = !isSettingsOpen;
+            const menu = document.getElementById('settings-menu');
+            if (menu) {
+                if (isSettingsOpen) menu.classList.remove('hidden');
+                else menu.classList.add('hidden');
+            }
+        }
+
         function toggleUserTheme() {
             const isDark = !document.documentElement.classList.contains('dark');
             setTheme(isDark);
             syncStateToURL();
+            renderApp(); 
+        }
+
+        // Close dropdowns when clicking outside
+        document.addEventListener('click', (e) => {
+            const menu = document.getElementById('settings-menu');
+            const btn = document.getElementById('settings-toggle-btn');
+            if (isSettingsOpen && menu && !menu.contains(e.target) && (!btn || !btn.contains(e.target))) {
+                isSettingsOpen = false;
+                menu.classList.add('hidden');
+            }
+
+            const navMenu = document.getElementById('custom-nav-menu');
+            const navContainer = document.getElementById('header-nav-container');
+            if (isNavMenuOpen && navMenu && navContainer && !navContainer.contains(e.target)) {
+                toggleNavMenu(null, false);
+            }
+        });
+
+        function toggleNavMenu(e, forceState) {
+            if(e) e.stopPropagation();
+            const menu = document.getElementById('custom-nav-menu');
+            const icon = document.getElementById('nav-dropdown-icon');
+            if (!menu || !icon) return;
+
+            isNavMenuOpen = forceState !== undefined ? forceState : !isNavMenuOpen;
+            
+            if (isNavMenuOpen) {
+                menu.classList.remove('invisible', 'opacity-0', 'scale-95', 'pointer-events-none');
+                menu.classList.add('opacity-100', 'scale-100');
+                icon.style.transform = 'rotate(180deg)';
+            } else {
+                menu.classList.add('opacity-0', 'scale-95', 'pointer-events-none');
+                menu.classList.remove('opacity-100', 'scale-100');
+                icon.style.transform = 'rotate(0deg)';
+                setTimeout(() => { if(!isNavMenuOpen) menu.classList.add('invisible'); }, 200);
+            }
+        }
+
+        function setViewMode(mode) {
+            viewMode = mode;
+            renderApp();
+            isSettingsOpen = false;
+            const menu = document.getElementById('settings-menu');
+            if (menu) menu.classList.add('hidden');
         }
 
         function toggleMobileAside() {
@@ -755,7 +1019,7 @@
         }
 
         function tileClicked(tileId) {
-            if (aps === 'closed') aps = 'dock'; // Re-open aside if closed
+            if (aps === 'closed') aps = 'dock'; 
             openTab(tileId);
         }
 
@@ -769,6 +1033,11 @@
             updateAsideUI();
             updateTileHighlights();
             syncStateToURL();
+
+            setTimeout(() => {
+                const activeTabEl = document.getElementById(`tab-btn-${tabId}`);
+                if (activeTabEl) activeTabEl.scrollIntoView({ behavior: 'smooth', inline: 'center' });
+            }, 50);
         }
 
         function closeTab(e, tabId) {
@@ -850,29 +1119,120 @@
             }, 600);
         }
 
+        function scrollToNavTarget(targetId) {
+            toggleNavMenu(null, false); // close menu
+            if (targetId === 'top') {
+                document.getElementById('left-content').scrollTo({top: 0, behavior: 'smooth'});
+                return;
+            }
+            const targetEl = document.getElementById(targetId);
+            if (targetEl) {
+                targetEl.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            }
+        }
+
+        function updateBreadcrumbs(secObj, subObj) {
+            const container = document.getElementById('dynamic-breadcrumbs');
+            if(!container) return;
+
+            if (viewMode === 'timeline') {
+                container.innerHTML = `<span class="text-slate-500 font-semibold cursor-default text-left">Timeline View</span>`;
+                return;
+            }
+
+            if (!secObj || secObj.id === 'top') {
+                container.innerHTML = `<span onclick="scrollToNavTarget('top')" class="hover:text-secondary cursor-pointer transition-colors text-left font-semibold">Overview</span>`;
+                return;
+            }
+
+            let html = `<span onclick="scrollToNavTarget('${secObj.id}')" class="hover:text-secondary cursor-pointer transition-colors text-left font-semibold truncate max-w-[120px]" title="${secObj.name}">${secObj.name}</span>`;
+            if (subObj) {
+                html += `<span class="text-slate-400 dark:text-slate-500 text-[10px] flex-shrink-0"><i class="fa-solid fa-chevron-right"></i></span>`;
+                html += `<span onclick="scrollToNavTarget('${subObj.id}')" class="hover:text-secondary cursor-pointer transition-colors text-left font-semibold truncate max-w-[120px]" title="${subObj.name}">${subObj.name}</span>`;
+            }
+            container.innerHTML = html;
+        }
+
+        function setupScrollSpy() {
+            const container = document.getElementById('left-content');
+            if(!container) return;
+
+            container.addEventListener('scroll', () => {
+                if (viewMode === 'timeline') {
+                    updateBreadcrumbs(null, null);
+                    return;
+                }
+                
+                const targets = Array.from(document.querySelectorAll('.scroll-target'));
+                let foundSec = null;
+                let foundSub = null;
+
+                for (let i = targets.length - 1; i >= 0; i--) {
+                    const target = targets[i];
+                    const rect = target.getBoundingClientRect();
+                    
+                    if (rect.top <= window.innerHeight / 2) {
+                        if (target.id === 'top') {
+                            foundSec = {id: 'top', name: 'Overview'};
+                        } else if (target.classList.contains('nav-sec-container')) {
+                            foundSec = {id: target.id, name: target.dataset.name};
+                        } else if (target.classList.contains('nav-sub-container')) {
+                            foundSub = {id: target.id, name: target.dataset.name};
+                            const parentSec = document.getElementById(target.dataset.secId);
+                            if (parentSec) foundSec = {id: parentSec.id, name: parentSec.dataset.name};
+                        }
+                        break;
+                    }
+                }
+                
+                if (!foundSec) foundSec = {id: 'top', name: 'Overview'};
+
+                if (activeScrollSec?.id !== foundSec?.id || activeScrollSub?.id !== foundSub?.id) {
+                    activeScrollSec = foundSec;
+                    activeScrollSub = foundSub;
+                    updateBreadcrumbs(activeScrollSec, activeScrollSub);
+                }
+            });
+            
+            setTimeout(() => container.dispatchEvent(new Event('scroll')), 100);
+        }
+
         function setupAnimatedTitles() {
             if (titleInterval) clearInterval(titleInterval);
+            const container = document.getElementById('hero-title-container');
+            if (!container) return;
+
             const titlesArray = appData.hero.animatedTitles.split(',').map(t => t.trim()).filter(t => t);
+            if (titlesArray.length === 0) return;
+
+            container.className = "grid w-full text-left relative";
+            container.innerHTML = titlesArray.map((t, i) => `
+                <div class="hero-phrase col-start-1 row-start-1 w-full text-left transition-all duration-700 ease-in-out ${i === 0 ? 'opacity-100 translate-y-0 z-10' : 'opacity-0 translate-y-6 z-0 pointer-events-none'}">${t}</div>
+            `).join('');
+
             if (titlesArray.length <= 1) return;
 
             let currentIndex = 0;
-            const track = document.getElementById('hero-title-track');
-            if(!track) return;
-            
-            titleInterval = setInterval(() => {
-                currentIndex++;
-                track.style.transition = 'transform 0.6s cubic-bezier(0.22, 1, 0.36, 1)';
-                track.style.transform = `translateY(-${currentIndex * 1.5}em)`;
+            const phrases = container.querySelectorAll('.hero-phrase');
 
-                if (currentIndex === titlesArray.length) {
-                    // Reached the clone at the end, jump back to start seamlessly
-                    setTimeout(() => {
-                        track.style.transition = 'none';
-                        currentIndex = 0;
-                        track.style.transform = `translateY(0)`;
-                    }, 600); // 600ms matches CSS transition duration
-                }
-            }, 2500); 
+            titleInterval = setInterval(() => {
+                const currentEl = phrases[currentIndex];
+                const nextIndex = (currentIndex + 1) % phrases.length;
+                const nextEl = phrases[nextIndex];
+
+                currentEl.classList.remove('opacity-100', 'translate-y-0', 'z-10');
+                currentEl.classList.add('opacity-0', '-translate-y-6', 'z-0', 'pointer-events-none');
+
+                nextEl.classList.remove('opacity-0', 'translate-y-6', '-translate-y-6', 'z-0', 'pointer-events-none');
+                nextEl.classList.add('opacity-100', 'translate-y-0', 'z-10');
+
+                setTimeout(() => {
+                    currentEl.classList.remove('-translate-y-6');
+                    currentEl.classList.add('translate-y-6');
+                }, 700);
+
+                currentIndex = nextIndex;
+            }, 3500); 
         }
 
         // ==========================================
@@ -884,7 +1244,7 @@
                     <div class="bg-white dark:bg-darkCard p-8 rounded-xl shadow-xl w-full max-w-md border border-slate-200 dark:border-slate-700">
                         <h2 class="text-2xl font-bold mb-6 text-primary dark:text-white text-left"><i class="fa-solid fa-lock text-secondary mr-2"></i> Admin Login</h2>
                         <input type="password" id="passcode-input" class="w-full px-4 py-3 rounded bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 text-slate-800 dark:text-slate-200 mb-4 focus:border-secondary outline-none text-left" placeholder="Enter Passcode">
-                        <button onclick="passcode=document.getElementById('passcode-input').value; renderApp()" class="w-full bg-secondary text-white font-bold py-3 rounded hover:bg-blue-600 transition-colors">Login</button>
+                        <button onclick="passcode=document.getElementById('passcode-input').value; renderApp()" class="w-full bg-secondary text-white font-bold py-3 rounded hover:bg-blue-600 transition-colors text-left">Login</button>
                         <button onclick="window.location.hash=''" class="w-full mt-3 text-slate-500 text-sm hover:underline text-left">Return to site</button>
                     </div>
                 </div>
@@ -929,9 +1289,9 @@
                 <div class="min-h-screen bg-slate-50 dark:bg-darkBg text-slate-800 dark:text-slate-200 flex flex-col text-left">
                     <div class="bg-white dark:bg-darkCard p-4 border-b border-slate-200 dark:border-slate-800 flex justify-between items-center sticky top-0 z-50 shadow-sm text-left">
                         <div class="text-sm truncate mr-4 text-left flex-1">${breadcrumbs}</div>
-                        <div class="flex gap-3 flex-shrink-0">
-                            <button onclick="window.location.hash=''" class="px-4 py-2 bg-slate-200 dark:bg-slate-700 rounded text-sm font-medium hover:bg-slate-300 dark:hover:bg-slate-600 transition-colors">Exit</button>
-                            <button onclick="savePortfolioData()" id="save-btn" class="px-4 py-2 bg-green-500 text-white rounded text-sm font-bold shadow-md hover:bg-green-600 transition-colors"><i class="fa-solid fa-floppy-disk mr-1"></i> Save</button>
+                        <div class="flex gap-3 flex-shrink-0 text-left">
+                            <button onclick="window.location.hash=''" class="px-4 py-2 bg-slate-200 dark:bg-slate-700 rounded text-sm font-medium hover:bg-slate-300 dark:hover:bg-slate-600 transition-colors text-left">Exit</button>
+                            <button onclick="savePortfolioData()" id="save-btn" class="px-4 py-2 bg-green-500 text-white rounded text-sm font-bold shadow-md hover:bg-green-600 transition-colors text-left"><i class="fa-solid fa-floppy-disk mr-1"></i> Save</button>
                         </div>
                     </div>
                     <div class="flex-1 max-w-4xl w-full mx-auto p-4 md:p-6 overflow-y-auto pb-20 text-left">
@@ -941,15 +1301,14 @@
             `;
         }
 
-        // --- Admin Form Generators ---
         function renderAdminRoot() {
             const ui = appData.uiText; const hero = appData.hero;
             let sectionsHtml = appData.sections.map((sec, i) => `
                 <div class="flex justify-between items-center p-3 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded mb-2 text-left">
                     <span class="font-bold text-left">${sec.name} <span class="text-xs text-slate-400 font-normal ml-2">(${sec.subsections.length} subs)</span></span>
-                    <div class="flex gap-2">
-                        <button onclick="adminNavigate(['${sec.id}'])" class="text-secondary hover:underline text-sm"><i class="fa-solid fa-pen"></i> Edit</button>
-                        <button onclick="adminDeleteSection(${i})" class="text-red-500 hover:underline text-sm"><i class="fa-solid fa-trash"></i></button>
+                    <div class="flex gap-2 text-left">
+                        <button onclick="adminNavigate(['${sec.id}'])" class="text-secondary hover:underline text-sm text-left"><i class="fa-solid fa-pen"></i> Edit</button>
+                        <button onclick="adminDeleteSection(${i})" class="text-red-500 hover:underline text-sm text-left"><i class="fa-solid fa-trash"></i></button>
                     </div>
                 </div>
             `).join('');
@@ -959,18 +1318,31 @@
                     <div class="bg-white dark:bg-darkCard p-6 rounded-xl shadow-sm border border-slate-200 dark:border-slate-700 text-left">
                         <h3 class="text-xl font-bold mb-4 border-b border-slate-100 dark:border-slate-800 pb-2 text-secondary text-left"><i class="fa-solid fa-image mr-2"></i> Landing Page (Hero)</h3>
                         <div class="grid grid-cols-1 md:grid-cols-2 gap-4 text-left w-full">
-                            <div class="text-left"><label class="block text-sm mb-1 opacity-70">Full Name</label><input type="text" onchange="appData.hero.name=this.value" value="${hero.name}" class="w-full p-2 rounded bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 font-bold text-left"></div>
-                            <div class="text-left"><label class="block text-sm mb-1 opacity-70">Animated Sentences (Comma separated)</label><input type="text" onchange="appData.hero.animatedTitles=this.value" value="${hero.animatedTitles}" class="w-full p-2 rounded bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 text-sm text-left"></div>
-                            <div class="md:col-span-2 text-left"><label class="block text-sm mb-1 opacity-70">Short Bio</label><textarea rows="3" onchange="appData.hero.bio=this.value" class="w-full p-2 rounded bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 text-left">${hero.bio}</textarea></div>
-                            <div class="text-left"><label class="block text-sm mb-1 opacity-70">Profile Pic (G-Drive Link)</label><input type="text" onchange="appData.hero.profileImageLink=this.value" value="${hero.profileImageLink}" class="w-full p-2 rounded bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 text-sm font-mono text-left"></div>
-                            <div class="text-left"><label class="block text-sm mb-1 opacity-70">Background Image (G-Drive Link)</label><input type="text" onchange="appData.hero.bgImageLink=this.value" value="${hero.bgImageLink}" class="w-full p-2 rounded bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 text-sm font-mono text-left"></div>
+                            <div class="text-left"><label class="block text-sm mb-1 opacity-70 text-left">Full Name</label><input type="text" onchange="appData.hero.name=this.value" value="${hero.name}" class="w-full p-2 rounded bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 font-bold text-left"></div>
+                            <div class="text-left"><label class="block text-sm mb-1 opacity-70 text-left">Animated Sentences (Comma separated)</label><input type="text" onchange="appData.hero.animatedTitles=this.value" value="${hero.animatedTitles}" class="w-full p-2 rounded bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 text-sm text-left"></div>
+                            <div class="md:col-span-2 text-left"><label class="block text-sm mb-1 opacity-70 text-left">Short Bio</label><textarea rows="3" onchange="appData.hero.bio=this.value" class="w-full p-2 rounded bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 text-left">${hero.bio}</textarea></div>
+                            <div class="text-left"><label class="block text-sm mb-1 opacity-70 text-left">Profile Pic (G-Drive Link)</label><input type="text" onchange="appData.hero.profileImageLink=this.value" value="${hero.profileImageLink}" class="w-full p-2 rounded bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 text-sm font-mono text-left"></div>
+                            <div class="text-left"><label class="block text-sm mb-1 opacity-70 text-left">Background Image (G-Drive Link)</label><input type="text" onchange="appData.hero.bgImageLink=this.value" value="${hero.bgImageLink}" class="w-full p-2 rounded bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 text-sm font-mono text-left"></div>
                         </div>
                     </div>
-                    <!-- Global Texts omitted for brevity, logic identical to previous version -->
+                    
+                    <div class="bg-white dark:bg-darkCard p-6 rounded-xl shadow-sm border border-slate-200 dark:border-slate-700 text-left">
+                        <h3 class="text-xl font-bold mb-4 border-b border-slate-100 dark:border-slate-800 pb-2 text-left">Global UI Text & Contact Info</h3>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4 text-left w-full">
+                            <div class="text-left md:col-span-2"><label class="block text-sm mb-1 opacity-70 text-left">Branding Logo (G-Drive Link or Image URL) - Optional</label><input type="text" onchange="appData.uiText.brandLogo=this.value" value="${ui.brandLogo || ''}" placeholder="Leave empty to use Site Title text" class="w-full p-2 rounded bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 text-sm font-mono text-left"></div>
+                            <div class="text-left"><label class="block text-sm mb-1 opacity-70 text-left">Site Title (Fallback)</label><input type="text" onchange="appData.uiText.siteTitle=this.value" value="${ui.siteTitle}" class="w-full p-2 rounded bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 text-left"></div>
+                            <div class="text-left"><label class="block text-sm mb-1 opacity-70 text-left">Chatbot Name</label><input type="text" onchange="appData.uiText.botName=this.value" value="${ui.botName}" class="w-full p-2 rounded bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 text-left"></div>
+                            <div class="text-left"><label class="block text-sm mb-1 opacity-70 text-left">Contact Email</label><input type="text" onchange="appData.uiText.contactEmail=this.value" value="${ui.contactEmail}" class="w-full p-2 rounded bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 text-left"></div>
+                            <div class="text-left"><label class="block text-sm mb-1 opacity-70 text-left">Contact Phone</label><input type="text" onchange="appData.uiText.contactPhone=this.value" value="${ui.contactPhone}" class="w-full p-2 rounded bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 text-left"></div>
+                            <div class="text-left"><label class="block text-sm mb-1 opacity-70 text-left">LinkedIn URL</label><input type="text" onchange="appData.uiText.linkedinLink=this.value" value="${ui.linkedinLink}" class="w-full p-2 rounded bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 text-left"></div>
+                            <div class="text-left"><label class="block text-sm mb-1 opacity-70 text-left">GitHub URL</label><input type="text" onchange="appData.uiText.githubLink=this.value" value="${ui.githubLink}" class="w-full p-2 rounded bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 text-left"></div>
+                        </div>
+                    </div>
+
                     <div class="bg-white dark:bg-darkCard p-6 rounded-xl shadow-sm border border-slate-200 dark:border-slate-700 text-left">
                         <div class="flex justify-between items-center mb-4 border-b border-slate-100 dark:border-slate-800 pb-2 text-left">
                             <h3 class="text-xl font-bold text-left">Portfolio Sections</h3>
-                            <button onclick="adminAddSection()" class="bg-secondary text-white px-3 py-1 rounded text-sm"><i class="fa-solid fa-plus"></i> Add Section</button>
+                            <button onclick="adminAddSection()" class="bg-secondary text-white px-3 py-1 rounded text-sm text-left"><i class="fa-solid fa-plus"></i> Add Section</button>
                         </div>
                         ${sectionsHtml || '<p class="text-sm opacity-50 text-left">No sections.</p>'}
                     </div>
@@ -982,9 +1354,9 @@
             let subsHtml = sec.subsections.map((sub, i) => `
                 <div class="flex justify-between items-center p-3 bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded mb-2 text-left">
                     <span class="font-medium text-left">${sub.name}</span>
-                    <div class="flex gap-2">
-                        <button onclick="adminNavigate(['${sec.id}', '${sub.id}'])" class="text-secondary hover:underline text-sm"><i class="fa-solid fa-pen"></i> Edit</button>
-                        <button onclick="adminDeleteSub('${sec.id}', ${i})" class="text-red-500 hover:underline text-sm"><i class="fa-solid fa-trash"></i></button>
+                    <div class="flex gap-2 text-left">
+                        <button onclick="adminNavigate(['${sec.id}', '${sub.id}'])" class="text-secondary hover:underline text-sm text-left"><i class="fa-solid fa-pen"></i> Edit</button>
+                        <button onclick="adminDeleteSub('${sec.id}', ${i})" class="text-red-500 hover:underline text-sm text-left"><i class="fa-solid fa-trash"></i></button>
                     </div>
                 </div>
             `).join('');
@@ -1000,7 +1372,7 @@
                     <div class="bg-white dark:bg-darkCard p-6 rounded-xl shadow-sm border border-slate-200 dark:border-slate-700 text-left">
                         <div class="flex justify-between items-center mb-4 text-left">
                             <h3 class="text-xl font-bold text-left">Subsections</h3>
-                            <button onclick="adminAddSub('${sec.id}')" class="bg-secondary text-white px-3 py-1 rounded text-sm"><i class="fa-solid fa-plus"></i> Add Sub</button>
+                            <button onclick="adminAddSub('${sec.id}')" class="bg-secondary text-white px-3 py-1 rounded text-sm text-left"><i class="fa-solid fa-plus"></i> Add Sub</button>
                         </div>
                         ${subsHtml || '<p class="text-sm opacity-50 text-left">No subsections.</p>'}
                     </div>
@@ -1012,9 +1384,9 @@
             let tilesHtml = sub.tiles.map((tile, i) => `
                 <div class="flex justify-between items-center p-3 bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded mb-2 text-left">
                     <span class="font-medium text-left"><i class="fa-solid ${tile.icon} text-secondary w-6 text-center"></i> ${tile.heading}</span>
-                    <div class="flex gap-2">
-                        <button onclick="adminNavigate(['${adminPath[0]}', '${sub.id}', '${tile.id}'])" class="text-secondary hover:underline text-sm"><i class="fa-solid fa-pen"></i> Edit</button>
-                        <button onclick="adminDeleteTile('${adminPath[0]}', '${sub.id}', ${i})" class="text-red-500 hover:underline text-sm"><i class="fa-solid fa-trash"></i></button>
+                    <div class="flex gap-2 text-left">
+                        <button onclick="adminNavigate(['${adminPath[0]}', '${sub.id}', '${tile.id}'])" class="text-secondary hover:underline text-sm text-left"><i class="fa-solid fa-pen"></i> Edit</button>
+                        <button onclick="adminDeleteTile('${adminPath[0]}', '${sub.id}', ${i})" class="text-red-500 hover:underline text-sm text-left"><i class="fa-solid fa-trash"></i></button>
                     </div>
                 </div>
             `).join('');
@@ -1022,8 +1394,13 @@
             return `
                 <div class="space-y-6 text-left">
                     <div class="bg-white dark:bg-darkCard p-6 rounded-xl shadow-sm border border-slate-200 dark:border-slate-700 text-left">
+                        <h3 class="text-xl font-bold mb-4 text-left">Subsection Properties</h3>
+                        <div class="text-left"><label class="block text-sm mb-1 opacity-70 text-left">Subsection Name</label><input type="text" onchange="adminUpdateSub('${adminPath[0]}', '${sub.id}', 'name', this.value)" value="${sub.name}" class="w-full p-2 rounded bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 text-left"></div>
+                    </div>
+                    
+                    <div class="bg-white dark:bg-darkCard p-6 rounded-xl shadow-sm border border-slate-200 dark:border-slate-700 text-left">
                         <h3 class="text-xl font-bold mb-4 text-left">Tiles (Cards)</h3>
-                        <button onclick="adminAddTile('${adminPath[0]}', '${sub.id}')" class="bg-secondary text-white px-3 py-1 rounded text-sm mb-4"><i class="fa-solid fa-plus"></i> Add Tile</button>
+                        <button onclick="adminAddTile('${adminPath[0]}', '${sub.id}')" class="bg-secondary text-white px-3 py-1 rounded text-sm mb-4 text-left"><i class="fa-solid fa-plus"></i> Add Tile</button>
                         ${tilesHtml || '<p class="text-sm opacity-50 text-left">No tiles.</p>'}
                     </div>
                 </div>
@@ -1041,9 +1418,9 @@
             selectHtml += `</select>`;
 
             let mediaHtml = (tile.mediaLinks || []).map((link, i) => `
-                <div class="flex gap-2 mb-2">
+                <div class="flex gap-2 mb-2 text-left">
                     <input type="text" onchange="adminUpdateMedia('${adminPath[0]}', '${adminPath[1]}', '${tile.id}', ${i}, this.value)" value="${link.replace(/"/g, '&quot;')}" class="flex-1 p-2 rounded bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 text-sm font-mono text-left" placeholder="G-Drive Link, Image URL, or <iframe src='...'></iframe>">
-                    <button onclick="adminRemoveMedia('${adminPath[0]}', '${adminPath[1]}', '${tile.id}', ${i})" class="bg-red-500 text-white px-3 rounded"><i class="fa-solid fa-trash"></i></button>
+                    <button onclick="adminRemoveMedia('${adminPath[0]}', '${adminPath[1]}', '${tile.id}', ${i})" class="bg-red-500 text-white px-3 rounded text-left"><i class="fa-solid fa-trash"></i></button>
                 </div>
             `).join('');
 
@@ -1052,17 +1429,19 @@
                     <h3 class="text-xl font-bold border-b border-slate-100 dark:border-slate-800 pb-2 text-left">Edit Tile</h3>
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-4 text-left w-full">
                         <div class="md:col-span-2 text-left"><label class="block text-sm mb-1 opacity-70 text-left">Tile Heading</label><input type="text" onchange="adminUpdateTileProp('${adminPath[0]}', '${adminPath[1]}', '${tile.id}', 'heading', this.value)" value="${tile.heading}" class="w-full p-2 rounded bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 font-bold text-left"></div>
+                        <div class="text-left"><label class="block text-sm mb-1 opacity-70 text-left">Subtitle (e.g. Job Role / Degree)</label><input type="text" onchange="adminUpdateTileProp('${adminPath[0]}', '${adminPath[1]}', '${tile.id}', 'subtitle', this.value)" value="${tile.subtitle || ''}" class="w-full p-2 rounded bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 text-left"></div>
+                        <div class="text-left"><label class="block text-sm mb-1 opacity-70 text-left">Date / Timeline</label><input type="text" onchange="adminUpdateTileProp('${adminPath[0]}', '${adminPath[1]}', '${tile.id}', 'date', this.value)" value="${tile.date || ''}" class="w-full p-2 rounded bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 text-left"></div>
+                        <div class="text-left"><label class="block text-sm mb-1 opacity-70 text-left">Location</label><input type="text" onchange="adminUpdateTileProp('${adminPath[0]}', '${adminPath[1]}', '${tile.id}', 'location', this.value)" value="${tile.location || ''}" class="w-full p-2 rounded bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 text-left"></div>
+                        <div class="text-left"><label class="block text-sm mb-1 opacity-70 text-left">Icon (FontAwesome Class)</label><input type="text" onchange="adminUpdateTileProp('${adminPath[0]}', '${adminPath[1]}', '${tile.id}', 'icon', this.value)" value="${tile.icon || 'fa-cube'}" class="w-full p-2 rounded bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 font-mono text-sm text-left"></div>
                         <div class="md:col-span-2 text-left"><label class="block text-sm mb-1 opacity-70 text-left">Card Description (Short snippet)</label><textarea rows="3" onchange="adminUpdateTileProp('${adminPath[0]}', '${adminPath[1]}', '${tile.id}', 'description', this.value)" class="w-full p-2 rounded bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 text-left">${tile.description || ''}</textarea></div>
                         <div class="md:col-span-2 text-left"><label class="block text-sm mb-1 opacity-70 text-left">Tab Detailed Content (Extended text for side pane)</label><textarea rows="5" onchange="adminUpdateTileProp('${adminPath[0]}', '${adminPath[1]}', '${tile.id}', 'tabText', this.value)" class="w-full p-2 rounded bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 text-left">${tile.tabText || ''}</textarea></div>
-                        
-                        <div class="text-left"><label class="block text-sm mb-1 opacity-70 text-left">Icon (FontAwesome Class)</label><input type="text" onchange="adminUpdateTileProp('${adminPath[0]}', '${adminPath[1]}', '${tile.id}', 'icon', this.value)" value="${tile.icon || 'fa-cube'}" class="w-full p-2 rounded bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 font-mono text-sm text-left"></div>
-                        <div class="text-left"><label class="block text-sm mb-1 opacity-70 text-left">Tile Background Image (G-Drive or URL)</label><input type="text" onchange="adminUpdateTileProp('${adminPath[0]}', '${adminPath[1]}', '${tile.id}', 'bgImage', this.value)" value="${tile.bgImage || ''}" class="w-full p-2 rounded bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 font-mono text-sm text-left"></div>
+                        <div class="md:col-span-2 text-left"><label class="block text-sm mb-1 opacity-70 text-left">Tile Background Image (G-Drive or URL)</label><input type="text" onchange="adminUpdateTileProp('${adminPath[0]}', '${adminPath[1]}', '${tile.id}', 'bgImage', this.value)" value="${tile.bgImage || ''}" class="w-full p-2 rounded bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 font-mono text-sm text-left"></div>
                     </div>
                     
                     <div class="border-t border-slate-100 dark:border-slate-800 pt-4 text-left w-full">
                         <h4 class="font-bold mb-2 text-left">Media Attachments (Side Pane)</h4>
                         ${mediaHtml}
-                        <button onclick="adminAddMedia('${adminPath[0]}', '${adminPath[1]}', '${tile.id}')" class="text-sm bg-slate-200 dark:bg-slate-700 px-3 py-1 rounded mt-2"><i class="fa-solid fa-plus"></i> Add Media Link</button>
+                        <button onclick="adminAddMedia('${adminPath[0]}', '${adminPath[1]}', '${tile.id}')" class="text-sm bg-slate-200 dark:bg-slate-700 px-3 py-1 rounded mt-2 text-left"><i class="fa-solid fa-plus"></i> Add Media Link</button>
                     </div>
 
                     <div class="border-t border-slate-100 dark:border-slate-800 pt-4 text-left w-full">
@@ -1081,7 +1460,7 @@
         function adminDeleteSection(idx) { if(confirm("Delete section?")) { appData.sections.splice(idx, 1); renderApp(); } }
         function adminAddSub(sId) { appData.sections.find(s=>s.id===sId).subsections.push({id: generateId(), name: "New Subsection", tiles: []}); renderApp(); }
         function adminDeleteSub(sId, idx) { if(confirm("Delete subsection?")) { appData.sections.find(s=>s.id===sId).subsections.splice(idx, 1); renderApp(); } }
-        function adminAddTile(sId, ssId) { appData.sections.find(s=>s.id===sId).subsections.find(ss=>ss.id===ssId).tiles.push({id: generateId(), heading: "New Tile", description: "", tabText: "", icon: "fa-cube", bgImage: "", mediaLinks: [], relatedTiles: []}); renderApp(); }
+        function adminAddTile(sId, ssId) { appData.sections.find(s=>s.id===sId).subsections.find(ss=>ss.id===ssId).tiles.push({id: generateId(), heading: "New Tile", subtitle: "", date: "", location: "", description: "", tabText: "", icon: "fa-cube", bgImage: "", mediaLinks: [], relatedTiles: []}); renderApp(); }
         function adminDeleteTile(sId, ssId, idx) { if(confirm("Delete tile?")) { appData.sections.find(s=>s.id===sId).subsections.find(ss=>ss.id===ssId).tiles.splice(idx, 1); renderApp(); } }
         function adminUpdateRelatedTiles(sId, ssId, tId, selectElem) { const selected = Array.from(selectElem.selectedOptions).map(opt => opt.value); appData.sections.find(s=>s.id===sId).subsections.find(ss=>ss.id===ssId).tiles.find(t=>t.id===tId).relatedTiles = selected; renderApp(); }
         function adminAddMedia(sId, ssId, tId) { appData.sections.find(s=>s.id===sId).subsections.find(ss=>ss.id===ssId).tiles.find(t=>t.id===tId).mediaLinks.push(""); renderApp(); }
@@ -1092,9 +1471,22 @@
         // 8. KICKOFF
         // ==========================================
         async function initApp() {
-            profileBlobShape = generateRandomBlob(); // Generate abstract shape on load
+            profileBlobShape = generateRandomBlob(); 
             appData = await fetchPortfolioData();
             loadStateFromURL();
+            
+            // Wait briefly to show off the generative loader, then smoothly fade out
+            setTimeout(() => {
+                const loader = document.getElementById('loader-wrapper');
+                if (loader) {
+                    loader.style.opacity = '0';
+                    setTimeout(() => {
+                        if(window._loaderAnimId) cancelAnimationFrame(window._loaderAnimId);
+                        loader.remove();
+                    }, 700);
+                }
+            }, 800);
+            
             renderApp();
             window.addEventListener('hashchange', renderApp);
         }
