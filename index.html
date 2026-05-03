@@ -188,7 +188,7 @@
             },
             hero: {
                 name: "Rahul Natha",
-                animatedTitles: "Mechanical Engineer., Mechanical Design Engineer., Electromechanical Systems Specialist.",
+                animatedTitles: "Mechanical Engineer, Mechanical Design Engineer, Electromechanical Systems Specialist",
                 bio: "5 years of experience across precision mechanical systems R&D and transportation industry. Specialised in electromechanical system design, 3D CAD, and structural analysis.",
                 profileImageLink: "",
                 bgImageLink: ""
@@ -205,8 +205,10 @@
                             tiles: [
                                 {
                                     id: "tile_exp_1",
-                                    heading: "", // Auto-generated
-                                    subtitle: "Senior Research Fellow",
+                                    heading: "",
+                                    role: "Senior Research Fellow",
+                                    baseSubject: "Mechanical Engineering",
+                                    specialisation: "",
                                     employer: "Research Centre Imarat, DRDO",
                                     employerUrl: "https://drdo.gov.in",
                                     date: "03/2022 - 03/2026",
@@ -226,8 +228,10 @@
                             tiles: [
                                 {
                                     id: "tile_exp_2",
-                                    heading: "", // Auto-generated
-                                    subtitle: "Mechanical Engineer",
+                                    heading: "",
+                                    role: "Mechanical Engineer",
+                                    baseSubject: "",
+                                    specialisation: "",
                                     employer: "Cyient",
                                     employerUrl: "https://www.cyient.com",
                                     date: "05/2021 - 03/2022",
@@ -255,7 +259,9 @@
                                 {
                                     id: "tile_skill_1",
                                     heading: "CAD / CAE",
-                                    subtitle: "Software Mastery",
+                                    role: "Software Mastery",
+                                    baseSubject: "",
+                                    specialisation: "",
                                     employer: "",
                                     employerUrl: "",
                                     date: "",
@@ -270,7 +276,9 @@
                                 {
                                     id: "tile_skill_2",
                                     heading: "Design Specialisation",
-                                    subtitle: "Core Domains",
+                                    role: "Core Domains",
+                                    baseSubject: "",
+                                    specialisation: "",
                                     employer: "",
                                     employerUrl: "",
                                     date: "",
@@ -318,10 +326,23 @@
 
         function getEffectiveHeading(tile) {
             if (tile.heading && tile.heading.trim() !== '') return tile.heading;
-            const sub = tile.subtitle ? tile.subtitle.trim() : '';
-            const emp = tile.employer ? tile.employer.trim() : '';
-            if (sub && emp) return `${sub} @ ${emp}`;
-            if (sub) return sub;
+            
+            // Fallback to subtitle to support older saved data gracefully
+            const role = (tile.role || tile.subtitle || '').trim();
+            const base = (tile.baseSubject || '').trim();
+            const spec = (tile.specialisation || '').trim();
+            const emp = (tile.employer || '').trim();
+            
+            let combinedRole = '';
+            if (role && base) combinedRole = `${role}, ${base}`;
+            else if (role) combinedRole = role;
+            else if (base) combinedRole = base;
+
+            if (combinedRole && spec) combinedRole += ` (${spec})`;
+            else if (spec) combinedRole = spec;
+
+            if (combinedRole && emp) return `${combinedRole} @ ${emp}`;
+            if (combinedRole) return combinedRole;
             if (emp) return emp;
             return 'Untitled Tile';
         }
@@ -770,9 +791,19 @@
 
             let cardMetaItems = [];
             if (!isAutoHeading) {
-                if (tile.subtitle) cardMetaItems.push(tile.subtitle);
+                const role = tile.role || tile.subtitle;
+                if (role) cardMetaItems.push(role);
+                if (tile.baseSubject) cardMetaItems.push(tile.baseSubject);
+                if (tile.specialisation) cardMetaItems.push(tile.specialisation);
                 if (tile.employer) cardMetaItems.push(tile.employer);
             }
+            
+            if (tile.score && tile.score.trim() !== '') {
+                let scoreStr = `Score: ${tile.score}`;
+                if (tile.maxScore && tile.maxScore.trim() !== '') scoreStr += ` / ${tile.maxScore}`;
+                cardMetaItems.push(scoreStr);
+            }
+            
             if (tile.date) cardMetaItems.push(tile.date);
             if (tile.location) cardMetaItems.push(tile.location);
             
@@ -962,11 +993,21 @@
             }
 
             let metaItems = [];
-            if (tile.subtitle) metaItems.push(`<span>${tile.subtitle}</span>`);
+            const role = tile.role || tile.subtitle;
+            if (role) metaItems.push(`<span>${role}</span>`);
+            if (tile.baseSubject) metaItems.push(`<span>${tile.baseSubject}</span>`);
+            if (tile.specialisation) metaItems.push(`<span>${tile.specialisation}</span>`);
             if (tile.employer) {
                 if (tile.employerUrl) metaItems.push(`<a href="${tile.employerUrl}" target="_blank" class="text-secondary hover:underline inline-flex items-center gap-1">${tile.employer} <i class="fa-solid fa-arrow-up-right-from-square text-[10px]"></i></a>`);
                 else metaItems.push(`<span>${tile.employer}</span>`);
             }
+            
+            if (tile.score && tile.score.trim() !== '') {
+                let scoreStr = `Score: ${tile.score}`;
+                if (tile.maxScore && tile.maxScore.trim() !== '') scoreStr += ` / ${tile.maxScore}`;
+                metaItems.push(`<span class="font-bold text-secondary dark:text-blue-400">${scoreStr}</span>`);
+            }
+            
             if (tile.date) metaItems.push(`<span>${tile.date}</span>`);
             if (tile.location) metaItems.push(`<span>${tile.location}</span>`);
             
@@ -1343,7 +1384,7 @@
                             <button onclick="savePortfolioData()" id="save-btn" class="px-4 py-2 bg-green-500 text-white rounded text-sm font-bold shadow-md hover:bg-green-600 transition-colors text-left"><i class="fa-solid fa-floppy-disk mr-1"></i> Save</button>
                         </div>
                     </div>
-                    <div class="flex-1 max-w-4xl w-full mx-auto p-4 md:p-6 overflow-y-auto pb-20 text-left relative">
+                    <div id="admin-scroll-container" class="flex-1 max-w-4xl w-full mx-auto p-4 md:p-6 overflow-y-auto pb-20 text-left relative">
                         ${editorHtml}
                     </div>
                 </div>
@@ -1490,10 +1531,14 @@
                 <div class="bg-white dark:bg-darkCard p-6 rounded-xl shadow-sm border border-slate-200 dark:border-slate-700 space-y-6 text-left">
                     <h3 class="text-xl font-bold border-b border-slate-100 dark:border-slate-800 pb-2 text-left">Edit Tile</h3>
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-4 text-left w-full">
-                        <div class="md:col-span-2 text-left"><label class="block text-sm mb-1 opacity-70 text-left">Tile Heading (Optional)</label><input type="text" onchange="adminUpdateTileProp('${adminPath[0]}', '${adminPath[1]}', '${tile.id}', 'heading', this.value)" value="${tile.heading || ''}" class="w-full p-2 rounded bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 font-bold text-left" placeholder="Leave empty for auto-heading: Subtitle @ Employer"></div>
-                        <div class="text-left"><label class="block text-sm mb-1 opacity-70 text-left">Subtitle (e.g. Job Role / Degree)</label><input type="text" onchange="adminUpdateTileProp('${adminPath[0]}', '${adminPath[1]}', '${tile.id}', 'subtitle', this.value)" value="${tile.subtitle || ''}" class="w-full p-2 rounded bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 text-left"></div>
-                        <div class="text-left"><label class="block text-sm mb-1 opacity-70 text-left">Employer / Organization Name</label><input type="text" onchange="adminUpdateTileProp('${adminPath[0]}', '${adminPath[1]}', '${tile.id}', 'employer', this.value)" value="${tile.employer || ''}" class="w-full p-2 rounded bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 text-left"></div>
+                        <div class="md:col-span-2 text-left"><label class="block text-sm mb-1 opacity-70 text-left">Tile Heading (Optional)</label><input type="text" onchange="adminUpdateTileProp('${adminPath[0]}', '${adminPath[1]}', '${tile.id}', 'heading', this.value)" value="${tile.heading || ''}" class="w-full p-2 rounded bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 font-bold text-left" placeholder="Leave empty for auto-heading: Role, Base Subject (Specialisation) @ Employer"></div>
+                        <div class="text-left"><label class="block text-sm mb-1 opacity-70 text-left">Role / Title (e.g. JRF, BTech, Engineer)</label><input type="text" onchange="adminUpdateTileProp('${adminPath[0]}', '${adminPath[1]}', '${tile.id}', 'role', this.value)" value="${tile.role || tile.subtitle || ''}" class="w-full p-2 rounded bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 text-left"></div>
+                        <div class="text-left"><label class="block text-sm mb-1 opacity-70 text-left">Base Subject / Major (e.g. Mechanical Eng)</label><input type="text" onchange="adminUpdateTileProp('${adminPath[0]}', '${adminPath[1]}', '${tile.id}', 'baseSubject', this.value)" value="${tile.baseSubject || ''}" class="w-full p-2 rounded bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 text-left"></div>
+                        <div class="text-left"><label class="block text-sm mb-1 opacity-70 text-left">Specialisation / Minor (e.g. Robotics)</label><input type="text" onchange="adminUpdateTileProp('${adminPath[0]}', '${adminPath[1]}', '${tile.id}', 'specialisation', this.value)" value="${tile.specialisation || ''}" class="w-full p-2 rounded bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 text-left"></div>
+                        <div class="text-left"><label class="block text-sm mb-1 opacity-70 text-left">Employer / Organization</label><input type="text" onchange="adminUpdateTileProp('${adminPath[0]}', '${adminPath[1]}', '${tile.id}', 'employer', this.value)" value="${tile.employer || ''}" class="w-full p-2 rounded bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 text-left"></div>
                         <div class="text-left"><label class="block text-sm mb-1 opacity-70 text-left">Employer Official URL</label><input type="text" onchange="adminUpdateTileProp('${adminPath[0]}', '${adminPath[1]}', '${tile.id}', 'employerUrl', this.value)" value="${tile.employerUrl || ''}" class="w-full p-2 rounded bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 font-mono text-sm text-left" placeholder="https://..."></div>
+                        <div class="text-left"><label class="block text-sm mb-1 opacity-70 text-left">Score / GPA</label><input type="text" onchange="adminUpdateTileProp('${adminPath[0]}', '${adminPath[1]}', '${tile.id}', 'score', this.value)" value="${tile.score || ''}" class="w-full p-2 rounded bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 text-left" placeholder="e.g. 7.5, 3.8, or 90%"></div>
+                        <div class="text-left"><label class="block text-sm mb-1 opacity-70 text-left">Max Possible Score</label><input type="text" onchange="adminUpdateTileProp('${adminPath[0]}', '${adminPath[1]}', '${tile.id}', 'maxScore', this.value)" value="${tile.maxScore || ''}" class="w-full p-2 rounded bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 text-left" placeholder="e.g. 9.0, 4.0, or 100%"></div>
                         <div class="text-left"><label class="block text-sm mb-1 opacity-70 text-left">Date / Timeline</label><input type="text" onchange="adminUpdateTileProp('${adminPath[0]}', '${adminPath[1]}', '${tile.id}', 'date', this.value)" value="${tile.date || ''}" class="w-full p-2 rounded bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 text-left"></div>
                         <div class="text-left"><label class="block text-sm mb-1 opacity-70 text-left">Location</label><input type="text" onchange="adminUpdateTileProp('${adminPath[0]}', '${adminPath[1]}', '${tile.id}', 'location', this.value)" value="${tile.location || ''}" class="w-full p-2 rounded bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 text-left"></div>
                         <div class="text-left"><label class="block text-sm mb-1 opacity-70 text-left">Icon (FontAwesome Class)</label><input type="text" onchange="adminUpdateTileProp('${adminPath[0]}', '${adminPath[1]}', '${tile.id}', 'icon', this.value)" value="${tile.icon || 'fa-cube'}" class="w-full p-2 rounded bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 font-mono text-sm text-left"></div>
@@ -1517,26 +1562,34 @@
         }
 
         // Admin mutators
-        function adminUpdateSec(sId, prop, val) { appData.sections.find(s=>s.id===sId)[prop] = val; renderApp(); }
-        function adminUpdateSub(sId, ssId, prop, val) { appData.sections.find(s=>s.id===sId).subsections.find(ss=>ss.id===ssId)[prop] = val; renderApp(); }
-        function adminUpdateTileProp(sId, ssId, tId, prop, val) { appData.sections.find(s=>s.id===sId).subsections.find(ss=>ss.id===ssId).tiles.find(t=>t.id===tId)[prop] = val; renderApp(); }
-        function adminAddSection() { appData.sections.push({id: generateId(), name: "New Section", bgImage: "", subsections: []}); renderApp(); }
-        function adminDeleteSection(idx) { if(confirm("Delete section?")) { appData.sections.splice(idx, 1); renderApp(); } }
-        function adminAddSub(sId) { appData.sections.find(s=>s.id===sId).subsections.push({id: generateId(), name: "New Subsection", tiles: []}); renderApp(); }
-        function adminDeleteSub(sId, idx) { if(confirm("Delete subsection?")) { appData.sections.find(s=>s.id===sId).subsections.splice(idx, 1); renderApp(); } }
-        function adminAddTile(sId, ssId) { appData.sections.find(s=>s.id===sId).subsections.find(ss=>ss.id===ssId).tiles.push({id: generateId(), heading: "", subtitle: "New Role", employer: "Company", employerUrl: "", date: "", location: "", description: "", tabText: "", icon: "fa-cube", bgImage: "", mediaLinks: [], relatedTiles: []}); renderApp(); }
-        function adminDeleteTile(sId, ssId, idx) { if(confirm("Delete tile?")) { appData.sections.find(s=>s.id===sId).subsections.find(ss=>ss.id===ssId).tiles.splice(idx, 1); renderApp(); } }
-        function adminUpdateRelatedTiles(sId, ssId, tId, selectElem) { const selected = Array.from(selectElem.selectedOptions).map(opt => opt.value); appData.sections.find(s=>s.id===sId).subsections.find(ss=>ss.id===ssId).tiles.find(t=>t.id===tId).relatedTiles = selected; renderApp(); }
-        function adminAddMedia(sId, ssId, tId) { appData.sections.find(s=>s.id===sId).subsections.find(ss=>ss.id===ssId).tiles.find(t=>t.id===tId).mediaLinks.push(""); renderApp(); }
-        function adminUpdateMedia(sId, ssId, tId, idx, val) { appData.sections.find(s=>s.id===sId).subsections.find(ss=>ss.id===ssId).tiles.find(t=>t.id===tId).mediaLinks[idx] = val; renderApp(); }
-        function adminRemoveMedia(sId, ssId, tId, idx) { appData.sections.find(s=>s.id===sId).subsections.find(ss=>ss.id===ssId).tiles.find(t=>t.id===tId).mediaLinks.splice(idx, 1); renderApp(); }
+        function adminRenderWithScroll() {
+            const scroller = document.getElementById('admin-scroll-container');
+            const scrollPos = scroller ? scroller.scrollTop : 0;
+            renderApp();
+            const newScroller = document.getElementById('admin-scroll-container');
+            if (newScroller) newScroller.scrollTop = scrollPos;
+        }
+
+        function adminUpdateSec(sId, prop, val) { appData.sections.find(s=>s.id===sId)[prop] = val; adminRenderWithScroll(); }
+        function adminUpdateSub(sId, ssId, prop, val) { appData.sections.find(s=>s.id===sId).subsections.find(ss=>ss.id===ssId)[prop] = val; adminRenderWithScroll(); }
+        function adminUpdateTileProp(sId, ssId, tId, prop, val) { appData.sections.find(s=>s.id===sId).subsections.find(ss=>ss.id===ssId).tiles.find(t=>t.id===tId)[prop] = val; adminRenderWithScroll(); }
+        function adminAddSection() { appData.sections.push({id: generateId(), name: "New Section", bgImage: "", subsections: []}); adminRenderWithScroll(); }
+        function adminDeleteSection(idx) { if(confirm("Delete section?")) { appData.sections.splice(idx, 1); adminRenderWithScroll(); } }
+        function adminAddSub(sId) { appData.sections.find(s=>s.id===sId).subsections.push({id: generateId(), name: "New Subsection", tiles: []}); adminRenderWithScroll(); }
+        function adminDeleteSub(sId, idx) { if(confirm("Delete subsection?")) { appData.sections.find(s=>s.id===sId).subsections.splice(idx, 1); adminRenderWithScroll(); } }
+        function adminAddTile(sId, ssId) { appData.sections.find(s=>s.id===sId).subsections.find(ss=>ss.id===ssId).tiles.push({id: generateId(), heading: "", role: "New Role", baseSubject: "", specialisation: "", employer: "Company", employerUrl: "", score: "", maxScore: "", date: "", location: "", description: "", tabText: "", icon: "fa-cube", bgImage: "", mediaLinks: [], relatedTiles: []}); adminRenderWithScroll(); }
+        function adminDeleteTile(sId, ssId, idx) { if(confirm("Delete tile?")) { appData.sections.find(s=>s.id===sId).subsections.find(ss=>ss.id===ssId).tiles.splice(idx, 1); adminRenderWithScroll(); } }
+        function adminUpdateRelatedTiles(sId, ssId, tId, selectElem) { const selected = Array.from(selectElem.selectedOptions).map(opt => opt.value); appData.sections.find(s=>s.id===sId).subsections.find(ss=>ss.id===ssId).tiles.find(t=>t.id===tId).relatedTiles = selected; adminRenderWithScroll(); }
+        function adminAddMedia(sId, ssId, tId) { appData.sections.find(s=>s.id===sId).subsections.find(ss=>ss.id===ssId).tiles.find(t=>t.id===tId).mediaLinks.push(""); adminRenderWithScroll(); }
+        function adminUpdateMedia(sId, ssId, tId, idx, val) { appData.sections.find(s=>s.id===sId).subsections.find(ss=>ss.id===ssId).tiles.find(t=>t.id===tId).mediaLinks[idx] = val; adminRenderWithScroll(); }
+        function adminRemoveMedia(sId, ssId, tId, idx) { appData.sections.find(s=>s.id===sId).subsections.find(ss=>ss.id===ssId).tiles.find(t=>t.id===tId).mediaLinks.splice(idx, 1); adminRenderWithScroll(); }
 
         function adminMoveSection(idx, dir) {
             if (idx + dir < 0 || idx + dir >= appData.sections.length) return;
             const temp = appData.sections[idx];
             appData.sections[idx] = appData.sections[idx + dir];
             appData.sections[idx + dir] = temp;
-            renderApp();
+            adminRenderWithScroll();
         }
 
         function adminMoveSub(sId, idx, dir) {
@@ -1545,7 +1598,7 @@
             const temp = sec.subsections[idx];
             sec.subsections[idx] = sec.subsections[idx + dir];
             sec.subsections[idx + dir] = temp;
-            renderApp();
+            adminRenderWithScroll();
         }
 
         function adminMoveTile(sId, ssId, idx, dir) {
@@ -1554,7 +1607,7 @@
             const temp = sub.tiles[idx];
             sub.tiles[idx] = sub.tiles[idx + dir];
             sub.tiles[idx + dir] = temp;
-            renderApp();
+            adminRenderWithScroll();
         }
 
         // ==========================================
