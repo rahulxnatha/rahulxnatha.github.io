@@ -168,6 +168,7 @@
         let activeScrollSec = null;
         let activeScrollSub = null;
         let adminPath = []; 
+        let adminExpanded = {}; // Tracks collapsible UI states in admin view
         let chatHistory = [{ sender: 'bot', text: "Hello! I am Virtual Rahul. I can help you navigate the portfolio or answer quick questions." }];
         let titleInterval;
         let profileBlobShape = "50%";
@@ -1332,38 +1333,31 @@
         }
 
         function adminNavigate(pathArray) { adminPath = pathArray; renderApp(); }
+        function toggleAdminExpand(id) { adminExpanded[id] = !adminExpanded[id]; adminRenderWithScroll(); }
 
         function renderAdminDashboard() {
             let breadcrumbs = `<button onclick="adminNavigate([])" class="hover:text-secondary font-medium">Root (Global)</button>`;
-            let currentContext = appData; let currentType = 'root';
-            
-            if (adminPath.length > 0) {
-                const sec = appData.sections.find(s => s.id === adminPath[0]);
-                if (sec) {
-                    breadcrumbs += ` <i class="fa-solid fa-chevron-right text-xs mx-2 text-slate-400"></i> <button onclick="adminNavigate(['${sec.id}'])" class="hover:text-secondary">${sec.name}</button>`;
-                    currentContext = sec; currentType = 'section';
-                    if (adminPath.length > 1) {
-                        const sub = sec.subsections.find(s => s.id === adminPath[1]);
-                        if (sub) {
-                            breadcrumbs += ` <i class="fa-solid fa-chevron-right text-xs mx-2 text-slate-400"></i> <button onclick="adminNavigate(['${sec.id}', '${sub.id}'])" class="hover:text-secondary">${sub.name}</button>`;
-                            currentContext = sub; currentType = 'subsection';
-                            if (adminPath.length > 2) {
-                                const tile = sub.tiles.find(t => t.id === adminPath[2]);
-                                if (tile) {
-                                    breadcrumbs += ` <i class="fa-solid fa-chevron-right text-xs mx-2 text-slate-400"></i> <span class="text-slate-400">${getEffectiveHeading(tile)}</span>`;
-                                    currentContext = tile; currentType = 'tile';
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-
             let editorHtml = '';
-            if (currentType === 'root') editorHtml = renderAdminRoot();
-            else if (currentType === 'section') editorHtml = renderAdminSection(currentContext);
-            else if (currentType === 'subsection') editorHtml = renderAdminSubsection(currentContext);
-            else if (currentType === 'tile') editorHtml = renderAdminTile(currentContext);
+
+            if (adminPath.length === 3) {
+                // Editing a specific Tile
+                const sec = appData.sections.find(s => s.id === adminPath[0]);
+                const sub = sec?.subsections.find(s => s.id === adminPath[1]);
+                const tile = sub?.tiles.find(t => t.id === adminPath[2]);
+
+                if (tile) {
+                    breadcrumbs += ` <i class="fa-solid fa-chevron-right text-xs mx-2 text-slate-400"></i> <span class="text-slate-400">${sec.name}</span>`;
+                    breadcrumbs += ` <i class="fa-solid fa-chevron-right text-xs mx-2 text-slate-400"></i> <span class="text-slate-400">${sub.name}</span>`;
+                    breadcrumbs += ` <i class="fa-solid fa-chevron-right text-xs mx-2 text-slate-400"></i> <span class="text-slate-400">${getEffectiveHeading(tile)}</span>`;
+                    editorHtml = renderAdminTile(tile);
+                } else {
+                    editorHtml = renderAdminRoot();
+                    adminPath = []; // fallback if missing
+                }
+            } else {
+                // Root view (which now includes Sections and Subsections)
+                editorHtml = renderAdminRoot();
+            }
 
             const isDark = document.documentElement.classList.contains('dark');
             const themeToggleKnobClass = isDark ? 'translate-x-6' : 'translate-x-1';
@@ -1393,19 +1387,83 @@
 
         function renderAdminRoot() {
             const ui = appData.uiText; const hero = appData.hero;
-            let sectionsHtml = appData.sections.map((sec, i) => `
-                <div class="flex justify-between items-center p-3 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded mb-2 text-left">
-                    <span class="font-bold text-left">${sec.name} <span class="text-xs text-slate-400 font-normal ml-2">(${sec.subsections.length} subs)</span></span>
-                    <div class="flex gap-3 text-left items-center">
-                        <div class="flex gap-1 border-r border-slate-200 dark:border-slate-600 pr-3 mr-1">
-                            <button onclick="adminMoveSection(${i}, -1)" class="text-slate-400 hover:text-secondary text-sm ${i === 0 ? 'invisible' : ''}" title="Move Up"><i class="fa-solid fa-arrow-up"></i></button>
-                            <button onclick="adminMoveSection(${i}, 1)" class="text-slate-400 hover:text-secondary text-sm ${i === appData.sections.length - 1 ? 'invisible' : ''}" title="Move Down"><i class="fa-solid fa-arrow-down"></i></button>
+            
+            let sectionsHtml = appData.sections.map((sec, i) => {
+                const isSecExpanded = adminExpanded[sec.id];
+                const chevronSec = isSecExpanded ? 'fa-chevron-down' : 'fa-chevron-right';
+
+                let subsHtml = sec.subsections.map((sub, j) => {
+                    const isSubExpanded = adminExpanded[sub.id];
+                    const chevronSub = isSubExpanded ? 'fa-chevron-down' : 'fa-chevron-right';
+
+                    let tilesHtml = sub.tiles.map((tile, k) => `
+                        <div class="flex justify-between items-center p-2.5 bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded mb-2 text-left ml-6 shadow-sm hover:border-secondary transition-colors">
+                            <span class="font-medium text-sm text-left truncate flex-1 mr-2"><i class="fa-solid ${tile.icon} text-secondary w-6 text-center"></i> ${getEffectiveHeading(tile)}</span>
+                            <div class="flex gap-2 text-left items-center flex-shrink-0">
+                                <div class="flex gap-1 border-r border-slate-200 dark:border-slate-600 pr-2 mr-1">
+                                    <button onclick="adminMoveTile('${sec.id}', '${sub.id}', ${k}, -1)" class="text-slate-400 hover:text-secondary text-xs ${k === 0 ? 'invisible' : ''}" title="Move Up"><i class="fa-solid fa-arrow-up"></i></button>
+                                    <button onclick="adminMoveTile('${sec.id}', '${sub.id}', ${k}, 1)" class="text-slate-400 hover:text-secondary text-xs ${k === sub.tiles.length - 1 ? 'invisible' : ''}" title="Move Down"><i class="fa-solid fa-arrow-down"></i></button>
+                                </div>
+                                <button onclick="adminNavigate(['${sec.id}', '${sub.id}', '${tile.id}'])" class="bg-secondary text-white px-3 py-1 rounded text-xs text-left shadow-sm hover:bg-blue-600 transition-colors"><i class="fa-solid fa-pen mr-1"></i> Edit Content</button>
+                                <button onclick="adminDeleteTile('${sec.id}', '${sub.id}', ${k})" class="text-slate-400 hover:text-red-500 text-sm ml-1"><i class="fa-solid fa-trash"></i></button>
+                            </div>
                         </div>
-                        <button onclick="adminNavigate(['${sec.id}'])" class="text-secondary hover:underline text-sm text-left"><i class="fa-solid fa-pen"></i> Edit</button>
-                        <button onclick="adminDeleteSection(${i})" class="text-red-500 hover:underline text-sm text-left"><i class="fa-solid fa-trash"></i></button>
+                    `).join('');
+
+                    return `
+                        <div class="mb-3 border border-slate-200 dark:border-slate-700 rounded-lg bg-white dark:bg-slate-800 text-left overflow-hidden shadow-sm">
+                            <div class="flex items-center justify-between p-3 bg-slate-50/50 dark:bg-slate-900/50 border-b border-transparent data-[expanded=true]:border-slate-200 dark:data-[expanded=true]:border-slate-700 transition-colors" data-expanded="${isSubExpanded}">
+                                <div class="flex items-center gap-2 flex-1 mr-4">
+                                    <button onclick="toggleAdminExpand('${sub.id}')" class="text-slate-400 hover:text-secondary w-6 h-6 flex items-center justify-center transition-colors"><i class="fa-solid ${chevronSub}"></i></button>
+                                    <input type="text" onchange="adminUpdateSub('${sec.id}', '${sub.id}', 'name', this.value)" value="${sub.name}" class="flex-1 p-1.5 rounded bg-white dark:bg-darkCard border border-slate-200 dark:border-slate-600 text-sm font-semibold focus:border-secondary outline-none transition-colors" placeholder="Subsection Name">
+                                </div>
+                                <div class="flex gap-3 items-center flex-shrink-0">
+                                    <div class="flex gap-1 border-r border-slate-200 dark:border-slate-600 pr-3 mr-1">
+                                        <button onclick="adminMoveSub('${sec.id}', ${j}, -1)" class="text-slate-400 hover:text-secondary text-sm ${j === 0 ? 'invisible' : ''}" title="Move Up"><i class="fa-solid fa-arrow-up"></i></button>
+                                        <button onclick="adminMoveSub('${sec.id}', ${j}, 1)" class="text-slate-400 hover:text-secondary text-sm ${j === sec.subsections.length - 1 ? 'invisible' : ''}" title="Move Down"><i class="fa-solid fa-arrow-down"></i></button>
+                                    </div>
+                                    <button onclick="adminDeleteSub('${sec.id}', ${j})" class="text-red-400 hover:text-red-500 text-sm"><i class="fa-solid fa-trash"></i></button>
+                                </div>
+                            </div>
+                            <div class="${isSubExpanded ? 'p-3 bg-white dark:bg-slate-800' : 'hidden'}">
+                                ${tilesHtml || '<p class="text-xs text-slate-500 italic ml-6 mb-3">No tiles (cards) in this subsection.</p>'}
+                                <button onclick="adminAddTile('${sec.id}', '${sub.id}')" class="text-xs border border-secondary text-secondary hover:bg-secondary hover:text-white transition-colors px-3 py-1.5 rounded-full ml-6 font-medium"><i class="fa-solid fa-plus mr-1"></i> Add Tile</button>
+                            </div>
+                        </div>
+                    `;
+                }).join('');
+
+                return `
+                    <div class="mb-5 border border-slate-300 dark:border-slate-600 rounded-xl bg-white dark:bg-darkCard shadow-sm overflow-hidden text-left">
+                        <div class="flex items-center justify-between p-4 bg-slate-100/50 dark:bg-slate-800/50 border-b border-transparent data-[expanded=true]:border-slate-200 dark:data-[expanded=true]:border-slate-700 transition-colors" data-expanded="${isSecExpanded}">
+                            <div class="flex items-center gap-3 flex-1 mr-4">
+                                <button onclick="toggleAdminExpand('${sec.id}')" class="text-slate-500 hover:text-secondary w-8 h-8 flex items-center justify-center rounded-full hover:bg-slate-200 dark:hover:bg-slate-700 transition-colors"><i class="fa-solid ${chevronSec} text-lg"></i></button>
+                                <input type="text" onchange="adminUpdateSec('${sec.id}', 'name', this.value)" value="${sec.name}" class="flex-1 p-2 rounded bg-white dark:bg-slate-900 border border-slate-300 dark:border-slate-600 font-bold text-lg focus:border-secondary outline-none transition-colors" placeholder="Section Name">
+                            </div>
+                            <div class="flex gap-3 items-center flex-shrink-0">
+                                <div class="flex gap-1 border-r border-slate-300 dark:border-slate-600 pr-3 mr-1">
+                                    <button onclick="adminMoveSection(${i}, -1)" class="text-slate-400 hover:text-secondary text-sm ${i === 0 ? 'invisible' : ''}" title="Move Up"><i class="fa-solid fa-arrow-up"></i></button>
+                                    <button onclick="adminMoveSection(${i}, 1)" class="text-slate-400 hover:text-secondary text-sm ${i === appData.sections.length - 1 ? 'invisible' : ''}" title="Move Down"><i class="fa-solid fa-arrow-down"></i></button>
+                                </div>
+                                <button onclick="adminDeleteSection(${i})" class="text-red-400 hover:text-red-500 text-lg"><i class="fa-solid fa-trash"></i></button>
+                            </div>
+                        </div>
+                        
+                        <div class="${isSecExpanded ? 'p-5 bg-white dark:bg-darkCard' : 'hidden'}">
+                            <div class="mb-6 ml-2 bg-slate-50 dark:bg-slate-900/50 p-3 rounded-lg border border-slate-100 dark:border-slate-800">
+                                <label class="block text-xs font-semibold mb-1.5 opacity-70"><i class="fa-regular fa-image mr-1"></i> Section Background Image (G-Drive Link or URL) - Optional</label>
+                                <input type="text" onchange="adminUpdateSec('${sec.id}', 'bgImage', this.value)" value="${sec.bgImage || ''}" class="w-full max-w-lg p-2 rounded bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 font-mono text-xs focus:border-secondary outline-none" placeholder="Leave empty for solid background color">
+                            </div>
+                            
+                            <div class="ml-2 pl-4 border-l-2 border-slate-200 dark:border-slate-700">
+                                <h4 class="text-sm font-bold mb-4 text-slate-600 dark:text-slate-400 uppercase tracking-wider flex items-center gap-2"><i class="fa-solid fa-layer-group"></i> Subsections inside ${sec.name}</h4>
+                                ${subsHtml}
+                                <button onclick="adminAddSub('${sec.id}')" class="mt-2 text-sm bg-slate-800 dark:bg-slate-200 text-white dark:text-slate-900 hover:bg-slate-700 dark:hover:bg-slate-300 transition-colors px-4 py-2 rounded-lg font-bold shadow-sm"><i class="fa-solid fa-plus mr-1"></i> Add Subsection</button>
+                            </div>
+                        </div>
                     </div>
-                </div>
-            `).join('');
+                `;
+            }).join('');
 
             return `
                 <div class="space-y-8 text-left">
@@ -1434,77 +1492,11 @@
                     </div>
 
                     <div class="bg-white dark:bg-darkCard p-6 rounded-xl shadow-sm border border-slate-200 dark:border-slate-700 text-left">
-                        <div class="flex justify-between items-center mb-4 border-b border-slate-100 dark:border-slate-800 pb-2 text-left">
-                            <h3 class="text-xl font-bold text-left">Portfolio Sections</h3>
-                            <button onclick="adminAddSection()" class="bg-secondary text-white px-3 py-1 rounded text-sm text-left"><i class="fa-solid fa-plus"></i> Add Section</button>
+                        <div class="flex justify-between items-center mb-6 border-b border-slate-100 dark:border-slate-800 pb-2 text-left">
+                            <h3 class="text-xl font-bold text-left"><i class="fa-solid fa-folder-tree mr-2"></i> Portfolio Content Architecture</h3>
+                            <button onclick="adminAddSection()" class="bg-secondary text-white px-4 py-2 rounded font-bold text-sm text-left shadow-sm hover:bg-blue-600 transition-colors"><i class="fa-solid fa-plus mr-1"></i> Add Root Section</button>
                         </div>
-                        ${sectionsHtml || '<p class="text-sm opacity-50 text-left">No sections.</p>'}
-                    </div>
-                </div>
-            `;
-        }
-
-        function renderAdminSection(sec) {
-            let subsHtml = sec.subsections.map((sub, i) => `
-                <div class="flex justify-between items-center p-3 bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded mb-2 text-left">
-                    <span class="font-medium text-left">${sub.name}</span>
-                    <div class="flex gap-3 text-left items-center">
-                        <div class="flex gap-1 border-r border-slate-200 dark:border-slate-600 pr-3 mr-1">
-                            <button onclick="adminMoveSub('${sec.id}', ${i}, -1)" class="text-slate-400 hover:text-secondary text-sm ${i === 0 ? 'invisible' : ''}" title="Move Up"><i class="fa-solid fa-arrow-up"></i></button>
-                            <button onclick="adminMoveSub('${sec.id}', ${i}, 1)" class="text-slate-400 hover:text-secondary text-sm ${i === sec.subsections.length - 1 ? 'invisible' : ''}" title="Move Down"><i class="fa-solid fa-arrow-down"></i></button>
-                        </div>
-                        <button onclick="adminNavigate(['${sec.id}', '${sub.id}'])" class="text-secondary hover:underline text-sm text-left"><i class="fa-solid fa-pen"></i> Edit</button>
-                        <button onclick="adminDeleteSub('${sec.id}', ${i})" class="text-red-500 hover:underline text-sm text-left"><i class="fa-solid fa-trash"></i></button>
-                    </div>
-                </div>
-            `).join('');
-
-            return `
-                <div class="space-y-6 text-left">
-                    <div class="bg-white dark:bg-darkCard p-6 rounded-xl shadow-sm border border-slate-200 dark:border-slate-700 text-left">
-                        <h3 class="text-xl font-bold mb-4 text-left">Section Properties</h3>
-                        <div class="space-y-4 text-left">
-                            <div class="text-left"><label class="block text-sm mb-1 opacity-70 text-left">Section Name</label><input type="text" onchange="adminUpdateSec('${sec.id}', 'name', this.value)" value="${sec.name}" class="w-full p-2 rounded bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 text-left"></div>
-                            <div class="text-left"><label class="block text-sm mb-1 opacity-70 text-left">Background Image (G-Drive or URL)</label><input type="text" onchange="adminUpdateSec('${sec.id}', 'bgImage', this.value)" value="${sec.bgImage || ''}" placeholder="Leave empty for solid color" class="w-full p-2 rounded bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 font-mono text-sm text-left"></div>
-                        </div>
-                    </div>
-                    <div class="bg-white dark:bg-darkCard p-6 rounded-xl shadow-sm border border-slate-200 dark:border-slate-700 text-left">
-                        <div class="flex justify-between items-center mb-4 text-left">
-                            <h3 class="text-xl font-bold text-left">Subsections</h3>
-                            <button onclick="adminAddSub('${sec.id}')" class="bg-secondary text-white px-3 py-1 rounded text-sm text-left"><i class="fa-solid fa-plus"></i> Add Sub</button>
-                        </div>
-                        ${subsHtml || '<p class="text-sm opacity-50 text-left">No subsections.</p>'}
-                    </div>
-                </div>
-            `;
-        }
-
-        function renderAdminSubsection(sub) {
-            let tilesHtml = sub.tiles.map((tile, i) => `
-                <div class="flex justify-between items-center p-3 bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded mb-2 text-left">
-                    <span class="font-medium text-left"><i class="fa-solid ${tile.icon} text-secondary w-6 text-center"></i> ${getEffectiveHeading(tile)}</span>
-                    <div class="flex gap-3 text-left items-center">
-                        <div class="flex gap-1 border-r border-slate-200 dark:border-slate-600 pr-3 mr-1">
-                            <button onclick="adminMoveTile('${adminPath[0]}', '${sub.id}', ${i}, -1)" class="text-slate-400 hover:text-secondary text-sm ${i === 0 ? 'invisible' : ''}" title="Move Up"><i class="fa-solid fa-arrow-up"></i></button>
-                            <button onclick="adminMoveTile('${adminPath[0]}', '${sub.id}', ${i}, 1)" class="text-slate-400 hover:text-secondary text-sm ${i === sub.tiles.length - 1 ? 'invisible' : ''}" title="Move Down"><i class="fa-solid fa-arrow-down"></i></button>
-                        </div>
-                        <button onclick="adminNavigate(['${adminPath[0]}', '${sub.id}', '${tile.id}'])" class="text-secondary hover:underline text-sm text-left"><i class="fa-solid fa-pen"></i> Edit</button>
-                        <button onclick="adminDeleteTile('${adminPath[0]}', '${sub.id}', ${i})" class="text-red-500 hover:underline text-sm text-left"><i class="fa-solid fa-trash"></i></button>
-                    </div>
-                </div>
-            `).join('');
-
-            return `
-                <div class="space-y-6 text-left">
-                    <div class="bg-white dark:bg-darkCard p-6 rounded-xl shadow-sm border border-slate-200 dark:border-slate-700 text-left">
-                        <h3 class="text-xl font-bold mb-4 text-left">Subsection Properties</h3>
-                        <div class="text-left"><label class="block text-sm mb-1 opacity-70 text-left">Subsection Name</label><input type="text" onchange="adminUpdateSub('${adminPath[0]}', '${sub.id}', 'name', this.value)" value="${sub.name}" class="w-full p-2 rounded bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 text-left"></div>
-                    </div>
-                    
-                    <div class="bg-white dark:bg-darkCard p-6 rounded-xl shadow-sm border border-slate-200 dark:border-slate-700 text-left">
-                        <h3 class="text-xl font-bold mb-4 text-left">Tiles (Cards)</h3>
-                        <button onclick="adminAddTile('${adminPath[0]}', '${sub.id}')" class="bg-secondary text-white px-3 py-1 rounded text-sm mb-4 text-left"><i class="fa-solid fa-plus"></i> Add Tile</button>
-                        ${tilesHtml || '<p class="text-sm opacity-50 text-left">No tiles.</p>'}
+                        ${sectionsHtml || '<p class="text-sm opacity-50 text-left">No sections exist yet. Build your portfolio here!</p>'}
                     </div>
                 </div>
             `;
