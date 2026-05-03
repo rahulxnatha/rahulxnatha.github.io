@@ -168,7 +168,9 @@
         let activeScrollSec = null;
         let activeScrollSub = null;
         let adminPath = []; 
-        let adminExpanded = {}; // Tracks collapsible UI states in admin view
+        let adminExpanded = {}; 
+        let adminSelected = {}; 
+        let revealedArchives = []; // Tracks dynamically revealed easter eggs
         let chatHistory = [{ sender: 'bot', text: "Hello! I am Virtual Rahul. I can help you navigate the portfolio or answer quick questions." }];
         let titleInterval;
         let profileBlobShape = "50%";
@@ -199,10 +201,12 @@
                     id: "sec_exp",
                     name: "Work & Experience",
                     bgImage: "",
+                    visibility: "visible",
                     subsections: [
                         {
                             id: "subsec_drdo",
                             name: "DRDO (Research Centre Imarat)",
+                            visibility: "visible",
                             tiles: [
                                 {
                                     id: "tile_exp_1",
@@ -218,78 +222,9 @@
                                     tabText: "Designed and developed mechanical systems for closed-loop electromechanical actuation focusing on high-precision motion control.\n\nLed 3D CAD modelling of multi-component assemblies. Performed static structural analysis in ANSYS Mechanical.",
                                     icon: "fa-rocket",
                                     bgImage: "",
+                                    visibility: "visible",
                                     mediaLinks: [],
                                     relatedTiles: ["tile_skill_1", "tile_skill_2"]
-                                }
-                            ]
-                        },
-                        {
-                            id: "subsec_cyient",
-                            name: "Cyient",
-                            tiles: [
-                                {
-                                    id: "tile_exp_2",
-                                    heading: "",
-                                    role: "Mechanical Engineer",
-                                    baseSubject: "",
-                                    specialisation: "",
-                                    employer: "Cyient",
-                                    employerUrl: "https://www.cyient.com",
-                                    date: "05/2021 - 03/2022",
-                                    location: "Hyderabad, India",
-                                    description: "Created high-fidelity technical illustrations in IsoDraw for Bombardier train systems. Digitized legacy 2D hardware drawings into parametric 3D CAD models.",
-                                    tabText: "Created high-fidelity technical illustrations in IsoDraw for Bombardier train systems. Digitized legacy 2D hardware drawings into parametric 3D CAD models.",
-                                    icon: "fa-train",
-                                    bgImage: "",
-                                    mediaLinks: [],
-                                    relatedTiles: []
-                                }
-                            ]
-                        }
-                    ]
-                },
-                {
-                    id: "sec_skills",
-                    name: "Skills",
-                    bgImage: "",
-                    subsections: [
-                        {
-                            id: "subsec_core_skills",
-                            name: "Technical Core",
-                            tiles: [
-                                {
-                                    id: "tile_skill_1",
-                                    heading: "CAD / CAE",
-                                    role: "Software Mastery",
-                                    baseSubject: "",
-                                    specialisation: "",
-                                    employer: "",
-                                    employerUrl: "",
-                                    date: "",
-                                    location: "",
-                                    description: "SolidWorks, ANSYS Mechanical, CATIA, Siemens NX, Creo Parametric, KISSsoft, Fusion 360, AutoCAD.",
-                                    tabText: "SolidWorks, ANSYS Mechanical, CATIA, Siemens NX, Creo Parametric, KISSsoft, Fusion 360, AutoCAD.",
-                                    icon: "fa-cube",
-                                    bgImage: "",
-                                    mediaLinks: [],
-                                    relatedTiles: ["tile_exp_1"]
-                                },
-                                {
-                                    id: "tile_skill_2",
-                                    heading: "Design Specialisation",
-                                    role: "Core Domains",
-                                    baseSubject: "",
-                                    specialisation: "",
-                                    employer: "",
-                                    employerUrl: "",
-                                    date: "",
-                                    location: "",
-                                    description: "Precision gear trains, electromechanical actuation systems, packaging of electronics, bearing selection, sheet metal.",
-                                    tabText: "Precision gear trains, electromechanical actuation systems, packaging of electronics, bearing selection, sheet metal.",
-                                    icon: "fa-gears",
-                                    bgImage: "",
-                                    mediaLinks: [],
-                                    relatedTiles: ["tile_exp_1"]
                                 }
                             ]
                         }
@@ -314,6 +249,34 @@
             };
         }
 
+        // Retrieves only sections that are currently cleared to be shown on the main pane
+        function getVisibleSections() {
+            return appData.sections.filter(sec => {
+                const vis = sec.visibility || 'visible';
+                if (vis === 'hidden') return false;
+                if (vis === 'archived' && !revealedArchives.includes(sec.id)) return false;
+                return true;
+            }).map(sec => {
+                const newSec = {...sec};
+                newSec.subsections = sec.subsections.filter(sub => {
+                    const vis = sub.visibility || 'visible';
+                    if (vis === 'hidden') return false;
+                    if (vis === 'archived' && !revealedArchives.includes(sub.id)) return false;
+                    return true;
+                }).map(sub => {
+                    const newSub = {...sub};
+                    newSub.tiles = sub.tiles.filter(tile => {
+                        const vis = tile.visibility || 'visible';
+                        if (vis === 'hidden') return false;
+                        if (vis === 'archived' && !revealedArchives.includes(tile.id)) return false;
+                        return true;
+                    });
+                    return newSub;
+                });
+                return newSec;
+            });
+        }
+
         function getTileById(id) {
             for (let sec of appData.sections) {
                 for (let sub of sec.subsections) {
@@ -325,10 +288,22 @@
             return null;
         }
 
+        function findTilePath(id) {
+            for(let s of appData.sections) {
+                if (s.id === id) return {sec: s};
+                for(let ss of s.subsections) {
+                    if (ss.id === id) return {sec: s, sub: ss};
+                    for(let t of ss.tiles) {
+                        if(t.id === id) return {sec: s, sub: ss, tile: t};
+                    }
+                }
+            }
+            return null;
+        }
+
         function getEffectiveHeading(tile) {
             if (tile.heading && tile.heading.trim() !== '') return tile.heading;
             
-            // Fallback to subtitle to support older saved data gracefully
             const role = (tile.role || tile.subtitle || '').trim();
             const base = (tile.baseSubject || '').trim();
             const spec = (tile.specialisation || '').trim();
@@ -400,7 +375,7 @@
                 url.searchParams.set('theme', document.documentElement.classList.contains('dark') ? 'dark' : 'light');
                 window.history.replaceState({}, '', url);
             } catch (e) {
-                console.warn("URL state syncing is disabled in this preview environment.");
+                console.warn("URL state syncing is disabled.");
             }
         }
 
@@ -559,7 +534,7 @@
             let dropdownMenuHtml = `<div class="flex flex-col text-left">`;
             dropdownMenuHtml += `<div onclick="scrollToNavTarget('top')" class="p-3 border-b border-slate-100 dark:border-slate-800 hover:bg-slate-50 dark:hover:bg-slate-700/50 cursor-pointer font-bold text-primary dark:text-white transition-colors text-left">Overview (Top)</div>`;
             
-            appData.sections.forEach(sec => {
+            getVisibleSections().forEach(sec => {
                 dropdownMenuHtml += `<div onclick="scrollToNavTarget('nav-sec-${sec.id}')" class="p-3 bg-slate-50/50 dark:bg-slate-800/50 hover:bg-slate-100 dark:hover:bg-slate-700 border-b border-slate-100 dark:border-slate-800 cursor-pointer font-semibold text-slate-800 dark:text-slate-200 transition-colors text-left">${sec.name}</div>`;
                 sec.subsections.forEach(sub => {
                     dropdownMenuHtml += `<div onclick="scrollToNavTarget('nav-sub-${sub.id}')" class="p-3 pl-8 hover:bg-slate-50 dark:hover:bg-slate-800/80 cursor-pointer text-sm text-slate-600 dark:text-slate-400 border-b border-slate-50 dark:border-slate-800/50 transition-colors flex items-center gap-2 text-left">
@@ -699,7 +674,7 @@
         }
 
         function renderCategorizedView() {
-            return appData.sections.map(sec => {
+            return getVisibleSections().map(sec => {
                 let secBg = ""; let secOverlay = "";
                 const sDriveData = parseDriveLink(sec.bgImage);
                 if (sDriveData && sDriveData.id) {
@@ -730,7 +705,7 @@
 
         function renderTimelineView() {
             let allTiles = [];
-            appData.sections.forEach(s => s.subsections.forEach(ss => ss.tiles.forEach(t => {
+            getVisibleSections().forEach(s => s.subsections.forEach(ss => ss.tiles.forEach(t => {
                 allTiles.push({...t, secName: s.name, subName: ss.name, sortDate: parseDateForSort(t.date)});
             })));
 
@@ -915,7 +890,7 @@
 
         function renderNewTabHTML() {
             let allTilesHtml = [];
-            appData.sections.forEach(s => s.subsections.forEach(ss => ss.tiles.forEach(t => {
+            getVisibleSections().forEach(s => s.subsections.forEach(ss => ss.tiles.forEach(t => {
                 allTilesHtml.push(`
                     <button onclick="openTab('${t.id}')" class="text-left w-full p-3 bg-white dark:bg-darkCard border border-slate-200 dark:border-slate-700 rounded-lg hover:border-secondary dark:hover:border-secondary mb-2 transition-colors flex items-center gap-3 shadow-sm hover:shadow">
                         <div class="w-8 h-8 rounded-full bg-blue-50 dark:bg-blue-900/30 flex items-center justify-center flex-shrink-0"><i class="fa-solid ${t.icon} text-secondary text-xs"></i></div>
@@ -1049,7 +1024,6 @@
             renderApp(); 
         }
 
-        // Close dropdowns when clicking outside
         document.addEventListener('click', (e) => {
             const menu = document.getElementById('settings-menu');
             const btn = document.getElementById('settings-toggle-btn');
@@ -1110,9 +1084,21 @@
             document.getElementById('search-results').classList.add('hidden');
             document.getElementById('aside-search-input').value = '';
             
-            updateAsideUI();
-            updateTileHighlights();
-            syncStateToURL();
+            const path = findTilePath(tabId);
+            let needsReRender = false;
+            if (path) {
+                if (path.sec && path.sec.visibility === 'archived' && !revealedArchives.includes(path.sec.id)) { revealedArchives.push(path.sec.id); needsReRender = true; }
+                if (path.sub && path.sub.visibility === 'archived' && !revealedArchives.includes(path.sub.id)) { revealedArchives.push(path.sub.id); needsReRender = true; }
+                if (path.tile && path.tile.visibility === 'archived' && !revealedArchives.includes(path.tile.id)) { revealedArchives.push(path.tile.id); needsReRender = true; }
+            }
+
+            if (needsReRender) {
+                renderApp(); 
+            } else {
+                updateAsideUI();
+                updateTileHighlights();
+                syncStateToURL();
+            }
 
             setTimeout(() => {
                 const activeTabEl = document.getElementById(`tab-btn-${tabId}`);
@@ -1147,7 +1133,6 @@
             if (container) container.scrollBy({ left: amount, behavior: 'smooth' });
         }
 
-        // --- Fuzzy Matching Algorithms for Typo Tolerance ---
         function levenshtein(a, b) {
             if(a.length === 0) return b.length;
             if(b.length === 0) return a.length;
@@ -1168,14 +1153,13 @@
 
         function fuzzyMatch(kw, text) {
             if (!kw || !text) return false;
-            if (text.includes(kw)) return true; // Direct substring match
-            if (kw.length <= 3) return false; // Don't fuzzy match very short words (too many false positives)
+            if (text.includes(kw)) return true; 
+            if (kw.length <= 3) return false; 
             
             const words = text.split(/[\s,.\-()]+/);
             for (let w of words) {
                 if (w.length > 3 && Math.abs(w.length - kw.length) <= 2) {
                     const dist = levenshtein(kw, w);
-                    // Allow 1 typo for 4-5 char words, 2 typos for longer words
                     if (dist <= 1 || (kw.length > 5 && dist <= 2)) return true;
                 }
             }
@@ -1189,13 +1173,18 @@
             let results = [];
             const queryWords = val.toLowerCase().split(/\s+/).filter(w => w.length > 0);
             
-            appData.sections.forEach(s => s.subsections.forEach(ss => ss.tiles.forEach(t => {
-                const searchable = [getEffectiveHeading(t), t.description, t.employer].filter(Boolean).join(' ').toLowerCase();
-                
-                // If any typed query word is found via substring OR fuzzy math
-                const isMatch = queryWords.some(qw => fuzzyMatch(qw, searchable));
-                if(isMatch) results.push(t);
-            })));
+            appData.sections.forEach(s => {
+                if ((s.visibility || 'visible') === 'hidden') return;
+                s.subsections.forEach(ss => {
+                    if ((ss.visibility || 'visible') === 'hidden') return;
+                    ss.tiles.forEach(t => {
+                        if ((t.visibility || 'visible') === 'hidden') return;
+                        const searchable = [getEffectiveHeading(t), t.description, t.employer].filter(Boolean).join(' ').toLowerCase();
+                        const isMatch = queryWords.some(qw => fuzzyMatch(qw, searchable));
+                        if(isMatch) results.push(t);
+                    });
+                });
+            });
 
             if(results.length > 0) {
                 resultsDiv.innerHTML = results.map(t => `
@@ -1213,19 +1202,27 @@
             }
         }
 
+        function revealAndScroll(id, targetId) {
+            const path = findTilePath(id);
+            if (path) {
+                if (path.sec && path.sec.visibility === 'archived' && !revealedArchives.includes(path.sec.id)) revealedArchives.push(path.sec.id);
+                if (path.sub && path.sub.visibility === 'archived' && !revealedArchives.includes(path.sub.id)) revealedArchives.push(path.sub.id);
+                if (path.tile && path.tile.visibility === 'archived' && !revealedArchives.includes(path.tile.id)) revealedArchives.push(path.tile.id);
+            }
+            renderApp();
+            setTimeout(() => scrollToNavTarget(targetId), 100);
+        }
+
         function generateBotResponse(query) {
             const lowerQuery = query.toLowerCase();
 
-            // 1. Hardcoded / Greeting checks
             if (lowerQuery.match(/^(hi|hello|hey|greetings|start)/)) {
                 return `Hello! I'm ${appData.uiText.botName.split(' ')[0]}. You can ask me about specific skills, my work experience, or how to contact me.`;
             }
-            // Use fuzzy matching for primary contact triggers
             if (fuzzyMatch('contact', lowerQuery) || fuzzyMatch('email', lowerQuery) || fuzzyMatch('phone', lowerQuery) || fuzzyMatch('hire', lowerQuery)) {
                 return `You can reach me via email at <a href="mailto:${appData.uiText.contactEmail}" class="text-secondary hover:underline">${appData.uiText.contactEmail}</a> or call ${appData.uiText.contactPhone}. Let's connect!`;
             }
 
-            // 2. Keyword extraction (remove stop words)
             const stopWords = ['a', 'an', 'the', 'is', 'at', 'in', 'of', 'for', 'to', 'and', 'or', 'with', 'about', 'my', 'your', 'i', 'me', 'tell', 'what', 'where', 'how', 'do', 'you', 'have', 'know', 'can', 'show', 'any', 'please'];
             const keywords = lowerQuery.replace(/[^\w\s]/g, '').split(/\s+/).filter(w => !stopWords.includes(w) && w.length > 1);
 
@@ -1233,12 +1230,13 @@
                 return "Could you be a bit more specific? I can tell you about my education, experience, or specific skills!";
             }
 
-            // 3. Scoring sections, subsections, and tiles with Typo-Tolerance
             let scoredSections = [];
             let scoredSubsections = [];
             let scoredTiles = [];
 
             appData.sections.forEach(sec => {
+                if ((sec.visibility || 'visible') === 'hidden') return;
+                
                 let secScore = 0;
                 keywords.forEach(kw => {
                     if (fuzzyMatch(kw, sec.name.toLowerCase())) secScore += 10;
@@ -1246,6 +1244,7 @@
                 if (secScore > 0) scoredSections.push({ sec, score: secScore });
 
                 sec.subsections.forEach(sub => {
+                    if ((sub.visibility || 'visible') === 'hidden') return;
                     let subScore = 0;
                     keywords.forEach(kw => {
                         if (fuzzyMatch(kw, sub.name.toLowerCase())) subScore += 10;
@@ -1253,6 +1252,7 @@
                     if (subScore > 0) scoredSubsections.push({ sec, sub, score: subScore });
 
                     sub.tiles.forEach(tile => {
+                        if ((tile.visibility || 'visible') === 'hidden') return;
                         let score = 0;
                         const searchableText = {
                             high: [tile.heading, tile.role, tile.baseSubject, tile.specialisation, tile.employer, sec.name, sub.name].filter(Boolean).join(' ').toLowerCase(),
@@ -1273,7 +1273,6 @@
                 });
             });
 
-            // Find highest scores
             scoredSections.sort((a, b) => b.score - a.score);
             scoredSubsections.sort((a, b) => b.score - a.score);
             scoredTiles.sort((a, b) => b.score - a.score);
@@ -1288,7 +1287,6 @@
                 return `I couldn't find specific details about that in the portfolio data. Feel free to browse the categories or <a href="mailto:${appData.uiText.contactEmail}" class="text-secondary hover:underline">contact me directly</a>!`;
             }
 
-            // 4. Formatting output based on winner
             if (topSecScore === maxScore || topSubScore === maxScore) {
                 let bestMatch = topSecScore >= topSubScore ? scoredSections[0].sec : scoredSubsections[0].sub;
                 let isSec = topSecScore >= topSubScore;
@@ -1297,15 +1295,22 @@
                 let response = `I found a category matching your query: <strong>${bestMatch.name}</strong>.`;
                 response += `<div class="mt-3 flex flex-col gap-2 w-full text-left">`;
                 
-                // Add Scroll Button
-                response += `<button onclick="scrollToNavTarget('${targetId}')" class="text-xs bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 border border-slate-300 dark:border-slate-600 px-3 py-2 rounded hover:bg-slate-200 dark:hover:bg-slate-700 transition-colors text-left flex items-center justify-between shadow-sm"><span class="truncate pr-2 font-medium">Scroll to ${bestMatch.name}</span> <i class="fa-solid fa-arrow-turn-down"></i></button>`;
+                response += `<button onclick="revealAndScroll('${bestMatch.id}', '${targetId}')" class="text-xs bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 border border-slate-300 dark:border-slate-600 px-3 py-2 rounded hover:bg-slate-200 dark:hover:bg-slate-700 transition-colors text-left flex items-center justify-between shadow-sm"><span class="truncate pr-2 font-medium">Scroll to ${bestMatch.name}</span> <i class="fa-solid fa-arrow-turn-down"></i></button>`;
 
-                // Get relevant tiles within this category and sort by specific tile score
                 let relevantTiles = [];
                 if (isSec) {
-                    bestMatch.subsections.forEach(ss => ss.tiles.forEach(t => relevantTiles.push(t)));
+                    bestMatch.subsections.forEach(ss => {
+                        if ((ss.visibility || 'visible') === 'hidden') return;
+                        ss.tiles.forEach(t => {
+                            if ((t.visibility || 'visible') === 'hidden') return;
+                            relevantTiles.push(t);
+                        });
+                    });
                 } else {
-                    bestMatch.tiles.forEach(t => relevantTiles.push(t));
+                    bestMatch.tiles.forEach(t => {
+                        if ((t.visibility || 'visible') === 'hidden') return;
+                        relevantTiles.push(t);
+                    });
                 }
 
                 relevantTiles.forEach(rt => {
@@ -1322,7 +1327,6 @@
                 response += `</div>`;
                 return response;
             } else {
-                // Specific Tile wins
                 const topMatch = scoredTiles[0].tile;
                 let response = `I found some relevant information. Check out <strong>${getEffectiveHeading(topMatch)}</strong>.`;
                 
@@ -1352,28 +1356,23 @@
             updateAsideUI();
             setTimeout(() => { const cw = document.getElementById('chat-window'); if (cw) cw.scrollTop = cw.scrollHeight; }, 50);
             
-            // Show typing indicator
             const typingId = 'typing_' + Date.now();
             chatHistory.push({ sender: 'bot', text: '<i class="fa-solid fa-ellipsis fa-fade text-slate-400 text-lg"></i>', id: typingId });
             updateAsideUI();
             setTimeout(() => { const cw = document.getElementById('chat-window'); if (cw) cw.scrollTop = cw.scrollHeight; }, 50);
 
             setTimeout(() => {
-                // Remove typing indicator
                 chatHistory = chatHistory.filter(msg => msg.id !== typingId);
-                
-                // Generate dynamic response
                 const response = generateBotResponse(text);
-
                 chatHistory.push({ sender: 'bot', text: response });
                 updateAsideUI();
                 setTimeout(() => { const cw = document.getElementById('chat-window'); if (cw) cw.scrollTop = cw.scrollHeight; }, 50);
-            }, 600 + Math.random() * 500); // Slight random delay for realism
+            }, 600 + Math.random() * 500);
         }
 
         function scrollToNavTarget(targetId) {
-            toggleNavMenu(null, false); // close menu
-            if (window.innerWidth < 768 && isAsideOpenMobile) toggleMobileAside(); // Close chat on mobile!
+            toggleNavMenu(null, false); 
+            if (window.innerWidth < 768 && isAsideOpenMobile) toggleMobileAside(); 
             
             if (targetId === 'top') {
                 document.getElementById('left-content').scrollTo({top: 0, behavior: 'smooth'});
@@ -1507,13 +1506,23 @@
 
         function adminNavigate(pathArray) { adminPath = pathArray; renderApp(); }
         function toggleAdminExpand(id) { adminExpanded[id] = !adminExpanded[id]; adminRenderWithScroll(); }
+        
+        function toggleAdminSelect(id) {
+            if (adminSelected[id]) delete adminSelected[id];
+            else adminSelected[id] = true;
+            adminRenderWithScroll();
+        }
+
+        function clearAdminSelection() {
+            adminSelected = {};
+            adminRenderWithScroll();
+        }
 
         function renderAdminDashboard() {
             let breadcrumbs = `<button onclick="adminNavigate([])" class="hover:text-secondary font-medium">Root (Global)</button>`;
             let editorHtml = '';
 
             if (adminPath.length === 3) {
-                // Editing a specific Tile
                 const sec = appData.sections.find(s => s.id === adminPath[0]);
                 const sub = sec?.subsections.find(s => s.id === adminPath[1]);
                 const tile = sub?.tiles.find(t => t.id === adminPath[2]);
@@ -1525,16 +1534,34 @@
                     editorHtml = renderAdminTile(tile);
                 } else {
                     editorHtml = renderAdminRoot();
-                    adminPath = []; // fallback if missing
+                    adminPath = []; 
                 }
             } else {
-                // Root view (which now includes Sections and Subsections)
                 editorHtml = renderAdminRoot();
             }
 
             const isDark = document.documentElement.classList.contains('dark');
             const themeToggleKnobClass = isDark ? 'translate-x-6' : 'translate-x-1';
             const themeToggleBgClass = isDark ? 'bg-secondary' : 'bg-slate-300 dark:bg-slate-600';
+
+            let bulkToolbar = '';
+            const selCount = Object.keys(adminSelected).length;
+            if (selCount > 0 && adminPath.length !== 3) { // Hide toolbar if inside specific tile editor
+                bulkToolbar = `
+                    <div class="fixed bottom-6 left-1/2 transform -translate-x-1/2 bg-slate-900 text-white px-5 py-3 rounded-full shadow-[0_20px_50px_rgba(0,0,0,0.5)] border border-slate-700 z-[100] flex items-center gap-5 text-sm font-semibold transition-all duration-300">
+                        <div class="bg-slate-800 px-3 py-1 rounded-full text-secondary whitespace-nowrap">${selCount} Selected</div>
+                        <div class="h-6 w-px bg-slate-700"></div>
+                        <button onclick="adminBulkAction('visible')" class="hover:text-green-400 transition-colors flex items-center gap-2" title="Set Visible"><i class="fa-solid fa-eye"></i></button>
+                        <button onclick="adminBulkAction('hidden')" class="hover:text-red-400 transition-colors flex items-center gap-2" title="Set Strictly Hidden"><i class="fa-solid fa-eye-slash"></i></button>
+                        <button onclick="adminBulkAction('archived')" class="hover:text-purple-400 transition-colors flex items-center gap-2" title="Set Easter Egg (Archive)"><i class="fa-solid fa-ghost"></i></button>
+                        <div class="h-6 w-px bg-slate-700"></div>
+                        <button onclick="adminBulkAction('duplicate')" class="hover:text-blue-400 transition-colors flex items-center gap-2" title="Duplicate"><i class="fa-solid fa-copy"></i></button>
+                        <button onclick="adminBulkAction('delete')" class="hover:text-red-500 transition-colors flex items-center gap-2" title="Delete"><i class="fa-solid fa-trash"></i></button>
+                        <div class="h-6 w-px bg-slate-700"></div>
+                        <button onclick="clearAdminSelection()" class="hover:text-slate-400 transition-colors" title="Clear Selection"><i class="fa-solid fa-xmark text-lg"></i></button>
+                    </div>
+                `;
+            }
 
             return `
                 <div class="h-screen w-full bg-slate-50 dark:bg-darkBg text-slate-800 dark:text-slate-200 flex flex-col text-left">
@@ -1551,12 +1578,19 @@
                             <button onclick="savePortfolioData()" id="save-btn" class="px-4 py-2 bg-green-500 text-white rounded text-sm font-bold shadow-md hover:bg-green-600 transition-colors text-left"><i class="fa-solid fa-floppy-disk mr-1"></i> Save</button>
                         </div>
                     </div>
-                    <div id="admin-scroll-container" class="flex-1 max-w-4xl w-full mx-auto p-4 md:p-6 overflow-y-auto pb-20 text-left relative">
+                    <div id="admin-scroll-container" class="flex-1 max-w-4xl w-full mx-auto p-4 md:p-6 overflow-y-auto pb-32 text-left relative">
                         ${editorHtml}
                     </div>
+                    ${bulkToolbar}
                 </div>
             `;
         }
+
+        const getVisBadge = (v) => {
+            if (v === 'hidden') return '<span class="ml-2 px-1.5 py-0.5 text-[9px] font-bold uppercase tracking-widest bg-red-100 text-red-600 rounded">Hidden</span>';
+            if (v === 'archived') return '<span class="ml-2 px-1.5 py-0.5 text-[9px] font-bold uppercase tracking-widest bg-purple-100 text-purple-600 rounded"><i class="fa-solid fa-ghost mr-1"></i>Easter Egg</span>';
+            return '';
+        };
 
         function renderAdminRoot() {
             const ui = appData.uiText; const hero = appData.hero;
@@ -1572,8 +1606,10 @@
                     let tilesHtml = sub.tiles.map((tile, k) => `
                         <div class="flex justify-between items-center p-2 bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded mb-2 text-left ml-6 shadow-sm hover:border-secondary transition-colors">
                             <div class="flex items-center flex-1 mr-4 gap-2 text-left">
-                                <i class="fa-solid ${tile.icon} text-secondary w-6 text-center flex-shrink-0"></i>
+                                <input type="checkbox" onclick="event.stopPropagation()" onchange="toggleAdminSelect('${tile.id}')" ${adminSelected[tile.id] ? 'checked' : ''} class="w-4 h-4 ml-1 cursor-pointer flex-shrink-0">
+                                <i class="fa-solid ${tile.icon} text-secondary w-6 text-center flex-shrink-0 ml-1"></i>
                                 <input type="text" onchange="adminUpdateTileProp('${sec.id}', '${sub.id}', '${tile.id}', 'heading', this.value)" value="${(tile.heading || '').replace(/"/g, '&quot;')}" placeholder="${getEffectiveHeading({...tile, heading: ''}).replace(/"/g, '&quot;')}" class="flex-1 p-1.5 rounded bg-white dark:bg-darkCard border border-slate-200 dark:border-slate-600 text-sm font-medium focus:border-secondary outline-none transition-colors" title="Tile Heading Override (Leave empty for auto-generated heading)">
+                                ${getVisBadge(tile.visibility || 'visible')}
                             </div>
                             <div class="flex gap-2 text-left items-center flex-shrink-0">
                                 <div class="flex gap-1 border-r border-slate-200 dark:border-slate-600 pr-2 mr-1">
@@ -1581,7 +1617,6 @@
                                     <button onclick="adminMoveTile('${sec.id}', '${sub.id}', ${k}, 1)" class="text-slate-400 hover:text-secondary text-xs ${k === sub.tiles.length - 1 ? 'invisible' : ''}" title="Move Down"><i class="fa-solid fa-arrow-down"></i></button>
                                 </div>
                                 <button onclick="adminNavigate(['${sec.id}', '${sub.id}', '${tile.id}'])" class="bg-secondary text-white px-3 py-1 rounded text-xs text-left shadow-sm hover:bg-blue-600 transition-colors"><i class="fa-solid fa-pen mr-1"></i> Edit Details</button>
-                                <button onclick="adminDeleteTile('${sec.id}', '${sub.id}', ${k})" class="text-slate-400 hover:text-red-500 text-sm ml-1"><i class="fa-solid fa-trash"></i></button>
                             </div>
                         </div>
                     `).join('');
@@ -1590,15 +1625,16 @@
                         <div class="mb-3 border border-slate-200 dark:border-slate-700 rounded-lg bg-white dark:bg-slate-800 text-left overflow-hidden shadow-sm">
                             <div class="flex items-center justify-between p-3 bg-slate-50/50 dark:bg-slate-900/50 border-b border-transparent data-[expanded=true]:border-slate-200 dark:data-[expanded=true]:border-slate-700 transition-colors" data-expanded="${isSubExpanded}">
                                 <div class="flex items-center gap-2 flex-1 mr-4">
-                                    <button onclick="toggleAdminExpand('${sub.id}')" class="text-slate-400 hover:text-secondary w-6 h-6 flex items-center justify-center transition-colors"><i class="fa-solid ${chevronSub}"></i></button>
+                                    <input type="checkbox" onclick="event.stopPropagation()" onchange="toggleAdminSelect('${sub.id}')" ${adminSelected[sub.id] ? 'checked' : ''} class="w-4 h-4 ml-1 cursor-pointer flex-shrink-0">
+                                    <button onclick="toggleAdminExpand('${sub.id}')" class="text-slate-400 hover:text-secondary w-6 h-6 flex items-center justify-center transition-colors ml-1"><i class="fa-solid ${chevronSub}"></i></button>
                                     <input type="text" onchange="adminUpdateSub('${sec.id}', '${sub.id}', 'name', this.value)" value="${sub.name}" class="flex-1 p-1.5 rounded bg-white dark:bg-darkCard border border-slate-200 dark:border-slate-600 text-sm font-semibold focus:border-secondary outline-none transition-colors" placeholder="Subsection Name">
+                                    ${getVisBadge(sub.visibility || 'visible')}
                                 </div>
                                 <div class="flex gap-3 items-center flex-shrink-0">
-                                    <div class="flex gap-1 border-r border-slate-200 dark:border-slate-600 pr-3 mr-1">
+                                    <div class="flex gap-1 pr-3 mr-1">
                                         <button onclick="adminMoveSub('${sec.id}', ${j}, -1)" class="text-slate-400 hover:text-secondary text-sm ${j === 0 ? 'invisible' : ''}" title="Move Up"><i class="fa-solid fa-arrow-up"></i></button>
                                         <button onclick="adminMoveSub('${sec.id}', ${j}, 1)" class="text-slate-400 hover:text-secondary text-sm ${j === sec.subsections.length - 1 ? 'invisible' : ''}" title="Move Down"><i class="fa-solid fa-arrow-down"></i></button>
                                     </div>
-                                    <button onclick="adminDeleteSub('${sec.id}', ${j})" class="text-red-400 hover:text-red-500 text-sm"><i class="fa-solid fa-trash"></i></button>
                                 </div>
                             </div>
                             <div class="${isSubExpanded ? 'p-3 bg-white dark:bg-slate-800' : 'hidden'}">
@@ -1613,15 +1649,16 @@
                     <div class="mb-5 border border-slate-300 dark:border-slate-600 rounded-xl bg-white dark:bg-darkCard shadow-sm overflow-hidden text-left">
                         <div class="flex items-center justify-between p-4 bg-slate-100/50 dark:bg-slate-800/50 border-b border-transparent data-[expanded=true]:border-slate-200 dark:data-[expanded=true]:border-slate-700 transition-colors" data-expanded="${isSecExpanded}">
                             <div class="flex items-center gap-3 flex-1 mr-4">
-                                <button onclick="toggleAdminExpand('${sec.id}')" class="text-slate-500 hover:text-secondary w-8 h-8 flex items-center justify-center rounded-full hover:bg-slate-200 dark:hover:bg-slate-700 transition-colors"><i class="fa-solid ${chevronSec} text-lg"></i></button>
+                                <input type="checkbox" onclick="event.stopPropagation()" onchange="toggleAdminSelect('${sec.id}')" ${adminSelected[sec.id] ? 'checked' : ''} class="w-4 h-4 ml-1 cursor-pointer flex-shrink-0">
+                                <button onclick="toggleAdminExpand('${sec.id}')" class="text-slate-500 hover:text-secondary w-8 h-8 flex items-center justify-center rounded-full hover:bg-slate-200 dark:hover:bg-slate-700 transition-colors ml-1"><i class="fa-solid ${chevronSec} text-lg"></i></button>
                                 <input type="text" onchange="adminUpdateSec('${sec.id}', 'name', this.value)" value="${sec.name}" class="flex-1 p-2 rounded bg-white dark:bg-slate-900 border border-slate-300 dark:border-slate-600 font-bold text-lg focus:border-secondary outline-none transition-colors" placeholder="Section Name">
+                                ${getVisBadge(sec.visibility || 'visible')}
                             </div>
                             <div class="flex gap-3 items-center flex-shrink-0">
-                                <div class="flex gap-1 border-r border-slate-300 dark:border-slate-600 pr-3 mr-1">
+                                <div class="flex gap-1 pr-3 mr-1">
                                     <button onclick="adminMoveSection(${i}, -1)" class="text-slate-400 hover:text-secondary text-sm ${i === 0 ? 'invisible' : ''}" title="Move Up"><i class="fa-solid fa-arrow-up"></i></button>
                                     <button onclick="adminMoveSection(${i}, 1)" class="text-slate-400 hover:text-secondary text-sm ${i === appData.sections.length - 1 ? 'invisible' : ''}" title="Move Down"><i class="fa-solid fa-arrow-down"></i></button>
                                 </div>
-                                <button onclick="adminDeleteSection(${i})" class="text-red-400 hover:text-red-500 text-lg"><i class="fa-solid fa-trash"></i></button>
                             </div>
                         </div>
                         
@@ -1677,27 +1714,30 @@
                 </div>
             `;
         }
-        function renderAdminSubsection(sub) {
-            let tilesHtml = sub.tiles.map((tile, i) => `
-                <div class="flex justify-between items-center p-2.5 bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded mb-2 text-left">
-                    <div class="flex items-center flex-1 mr-4 gap-2 text-left">
-                        <i class="fa-solid ${tile.icon} text-secondary w-6 text-center flex-shrink-0"></i>
-                        <input type="text" onchange="adminUpdateTileProp('${adminPath[0]}', '${sub.id}', '${tile.id}', 'heading', this.value)" value="${(tile.heading || '').replace(/"/g, '&quot;')}" placeholder="${getEffectiveHeading({...tile, heading: ''}).replace(/"/g, '&quot;')}" class="flex-1 p-1.5 rounded bg-white dark:bg-darkCard border border-slate-200 dark:border-slate-600 text-sm font-medium focus:border-secondary outline-none transition-colors" title="Tile Heading Override (Leave empty for auto-generated heading)">
-                    </div>
-                    <div class="flex gap-3 text-left items-center flex-shrink-0">
-                        <div class="flex gap-1 border-r border-slate-200 dark:border-slate-600 pr-3 mr-1">
-                            <button onclick="adminMoveTile('${adminPath[0]}', '${sub.id}', ${i}, -1)" class="text-slate-400 hover:text-secondary text-sm ${i === 0 ? 'invisible' : ''}" title="Move Up"><i class="fa-solid fa-arrow-up"></i></button>
-                            <button onclick="adminMoveTile('${adminPath[0]}', '${sub.id}', ${i}, 1)" class="text-slate-400 hover:text-secondary text-sm ${i === sub.tiles.length - 1 ? 'invisible' : ''}" title="Move Down"><i class="fa-solid fa-arrow-down"></i></button>
-                        </div>
-                        <button onclick="adminNavigate(['${adminPath[0]}', '${sub.id}', '${tile.id}'])" class="text-secondary hover:underline text-sm text-left"><i class="fa-solid fa-pen"></i> Edit Details</button>
-                        <button onclick="adminDeleteTile('${adminPath[0]}', '${sub.id}', ${i})" class="text-red-500 hover:underline text-sm text-left"><i class="fa-solid fa-trash"></i></button>
-                    </div>
+
+        function renderAdminTile(tile) {
+            let allTiles = [];
+            appData.sections.forEach(s => s.subsections.forEach(ss => ss.tiles.forEach(t => {
+                if (t.id !== tile.id) allTiles.push({id: t.id, name: getEffectiveHeading(t), sid: s.name});
+            })));
+
+            let selectHtml = `<select multiple onchange="adminUpdateRelatedTiles('${adminPath[0]}', '${adminPath[1]}', '${tile.id}', this)" class="w-full p-2 rounded bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 h-32 text-sm text-left">`;
+            allTiles.forEach(t => { const isSel = (tile.relatedTiles || []).includes(t.id) ? 'selected' : ''; selectHtml += `<option value="${t.id}" ${isSel}>${t.sid} > ${t.name}</option>`; });
+            selectHtml += `</select>`;
+
+            let mediaHtml = (tile.mediaLinks || []).map((link, i) => `
+                <div class="flex gap-2 mb-2 text-left">
+                    <input type="text" onchange="adminUpdateMedia('${adminPath[0]}', '${adminPath[1]}', '${tile.id}', ${i}, this.value)" value="${link.replace(/"/g, '&quot;')}" class="flex-1 p-2 rounded bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 text-sm font-mono text-left" placeholder="G-Drive Link, Image URL, or <iframe src='...'></iframe>">
+                    <button onclick="adminRemoveMedia('${adminPath[0]}', '${adminPath[1]}', '${tile.id}', ${i})" class="bg-red-500 text-white px-3 rounded text-left"><i class="fa-solid fa-trash"></i></button>
                 </div>
             `).join('');
 
             return `
                 <div class="bg-white dark:bg-darkCard p-6 rounded-xl shadow-sm border border-slate-200 dark:border-slate-700 space-y-6 text-left">
-                    <h3 class="text-xl font-bold border-b border-slate-100 dark:border-slate-800 pb-2 text-left">Edit Tile</h3>
+                    <div class="flex justify-between items-center border-b border-slate-100 dark:border-slate-800 pb-2">
+                        <h3 class="text-xl font-bold text-left">Edit Tile Details</h3>
+                        <button onclick="adminNavigate([])" class="text-sm text-slate-500 hover:text-secondary"><i class="fa-solid fa-arrow-left mr-1"></i> Back to Architecture</button>
+                    </div>
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-4 text-left w-full">
                         <div class="md:col-span-2 text-left"><label class="block text-sm mb-1 opacity-70 text-left">Tile Heading (Optional)</label><input type="text" onchange="adminUpdateTileProp('${adminPath[0]}', '${adminPath[1]}', '${tile.id}', 'heading', this.value)" value="${tile.heading || ''}" class="w-full p-2 rounded bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 font-bold text-left" placeholder="Leave empty for auto-heading: Role, Base Subject (Specialisation) @ Employer"></div>
                         <div class="text-left"><label class="block text-sm mb-1 opacity-70 text-left">Role / Title (e.g. JRF, BTech, Engineer)</label><input type="text" onchange="adminUpdateTileProp('${adminPath[0]}', '${adminPath[1]}', '${tile.id}', 'role', this.value)" value="${tile.role || tile.subtitle || ''}" class="w-full p-2 rounded bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 text-left"></div>
@@ -1738,15 +1778,72 @@
             if (newScroller) newScroller.scrollTop = scrollPos;
         }
 
+        function adminBulkAction(action) {
+            const ids = Object.keys(adminSelected);
+            if (ids.length === 0) return;
+
+            if (action === 'delete') {
+                if (!confirm(`Are you sure you want to permanently delete ${ids.length} selected item(s)?`)) return;
+                appData.sections = appData.sections.filter(s => !ids.includes(s.id));
+                appData.sections.forEach(s => {
+                    s.subsections = s.subsections.filter(ss => !ids.includes(ss.id));
+                    s.subsections.forEach(ss => { ss.tiles = ss.tiles.filter(t => !ids.includes(t.id)); });
+                });
+            } 
+            else if (['visible', 'hidden', 'archived'].includes(action)) {
+                appData.sections.forEach(s => {
+                    if (ids.includes(s.id)) s.visibility = action;
+                    s.subsections.forEach(ss => {
+                        if (ids.includes(ss.id)) ss.visibility = action;
+                        ss.tiles.forEach(t => { if (ids.includes(t.id)) t.visibility = action; });
+                    });
+                });
+            }
+            else if (action === 'duplicate') {
+                for (let i = appData.sections.length - 1; i >= 0; i--) {
+                    const s = appData.sections[i];
+                    if (ids.includes(s.id)) {
+                        let clone = JSON.parse(JSON.stringify(s));
+                        clone.id = generateId(); clone.name += " (Copy)";
+                        clone.subsections.forEach(ss => { ss.id = generateId(); ss.tiles.forEach(t => t.id = generateId()); });
+                        appData.sections.splice(i + 1, 0, clone);
+                        continue; 
+                    }
+                    for (let j = s.subsections.length - 1; j >= 0; j--) {
+                        const ss = s.subsections[j];
+                        if (ids.includes(ss.id)) {
+                            let clone = JSON.parse(JSON.stringify(ss));
+                            clone.id = generateId(); clone.name += " (Copy)";
+                            clone.tiles.forEach(t => t.id = generateId());
+                            s.subsections.splice(j + 1, 0, clone);
+                            continue;
+                        }
+                        for (let k = ss.tiles.length - 1; k >= 0; k--) {
+                            const t = ss.tiles[k];
+                            if (ids.includes(t.id)) {
+                                let clone = JSON.parse(JSON.stringify(t));
+                                clone.id = generateId();
+                                if(clone.heading) clone.heading += " (Copy)";
+                                ss.tiles.splice(k + 1, 0, clone);
+                            }
+                        }
+                    }
+                }
+            }
+            adminSelected = {};
+            adminRenderWithScroll();
+        }
+
         function adminUpdateSec(sId, prop, val) { appData.sections.find(s=>s.id===sId)[prop] = val; adminRenderWithScroll(); }
         function adminUpdateSub(sId, ssId, prop, val) { appData.sections.find(s=>s.id===sId).subsections.find(ss=>ss.id===ssId)[prop] = val; adminRenderWithScroll(); }
         function adminUpdateTileProp(sId, ssId, tId, prop, val) { appData.sections.find(s=>s.id===sId).subsections.find(ss=>ss.id===ssId).tiles.find(t=>t.id===tId)[prop] = val; adminRenderWithScroll(); }
-        function adminAddSection() { appData.sections.push({id: generateId(), name: "New Section", bgImage: "", subsections: []}); adminRenderWithScroll(); }
+        function adminAddSection() { appData.sections.push({id: generateId(), name: "New Section", bgImage: "", visibility: "visible", subsections: []}); adminRenderWithScroll(); }
+        function adminAddSub(sId) { appData.sections.find(s=>s.id===sId).subsections.push({id: generateId(), name: "New Subsection", visibility: "visible", tiles: []}); adminRenderWithScroll(); }
+        function adminAddTile(sId, ssId) { appData.sections.find(s=>s.id===sId).subsections.find(ss=>ss.id===ssId).tiles.push({id: generateId(), heading: "", role: "New Role", baseSubject: "", specialisation: "", employer: "Company", employerUrl: "", score: "", maxScore: "", date: "", location: "", description: "", tabText: "", icon: "fa-cube", bgImage: "", visibility: "visible", mediaLinks: [], relatedTiles: []}); adminRenderWithScroll(); }
         function adminDeleteSection(idx) { if(confirm("Delete section?")) { appData.sections.splice(idx, 1); adminRenderWithScroll(); } }
-        function adminAddSub(sId) { appData.sections.find(s=>s.id===sId).subsections.push({id: generateId(), name: "New Subsection", tiles: []}); adminRenderWithScroll(); }
         function adminDeleteSub(sId, idx) { if(confirm("Delete subsection?")) { appData.sections.find(s=>s.id===sId).subsections.splice(idx, 1); adminRenderWithScroll(); } }
-        function adminAddTile(sId, ssId) { appData.sections.find(s=>s.id===sId).subsections.find(ss=>ss.id===ssId).tiles.push({id: generateId(), heading: "", role: "New Role", baseSubject: "", specialisation: "", employer: "Company", employerUrl: "", score: "", maxScore: "", date: "", location: "", description: "", tabText: "", icon: "fa-cube", bgImage: "", mediaLinks: [], relatedTiles: []}); adminRenderWithScroll(); }
         function adminDeleteTile(sId, ssId, idx) { if(confirm("Delete tile?")) { appData.sections.find(s=>s.id===sId).subsections.find(ss=>ss.id===ssId).tiles.splice(idx, 1); adminRenderWithScroll(); } }
+        
         function adminUpdateRelatedTiles(sId, ssId, tId, selectElem) { const selected = Array.from(selectElem.selectedOptions).map(opt => opt.value); appData.sections.find(s=>s.id===sId).subsections.find(ss=>ss.id===ssId).tiles.find(t=>t.id===tId).relatedTiles = selected; adminRenderWithScroll(); }
         function adminAddMedia(sId, ssId, tId) { appData.sections.find(s=>s.id===sId).subsections.find(ss=>ss.id===ssId).tiles.find(t=>t.id===tId).mediaLinks.push(""); adminRenderWithScroll(); }
         function adminUpdateMedia(sId, ssId, tId, idx, val) { appData.sections.find(s=>s.id===sId).subsections.find(ss=>ss.id===ssId).tiles.find(t=>t.id===tId).mediaLinks[idx] = val; adminRenderWithScroll(); }
@@ -1786,7 +1883,6 @@
             appData = await fetchPortfolioData();
             loadStateFromURL();
             
-            // Wait briefly to show off the generative loader, then smoothly fade out
             setTimeout(() => {
                 const loader = document.getElementById('loader-wrapper');
                 if (loader) {
