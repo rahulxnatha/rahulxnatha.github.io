@@ -45,16 +45,6 @@
         .chat-bubble { animation: fadeIn 0.3s ease-out; }
         @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
 
-        /* Theme-aware Dynamic Loader */
-        #loader-wrapper { background-color: #f8fafc; color: #334155; transition: background-color 0.3s; }
-        @media (prefers-color-scheme: dark) { #loader-wrapper { background-color: #0b1120; color: #cbd5e1; } }
-        html.dark #loader-wrapper { background-color: #0b1120; color: #cbd5e1; }
-        .pulse-text { animation: pulse 1.5s ease-in-out infinite; z-index: 10; position: relative; }
-        @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.5; } }
-        
-        /* Animated Title Setup for Multi-line */
-        .hero-phrase { transition: all 0.6s cubic-bezier(0.22, 1, 0.36, 1); }
-
         /* Fixed Layout */
         #main-wrapper { display: flex; height: 100vh; overflow: hidden; padding-top: 4rem; }
         #left-content { flex: 1; overflow-y: auto; scroll-behavior: smooth; position: relative; }
@@ -106,12 +96,10 @@
             window.addEventListener('resize', resize);
             resize();
 
-            // Detect theme naturally
             const isDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
-            const bgTrail = isDark ? 'rgba(15, 23, 42, 0.25)' : 'rgba(248, 250, 252, 0.25)'; // slate-900 / slate-50
-            const lColorRGB = isDark ? '59, 130, 246' : '37, 99, 235'; // secondary blue
+            const bgTrail = isDark ? 'rgba(15, 23, 42, 0.25)' : 'rgba(248, 250, 252, 0.25)';
+            const lColorRGB = isDark ? '59, 130, 246' : '37, 99, 235';
 
-            // Create particles
             for(let i=0; i < (window.innerWidth < 768 ? 40 : 100); i++) {
                 particles.push({
                     x: Math.random() * w, y: Math.random() * h,
@@ -122,7 +110,6 @@
 
             let animId;
             function draw() {
-                // Background fade for motion trails
                 ctx.fillStyle = bgTrail;
                 ctx.fillRect(0, 0, w, h);
 
@@ -136,7 +123,6 @@
                     ctx.fillStyle = `rgb(${lColorRGB})`;
                     ctx.fill();
 
-                    // Connect particles within distance
                     for(let j=i+1; j<particles.length; j++) {
                         const p2 = particles[j];
                         const dist = Math.hypot(p.x - p2.x, p.y - p2.y);
@@ -151,7 +137,6 @@
                     }
                 });
                 
-                // Random technical text updates
                 if(Math.random() < 0.02) {
                     const statuses = ["Loading Assets...", "Compiling Geometry...", "Syncing Database...", "Preparing Interface...", "Almost Ready..."];
                     const statusEl = document.getElementById('loader-status');
@@ -220,8 +205,10 @@
                             tiles: [
                                 {
                                     id: "tile_exp_1",
-                                    heading: "Senior Research Fellow",
-                                    subtitle: "Mechanical Engineering",
+                                    heading: "", // Auto-generated
+                                    subtitle: "Senior Research Fellow",
+                                    employer: "Research Centre Imarat, DRDO",
+                                    employerUrl: "https://drdo.gov.in",
                                     date: "03/2022 - 03/2026",
                                     location: "Hyderabad, India",
                                     description: "Designed and developed mechanical systems for closed-loop electromechanical actuation focusing on high-precision motion control.\n\nLed 3D CAD modelling of multi-component assemblies. Performed static structural analysis in ANSYS Mechanical.",
@@ -239,8 +226,10 @@
                             tiles: [
                                 {
                                     id: "tile_exp_2",
-                                    heading: "Mechanical Engineer",
-                                    subtitle: "Full Time",
+                                    heading: "", // Auto-generated
+                                    subtitle: "Mechanical Engineer",
+                                    employer: "Cyient",
+                                    employerUrl: "https://www.cyient.com",
                                     date: "05/2021 - 03/2022",
                                     location: "Hyderabad, India",
                                     description: "Created high-fidelity technical illustrations in IsoDraw for Bombardier train systems. Digitized legacy 2D hardware drawings into parametric 3D CAD models.",
@@ -267,6 +256,8 @@
                                     id: "tile_skill_1",
                                     heading: "CAD / CAE",
                                     subtitle: "Software Mastery",
+                                    employer: "",
+                                    employerUrl: "",
                                     date: "",
                                     location: "",
                                     description: "SolidWorks, ANSYS Mechanical, CATIA, Siemens NX, Creo Parametric, KISSsoft, Fusion 360, AutoCAD.",
@@ -280,6 +271,8 @@
                                     id: "tile_skill_2",
                                     heading: "Design Specialisation",
                                     subtitle: "Core Domains",
+                                    employer: "",
+                                    employerUrl: "",
                                     date: "",
                                     location: "",
                                     description: "Precision gear trains, electromechanical actuation systems, packaging of electronics, bearing selection, sheet metal.",
@@ -321,6 +314,21 @@
                 }
             }
             return null;
+        }
+
+        function getEffectiveHeading(tile) {
+            if (tile.heading && tile.heading.trim() !== '') return tile.heading;
+            const sub = tile.subtitle ? tile.subtitle.trim() : '';
+            const emp = tile.employer ? tile.employer.trim() : '';
+            if (sub && emp) return `${sub} @ ${emp}`;
+            if (sub) return sub;
+            if (emp) return emp;
+            return 'Untitled Tile';
+        }
+
+        function formatText(text, marginClass = 'mt-4') {
+            if (!text) return '';
+            return text.split(/\n+/).filter(p => p.trim() !== '').map((p, i) => `<p class="${i > 0 ? marginClass : ''}">${p}</p>`).join('');
         }
 
         function generateRandomBlob() {
@@ -647,7 +655,7 @@
                                 <!-- Titles generated dynamically by JS grid technique -->
                             </div>
                         </div>
-                        <p class="text-lg text-slate-600 dark:text-slate-300 preserve-newlines leading-relaxed max-w-2xl text-left">${appData.hero.bio}</p>
+                        <div class="text-lg text-slate-600 dark:text-slate-300 leading-relaxed max-w-2xl text-left">${formatText(appData.hero.bio, 'mt-4')}</div>
                     </div>
                 </section>
             `;
@@ -757,16 +765,27 @@
             const textClass = isDarkBg ? "text-slate-200" : "text-slate-600 dark:text-slate-400";
             const titleClass = isDarkBg ? "text-white" : "text-primary dark:text-white";
 
-            const metaInfo = [tile.subtitle, tile.date, tile.location].filter(v => v).join(' | ');
+            const effectiveHeading = getEffectiveHeading(tile);
+            const isAutoHeading = !(tile.heading && tile.heading.trim() !== '');
+
+            let cardMetaItems = [];
+            if (!isAutoHeading) {
+                if (tile.subtitle) cardMetaItems.push(tile.subtitle);
+                if (tile.employer) cardMetaItems.push(tile.employer);
+            }
+            if (tile.date) cardMetaItems.push(tile.date);
+            if (tile.location) cardMetaItems.push(tile.location);
+            
+            const metaInfo = cardMetaItems.join(' | ');
             const metaHTML = metaInfo ? `<p class="text-xs font-semibold mb-3 ${isDarkBg ? 'text-blue-300' : 'text-secondary'} text-left">${metaInfo}</p>` : '';
 
             return `
                 <div id="dom-tile-${tile.id}" onclick="tileClicked('${tile.id}')" class="portfolio-tile group cursor-pointer rounded-xl p-6 border shadow-sm transition-all bg-white dark:bg-darkCard relative overflow-hidden text-left" style="${tBg}">
                     <div class="tile-active-indicator absolute top-0 right-0 w-12 h-12 bg-secondary rounded-bl-full flex items-start justify-end p-2 text-white hidden"><i class="fa-solid fa-check text-xs"></i></div>
                     <div class="text-secondary mb-4 text-3xl text-left"><i class="fa-solid ${tile.icon || 'fa-cube'}"></i></div>
-                    <h4 class="text-xl font-bold mb-1 text-left ${titleClass}">${tile.heading}</h4>
+                    <h4 class="text-xl font-bold mb-1 text-left ${titleClass}">${effectiveHeading}</h4>
                     ${metaHTML}
-                    <p class="text-sm line-clamp-3 preserve-newlines text-left ${textClass}">${tile.description}</p>
+                    <div class="text-sm line-clamp-3 text-left ${textClass}">${formatText(tile.description, 'mt-3')}</div>
                 </div>
             `;
         }
@@ -802,9 +821,10 @@
                 } else {
                     const tile = getTileById(tabId);
                     if (!tile) return '';
-                    if (isActive) document.getElementById('min-title-text').innerText = tile.heading;
+                    const effectiveHeading = getEffectiveHeading(tile);
+                    if (isActive) document.getElementById('min-title-text').innerText = effectiveHeading;
                     return `<div id="tab-btn-${tile.id}" onclick="openTab('${tile.id}')" class="px-4 rounded-t-lg cursor-pointer flex items-center gap-2 whitespace-nowrap transition-colors group flex-shrink-0 text-left ${activeClasses}">
-                                <i class="fa-solid ${tile.icon} text-xs"></i> <span class="text-sm truncate max-w-[120px]">${tile.heading}</span>
+                                <i class="fa-solid ${tile.icon} text-xs"></i> <span class="text-sm truncate max-w-[120px]">${effectiveHeading}</span>
                                 <button onclick="closeTab(event, '${tile.id}')" class="ml-1 w-5 h-5 rounded-full flex items-center justify-center hover:bg-slate-200 dark:hover:bg-slate-600 text-slate-400 hover:text-red-500 transition-colors"><i class="fa-solid fa-xmark text-xs"></i></button>
                             </div>`;
                 }
@@ -867,7 +887,7 @@
                 allTilesHtml.push(`
                     <button onclick="openTab('${t.id}')" class="text-left w-full p-3 bg-white dark:bg-darkCard border border-slate-200 dark:border-slate-700 rounded-lg hover:border-secondary dark:hover:border-secondary mb-2 transition-colors flex items-center gap-3 shadow-sm hover:shadow">
                         <div class="w-8 h-8 rounded-full bg-blue-50 dark:bg-blue-900/30 flex items-center justify-center flex-shrink-0"><i class="fa-solid ${t.icon} text-secondary text-xs"></i></div>
-                        <span class="font-medium text-sm text-slate-700 dark:text-slate-300 truncate text-left w-full">${t.heading}</span>
+                        <span class="font-medium text-sm text-slate-700 dark:text-slate-300 truncate text-left w-full">${getEffectiveHeading(t)}</span>
                     </button>
                 `);
             })));
@@ -929,7 +949,7 @@
                     if (!relTile) return '';
                     return `<button onclick="openTab('${relTile.id}')" class="text-left w-full p-3 bg-white dark:bg-darkCard border border-slate-200 dark:border-slate-700 rounded-lg hover:border-secondary dark:hover:border-secondary mb-2 transition-colors flex items-center gap-3 shadow-sm hover:shadow">
                                 <div class="w-8 h-8 rounded-full bg-blue-50 dark:bg-blue-900/30 flex items-center justify-center flex-shrink-0"><i class="fa-solid ${relTile.icon} text-secondary text-xs"></i></div>
-                                <span class="font-medium text-sm text-slate-700 dark:text-slate-300 truncate text-left w-full">${relTile.heading}</span>
+                                <span class="font-medium text-sm text-slate-700 dark:text-slate-300 truncate text-left w-full">${getEffectiveHeading(relTile)}</span>
                             </button>`;
                 }).join('');
                 
@@ -941,17 +961,25 @@
                 `;
             }
 
-            const metaInfo = [tile.subtitle, tile.date, tile.location].filter(v => v).join(' | ');
-            const metaHTML = metaInfo ? `<p class="text-sm font-semibold mb-4 text-secondary text-left">${metaInfo}</p>` : '';
+            let metaItems = [];
+            if (tile.subtitle) metaItems.push(`<span>${tile.subtitle}</span>`);
+            if (tile.employer) {
+                if (tile.employerUrl) metaItems.push(`<a href="${tile.employerUrl}" target="_blank" class="text-secondary hover:underline inline-flex items-center gap-1">${tile.employer} <i class="fa-solid fa-arrow-up-right-from-square text-[10px]"></i></a>`);
+                else metaItems.push(`<span>${tile.employer}</span>`);
+            }
+            if (tile.date) metaItems.push(`<span>${tile.date}</span>`);
+            if (tile.location) metaItems.push(`<span>${tile.location}</span>`);
+            
+            const metaHTML = metaItems.length > 0 ? `<div class="text-sm font-semibold mb-6 text-slate-500 dark:text-slate-400 text-left flex flex-wrap gap-x-3 gap-y-1 items-center">` + metaItems.join('<span class="text-slate-300 dark:text-slate-600">|</span>') + `</div>` : '';
 
             return `
                 <div class="p-6 absolute inset-0 overflow-y-auto text-left">
                     <div class="w-14 h-14 bg-blue-100 dark:bg-blue-900/30 text-secondary rounded-2xl flex items-center justify-center text-2xl mb-6 shadow-sm">
                         <i class="fa-solid ${tile.icon}"></i>
                     </div>
-                    <h2 class="text-2xl font-bold text-primary dark:text-white mb-2 text-left">${tile.heading}</h2>
+                    <h2 class="text-2xl font-bold text-primary dark:text-white mb-2 text-left">${getEffectiveHeading(tile)}</h2>
                     ${metaHTML}
-                    <p class="text-slate-600 dark:text-slate-300 preserve-newlines text-sm leading-relaxed mb-8 text-left">${tile.tabText || tile.description}</p>
+                    <div class="text-slate-600 dark:text-slate-300 text-sm leading-relaxed mb-8 text-left">${formatText(tile.tabText || tile.description, 'mt-4')}</div>
                     
                     ${mediaHtml}
                     ${relatedHtml}
@@ -1084,7 +1112,8 @@
             let results = [];
             const query = val.toLowerCase();
             appData.sections.forEach(s => s.subsections.forEach(ss => ss.tiles.forEach(t => {
-                if(t.heading.toLowerCase().includes(query) || t.description.toLowerCase().includes(query)) results.push(t);
+                const effHeading = getEffectiveHeading(t);
+                if(effHeading.toLowerCase().includes(query) || t.description.toLowerCase().includes(query) || (t.employer && t.employer.toLowerCase().includes(query))) results.push(t);
             })));
 
             if(results.length > 0) {
@@ -1092,7 +1121,7 @@
                     <div onclick="openTab('${t.id}')" class="p-3 border-b border-slate-100 dark:border-slate-700 hover:bg-slate-50 dark:hover:bg-slate-700 cursor-pointer flex items-center gap-3 text-left">
                         <i class="fa-solid ${t.icon} text-secondary"></i>
                         <div class="overflow-hidden text-left w-full">
-                            <div class="text-sm font-bold text-slate-800 dark:text-slate-200 truncate text-left w-full">${t.heading}</div>
+                            <div class="text-sm font-bold text-slate-800 dark:text-slate-200 truncate text-left w-full">${getEffectiveHeading(t)}</div>
                         </div>
                     </div>
                 `).join('');
@@ -1280,7 +1309,7 @@
                             if (adminPath.length > 2) {
                                 const tile = sub.tiles.find(t => t.id === adminPath[2]);
                                 if (tile) {
-                                    breadcrumbs += ` <i class="fa-solid fa-chevron-right text-xs mx-2 text-slate-400"></i> <span class="text-slate-400">${tile.heading}</span>`;
+                                    breadcrumbs += ` <i class="fa-solid fa-chevron-right text-xs mx-2 text-slate-400"></i> <span class="text-slate-400">${getEffectiveHeading(tile)}</span>`;
                                     currentContext = tile; currentType = 'tile';
                                 }
                             }
@@ -1326,7 +1355,11 @@
             let sectionsHtml = appData.sections.map((sec, i) => `
                 <div class="flex justify-between items-center p-3 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded mb-2 text-left">
                     <span class="font-bold text-left">${sec.name} <span class="text-xs text-slate-400 font-normal ml-2">(${sec.subsections.length} subs)</span></span>
-                    <div class="flex gap-2 text-left">
+                    <div class="flex gap-3 text-left items-center">
+                        <div class="flex gap-1 border-r border-slate-200 dark:border-slate-600 pr-3 mr-1">
+                            <button onclick="adminMoveSection(${i}, -1)" class="text-slate-400 hover:text-secondary text-sm ${i === 0 ? 'invisible' : ''}" title="Move Up"><i class="fa-solid fa-arrow-up"></i></button>
+                            <button onclick="adminMoveSection(${i}, 1)" class="text-slate-400 hover:text-secondary text-sm ${i === appData.sections.length - 1 ? 'invisible' : ''}" title="Move Down"><i class="fa-solid fa-arrow-down"></i></button>
+                        </div>
                         <button onclick="adminNavigate(['${sec.id}'])" class="text-secondary hover:underline text-sm text-left"><i class="fa-solid fa-pen"></i> Edit</button>
                         <button onclick="adminDeleteSection(${i})" class="text-red-500 hover:underline text-sm text-left"><i class="fa-solid fa-trash"></i></button>
                     </div>
@@ -1374,7 +1407,11 @@
             let subsHtml = sec.subsections.map((sub, i) => `
                 <div class="flex justify-between items-center p-3 bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded mb-2 text-left">
                     <span class="font-medium text-left">${sub.name}</span>
-                    <div class="flex gap-2 text-left">
+                    <div class="flex gap-3 text-left items-center">
+                        <div class="flex gap-1 border-r border-slate-200 dark:border-slate-600 pr-3 mr-1">
+                            <button onclick="adminMoveSub('${sec.id}', ${i}, -1)" class="text-slate-400 hover:text-secondary text-sm ${i === 0 ? 'invisible' : ''}" title="Move Up"><i class="fa-solid fa-arrow-up"></i></button>
+                            <button onclick="adminMoveSub('${sec.id}', ${i}, 1)" class="text-slate-400 hover:text-secondary text-sm ${i === sec.subsections.length - 1 ? 'invisible' : ''}" title="Move Down"><i class="fa-solid fa-arrow-down"></i></button>
+                        </div>
                         <button onclick="adminNavigate(['${sec.id}', '${sub.id}'])" class="text-secondary hover:underline text-sm text-left"><i class="fa-solid fa-pen"></i> Edit</button>
                         <button onclick="adminDeleteSub('${sec.id}', ${i})" class="text-red-500 hover:underline text-sm text-left"><i class="fa-solid fa-trash"></i></button>
                     </div>
@@ -1387,6 +1424,7 @@
                         <h3 class="text-xl font-bold mb-4 text-left">Section Properties</h3>
                         <div class="space-y-4 text-left">
                             <div class="text-left"><label class="block text-sm mb-1 opacity-70 text-left">Section Name</label><input type="text" onchange="adminUpdateSec('${sec.id}', 'name', this.value)" value="${sec.name}" class="w-full p-2 rounded bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 text-left"></div>
+                            <div class="text-left"><label class="block text-sm mb-1 opacity-70 text-left">Background Image (G-Drive or URL)</label><input type="text" onchange="adminUpdateSec('${sec.id}', 'bgImage', this.value)" value="${sec.bgImage || ''}" placeholder="Leave empty for solid color" class="w-full p-2 rounded bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 font-mono text-sm text-left"></div>
                         </div>
                     </div>
                     <div class="bg-white dark:bg-darkCard p-6 rounded-xl shadow-sm border border-slate-200 dark:border-slate-700 text-left">
@@ -1403,8 +1441,12 @@
         function renderAdminSubsection(sub) {
             let tilesHtml = sub.tiles.map((tile, i) => `
                 <div class="flex justify-between items-center p-3 bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded mb-2 text-left">
-                    <span class="font-medium text-left"><i class="fa-solid ${tile.icon} text-secondary w-6 text-center"></i> ${tile.heading}</span>
-                    <div class="flex gap-2 text-left">
+                    <span class="font-medium text-left"><i class="fa-solid ${tile.icon} text-secondary w-6 text-center"></i> ${getEffectiveHeading(tile)}</span>
+                    <div class="flex gap-3 text-left items-center">
+                        <div class="flex gap-1 border-r border-slate-200 dark:border-slate-600 pr-3 mr-1">
+                            <button onclick="adminMoveTile('${adminPath[0]}', '${sub.id}', ${i}, -1)" class="text-slate-400 hover:text-secondary text-sm ${i === 0 ? 'invisible' : ''}" title="Move Up"><i class="fa-solid fa-arrow-up"></i></button>
+                            <button onclick="adminMoveTile('${adminPath[0]}', '${sub.id}', ${i}, 1)" class="text-slate-400 hover:text-secondary text-sm ${i === sub.tiles.length - 1 ? 'invisible' : ''}" title="Move Down"><i class="fa-solid fa-arrow-down"></i></button>
+                        </div>
                         <button onclick="adminNavigate(['${adminPath[0]}', '${sub.id}', '${tile.id}'])" class="text-secondary hover:underline text-sm text-left"><i class="fa-solid fa-pen"></i> Edit</button>
                         <button onclick="adminDeleteTile('${adminPath[0]}', '${sub.id}', ${i})" class="text-red-500 hover:underline text-sm text-left"><i class="fa-solid fa-trash"></i></button>
                     </div>
@@ -1430,7 +1472,7 @@
         function renderAdminTile(tile) {
             let allTiles = [];
             appData.sections.forEach(s => s.subsections.forEach(ss => ss.tiles.forEach(t => {
-                if (t.id !== tile.id) allTiles.push({id: t.id, name: t.heading, sid: s.name});
+                if (t.id !== tile.id) allTiles.push({id: t.id, name: getEffectiveHeading(t), sid: s.name});
             })));
 
             let selectHtml = `<select multiple onchange="adminUpdateRelatedTiles('${adminPath[0]}', '${adminPath[1]}', '${tile.id}', this)" class="w-full p-2 rounded bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 h-32 text-sm text-left">`;
@@ -1448,8 +1490,10 @@
                 <div class="bg-white dark:bg-darkCard p-6 rounded-xl shadow-sm border border-slate-200 dark:border-slate-700 space-y-6 text-left">
                     <h3 class="text-xl font-bold border-b border-slate-100 dark:border-slate-800 pb-2 text-left">Edit Tile</h3>
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-4 text-left w-full">
-                        <div class="md:col-span-2 text-left"><label class="block text-sm mb-1 opacity-70 text-left">Tile Heading</label><input type="text" onchange="adminUpdateTileProp('${adminPath[0]}', '${adminPath[1]}', '${tile.id}', 'heading', this.value)" value="${tile.heading}" class="w-full p-2 rounded bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 font-bold text-left"></div>
+                        <div class="md:col-span-2 text-left"><label class="block text-sm mb-1 opacity-70 text-left">Tile Heading (Optional)</label><input type="text" onchange="adminUpdateTileProp('${adminPath[0]}', '${adminPath[1]}', '${tile.id}', 'heading', this.value)" value="${tile.heading || ''}" class="w-full p-2 rounded bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 font-bold text-left" placeholder="Leave empty for auto-heading: Subtitle @ Employer"></div>
                         <div class="text-left"><label class="block text-sm mb-1 opacity-70 text-left">Subtitle (e.g. Job Role / Degree)</label><input type="text" onchange="adminUpdateTileProp('${adminPath[0]}', '${adminPath[1]}', '${tile.id}', 'subtitle', this.value)" value="${tile.subtitle || ''}" class="w-full p-2 rounded bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 text-left"></div>
+                        <div class="text-left"><label class="block text-sm mb-1 opacity-70 text-left">Employer / Organization Name</label><input type="text" onchange="adminUpdateTileProp('${adminPath[0]}', '${adminPath[1]}', '${tile.id}', 'employer', this.value)" value="${tile.employer || ''}" class="w-full p-2 rounded bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 text-left"></div>
+                        <div class="text-left"><label class="block text-sm mb-1 opacity-70 text-left">Employer Official URL</label><input type="text" onchange="adminUpdateTileProp('${adminPath[0]}', '${adminPath[1]}', '${tile.id}', 'employerUrl', this.value)" value="${tile.employerUrl || ''}" class="w-full p-2 rounded bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 font-mono text-sm text-left" placeholder="https://..."></div>
                         <div class="text-left"><label class="block text-sm mb-1 opacity-70 text-left">Date / Timeline</label><input type="text" onchange="adminUpdateTileProp('${adminPath[0]}', '${adminPath[1]}', '${tile.id}', 'date', this.value)" value="${tile.date || ''}" class="w-full p-2 rounded bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 text-left"></div>
                         <div class="text-left"><label class="block text-sm mb-1 opacity-70 text-left">Location</label><input type="text" onchange="adminUpdateTileProp('${adminPath[0]}', '${adminPath[1]}', '${tile.id}', 'location', this.value)" value="${tile.location || ''}" class="w-full p-2 rounded bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 text-left"></div>
                         <div class="text-left"><label class="block text-sm mb-1 opacity-70 text-left">Icon (FontAwesome Class)</label><input type="text" onchange="adminUpdateTileProp('${adminPath[0]}', '${adminPath[1]}', '${tile.id}', 'icon', this.value)" value="${tile.icon || 'fa-cube'}" class="w-full p-2 rounded bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 font-mono text-sm text-left"></div>
@@ -1480,12 +1524,38 @@
         function adminDeleteSection(idx) { if(confirm("Delete section?")) { appData.sections.splice(idx, 1); renderApp(); } }
         function adminAddSub(sId) { appData.sections.find(s=>s.id===sId).subsections.push({id: generateId(), name: "New Subsection", tiles: []}); renderApp(); }
         function adminDeleteSub(sId, idx) { if(confirm("Delete subsection?")) { appData.sections.find(s=>s.id===sId).subsections.splice(idx, 1); renderApp(); } }
-        function adminAddTile(sId, ssId) { appData.sections.find(s=>s.id===sId).subsections.find(ss=>ss.id===ssId).tiles.push({id: generateId(), heading: "New Tile", subtitle: "", date: "", location: "", description: "", tabText: "", icon: "fa-cube", bgImage: "", mediaLinks: [], relatedTiles: []}); renderApp(); }
+        function adminAddTile(sId, ssId) { appData.sections.find(s=>s.id===sId).subsections.find(ss=>ss.id===ssId).tiles.push({id: generateId(), heading: "", subtitle: "New Role", employer: "Company", employerUrl: "", date: "", location: "", description: "", tabText: "", icon: "fa-cube", bgImage: "", mediaLinks: [], relatedTiles: []}); renderApp(); }
         function adminDeleteTile(sId, ssId, idx) { if(confirm("Delete tile?")) { appData.sections.find(s=>s.id===sId).subsections.find(ss=>ss.id===ssId).tiles.splice(idx, 1); renderApp(); } }
         function adminUpdateRelatedTiles(sId, ssId, tId, selectElem) { const selected = Array.from(selectElem.selectedOptions).map(opt => opt.value); appData.sections.find(s=>s.id===sId).subsections.find(ss=>ss.id===ssId).tiles.find(t=>t.id===tId).relatedTiles = selected; renderApp(); }
         function adminAddMedia(sId, ssId, tId) { appData.sections.find(s=>s.id===sId).subsections.find(ss=>ss.id===ssId).tiles.find(t=>t.id===tId).mediaLinks.push(""); renderApp(); }
         function adminUpdateMedia(sId, ssId, tId, idx, val) { appData.sections.find(s=>s.id===sId).subsections.find(ss=>ss.id===ssId).tiles.find(t=>t.id===tId).mediaLinks[idx] = val; renderApp(); }
         function adminRemoveMedia(sId, ssId, tId, idx) { appData.sections.find(s=>s.id===sId).subsections.find(ss=>ss.id===ssId).tiles.find(t=>t.id===tId).mediaLinks.splice(idx, 1); renderApp(); }
+
+        function adminMoveSection(idx, dir) {
+            if (idx + dir < 0 || idx + dir >= appData.sections.length) return;
+            const temp = appData.sections[idx];
+            appData.sections[idx] = appData.sections[idx + dir];
+            appData.sections[idx + dir] = temp;
+            renderApp();
+        }
+
+        function adminMoveSub(sId, idx, dir) {
+            const sec = appData.sections.find(s => s.id === sId);
+            if (idx + dir < 0 || idx + dir >= sec.subsections.length) return;
+            const temp = sec.subsections[idx];
+            sec.subsections[idx] = sec.subsections[idx + dir];
+            sec.subsections[idx + dir] = temp;
+            renderApp();
+        }
+
+        function adminMoveTile(sId, ssId, idx, dir) {
+            const sub = appData.sections.find(s => s.id === sId).subsections.find(ss => ss.id === ssId);
+            if (idx + dir < 0 || idx + dir >= sub.tiles.length) return;
+            const temp = sub.tiles[idx];
+            sub.tiles[idx] = sub.tiles[idx + dir];
+            sub.tiles[idx + dir] = temp;
+            renderApp();
+        }
 
         // ==========================================
         // 8. KICKOFF
