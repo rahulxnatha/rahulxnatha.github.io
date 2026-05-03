@@ -1174,6 +1174,73 @@
             }
         }
 
+        function generateBotResponse(query) {
+            const lowerQuery = query.toLowerCase();
+
+            // 1. Hardcoded / Greeting checks
+            if (lowerQuery.match(/^(hi|hello|hey|greetings|start)/)) {
+                return `Hello! I'm ${appData.uiText.botName.split(' ')[0]}. You can ask me about specific skills, my work experience, or how to contact me.`;
+            }
+            if (lowerQuery.includes('contact') || lowerQuery.includes('email') || lowerQuery.includes('phone') || lowerQuery.includes('hire')) {
+                return `You can reach me via email at <a href="mailto:${appData.uiText.contactEmail}" class="text-secondary hover:underline">${appData.uiText.contactEmail}</a> or call ${appData.uiText.contactPhone}. Let's connect!`;
+            }
+
+            // 2. Keyword extraction (remove stop words)
+            const stopWords = ['a', 'an', 'the', 'is', 'at', 'in', 'of', 'for', 'to', 'and', 'or', 'with', 'about', 'my', 'your', 'i', 'me', 'tell', 'what', 'where', 'how', 'do', 'you', 'have', 'know', 'can', 'show', 'any'];
+            const keywords = lowerQuery.replace(/[^\w\s]/g, '').split(/\s+/).filter(w => !stopWords.includes(w) && w.length > 1);
+
+            if (keywords.length === 0) {
+                return "Could you be a bit more specific? I can tell you about my education, experience, or specific skills!";
+            }
+
+            // 3. Scoring tiles based on data structure
+            let scoredTiles = [];
+            appData.sections.forEach(sec => {
+                sec.subsections.forEach(sub => {
+                    sub.tiles.forEach(tile => {
+                        let score = 0;
+                        const searchableText = {
+                            high: [tile.heading, tile.role, tile.baseSubject, tile.specialisation, tile.employer].filter(Boolean).join(' ').toLowerCase(),
+                            medium: (tile.description || '').toLowerCase(),
+                            low: (tile.tabText || '').toLowerCase()
+                        };
+
+                        keywords.forEach(kw => {
+                            if (searchableText.high.includes(kw)) score += 5;
+                            if (searchableText.medium.includes(kw)) score += 3;
+                            if (searchableText.low.includes(kw)) score += 1;
+                        });
+
+                        if (score > 0) {
+                            scoredTiles.push({ tile, score });
+                        }
+                    });
+                });
+            });
+
+            // 4. Formatting output
+            if (scoredTiles.length > 0) {
+                scoredTiles.sort((a, b) => b.score - a.score);
+                const topMatch = scoredTiles[0].tile;
+                let response = `I found some relevant information. Check out <strong>${getEffectiveHeading(topMatch)}</strong>.`;
+                
+                if (topMatch.description) {
+                    response += `<br><br><span class="italic text-slate-500 dark:text-slate-400">"${topMatch.description.substring(0, 120)}..."</span>`;
+                }
+
+                response += `<div class="mt-3 flex flex-col gap-2 w-full text-left">`;
+                const maxButtons = Math.min(scoredTiles.length, 3);
+                for(let i=0; i<maxButtons; i++){
+                    response += `<button onclick="openTab('${scoredTiles[i].tile.id}')" class="text-xs bg-blue-50 dark:bg-blue-900/30 text-secondary border border-blue-200 dark:border-blue-800 px-3 py-2 rounded hover:bg-blue-100 dark:hover:bg-blue-800 transition-colors text-left flex items-center justify-between shadow-sm"><span class="truncate pr-2 font-medium">${getEffectiveHeading(scoredTiles[i].tile)}</span> <i class="fa-solid fa-arrow-right"></i></button>`;
+                }
+                response += `</div>`;
+                return response;
+            }
+
+            // 5. Fallback
+            return `I couldn't find specific details about that in the portfolio data. Feel free to browse the categories or <a href="mailto:${appData.uiText.contactEmail}" class="text-secondary hover:underline">contact me directly</a>!`;
+        }
+
         function handleChatSubmit(e) {
             e.preventDefault();
             const input = document.getElementById('chat-input');
@@ -1186,18 +1253,23 @@
             updateAsideUI();
             setTimeout(() => { const cw = document.getElementById('chat-window'); if (cw) cw.scrollTop = cw.scrollHeight; }, 50);
             
+            // Show typing indicator
+            const typingId = 'typing_' + Date.now();
+            chatHistory.push({ sender: 'bot', text: '<i class="fa-solid fa-ellipsis fa-fade text-slate-400 text-lg"></i>', id: typingId });
+            updateAsideUI();
+            setTimeout(() => { const cw = document.getElementById('chat-window'); if (cw) cw.scrollTop = cw.scrollHeight; }, 50);
+
             setTimeout(() => {
-                let response = "I'm a simple bot! Try searching the portfolio above, or asking about 'Experience', 'Education', 'Skills', or 'Contact'.";
-                const lower = text.toLowerCase();
-                if (lower.includes('exp') || lower.includes('work')) response = "I have 5 years of experience in electromechanical design. Check the 'Work & Experience' section to your left!";
-                else if (lower.includes('skill') || lower.includes('cad')) response = "My core skills include SolidWorks, ANSYS, and precision mechanism design. Check the 'Skills' section!";
-                else if (lower.includes('edu') || lower.includes('degree')) response = "I hold a B.Tech in Mechanical Engineering (Gold Medalist) from JNTU Hyderabad.";
-                else if (lower.includes('contact') || lower.includes('email')) response = `You can email me at ${appData.uiText.contactEmail} or call ${appData.uiText.contactPhone}.`;
+                // Remove typing indicator
+                chatHistory = chatHistory.filter(msg => msg.id !== typingId);
+                
+                // Generate dynamic response
+                const response = generateBotResponse(text);
 
                 chatHistory.push({ sender: 'bot', text: response });
                 updateAsideUI();
                 setTimeout(() => { const cw = document.getElementById('chat-window'); if (cw) cw.scrollTop = cw.scrollHeight; }, 50);
-            }, 600);
+            }, 600 + Math.random() * 500); // Slight random delay for realism
         }
 
         function scrollToNavTarget(targetId) {
@@ -1397,14 +1469,17 @@
                     const chevronSub = isSubExpanded ? 'fa-chevron-down' : 'fa-chevron-right';
 
                     let tilesHtml = sub.tiles.map((tile, k) => `
-                        <div class="flex justify-between items-center p-2.5 bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded mb-2 text-left ml-6 shadow-sm hover:border-secondary transition-colors">
-                            <span class="font-medium text-sm text-left truncate flex-1 mr-2"><i class="fa-solid ${tile.icon} text-secondary w-6 text-center"></i> ${getEffectiveHeading(tile)}</span>
+                        <div class="flex justify-between items-center p-2 bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded mb-2 text-left ml-6 shadow-sm hover:border-secondary transition-colors">
+                            <div class="flex items-center flex-1 mr-4 gap-2 text-left">
+                                <i class="fa-solid ${tile.icon} text-secondary w-6 text-center flex-shrink-0"></i>
+                                <input type="text" onchange="adminUpdateTileProp('${sec.id}', '${sub.id}', '${tile.id}', 'heading', this.value)" value="${(tile.heading || '').replace(/"/g, '&quot;')}" placeholder="${getEffectiveHeading({...tile, heading: ''}).replace(/"/g, '&quot;')}" class="flex-1 p-1.5 rounded bg-white dark:bg-darkCard border border-slate-200 dark:border-slate-600 text-sm font-medium focus:border-secondary outline-none transition-colors" title="Tile Heading Override (Leave empty for auto-generated heading)">
+                            </div>
                             <div class="flex gap-2 text-left items-center flex-shrink-0">
                                 <div class="flex gap-1 border-r border-slate-200 dark:border-slate-600 pr-2 mr-1">
                                     <button onclick="adminMoveTile('${sec.id}', '${sub.id}', ${k}, -1)" class="text-slate-400 hover:text-secondary text-xs ${k === 0 ? 'invisible' : ''}" title="Move Up"><i class="fa-solid fa-arrow-up"></i></button>
                                     <button onclick="adminMoveTile('${sec.id}', '${sub.id}', ${k}, 1)" class="text-slate-400 hover:text-secondary text-xs ${k === sub.tiles.length - 1 ? 'invisible' : ''}" title="Move Down"><i class="fa-solid fa-arrow-down"></i></button>
                                 </div>
-                                <button onclick="adminNavigate(['${sec.id}', '${sub.id}', '${tile.id}'])" class="bg-secondary text-white px-3 py-1 rounded text-xs text-left shadow-sm hover:bg-blue-600 transition-colors"><i class="fa-solid fa-pen mr-1"></i> Edit Content</button>
+                                <button onclick="adminNavigate(['${sec.id}', '${sub.id}', '${tile.id}'])" class="bg-secondary text-white px-3 py-1 rounded text-xs text-left shadow-sm hover:bg-blue-600 transition-colors"><i class="fa-solid fa-pen mr-1"></i> Edit Details</button>
                                 <button onclick="adminDeleteTile('${sec.id}', '${sub.id}', ${k})" class="text-slate-400 hover:text-red-500 text-sm ml-1"><i class="fa-solid fa-trash"></i></button>
                             </div>
                         </div>
@@ -1501,21 +1576,21 @@
                 </div>
             `;
         }
-
-        function renderAdminTile(tile) {
-            let allTiles = [];
-            appData.sections.forEach(s => s.subsections.forEach(ss => ss.tiles.forEach(t => {
-                if (t.id !== tile.id) allTiles.push({id: t.id, name: getEffectiveHeading(t), sid: s.name});
-            })));
-
-            let selectHtml = `<select multiple onchange="adminUpdateRelatedTiles('${adminPath[0]}', '${adminPath[1]}', '${tile.id}', this)" class="w-full p-2 rounded bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 h-32 text-sm text-left">`;
-            allTiles.forEach(t => { const isSel = (tile.relatedTiles || []).includes(t.id) ? 'selected' : ''; selectHtml += `<option value="${t.id}" ${isSel}>${t.sid} > ${t.name}</option>`; });
-            selectHtml += `</select>`;
-
-            let mediaHtml = (tile.mediaLinks || []).map((link, i) => `
-                <div class="flex gap-2 mb-2 text-left">
-                    <input type="text" onchange="adminUpdateMedia('${adminPath[0]}', '${adminPath[1]}', '${tile.id}', ${i}, this.value)" value="${link.replace(/"/g, '&quot;')}" class="flex-1 p-2 rounded bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 text-sm font-mono text-left" placeholder="G-Drive Link, Image URL, or <iframe src='...'></iframe>">
-                    <button onclick="adminRemoveMedia('${adminPath[0]}', '${adminPath[1]}', '${tile.id}', ${i})" class="bg-red-500 text-white px-3 rounded text-left"><i class="fa-solid fa-trash"></i></button>
+        function renderAdminSubsection(sub) {
+            let tilesHtml = sub.tiles.map((tile, i) => `
+                <div class="flex justify-between items-center p-2.5 bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded mb-2 text-left">
+                    <div class="flex items-center flex-1 mr-4 gap-2 text-left">
+                        <i class="fa-solid ${tile.icon} text-secondary w-6 text-center flex-shrink-0"></i>
+                        <input type="text" onchange="adminUpdateTileProp('${adminPath[0]}', '${sub.id}', '${tile.id}', 'heading', this.value)" value="${(tile.heading || '').replace(/"/g, '&quot;')}" placeholder="${getEffectiveHeading({...tile, heading: ''}).replace(/"/g, '&quot;')}" class="flex-1 p-1.5 rounded bg-white dark:bg-darkCard border border-slate-200 dark:border-slate-600 text-sm font-medium focus:border-secondary outline-none transition-colors" title="Tile Heading Override (Leave empty for auto-generated heading)">
+                    </div>
+                    <div class="flex gap-3 text-left items-center flex-shrink-0">
+                        <div class="flex gap-1 border-r border-slate-200 dark:border-slate-600 pr-3 mr-1">
+                            <button onclick="adminMoveTile('${adminPath[0]}', '${sub.id}', ${i}, -1)" class="text-slate-400 hover:text-secondary text-sm ${i === 0 ? 'invisible' : ''}" title="Move Up"><i class="fa-solid fa-arrow-up"></i></button>
+                            <button onclick="adminMoveTile('${adminPath[0]}', '${sub.id}', ${i}, 1)" class="text-slate-400 hover:text-secondary text-sm ${i === sub.tiles.length - 1 ? 'invisible' : ''}" title="Move Down"><i class="fa-solid fa-arrow-down"></i></button>
+                        </div>
+                        <button onclick="adminNavigate(['${adminPath[0]}', '${sub.id}', '${tile.id}'])" class="text-secondary hover:underline text-sm text-left"><i class="fa-solid fa-pen"></i> Edit Details</button>
+                        <button onclick="adminDeleteTile('${adminPath[0]}', '${sub.id}', ${i})" class="text-red-500 hover:underline text-sm text-left"><i class="fa-solid fa-trash"></i></button>
+                    </div>
                 </div>
             `).join('');
 
