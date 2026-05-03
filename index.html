@@ -45,6 +45,13 @@
         .chat-bubble { animation: fadeIn 0.3s ease-out; }
         @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
 
+        /* Loader specific native dark mode fallback */
+        @media (prefers-color-scheme: dark) { 
+            #loader-wrapper { background-color: #0b1120; color: #f8fafc; } 
+            #loader-main-text { color: #ffffff !important; }
+            #loader-status { color: #60a5fa !important; }
+        }
+
         /* Fixed Layout */
         #main-wrapper { display: flex; height: 100vh; overflow: hidden; padding-top: 4rem; }
         #left-content { flex: 1; overflow-y: auto; scroll-behavior: smooth; position: relative; }
@@ -71,10 +78,10 @@
             <canvas id="loader-canvas" class="absolute inset-0 w-full h-full z-0"></canvas>
             
             <div class="relative z-10 flex flex-col items-start pointer-events-none select-none text-left">
-                <h1 class="text-4xl md:text-6xl font-bold tracking-wider uppercase text-slate-800 dark:text-white mb-6 drop-shadow-sm text-left">Loading<br/>Platform</h1>
+                <h1 id="loader-main-text" class="text-4xl md:text-6xl font-bold tracking-wide text-slate-900 dark:text-white mb-6 drop-shadow-sm text-left">Loading<br/>Platform</h1>
                 <div class="flex items-center gap-4 text-left">
                     <i class="fa-solid fa-circle-notch fa-spin text-secondary text-2xl"></i>
-                    <p class="text-sm font-mono text-secondary tracking-widest uppercase text-left" id="loader-status">Initializing Workspace...</p>
+                    <p class="text-sm font-mono text-secondary tracking-wide text-left" id="loader-status">Initializing Workspace...</p>
                 </div>
             </div>
         </div>
@@ -170,7 +177,7 @@
         let adminPath = []; 
         let adminExpanded = {}; 
         let adminSelected = {}; 
-        let revealedArchives = []; // Tracks dynamically revealed easter eggs
+        let revealedArchives = []; 
         let chatHistory = [{ sender: 'bot', text: "Hello! I am Virtual Rahul. I can help you navigate the portfolio or answer quick questions." }];
         let titleInterval;
         let profileBlobShape = "50%";
@@ -249,7 +256,6 @@
             };
         }
 
-        // Retrieves only sections that are currently cleared to be shown on the main pane
         function getVisibleSections() {
             return appData.sections.filter(sec => {
                 const vis = sec.visibility || 'visible';
@@ -340,19 +346,16 @@
             return 0;
         }
 
-        // --- BANNER MEDIA PARSER ---
         function getBannerHTML(link) {
             if (!link || !link.trim()) return '';
             const trimmed = link.trim();
             
-            // Raw iframe
             if (trimmed.toLowerCase().startsWith('<iframe')) {
                 let fixedIframe = trimmed;
                 if(!fixedIframe.includes('w-full')) fixedIframe = fixedIframe.replace('<iframe', '<iframe class="w-full aspect-video border-none"');
                 return `<div class="w-full aspect-video bg-slate-100 dark:bg-slate-900 border-b border-slate-200 dark:border-slate-700 relative z-10">${fixedIframe}</div>`;
             }
 
-            // YouTube Match
             const ytMatch = trimmed.match(/(?:youtube\.com\/(?:[^\/]+\/.+\/|(?:v|e(?:mbed)?)\/|.*[?&]v=)|youtu\.be\/)([^"&?\/\s]{11})/i);
             if (ytMatch && ytMatch[1]) {
                 return `<div class="w-full aspect-video bg-slate-100 dark:bg-slate-900 border-b border-slate-200 dark:border-slate-700 relative z-10">
@@ -360,12 +363,10 @@
                         </div>`;
             }
 
-            // Standard Image Match
             if (trimmed.match(/\.(jpeg|jpg|gif|png|webp|svg)$/i)) {
                 return `<img src="${trimmed}" class="w-full max-h-[400px] object-cover bg-slate-100 dark:bg-slate-900 border-b border-slate-200 dark:border-slate-700 relative z-10 pointer-events-none">`;
             }
 
-            // Google Drive link
             const driveData = parseDriveLink(trimmed);
             if (driveData && driveData.id) {
                 return `<div class="w-full aspect-video bg-slate-100 dark:bg-slate-900 border-b border-slate-200 dark:border-slate-700 relative z-10">
@@ -373,7 +374,6 @@
                         </div>`;
             }
 
-            // Fallback for raw HTTP links
             if (trimmed.startsWith('http')) {
                 return `<div class="w-full aspect-video bg-slate-100 dark:bg-slate-900 border-b border-slate-200 dark:border-slate-700 relative z-10">
                             <iframe src="${trimmed}" class="w-full h-full border-none" allow="autoplay"></iframe>
@@ -501,14 +501,38 @@
             if (hash === '#admin') {
                 container.innerHTML = passcode ? renderAdminDashboard() : renderAdminLogin();
             } else {
+                let isFirstRender = false;
                 if (!document.getElementById('main-wrapper')) {
                     container.innerHTML = renderPublicShell();
                     document.getElementById('left-content').innerHTML = renderLeftContent();
                     setupAnimatedTitles();
                     setupScrollSpy();
+                    
+                    const tabsContainer = document.getElementById('aside-tabs');
+                    if (tabsContainer) {
+                        tabsContainer.addEventListener('wheel', (e) => {
+                            if (e.deltaY !== 0) {
+                                e.preventDefault();
+                                tabsContainer.scrollLeft += e.deltaY;
+                            }
+                        }, { passive: false });
+                    }
+                    isFirstRender = true;
+                }
+                
+                // Cache scroll position to prevent jumping during DOM rebuilds
+                const leftContentEl = document.getElementById('left-content');
+                let savedScroll = 0;
+                if (leftContentEl && !isFirstRender) {
+                    savedScroll = leftContentEl.scrollTop;
                 }
                 
                 document.getElementById('left-content-dynamic').innerHTML = viewMode === 'timeline' ? renderTimelineView() : renderCategorizedView();
+                
+                // Restore scroll position instantly
+                if (leftContentEl && !isFirstRender) {
+                    leftContentEl.scrollTop = savedScroll;
+                }
                 
                 updateSettingsMenuHTML();
                 updateAsideUI();
@@ -552,6 +576,16 @@
                     </div>
                 </div>
 
+                <div class="mb-5 text-left border-b border-slate-100 dark:border-slate-800 pb-5">
+                    <label class="block text-sm font-semibold text-slate-700 dark:text-slate-300 mb-1 text-left">Panel Layout</label>
+                    <p class="text-xs text-slate-500 dark:text-slate-400 mb-3 text-left">Control the details side pane</p>
+                    <div class="flex bg-slate-100 dark:bg-slate-800 rounded-lg p-1 gap-1 text-left">
+                        <button onclick="setAsideState('dock'); updateSettingsMenuHTML();" class="flex-1 py-1.5 rounded-md text-xs font-medium transition-colors ${aps === 'dock' ? 'bg-white dark:bg-slate-700 shadow text-secondary dark:text-white' : 'text-slate-500 hover:text-slate-700 dark:hover:text-slate-300'}">Docked</button>
+                        <button onclick="setAsideState('max'); updateSettingsMenuHTML();" class="flex-1 py-1.5 rounded-md text-xs font-medium transition-colors ${aps === 'max' ? 'bg-white dark:bg-slate-700 shadow text-secondary dark:text-white' : 'text-slate-500 hover:text-slate-700 dark:hover:text-slate-300'}">Max</button>
+                        <button onclick="setAsideState('closed'); updateSettingsMenuHTML();" class="flex-1 py-1.5 rounded-md text-xs font-medium transition-colors ${aps === 'closed' ? 'bg-white dark:bg-slate-700 shadow text-secondary dark:text-white' : 'text-slate-500 hover:text-slate-700 dark:hover:text-slate-300'}">Hidden</button>
+                    </div>
+                </div>
+
                 <div class="text-left">
                     <label class="block text-sm font-semibold text-slate-700 dark:text-slate-300 mb-1 text-left">Layout View</label>
                     <p class="text-xs text-slate-500 dark:text-slate-400 mb-3 text-left">Select portfolio arrangement</p>
@@ -588,7 +622,7 @@
             dropdownMenuHtml += `</div>`;
 
             return `
-                <header class="fixed top-0 left-0 w-full z-40 bg-white/80 dark:bg-slate-900/80 backdrop-blur-md border-b border-slate-200 dark:border-slate-800 flex justify-between items-center p-3 md:px-6 h-16 shadow-sm text-left">
+                <header class="fixed top-0 left-0 w-full z-[60] bg-white/80 dark:bg-slate-900/80 backdrop-blur-md border-b border-slate-200 dark:border-slate-800 flex justify-between items-center p-3 md:px-6 h-16 shadow-sm text-left">
                     <div class="flex items-center gap-4 md:gap-8 flex-1 overflow-visible text-left">
                         <div class="flex-shrink-0 flex items-center cursor-pointer text-left" onclick="scrollToNavTarget('top')">
                             ${brandHtml}
@@ -632,17 +666,8 @@
                         </div>
 
                         <div class="flex items-center bg-slate-100 dark:bg-slate-900 border-b border-slate-200 dark:border-slate-700 pr-2 text-left">
-                            <div class="flex-1 flex items-center overflow-hidden relative group text-left">
-                                <button onclick="scrollTabs(-150)" class="absolute left-0 top-0 bottom-0 bg-gradient-to-r from-slate-100 dark:from-slate-900 to-transparent w-8 z-10 flex items-center justify-start pl-1 opacity-0 group-hover:opacity-100 transition-opacity"><i class="fa-solid fa-chevron-left text-xs text-slate-500"></i></button>
-                                <div id="aside-tabs" class="flex overflow-x-auto no-scrollbar pt-2 flex-1 scroll-smooth text-left"></div>
-                                <button onclick="scrollTabs(150)" class="absolute right-0 top-0 bottom-0 bg-gradient-to-l from-slate-100 dark:from-slate-900 to-transparent w-8 z-10 flex items-center justify-end pr-1 opacity-0 group-hover:opacity-100 transition-opacity"><i class="fa-solid fa-chevron-right text-xs text-slate-500"></i></button>
-                            </div>
-                            <button onclick="addNewTab()" class="ml-1 w-8 h-8 rounded hover:bg-slate-200 dark:hover:bg-slate-700 flex items-center justify-center text-slate-500 transition-colors flex-shrink-0"><i class="fa-solid fa-plus text-sm"></i></button>
-                            
-                            <div class="flex items-center ml-2 border-l border-slate-300 dark:border-slate-600 pl-2 gap-1 flex-shrink-0 text-left">
-                                <button onclick="setAsideState('min')" class="w-8 h-8 rounded hover:bg-slate-200 dark:hover:bg-slate-700 flex items-center justify-center text-slate-500"><i class="fa-solid fa-minus text-sm"></i></button>
-                                <button onclick="setAsideState(aps === 'max' ? 'dock' : 'max')" class="w-8 h-8 rounded hover:bg-slate-200 dark:hover:bg-slate-700 flex items-center justify-center text-slate-500"><i class="fa-regular fa-window-maximize text-sm"></i></button>
-                                <button onclick="setAsideState('closed')" class="w-8 h-8 rounded hover:bg-red-500 hover:text-white dark:hover:bg-red-600 flex items-center justify-center text-slate-500 transition-colors"><i class="fa-solid fa-xmark text-sm"></i></button>
+                            <div class="flex-1 flex items-center overflow-hidden relative text-left">
+                                <div id="aside-tabs" class="flex items-center overflow-x-auto no-scrollbar py-2 px-3 gap-1.5 flex-1 scroll-smooth text-left relative z-10"></div>
                             </div>
                         </div>
 
@@ -733,7 +758,7 @@
                             <div class="space-y-12 text-left w-full">
                                 ${sec.subsections.map(sub => `
                                     <div id="nav-sub-${sub.id}" class="text-left w-full scroll-target nav-sub-container" data-sec-id="nav-sec-${sec.id}" data-name="${sub.name.replace(/"/g, '&quot;')}">
-                                        <h3 class="text-xl font-semibold text-slate-700 dark:text-slate-300 mb-6 uppercase tracking-wider text-sm text-left">${sub.name}</h3>
+                                        <h3 class="text-lg font-bold text-slate-700 dark:text-slate-300 mb-6 text-left">${sub.name}</h3>
                                         <div class="grid grid-cols-1 md:grid-cols-2 gap-6 w-full text-left">
                                             ${sub.tiles.map(tile => generateTileCardHTML(tile)).join('')}
                                         </div>
@@ -766,9 +791,9 @@
                 html += `
                     <div class="relative text-left">
                         <div class="absolute -left-[41px] md:-left-[57px] top-6 w-5 h-5 rounded-full bg-secondary border-4 border-slate-50 dark:border-slate-900"></div>
-                        <div class="text-sm text-slate-500 dark:text-slate-400 mb-3 text-left">
-                            <span class="font-bold text-secondary">${tile.date}</span> ${tile.location ? ` | ${tile.location}` : ''}
-                            <div class="text-xs uppercase tracking-wider mt-1 text-left">${tile.secName} > ${tile.subName}</div>
+                        <div class="text-sm font-bold mt-1 mb-3 text-left">
+                            <span class="text-secondary">${tile.date}</span> ${tile.location ? `<span class="font-normal text-slate-500">| ${tile.location}</span>` : ''}
+                            <div class="text-slate-500 dark:text-slate-400 mt-1">${tile.secName} &gt; ${tile.subName}</div>
                         </div>
                         <div class="w-full md:w-3/4 text-left">
                             ${generateTileCardHTML(tile)}
@@ -827,7 +852,7 @@
             if (tile.location) cardMetaItems.push(tile.location);
             
             const metaInfo = cardMetaItems.join(' | ');
-            const metaHTML = metaInfo ? `<p class="text-xs font-semibold mb-3 ${isDarkBg ? 'text-blue-300' : 'text-secondary'} text-left">${metaInfo}</p>` : '';
+            const metaHTML = metaInfo ? `<p class="text-sm font-semibold mb-3 ${isDarkBg ? 'text-blue-300' : 'text-secondary'} text-left">${metaInfo}</p>` : '';
 
             let bannerHTML = '';
             let colSpanClass = '';
@@ -836,15 +861,59 @@
                 bannerHTML = getBannerHTML(tile.banner);
             }
 
+            // Generate dynamic metrics from related tiles
+            let metricsMap = {};
+            if (tile.relatedTiles && tile.relatedTiles.length > 0) {
+                tile.relatedTiles.forEach(relId => {
+                    const path = findTilePath(relId);
+                    // Ensure we do NOT count strictly hidden tiles in metrics
+                    if (path && path.sub && (path.tile.visibility || 'visible') !== 'hidden') {
+                        const subName = path.sub.name;
+                        if (!metricsMap[subName]) metricsMap[subName] = [];
+                        if (!metricsMap[subName].includes(relId)) metricsMap[subName].push(relId);
+                    }
+                });
+            }
+
+            let badges = '';
+            const metricKeys = Object.keys(metricsMap);
+            if (metricKeys.length > 0) {
+                badges = metricKeys.map(key => {
+                    const count = metricsMap[key].length;
+                    const pillId = `${tile.id}_${key.replace(/\s+/g, '_')}`;
+                    
+                    let dropdownLinks = metricsMap[key].map(id => {
+                        const rt = getTileById(id);
+                        if(!rt) return '';
+                        return `<div onclick="event.stopPropagation(); openTab('${id}'); togglePillDropdown(event, 'dropdown-${pillId}')" class="w-full text-left p-3 border-b border-slate-100 dark:border-slate-800 hover:bg-slate-50 dark:hover:bg-slate-700 text-sm font-medium text-slate-700 dark:text-slate-300 transition-colors cursor-pointer truncate">${getEffectiveHeading(rt)}</div>`;
+                    }).join('');
+
+                    return `
+                    <div class="relative inline-block text-left pill-dropdown-container">
+                        <button onclick="togglePillDropdown(event, 'dropdown-${pillId}')" class="flex items-center gap-1.5 px-3 py-1 border border-slate-200 dark:border-slate-700 hover:border-secondary dark:hover:border-secondary transition-all rounded-full text-xs font-semibold shadow-sm bg-white dark:bg-slate-800 text-slate-700 dark:text-slate-300 capitalize">
+                            <span class="text-secondary dark:text-blue-400">${count}</span> <span>${key}</span> <i class="fa-solid fa-chevron-down text-[10px] ml-1 opacity-50 pointer-events-none"></i>
+                        </button>
+                        <div id="dropdown-${pillId}" class="pill-dropdown-content hidden absolute top-full left-0 mt-2 w-56 bg-white dark:bg-darkCard rounded-xl shadow-xl border border-slate-200 dark:border-slate-700 overflow-hidden z-[60] flex flex-col max-h-[40vh] overflow-y-auto">
+                            ${dropdownLinks}
+                        </div>
+                    </div>`;
+                }).join('');
+            }
+
             return `
-                <div id="dom-tile-${tile.id}" onclick="tileClicked('${tile.id}')" class="portfolio-tile group cursor-pointer rounded-xl border border-slate-200 dark:border-slate-700 shadow-sm transition-all hover:shadow-md hover:-translate-y-1 hover:border-secondary dark:hover:border-secondary bg-white dark:bg-darkCard relative overflow-hidden text-left flex flex-col ${colSpanClass}" style="${tBg}">
-                    <div class="tile-active-indicator absolute top-0 right-0 w-12 h-12 bg-secondary rounded-bl-full flex items-start justify-end p-2 text-white hidden z-20"><i class="fa-solid fa-check text-xs"></i></div>
-                    ${bannerHTML}
-                    <div class="p-6 flex-1 flex flex-col relative z-10">
-                        <div class="text-secondary mb-4 text-3xl text-left"><i class="fa-solid ${tile.icon || 'fa-cube'}"></i></div>
-                        <h4 class="text-xl font-bold mb-1 text-left ${titleClass}">${effectiveHeading}</h4>
-                        ${metaHTML}
-                        <div class="text-sm line-clamp-3 text-left ${textClass}">${formatText(tile.description, 'mt-3')}</div>
+                <div class="flex flex-col h-full ${colSpanClass}">
+                    <div id="dom-tile-${tile.id}" onclick="tileClicked('${tile.id}')" class="portfolio-tile flex-1 group cursor-pointer rounded-xl border border-slate-200 dark:border-slate-700 shadow-sm transition-all hover:shadow-md hover:-translate-y-1 hover:border-secondary dark:hover:border-secondary bg-white dark:bg-darkCard relative overflow-hidden text-left flex flex-col" style="${tBg}">
+                        <div class="tile-active-indicator absolute top-0 right-0 w-12 h-12 bg-secondary rounded-bl-full flex items-start justify-end p-2 text-white hidden z-20"><i class="fa-solid fa-check text-xs"></i></div>
+                        ${bannerHTML}
+                        <div class="p-6 flex-1 flex flex-col relative z-10">
+                            <div class="text-secondary mb-4 text-3xl text-left"><i class="fa-solid ${tile.icon || 'fa-cube'}"></i></div>
+                            <h4 class="text-xl font-bold mb-1 text-left ${titleClass}">${effectiveHeading}</h4>
+                            ${metaHTML}
+                            <div class="text-sm line-clamp-3 text-left mb-2 ${textClass}">${formatText(tile.description, 'mt-3')}</div>
+                        </div>
+                    </div>
+                    <div class="mt-3 flex flex-wrap gap-2 text-left w-full pl-1 min-h-[32px]">
+                        ${badges}
                     </div>
                 </div>
             `;
@@ -861,34 +930,42 @@
             document.getElementById('aside-min-view').className = `${aps === 'min' ? 'flex' : 'hidden'} flex-1 items-center justify-between px-4 bg-white dark:bg-slate-800 cursor-pointer hover:bg-slate-50 dark:hover:bg-slate-700 text-left`;
 
             const tabsContainer = document.getElementById('aside-tabs');
-            tabsContainer.innerHTML = openTabs.map(tabId => {
+            let tabsHtml = openTabs.map(tabId => {
                 const isActive = tabId === activeAsideTab;
                 const activeClasses = isActive 
-                    ? "bg-white dark:bg-slate-800 border-t-2 border-secondary font-bold text-secondary dark:text-white pb-3 pt-2 shadow-[0_4px_0_0_#fff] dark:shadow-[0_4px_0_0_#1e293b] z-10" 
-                    : "bg-slate-50 hover:bg-slate-200 dark:bg-slate-800/50 dark:hover:bg-slate-700 border-t-2 border-transparent text-slate-500 pb-2 pt-2";
+                    ? "bg-white dark:bg-slate-700 text-secondary dark:text-blue-400 font-bold shadow-sm border border-slate-200 dark:border-slate-600 rounded-lg py-1.5" 
+                    : "bg-slate-200/50 hover:bg-slate-200 dark:bg-slate-800/40 dark:hover:bg-slate-700 text-slate-600 dark:text-slate-400 font-medium border border-transparent rounded-lg py-1.5 transition-colors";
                 
                 if (tabId === 'chatbot') {
-                    if (isActive) document.getElementById('min-title-text').innerText = `Chat with ${appData.uiText.botName.split(' ')[0]}`;
-                    return `<div id="tab-btn-chatbot" onclick="openTab('chatbot')" class="px-4 rounded-t-lg cursor-pointer flex items-center gap-2 whitespace-nowrap transition-colors flex-shrink-0 text-left ${activeClasses}">
-                                <i class="fa-solid fa-robot"></i> <span class="text-sm">Chat with ${appData.uiText.botName.split(' ')[0]}</span>
+                    if (isActive) document.getElementById('min-title-text').innerText = `Chat`;
+                    return `<div id="tab-btn-chatbot" onclick="openTab('chatbot')" class="px-3 cursor-pointer flex items-center gap-2 whitespace-nowrap flex-shrink-0 text-left ${activeClasses}">
+                                <i class="fa-solid fa-robot"></i> <span class="text-sm">Chat</span>
                             </div>`;
                 } else if (tabId.startsWith('newtab_')) {
                     if (isActive) document.getElementById('min-title-text').innerText = `New Tab`;
-                    return `<div id="tab-btn-${tabId}" onclick="openTab('${tabId}')" class="px-4 rounded-t-lg cursor-pointer flex items-center gap-2 whitespace-nowrap transition-colors group flex-shrink-0 text-left ${activeClasses}">
+                    return `<div id="tab-btn-${tabId}" onclick="openTab('${tabId}')" class="px-3 cursor-pointer flex items-center gap-2 whitespace-nowrap group flex-shrink-0 text-left ${activeClasses}">
                                 <i class="fa-solid fa-layer-group text-xs"></i> <span class="text-sm">Explore</span>
-                                <button onclick="closeTab(event, '${tabId}')" class="ml-1 w-5 h-5 rounded-full flex items-center justify-center hover:bg-slate-200 dark:hover:bg-slate-600 text-slate-400 hover:text-red-500 transition-colors"><i class="fa-solid fa-xmark text-xs"></i></button>
+                                <button onclick="closeTab(event, '${tabId}')" class="ml-1 w-5 h-5 rounded-full flex items-center justify-center hover:bg-slate-100 dark:hover:bg-slate-600 text-slate-400 hover:text-red-500 transition-colors"><i class="fa-solid fa-xmark text-xs"></i></button>
                             </div>`;
                 } else {
                     const tile = getTileById(tabId);
                     if (!tile) return '';
                     const effectiveHeading = getEffectiveHeading(tile);
                     if (isActive) document.getElementById('min-title-text').innerText = effectiveHeading;
-                    return `<div id="tab-btn-${tile.id}" onclick="openTab('${tile.id}')" class="px-4 rounded-t-lg cursor-pointer flex items-center gap-2 whitespace-nowrap transition-colors group flex-shrink-0 text-left ${activeClasses}">
+                    return `<div id="tab-btn-${tile.id}" onclick="openTab('${tile.id}')" class="px-3 cursor-pointer flex items-center gap-2 whitespace-nowrap group flex-shrink-0 text-left ${activeClasses}">
                                 <i class="fa-solid ${tile.icon} text-xs"></i> <span class="text-sm truncate max-w-[120px]">${effectiveHeading}</span>
-                                <button onclick="closeTab(event, '${tile.id}')" class="ml-1 w-5 h-5 rounded-full flex items-center justify-center hover:bg-slate-200 dark:hover:bg-slate-600 text-slate-400 hover:text-red-500 transition-colors"><i class="fa-solid fa-xmark text-xs"></i></button>
+                                <button onclick="closeTab(event, '${tile.id}')" class="ml-1 w-5 h-5 rounded-full flex items-center justify-center hover:bg-slate-100 dark:hover:bg-slate-600 text-slate-400 hover:text-red-500 transition-colors"><i class="fa-solid fa-xmark text-xs"></i></button>
                             </div>`;
                 }
             }).join('');
+
+            tabsHtml += `
+                <div class="flex items-center pl-1 pr-2">
+                    <button onclick="addNewTab()" class="w-7 h-7 rounded-full bg-slate-200 hover:bg-slate-300 dark:bg-slate-800 dark:hover:bg-slate-700 hidden md:flex items-center justify-center text-slate-500 dark:text-slate-400 transition-colors flex-shrink-0 shadow-sm" title="New Tab"><i class="fa-solid fa-plus text-sm"></i></button>
+                </div>
+            `;
+
+            tabsContainer.innerHTML = tabsHtml;
 
             const contentContainer = document.getElementById('aside-content');
             if (activeAsideTab === 'chatbot') contentContainer.innerHTML = renderChatbotHTML();
@@ -960,7 +1037,7 @@
                         <p class="text-blue-100 text-sm text-left">Ask questions to quickly find what you're looking for.</p>
                     </button>
 
-                    <h3 class="text-xs font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider mb-4 text-left"><i class="fa-solid fa-compass mr-2"></i> Explore Portfolio</h3>
+                    <h3 class="text-sm font-bold text-slate-500 dark:text-slate-400 mb-4 text-left"><i class="fa-solid fa-compass mr-2"></i> Explore Portfolio</h3>
                     <div class="space-y-2 w-full text-left">
                         ${allTilesHtml.join('')}
                     </div>
@@ -1015,7 +1092,7 @@
                 
                 relatedHtml = `
                     <div class="mt-8 pt-6 border-t border-slate-200 dark:border-slate-700 text-left w-full">
-                        <h5 class="text-xs font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider mb-4 text-left"><i class="fa-solid fa-link mr-2"></i> ${appData.uiText.relatedTabsBtn}</h5>
+                        <h5 class="text-sm font-bold text-slate-500 dark:text-slate-400 mb-4 text-left"><i class="fa-solid fa-link mr-2"></i> ${appData.uiText.relatedTabsBtn}</h5>
                         ${relatedLinks}
                     </div>
                 `;
@@ -1040,7 +1117,7 @@
             if (tile.date) metaItems.push(`<span>${tile.date}</span>`);
             if (tile.location) metaItems.push(`<span>${tile.location}</span>`);
             
-            const metaHTML = metaItems.length > 0 ? `<div class="text-sm font-semibold mb-6 text-slate-500 dark:text-slate-400 text-left flex flex-wrap gap-x-3 gap-y-1 items-center">` + metaItems.join('<span class="text-slate-300 dark:text-slate-600">|</span>') + `</div>` : '';
+            const metaHTML = metaItems.length > 0 ? `<div class="text-[15px] font-semibold mb-6 text-slate-500 dark:text-slate-400 text-left flex flex-wrap gap-x-3 gap-y-1 items-center">` + metaItems.join('<span class="text-slate-300 dark:text-slate-600">|</span>') + `</div>` : '';
 
             return `
                 <div class="p-6 absolute inset-0 overflow-y-auto text-left">
@@ -1090,6 +1167,13 @@
             if (isNavMenuOpen && navMenu && navContainer && !navContainer.contains(e.target)) {
                 toggleNavMenu(null, false);
             }
+            
+            // Close pill dropdowns when clicking outside
+            document.querySelectorAll('.pill-dropdown-content').forEach(el => {
+                if (!el.classList.contains('hidden') && !el.parentElement.contains(e.target)) {
+                    el.classList.add('hidden');
+                }
+            });
         });
 
         function toggleNavMenu(e, forceState) {
@@ -1115,14 +1199,25 @@
         function setViewMode(mode) {
             viewMode = mode;
             renderApp();
-            isSettingsOpen = false;
-            const menu = document.getElementById('settings-menu');
-            if (menu) menu.classList.add('hidden');
         }
 
         function toggleMobileAside() {
             isAsideOpenMobile = !isAsideOpenMobile;
             updateAsideUI();
+        }
+
+        function togglePillDropdown(event, dropdownId) {
+            if(event) event.stopPropagation();
+            
+            // Close all other dropdowns first
+            document.querySelectorAll('.pill-dropdown-content').forEach(el => {
+                if (el.id !== dropdownId) el.classList.add('hidden');
+            });
+            
+            const dropdown = document.getElementById(dropdownId);
+            if (dropdown) {
+                dropdown.classList.toggle('hidden');
+            }
         }
 
         function tileClicked(tileId) {
@@ -1156,6 +1251,11 @@
             setTimeout(() => {
                 const activeTabEl = document.getElementById(`tab-btn-${tabId}`);
                 if (activeTabEl) activeTabEl.scrollIntoView({ behavior: 'smooth', inline: 'center' });
+                
+                if (tabId !== 'chatbot' && !tabId.startsWith('newtab_')) {
+                    const tileEl = document.getElementById(`dom-tile-${tabId}`);
+                    if (tileEl) tileEl.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                }
             }, 50);
         }
 
@@ -1599,7 +1699,7 @@
 
             let bulkToolbar = '';
             const selCount = Object.keys(adminSelected).length;
-            if (selCount > 0 && adminPath.length !== 3) { // Hide toolbar if inside specific tile editor
+            if (selCount > 0 && adminPath.length !== 3) { 
                 bulkToolbar = `
                     <div class="fixed bottom-6 left-1/2 transform -translate-x-1/2 bg-slate-900 text-white px-5 py-3 rounded-full shadow-[0_20px_50px_rgba(0,0,0,0.5)] border border-slate-700 z-[100] flex items-center gap-5 text-sm font-semibold transition-all duration-300">
                         <div class="bg-slate-800 px-3 py-1 rounded-full text-secondary whitespace-nowrap">${selCount} Selected</div>
@@ -1722,7 +1822,7 @@
                             </div>
                             
                             <div class="ml-2 pl-4 border-l-2 border-slate-200 dark:border-slate-700">
-                                <h4 class="text-sm font-bold mb-4 text-slate-600 dark:text-slate-400 uppercase tracking-wider flex items-center gap-2"><i class="fa-solid fa-layer-group"></i> Subsections inside ${sec.name}</h4>
+                                <h4 class="text-sm font-bold mb-4 text-slate-600 dark:text-slate-400 flex items-center gap-2"><i class="fa-solid fa-layer-group"></i> Subsections inside ${sec.name}</h4>
                                 ${subsHtml}
                                 <button onclick="adminAddSub('${sec.id}')" class="mt-2 text-sm bg-slate-800 dark:bg-slate-200 text-white dark:text-slate-900 hover:bg-slate-700 dark:hover:bg-slate-300 transition-colors px-4 py-2 rounded-lg font-bold shadow-sm"><i class="fa-solid fa-plus mr-1"></i> Add Subsection</button>
                             </div>
