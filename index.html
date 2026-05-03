@@ -1147,15 +1147,54 @@
             if (container) container.scrollBy({ left: amount, behavior: 'smooth' });
         }
 
+        // --- Fuzzy Matching Algorithms for Typo Tolerance ---
+        function levenshtein(a, b) {
+            if(a.length === 0) return b.length;
+            if(b.length === 0) return a.length;
+            let matrix = [];
+            for(let i = 0; i <= b.length; i++){ matrix[i] = [i]; }
+            for(let j = 0; j <= a.length; j++){ matrix[0][j] = j; }
+            for(let i = 1; i <= b.length; i++){
+                for(let j = 1; j <= a.length; j++){
+                    if(b.charAt(i-1) === a.charAt(j-1)){
+                        matrix[i][j] = matrix[i-1][j-1];
+                    } else {
+                        matrix[i][j] = Math.min(matrix[i-1][j-1] + 1, Math.min(matrix[i][j-1] + 1, matrix[i-1][j] + 1));
+                    }
+                }
+            }
+            return matrix[b.length][a.length];
+        }
+
+        function fuzzyMatch(kw, text) {
+            if (!kw || !text) return false;
+            if (text.includes(kw)) return true; // Direct substring match
+            if (kw.length <= 3) return false; // Don't fuzzy match very short words (too many false positives)
+            
+            const words = text.split(/[\s,.\-()]+/);
+            for (let w of words) {
+                if (w.length > 3 && Math.abs(w.length - kw.length) <= 2) {
+                    const dist = levenshtein(kw, w);
+                    // Allow 1 typo for 4-5 char words, 2 typos for longer words
+                    if (dist <= 1 || (kw.length > 5 && dist <= 2)) return true;
+                }
+            }
+            return false;
+        }
+
         function handleSearch(val) {
             const resultsDiv = document.getElementById('search-results');
             if(!val.trim()) { resultsDiv.classList.add('hidden'); return; }
             
             let results = [];
-            const query = val.toLowerCase();
+            const queryWords = val.toLowerCase().split(/\s+/).filter(w => w.length > 0);
+            
             appData.sections.forEach(s => s.subsections.forEach(ss => ss.tiles.forEach(t => {
-                const effHeading = getEffectiveHeading(t);
-                if(effHeading.toLowerCase().includes(query) || t.description.toLowerCase().includes(query) || (t.employer && t.employer.toLowerCase().includes(query))) results.push(t);
+                const searchable = [getEffectiveHeading(t), t.description, t.employer].filter(Boolean).join(' ').toLowerCase();
+                
+                // If any typed query word is found via substring OR fuzzy math
+                const isMatch = queryWords.some(qw => fuzzyMatch(qw, searchable));
+                if(isMatch) results.push(t);
             })));
 
             if(results.length > 0) {
@@ -1181,34 +1220,50 @@
             if (lowerQuery.match(/^(hi|hello|hey|greetings|start)/)) {
                 return `Hello! I'm ${appData.uiText.botName.split(' ')[0]}. You can ask me about specific skills, my work experience, or how to contact me.`;
             }
-            if (lowerQuery.includes('contact') || lowerQuery.includes('email') || lowerQuery.includes('phone') || lowerQuery.includes('hire')) {
+            // Use fuzzy matching for primary contact triggers
+            if (fuzzyMatch('contact', lowerQuery) || fuzzyMatch('email', lowerQuery) || fuzzyMatch('phone', lowerQuery) || fuzzyMatch('hire', lowerQuery)) {
                 return `You can reach me via email at <a href="mailto:${appData.uiText.contactEmail}" class="text-secondary hover:underline">${appData.uiText.contactEmail}</a> or call ${appData.uiText.contactPhone}. Let's connect!`;
             }
 
             // 2. Keyword extraction (remove stop words)
-            const stopWords = ['a', 'an', 'the', 'is', 'at', 'in', 'of', 'for', 'to', 'and', 'or', 'with', 'about', 'my', 'your', 'i', 'me', 'tell', 'what', 'where', 'how', 'do', 'you', 'have', 'know', 'can', 'show', 'any'];
+            const stopWords = ['a', 'an', 'the', 'is', 'at', 'in', 'of', 'for', 'to', 'and', 'or', 'with', 'about', 'my', 'your', 'i', 'me', 'tell', 'what', 'where', 'how', 'do', 'you', 'have', 'know', 'can', 'show', 'any', 'please'];
             const keywords = lowerQuery.replace(/[^\w\s]/g, '').split(/\s+/).filter(w => !stopWords.includes(w) && w.length > 1);
 
             if (keywords.length === 0) {
                 return "Could you be a bit more specific? I can tell you about my education, experience, or specific skills!";
             }
 
-            // 3. Scoring tiles based on data structure
+            // 3. Scoring sections, subsections, and tiles with Typo-Tolerance
+            let scoredSections = [];
+            let scoredSubsections = [];
             let scoredTiles = [];
+
             appData.sections.forEach(sec => {
+                let secScore = 0;
+                keywords.forEach(kw => {
+                    if (fuzzyMatch(kw, sec.name.toLowerCase())) secScore += 10;
+                });
+                if (secScore > 0) scoredSections.push({ sec, score: secScore });
+
                 sec.subsections.forEach(sub => {
+                    let subScore = 0;
+                    keywords.forEach(kw => {
+                        if (fuzzyMatch(kw, sub.name.toLowerCase())) subScore += 10;
+                    });
+                    if (subScore > 0) scoredSubsections.push({ sec, sub, score: subScore });
+
                     sub.tiles.forEach(tile => {
                         let score = 0;
                         const searchableText = {
-                            high: [tile.heading, tile.role, tile.baseSubject, tile.specialisation, tile.employer].filter(Boolean).join(' ').toLowerCase(),
+                            high: [tile.heading, tile.role, tile.baseSubject, tile.specialisation, tile.employer, sec.name, sub.name].filter(Boolean).join(' ').toLowerCase(),
                             medium: (tile.description || '').toLowerCase(),
                             low: (tile.tabText || '').toLowerCase()
                         };
 
                         keywords.forEach(kw => {
-                            if (searchableText.high.includes(kw)) score += 5;
-                            if (searchableText.medium.includes(kw)) score += 3;
-                            if (searchableText.low.includes(kw)) score += 1;
+                            if (fuzzyMatch(kw, searchableText.high)) score += 5;
+                            if (fuzzyMatch(kw, searchableText.medium)) score += 3;
+                            if (fuzzyMatch(kw, searchableText.low)) score += 1;
                         });
 
                         if (score > 0) {
@@ -1218,9 +1273,56 @@
                 });
             });
 
-            // 4. Formatting output
-            if (scoredTiles.length > 0) {
-                scoredTiles.sort((a, b) => b.score - a.score);
+            // Find highest scores
+            scoredSections.sort((a, b) => b.score - a.score);
+            scoredSubsections.sort((a, b) => b.score - a.score);
+            scoredTiles.sort((a, b) => b.score - a.score);
+
+            const topSecScore = scoredSections.length > 0 ? scoredSections[0].score : 0;
+            const topSubScore = scoredSubsections.length > 0 ? scoredSubsections[0].score : 0;
+            const topTileScore = scoredTiles.length > 0 ? scoredTiles[0].score : 0;
+
+            const maxScore = Math.max(topSecScore, topSubScore, topTileScore);
+
+            if (maxScore === 0) {
+                return `I couldn't find specific details about that in the portfolio data. Feel free to browse the categories or <a href="mailto:${appData.uiText.contactEmail}" class="text-secondary hover:underline">contact me directly</a>!`;
+            }
+
+            // 4. Formatting output based on winner
+            if (topSecScore === maxScore || topSubScore === maxScore) {
+                let bestMatch = topSecScore >= topSubScore ? scoredSections[0].sec : scoredSubsections[0].sub;
+                let isSec = topSecScore >= topSubScore;
+                let targetId = isSec ? `nav-sec-${bestMatch.id}` : `nav-sub-${bestMatch.id}`;
+
+                let response = `I found a category matching your query: <strong>${bestMatch.name}</strong>.`;
+                response += `<div class="mt-3 flex flex-col gap-2 w-full text-left">`;
+                
+                // Add Scroll Button
+                response += `<button onclick="scrollToNavTarget('${targetId}')" class="text-xs bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 border border-slate-300 dark:border-slate-600 px-3 py-2 rounded hover:bg-slate-200 dark:hover:bg-slate-700 transition-colors text-left flex items-center justify-between shadow-sm"><span class="truncate pr-2 font-medium">Scroll to ${bestMatch.name}</span> <i class="fa-solid fa-arrow-turn-down"></i></button>`;
+
+                // Get relevant tiles within this category and sort by specific tile score
+                let relevantTiles = [];
+                if (isSec) {
+                    bestMatch.subsections.forEach(ss => ss.tiles.forEach(t => relevantTiles.push(t)));
+                } else {
+                    bestMatch.tiles.forEach(t => relevantTiles.push(t));
+                }
+
+                relevantTiles.forEach(rt => {
+                    const matchedTile = scoredTiles.find(st => st.tile.id === rt.id);
+                    rt._tempScore = matchedTile ? matchedTile.score : 0;
+                });
+                relevantTiles.sort((a, b) => b._tempScore - a._tempScore);
+
+                const maxButtons = Math.min(relevantTiles.length, 3);
+                for(let i=0; i<maxButtons; i++){
+                    response += `<button onclick="openTab('${relevantTiles[i].id}')" class="text-xs bg-blue-50 dark:bg-blue-900/30 text-secondary border border-blue-200 dark:border-blue-800 px-3 py-2 rounded hover:bg-blue-100 dark:hover:bg-blue-800 transition-colors text-left flex items-center justify-between shadow-sm"><span class="truncate pr-2 font-medium">${getEffectiveHeading(relevantTiles[i])}</span> <i class="fa-solid fa-arrow-right"></i></button>`;
+                }
+                
+                response += `</div>`;
+                return response;
+            } else {
+                // Specific Tile wins
                 const topMatch = scoredTiles[0].tile;
                 let response = `I found some relevant information. Check out <strong>${getEffectiveHeading(topMatch)}</strong>.`;
                 
@@ -1236,9 +1338,6 @@
                 response += `</div>`;
                 return response;
             }
-
-            // 5. Fallback
-            return `I couldn't find specific details about that in the portfolio data. Feel free to browse the categories or <a href="mailto:${appData.uiText.contactEmail}" class="text-secondary hover:underline">contact me directly</a>!`;
         }
 
         function handleChatSubmit(e) {
@@ -1274,6 +1373,8 @@
 
         function scrollToNavTarget(targetId) {
             toggleNavMenu(null, false); // close menu
+            if (window.innerWidth < 768 && isAsideOpenMobile) toggleMobileAside(); // Close chat on mobile!
+            
             if (targetId === 'top') {
                 document.getElementById('left-content').scrollTo({top: 0, behavior: 'smooth'});
                 return;
