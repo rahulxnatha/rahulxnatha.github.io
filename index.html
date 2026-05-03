@@ -340,6 +340,49 @@
             return 0;
         }
 
+        // --- BANNER MEDIA PARSER ---
+        function getBannerHTML(link) {
+            if (!link || !link.trim()) return '';
+            const trimmed = link.trim();
+            
+            // Raw iframe
+            if (trimmed.toLowerCase().startsWith('<iframe')) {
+                let fixedIframe = trimmed;
+                if(!fixedIframe.includes('w-full')) fixedIframe = fixedIframe.replace('<iframe', '<iframe class="w-full aspect-video border-none"');
+                return `<div class="w-full aspect-video bg-slate-100 dark:bg-slate-900 border-b border-slate-200 dark:border-slate-700 relative z-10">${fixedIframe}</div>`;
+            }
+
+            // YouTube Match
+            const ytMatch = trimmed.match(/(?:youtube\.com\/(?:[^\/]+\/.+\/|(?:v|e(?:mbed)?)\/|.*[?&]v=)|youtu\.be\/)([^"&?\/\s]{11})/i);
+            if (ytMatch && ytMatch[1]) {
+                return `<div class="w-full aspect-video bg-slate-100 dark:bg-slate-900 border-b border-slate-200 dark:border-slate-700 relative z-10">
+                            <iframe src="https://www.youtube.com/embed/${ytMatch[1]}" class="w-full h-full border-none" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+                        </div>`;
+            }
+
+            // Standard Image Match
+            if (trimmed.match(/\.(jpeg|jpg|gif|png|webp|svg)$/i)) {
+                return `<img src="${trimmed}" class="w-full max-h-[400px] object-cover bg-slate-100 dark:bg-slate-900 border-b border-slate-200 dark:border-slate-700 relative z-10 pointer-events-none">`;
+            }
+
+            // Google Drive link
+            const driveData = parseDriveLink(trimmed);
+            if (driveData && driveData.id) {
+                return `<div class="w-full aspect-video bg-slate-100 dark:bg-slate-900 border-b border-slate-200 dark:border-slate-700 relative z-10">
+                            <iframe src="${driveData.iframePreviewUrl}" class="w-full h-full border-none" allow="autoplay"></iframe>
+                        </div>`;
+            }
+
+            // Fallback for raw HTTP links
+            if (trimmed.startsWith('http')) {
+                return `<div class="w-full aspect-video bg-slate-100 dark:bg-slate-900 border-b border-slate-200 dark:border-slate-700 relative z-10">
+                            <iframe src="${trimmed}" class="w-full h-full border-none" allow="autoplay"></iframe>
+                        </div>`;
+            }
+            
+            return '';
+        }
+
         function encodeTileToPath(tileId) {
             if (tileId === 'chatbot') return 'chatbot';
             if (tileId.startsWith('newtab_')) return tileId;
@@ -786,13 +829,23 @@
             const metaInfo = cardMetaItems.join(' | ');
             const metaHTML = metaInfo ? `<p class="text-xs font-semibold mb-3 ${isDarkBg ? 'text-blue-300' : 'text-secondary'} text-left">${metaInfo}</p>` : '';
 
+            let bannerHTML = '';
+            let colSpanClass = '';
+            if (tile.banner && tile.banner.trim() !== '') {
+                colSpanClass = 'md:col-span-2';
+                bannerHTML = getBannerHTML(tile.banner);
+            }
+
             return `
-                <div id="dom-tile-${tile.id}" onclick="tileClicked('${tile.id}')" class="portfolio-tile group cursor-pointer rounded-xl p-6 border shadow-sm transition-all bg-white dark:bg-darkCard relative overflow-hidden text-left" style="${tBg}">
-                    <div class="tile-active-indicator absolute top-0 right-0 w-12 h-12 bg-secondary rounded-bl-full flex items-start justify-end p-2 text-white hidden"><i class="fa-solid fa-check text-xs"></i></div>
-                    <div class="text-secondary mb-4 text-3xl text-left"><i class="fa-solid ${tile.icon || 'fa-cube'}"></i></div>
-                    <h4 class="text-xl font-bold mb-1 text-left ${titleClass}">${effectiveHeading}</h4>
-                    ${metaHTML}
-                    <div class="text-sm line-clamp-3 text-left ${textClass}">${formatText(tile.description, 'mt-3')}</div>
+                <div id="dom-tile-${tile.id}" onclick="tileClicked('${tile.id}')" class="portfolio-tile group cursor-pointer rounded-xl border border-slate-200 dark:border-slate-700 shadow-sm transition-all hover:shadow-md hover:-translate-y-1 hover:border-secondary dark:hover:border-secondary bg-white dark:bg-darkCard relative overflow-hidden text-left flex flex-col ${colSpanClass}" style="${tBg}">
+                    <div class="tile-active-indicator absolute top-0 right-0 w-12 h-12 bg-secondary rounded-bl-full flex items-start justify-end p-2 text-white hidden z-20"><i class="fa-solid fa-check text-xs"></i></div>
+                    ${bannerHTML}
+                    <div class="p-6 flex-1 flex flex-col relative z-10">
+                        <div class="text-secondary mb-4 text-3xl text-left"><i class="fa-solid ${tile.icon || 'fa-cube'}"></i></div>
+                        <h4 class="text-xl font-bold mb-1 text-left ${titleClass}">${effectiveHeading}</h4>
+                        ${metaHTML}
+                        <div class="text-sm line-clamp-3 text-left ${textClass}">${formatText(tile.description, 'mt-3')}</div>
+                    </div>
                 </div>
             `;
         }
@@ -1739,6 +1792,11 @@
                         <button onclick="adminNavigate([])" class="text-sm text-slate-500 hover:text-secondary"><i class="fa-solid fa-arrow-left mr-1"></i> Back to Architecture</button>
                     </div>
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-4 text-left w-full">
+                        <div class="md:col-span-2 text-left mb-2">
+                            <label class="block text-sm mb-1 opacity-70 text-left font-bold text-secondary"><i class="fa-solid fa-rectangle-ad mr-1"></i> Top Banner Media (Optional)</label>
+                            <input type="text" onchange="adminUpdateTileProp('${adminPath[0]}', '${adminPath[1]}', '${tile.id}', 'banner', this.value)" value="${(tile.banner || '').replace(/"/g, '&quot;')}" class="w-full p-2 rounded bg-slate-50 dark:bg-slate-900 border border-blue-200 dark:border-blue-900 text-sm font-mono text-left focus:border-secondary outline-none" placeholder="Paste YouTube link, G-Drive link, or Image URL">
+                            <p class="text-[10px] text-slate-500 mt-1">Adding a banner automatically expands this tile to span the full width of the row to catch a recruiter's eye.</p>
+                        </div>
                         <div class="md:col-span-2 text-left"><label class="block text-sm mb-1 opacity-70 text-left">Tile Heading (Optional)</label><input type="text" onchange="adminUpdateTileProp('${adminPath[0]}', '${adminPath[1]}', '${tile.id}', 'heading', this.value)" value="${tile.heading || ''}" class="w-full p-2 rounded bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 font-bold text-left" placeholder="Leave empty for auto-heading: Role, Base Subject (Specialisation) @ Employer"></div>
                         <div class="text-left"><label class="block text-sm mb-1 opacity-70 text-left">Role / Title (e.g. JRF, BTech, Engineer)</label><input type="text" onchange="adminUpdateTileProp('${adminPath[0]}', '${adminPath[1]}', '${tile.id}', 'role', this.value)" value="${tile.role || tile.subtitle || ''}" class="w-full p-2 rounded bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 text-left"></div>
                         <div class="text-left"><label class="block text-sm mb-1 opacity-70 text-left">Base Subject / Major (e.g. Mechanical Eng)</label><input type="text" onchange="adminUpdateTileProp('${adminPath[0]}', '${adminPath[1]}', '${tile.id}', 'baseSubject', this.value)" value="${tile.baseSubject || ''}" class="w-full p-2 rounded bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 text-left"></div>
@@ -1839,7 +1897,7 @@
         function adminUpdateTileProp(sId, ssId, tId, prop, val) { appData.sections.find(s=>s.id===sId).subsections.find(ss=>ss.id===ssId).tiles.find(t=>t.id===tId)[prop] = val; adminRenderWithScroll(); }
         function adminAddSection() { appData.sections.push({id: generateId(), name: "New Section", bgImage: "", visibility: "visible", subsections: []}); adminRenderWithScroll(); }
         function adminAddSub(sId) { appData.sections.find(s=>s.id===sId).subsections.push({id: generateId(), name: "New Subsection", visibility: "visible", tiles: []}); adminRenderWithScroll(); }
-        function adminAddTile(sId, ssId) { appData.sections.find(s=>s.id===sId).subsections.find(ss=>ss.id===ssId).tiles.push({id: generateId(), heading: "", role: "New Role", baseSubject: "", specialisation: "", employer: "Company", employerUrl: "", score: "", maxScore: "", date: "", location: "", description: "", tabText: "", icon: "fa-cube", bgImage: "", visibility: "visible", mediaLinks: [], relatedTiles: []}); adminRenderWithScroll(); }
+        function adminAddTile(sId, ssId) { appData.sections.find(s=>s.id===sId).subsections.find(ss=>ss.id===ssId).tiles.push({id: generateId(), heading: "", role: "New Role", baseSubject: "", specialisation: "", employer: "Company", employerUrl: "", score: "", maxScore: "", date: "", location: "", description: "", tabText: "", icon: "fa-cube", bgImage: "", banner: "", visibility: "visible", mediaLinks: [], relatedTiles: []}); adminRenderWithScroll(); }
         function adminDeleteSection(idx) { if(confirm("Delete section?")) { appData.sections.splice(idx, 1); adminRenderWithScroll(); } }
         function adminDeleteSub(sId, idx) { if(confirm("Delete subsection?")) { appData.sections.find(s=>s.id===sId).subsections.splice(idx, 1); adminRenderWithScroll(); } }
         function adminDeleteTile(sId, ssId, idx) { if(confirm("Delete tile?")) { appData.sections.find(s=>s.id===sId).subsections.find(ss=>ss.id===ssId).tiles.splice(idx, 1); adminRenderWithScroll(); } }
