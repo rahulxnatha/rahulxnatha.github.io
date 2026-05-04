@@ -3,7 +3,15 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <!-- STATIC FALLBACKS FOR WHATSAPP/IMESSAGE (Scrapers that do not run JavaScript) -->
+    <!-- You MUST manually edit the content below in your code editor before deploying to GitHub -->
     <title>Rahul Natha | Portfolio</title>
+    <meta name="description" content="Mechanical Engineer, Mechanical Design Engineer, Electromechanical Systems Specialist">
+    <meta property="og:title" content="Rahul Natha | Portfolio">
+    <meta property="og:description" content="5 years of experience across precision mechanical systems R&D and transportation industry.">
+    <meta property="og:image" content="https://via.placeholder.com/1200x630.png?text=Update+Me+In+Code">
+    <meta property="og:type" content="website">
     
     <!-- Tailwind CSS with Dark Mode config -->
     <script src="https://cdn.tailwindcss.com"></script>
@@ -186,6 +194,11 @@
         // 2. DEFAULT DATA STRUCTURE 
         // ==========================================
         let appData = {
+            seo: {
+                title: "Rahul Natha | Portfolio",
+                description: "Mechanical Engineer, Mechanical Design Engineer, Electromechanical Systems Specialist. 5 years of experience across precision mechanical systems R&D and transportation industry.",
+                image: ""
+            },
             uiText: {
                 brandLogo: "", 
                 siteTitle: "Rahul Natha",
@@ -468,7 +481,10 @@
             try {
                 const response = await fetch(GOOGLE_SCRIPT_URL);
                 const data = await response.json();
-                if (data && data.uiText) return data;
+                if (data && data.uiText) {
+                    if (!data.seo) data.seo = appData.seo; // Fallback for old data
+                    return data;
+                }
                 return appData;
             } catch (e) { return appData; }
         }
@@ -494,12 +510,47 @@
         // ==========================================
         // 4. RENDERING CORE (PUBLIC)
         // ==========================================
+        function applySEOMetadata() {
+            const seo = appData.seo || {};
+            const title = seo.title || appData.uiText.siteTitle;
+            const desc = seo.description || appData.hero.bio;
+            const imgLink = parseDriveLink(seo.image || appData.hero.bgImageLink);
+            const imgUrl = imgLink ? imgLink.imageViewUrl : seo.image;
+
+            document.title = title;
+            
+            const updateMeta = (name, property, content) => {
+                let tag = document.querySelector(`meta[${name ? `name="${name}"` : `property="${property}"`}]`);
+                if (!tag) {
+                    tag = document.createElement('meta');
+                    if (name) tag.setAttribute('name', name);
+                    if (property) tag.setAttribute('property', property);
+                    document.head.appendChild(tag);
+                }
+                tag.setAttribute('content', content);
+            };
+
+            updateMeta('description', null, desc);
+            updateMeta(null, 'og:title', title);
+            updateMeta(null, 'og:description', desc);
+            if (imgUrl) updateMeta(null, 'og:image', imgUrl);
+        }
+
         function renderApp() {
             const container = document.getElementById('app-container');
             const hash = window.location.hash;
+            
+            applySEOMetadata();
 
             if (hash === '#admin') {
                 container.innerHTML = passcode ? renderAdminDashboard() : renderAdminLogin();
+                // Initialize auto-expanding textareas after render
+                setTimeout(() => {
+                    document.querySelectorAll('textarea.auto-expand').forEach(el => {
+                        el.style.height = 'auto';
+                        el.style.height = (el.scrollHeight) + 'px';
+                    });
+                }, 50);
             } else {
                 let isFirstRender = false;
                 if (!document.getElementById('main-wrapper')) {
@@ -1644,14 +1695,22 @@
         // ==========================================
         // 7. ADMIN VIEW RENDERING (DRILL-DOWN CMS)
         // ==========================================
+        const adminInputCls = "w-full bg-slate-50 dark:bg-slate-900/50 border border-slate-300 dark:border-slate-600 rounded-xl px-4 py-3 text-sm text-slate-800 dark:text-slate-200 focus:outline-none focus:ring-2 focus:ring-secondary/50 focus:border-secondary transition-all shadow-sm";
+        const adminLabelCls = "block text-sm font-bold text-slate-700 dark:text-slate-300 mb-1.5";
+
         function renderAdminLogin() {
             return `
                 <div class="h-screen w-full flex items-center justify-center bg-slate-100 dark:bg-darkBg px-4 text-left overflow-y-auto">
-                    <div class="bg-white dark:bg-darkCard p-8 rounded-xl shadow-xl w-full max-w-md border border-slate-200 dark:border-slate-700">
-                        <h2 class="text-2xl font-bold mb-6 text-primary dark:text-white text-left"><i class="fa-solid fa-lock text-secondary mr-2"></i> Admin Login</h2>
-                        <input type="password" id="passcode-input" class="w-full px-4 py-3 rounded bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 text-slate-800 dark:text-slate-200 mb-4 focus:border-secondary outline-none text-left" placeholder="Enter Passcode">
-                        <button onclick="passcode=document.getElementById('passcode-input').value; renderApp()" class="w-full bg-secondary text-white font-bold py-3 rounded hover:bg-blue-600 transition-colors text-left">Login</button>
-                        <button onclick="window.location.hash=''" class="w-full mt-3 text-slate-500 text-sm hover:underline text-left">Return to site</button>
+                    <div class="bg-white dark:bg-darkCard p-8 rounded-2xl shadow-xl w-full max-w-md border border-slate-200 dark:border-slate-700">
+                        <h2 class="text-2xl font-bold mb-6 text-primary dark:text-white text-left flex items-center gap-3"><div class="w-10 h-10 bg-blue-100 dark:bg-blue-900/30 text-secondary rounded-xl flex items-center justify-center"><i class="fa-solid fa-lock"></i></div> Admin Login</h2>
+                        <div class="space-y-4">
+                            <div>
+                                <label class="${adminLabelCls}">Security Passcode</label>
+                                <input type="password" id="passcode-input" class="${adminInputCls}" placeholder="Enter Passcode">
+                            </div>
+                            <button onclick="passcode=document.getElementById('passcode-input').value; renderApp()" class="w-full bg-secondary text-white font-bold py-3.5 rounded-xl hover:bg-blue-600 transition-colors shadow-md shadow-blue-500/20 text-center">Unlock Workspace</button>
+                            <button onclick="window.location.hash=''" class="w-full text-slate-500 text-sm hover:text-slate-700 dark:hover:text-slate-300 transition-colors text-center">Return to site</button>
+                        </div>
                     </div>
                 </div>
             `;
@@ -1746,7 +1805,7 @@
         };
 
         function renderAdminRoot() {
-            const ui = appData.uiText; const hero = appData.hero;
+            const ui = appData.uiText; const hero = appData.hero; const seo = appData.seo || {};
             
             let sectionsHtml = appData.sections.map((sec, i) => {
                 const isSecExpanded = adminExpanded[sec.id];
@@ -1757,74 +1816,77 @@
                     const chevronSub = isSubExpanded ? 'fa-chevron-down' : 'fa-chevron-right';
 
                     let tilesHtml = sub.tiles.map((tile, k) => `
-                        <div class="flex justify-between items-center p-2 bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded mb-2 text-left ml-6 shadow-sm hover:border-secondary transition-colors">
-                            <div class="flex items-center flex-1 mr-4 gap-2 text-left">
-                                <input type="checkbox" onclick="event.stopPropagation()" onchange="toggleAdminSelect('${tile.id}')" ${adminSelected[tile.id] ? 'checked' : ''} class="w-4 h-4 ml-1 cursor-pointer flex-shrink-0">
-                                <i class="fa-solid ${tile.icon} text-secondary w-6 text-center flex-shrink-0 ml-1"></i>
-                                <input type="text" onchange="adminUpdateTileProp('${sec.id}', '${sub.id}', '${tile.id}', 'heading', this.value)" value="${(tile.heading || '').replace(/"/g, '&quot;')}" placeholder="${getEffectiveHeading({...tile, heading: ''}).replace(/"/g, '&quot;')}" class="flex-1 p-1.5 rounded bg-white dark:bg-darkCard border border-slate-200 dark:border-slate-600 text-sm font-medium focus:border-secondary outline-none transition-colors" title="Tile Heading Override (Leave empty for auto-generated heading)">
+                        <div class="flex justify-between items-center p-3 bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-xl mb-3 text-left ml-6 shadow-sm hover:border-secondary transition-colors group">
+                            <div class="flex items-center flex-1 mr-4 gap-3 text-left">
+                                <input type="checkbox" onclick="event.stopPropagation()" onchange="toggleAdminSelect('${tile.id}')" ${adminSelected[tile.id] ? 'checked' : ''} class="w-4 h-4 cursor-pointer flex-shrink-0 text-secondary rounded border-slate-300 focus:ring-secondary">
+                                <div class="w-8 h-8 rounded-lg bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 flex items-center justify-center flex-shrink-0 shadow-sm"><i class="fa-solid ${tile.icon} text-secondary text-xs"></i></div>
+                                <div class="flex-1">
+                                    <input type="text" onchange="adminUpdateTileProp('${sec.id}', '${sub.id}', '${tile.id}', 'heading', this.value)" value="${(tile.heading || '').replace(/"/g, '&quot;')}" placeholder="${getEffectiveHeading({...tile, heading: ''}).replace(/"/g, '&quot;')}" class="w-full bg-transparent border-none text-sm font-semibold text-slate-800 dark:text-slate-200 focus:outline-none focus:ring-0 placeholder-slate-400 dark:placeholder-slate-500" title="Tile Heading Override">
+                                </div>
                                 ${getVisBadge(tile.visibility || 'visible')}
                             </div>
                             <div class="flex gap-2 text-left items-center flex-shrink-0">
-                                <div class="flex gap-1 border-r border-slate-200 dark:border-slate-600 pr-2 mr-1">
-                                    <button onclick="adminMoveTile('${sec.id}', '${sub.id}', ${k}, -1)" class="text-slate-400 hover:text-secondary text-xs ${k === 0 ? 'invisible' : ''}" title="Move Up"><i class="fa-solid fa-arrow-up"></i></button>
-                                    <button onclick="adminMoveTile('${sec.id}', '${sub.id}', ${k}, 1)" class="text-slate-400 hover:text-secondary text-xs ${k === sub.tiles.length - 1 ? 'invisible' : ''}" title="Move Down"><i class="fa-solid fa-arrow-down"></i></button>
+                                <div class="flex gap-1 border-r border-slate-200 dark:border-slate-600 pr-2 mr-1 opacity-0 group-hover:opacity-100 transition-opacity">
+                                    <button onclick="adminMoveTile('${sec.id}', '${sub.id}', ${k}, -1)" class="text-slate-400 hover:text-secondary p-1 rounded hover:bg-slate-200 dark:hover:bg-slate-800 ${k === 0 ? 'invisible' : ''}" title="Move Up"><i class="fa-solid fa-arrow-up text-xs"></i></button>
+                                    <button onclick="adminMoveTile('${sec.id}', '${sub.id}', ${k}, 1)" class="text-slate-400 hover:text-secondary p-1 rounded hover:bg-slate-200 dark:hover:bg-slate-800 ${k === sub.tiles.length - 1 ? 'invisible' : ''}" title="Move Down"><i class="fa-solid fa-arrow-down text-xs"></i></button>
                                 </div>
-                                <button onclick="adminNavigate(['${sec.id}', '${sub.id}', '${tile.id}'])" class="bg-secondary text-white px-3 py-1 rounded text-xs text-left shadow-sm hover:bg-blue-600 transition-colors"><i class="fa-solid fa-pen mr-1"></i> Edit Details</button>
+                                <button onclick="adminNavigate(['${sec.id}', '${sub.id}', '${tile.id}'])" class="bg-secondary text-white px-3 py-1.5 rounded-lg text-xs font-semibold shadow-sm hover:bg-blue-600 transition-colors flex items-center gap-1.5"><i class="fa-solid fa-pen text-[10px]"></i> Edit</button>
                             </div>
                         </div>
                     `).join('');
 
                     return `
-                        <div class="mb-3 border border-slate-200 dark:border-slate-700 rounded-lg bg-white dark:bg-slate-800 text-left overflow-hidden shadow-sm">
-                            <div class="flex items-center justify-between p-3 bg-slate-50/50 dark:bg-slate-900/50 border-b border-transparent data-[expanded=true]:border-slate-200 dark:data-[expanded=true]:border-slate-700 transition-colors" data-expanded="${isSubExpanded}">
-                                <div class="flex items-center gap-2 flex-1 mr-4">
-                                    <input type="checkbox" onclick="event.stopPropagation()" onchange="toggleAdminSelect('${sub.id}')" ${adminSelected[sub.id] ? 'checked' : ''} class="w-4 h-4 ml-1 cursor-pointer flex-shrink-0">
-                                    <button onclick="toggleAdminExpand('${sub.id}')" class="text-slate-400 hover:text-secondary w-6 h-6 flex items-center justify-center transition-colors ml-1"><i class="fa-solid ${chevronSub}"></i></button>
-                                    <input type="text" onchange="adminUpdateSub('${sec.id}', '${sub.id}', 'name', this.value)" value="${sub.name}" class="flex-1 p-1.5 rounded bg-white dark:bg-darkCard border border-slate-200 dark:border-slate-600 text-sm font-semibold focus:border-secondary outline-none transition-colors" placeholder="Subsection Name">
+                        <div class="mb-4 border border-slate-200 dark:border-slate-700 rounded-xl bg-white dark:bg-slate-800/50 text-left overflow-hidden shadow-sm">
+                            <div class="flex items-center justify-between p-3 bg-slate-50/50 dark:bg-slate-900/50 border-b border-transparent data-[expanded=true]:border-slate-200 dark:data-[expanded=true]:border-slate-700 transition-colors group" data-expanded="${isSubExpanded}">
+                                <div class="flex items-center gap-3 flex-1 mr-4">
+                                    <input type="checkbox" onclick="event.stopPropagation()" onchange="toggleAdminSelect('${sub.id}')" ${adminSelected[sub.id] ? 'checked' : ''} class="w-4 h-4 ml-1 cursor-pointer flex-shrink-0 text-secondary rounded border-slate-300 focus:ring-secondary">
+                                    <button onclick="toggleAdminExpand('${sub.id}')" class="text-slate-400 hover:text-secondary w-7 h-7 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded shadow-sm flex items-center justify-center transition-colors"><i class="fa-solid ${chevronSub} text-xs"></i></button>
+                                    <input type="text" onchange="adminUpdateSub('${sec.id}', '${sub.id}', 'name', this.value)" value="${sub.name}" class="flex-1 bg-transparent border-none text-sm font-bold text-slate-800 dark:text-slate-200 focus:outline-none focus:ring-0 placeholder-slate-400" placeholder="Subsection Name">
                                     ${getVisBadge(sub.visibility || 'visible')}
                                 </div>
-                                <div class="flex gap-3 items-center flex-shrink-0">
+                                <div class="flex gap-3 items-center flex-shrink-0 opacity-0 group-hover:opacity-100 transition-opacity">
                                     <div class="flex gap-1 pr-3 mr-1">
-                                        <button onclick="adminMoveSub('${sec.id}', ${j}, -1)" class="text-slate-400 hover:text-secondary text-sm ${j === 0 ? 'invisible' : ''}" title="Move Up"><i class="fa-solid fa-arrow-up"></i></button>
-                                        <button onclick="adminMoveSub('${sec.id}', ${j}, 1)" class="text-slate-400 hover:text-secondary text-sm ${j === sec.subsections.length - 1 ? 'invisible' : ''}" title="Move Down"><i class="fa-solid fa-arrow-down"></i></button>
+                                        <button onclick="adminMoveSub('${sec.id}', ${j}, -1)" class="text-slate-400 hover:text-secondary p-1 rounded hover:bg-slate-200 dark:hover:bg-slate-700 ${j === 0 ? 'invisible' : ''}" title="Move Up"><i class="fa-solid fa-arrow-up text-xs"></i></button>
+                                        <button onclick="adminMoveSub('${sec.id}', ${j}, 1)" class="text-slate-400 hover:text-secondary p-1 rounded hover:bg-slate-200 dark:hover:bg-slate-700 ${j === sec.subsections.length - 1 ? 'invisible' : ''}" title="Move Down"><i class="fa-solid fa-arrow-down text-xs"></i></button>
                                     </div>
                                 </div>
                             </div>
-                            <div class="${isSubExpanded ? 'p-3 bg-white dark:bg-slate-800' : 'hidden'}">
-                                ${tilesHtml || '<p class="text-xs text-slate-500 italic ml-6 mb-3">No tiles (cards) in this subsection.</p>'}
-                                <button onclick="adminAddTile('${sec.id}', '${sub.id}')" class="text-xs border border-secondary text-secondary hover:bg-secondary hover:text-white transition-colors px-3 py-1.5 rounded-full ml-6 font-medium"><i class="fa-solid fa-plus mr-1"></i> Add Tile</button>
+                            <div class="${isSubExpanded ? 'p-4 bg-white dark:bg-slate-800/20' : 'hidden'}">
+                                ${tilesHtml || '<p class="text-xs text-slate-500 italic ml-6 mb-3">No tiles in this subsection.</p>'}
+                                <button onclick="adminAddTile('${sec.id}', '${sub.id}')" class="text-xs border-2 border-dashed border-slate-300 dark:border-slate-600 text-slate-500 dark:text-slate-400 hover:border-secondary hover:text-secondary dark:hover:border-secondary transition-colors px-4 py-2 rounded-xl ml-6 font-semibold w-[calc(100%-1.5rem)] text-center mt-2 flex items-center justify-center gap-2"><i class="fa-solid fa-plus"></i> Add New Tile</button>
                             </div>
                         </div>
                     `;
                 }).join('');
 
                 return `
-                    <div class="mb-5 border border-slate-300 dark:border-slate-600 rounded-xl bg-white dark:bg-darkCard shadow-sm overflow-hidden text-left">
-                        <div class="flex items-center justify-between p-4 bg-slate-100/50 dark:bg-slate-800/50 border-b border-transparent data-[expanded=true]:border-slate-200 dark:data-[expanded=true]:border-slate-700 transition-colors" data-expanded="${isSecExpanded}">
-                            <div class="flex items-center gap-3 flex-1 mr-4">
-                                <input type="checkbox" onclick="event.stopPropagation()" onchange="toggleAdminSelect('${sec.id}')" ${adminSelected[sec.id] ? 'checked' : ''} class="w-4 h-4 ml-1 cursor-pointer flex-shrink-0">
-                                <button onclick="toggleAdminExpand('${sec.id}')" class="text-slate-500 hover:text-secondary w-8 h-8 flex items-center justify-center rounded-full hover:bg-slate-200 dark:hover:bg-slate-700 transition-colors ml-1"><i class="fa-solid ${chevronSec} text-lg"></i></button>
-                                <input type="text" onchange="adminUpdateSec('${sec.id}', 'name', this.value)" value="${sec.name}" class="flex-1 p-2 rounded bg-white dark:bg-slate-900 border border-slate-300 dark:border-slate-600 font-bold text-lg focus:border-secondary outline-none transition-colors" placeholder="Section Name">
+                    <div class="mb-6 border border-slate-300 dark:border-slate-600 rounded-2xl bg-white dark:bg-darkCard shadow-sm overflow-hidden text-left transition-all">
+                        <div class="flex items-center justify-between p-5 bg-slate-100/50 dark:bg-slate-800/50 border-b border-transparent data-[expanded=true]:border-slate-200 dark:data-[expanded=true]:border-slate-700 transition-colors group" data-expanded="${isSecExpanded}">
+                            <div class="flex items-center gap-4 flex-1 mr-4">
+                                <input type="checkbox" onclick="event.stopPropagation()" onchange="toggleAdminSelect('${sec.id}')" ${adminSelected[sec.id] ? 'checked' : ''} class="w-5 h-5 cursor-pointer flex-shrink-0 text-secondary rounded border-slate-300 focus:ring-secondary">
+                                <button onclick="toggleAdminExpand('${sec.id}')" class="text-slate-500 hover:text-secondary w-9 h-9 bg-white dark:bg-slate-700 border border-slate-300 dark:border-slate-600 shadow-sm flex items-center justify-center rounded-lg transition-colors"><i class="fa-solid ${chevronSec}"></i></button>
+                                <input type="text" onchange="adminUpdateSec('${sec.id}', 'name', this.value)" value="${sec.name}" class="flex-1 bg-transparent border-none font-extrabold text-xl text-slate-800 dark:text-slate-100 focus:outline-none focus:ring-0 placeholder-slate-400" placeholder="Section Name">
                                 ${getVisBadge(sec.visibility || 'visible')}
                             </div>
-                            <div class="flex gap-3 items-center flex-shrink-0">
+                            <div class="flex gap-3 items-center flex-shrink-0 opacity-0 group-hover:opacity-100 transition-opacity">
                                 <div class="flex gap-1 pr-3 mr-1">
-                                    <button onclick="adminMoveSection(${i}, -1)" class="text-slate-400 hover:text-secondary text-sm ${i === 0 ? 'invisible' : ''}" title="Move Up"><i class="fa-solid fa-arrow-up"></i></button>
-                                    <button onclick="adminMoveSection(${i}, 1)" class="text-slate-400 hover:text-secondary text-sm ${i === appData.sections.length - 1 ? 'invisible' : ''}" title="Move Down"><i class="fa-solid fa-arrow-down"></i></button>
+                                    <button onclick="adminMoveSection(${i}, -1)" class="text-slate-400 hover:text-secondary p-1.5 rounded hover:bg-slate-200 dark:hover:bg-slate-700 ${i === 0 ? 'invisible' : ''}" title="Move Up"><i class="fa-solid fa-arrow-up text-sm"></i></button>
+                                    <button onclick="adminMoveSection(${i}, 1)" class="text-slate-400 hover:text-secondary p-1.5 rounded hover:bg-slate-200 dark:hover:bg-slate-700 ${i === appData.sections.length - 1 ? 'invisible' : ''}" title="Move Down"><i class="fa-solid fa-arrow-down text-sm"></i></button>
                                 </div>
                             </div>
                         </div>
                         
-                        <div class="${isSecExpanded ? 'p-5 bg-white dark:bg-darkCard' : 'hidden'}">
-                            <div class="mb-6 ml-2 bg-slate-50 dark:bg-slate-900/50 p-3 rounded-lg border border-slate-100 dark:border-slate-800">
-                                <label class="block text-xs font-semibold mb-1.5 opacity-70"><i class="fa-regular fa-image mr-1"></i> Section Background Image (G-Drive Link or URL) - Optional</label>
-                                <input type="text" onchange="adminUpdateSec('${sec.id}', 'bgImage', this.value)" value="${sec.bgImage || ''}" class="w-full max-w-lg p-2 rounded bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 font-mono text-xs focus:border-secondary outline-none" placeholder="Leave empty for solid background color">
+                        <div class="${isSecExpanded ? 'p-6 bg-white dark:bg-darkCard' : 'hidden'}">
+                            <div class="mb-8 ml-2 bg-slate-50 dark:bg-slate-900/50 p-4 rounded-xl border border-slate-200 dark:border-slate-700">
+                                <label class="${adminLabelCls}"><i class="fa-regular fa-image mr-1 text-secondary"></i> Section Background Image</label>
+                                <input type="text" onchange="adminUpdateSec('${sec.id}', 'bgImage', this.value)" value="${sec.bgImage || ''}" class="${adminInputCls} font-mono" placeholder="G-Drive Link or URL (Leave empty for solid color)">
                             </div>
                             
-                            <div class="ml-2 pl-4 border-l-2 border-slate-200 dark:border-slate-700">
-                                <h4 class="text-sm font-bold mb-4 text-slate-600 dark:text-slate-400 flex items-center gap-2"><i class="fa-solid fa-layer-group"></i> Subsections inside ${sec.name}</h4>
+                            <div class="ml-4 pl-6 border-l-2 border-slate-200 dark:border-slate-700 relative">
+                                <div class="absolute -left-[11px] top-0 bottom-0 flex flex-col justify-between py-2"><div class="w-5 h-px bg-slate-200 dark:bg-slate-700"></div><div class="w-5 h-px bg-slate-200 dark:bg-slate-700"></div></div>
+                                <h4 class="text-sm font-bold mb-5 text-slate-500 dark:text-slate-400 uppercase tracking-wider flex items-center gap-2"><i class="fa-solid fa-layer-group"></i> Subsections</h4>
                                 ${subsHtml}
-                                <button onclick="adminAddSub('${sec.id}')" class="mt-2 text-sm bg-slate-800 dark:bg-slate-200 text-white dark:text-slate-900 hover:bg-slate-700 dark:hover:bg-slate-300 transition-colors px-4 py-2 rounded-lg font-bold shadow-sm"><i class="fa-solid fa-plus mr-1"></i> Add Subsection</button>
+                                <button onclick="adminAddSub('${sec.id}')" class="mt-4 w-full bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-slate-700 border border-slate-300 dark:border-slate-600 transition-colors px-4 py-3 rounded-xl font-bold shadow-sm flex items-center justify-center gap-2"><i class="fa-solid fa-plus"></i> Add New Subsection</button>
                             </div>
                         </div>
                     </div>
@@ -1832,40 +1894,66 @@
             }).join('');
 
             return `
-                <div class="space-y-8 text-left">
-                    <div class="bg-white dark:bg-darkCard p-6 rounded-xl shadow-sm border border-slate-200 dark:border-slate-700 text-left">
-                        <h3 class="text-xl font-bold mb-4 border-b border-slate-100 dark:border-slate-800 pb-2 text-secondary text-left"><i class="fa-solid fa-image mr-2"></i> Landing Page (Hero)</h3>
-                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4 text-left w-full">
-                            <div class="text-left"><label class="block text-sm mb-1 opacity-70 text-left">Full Name</label><input type="text" onchange="appData.hero.name=this.value" value="${hero.name}" class="w-full p-2 rounded bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 font-bold text-left"></div>
-                            <div class="text-left"><label class="block text-sm mb-1 opacity-70 text-left">Animated Sentences (Comma separated)</label><input type="text" onchange="appData.hero.animatedTitles=this.value" value="${hero.animatedTitles}" class="w-full p-2 rounded bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 text-sm text-left"></div>
-                            <div class="md:col-span-2 text-left"><label class="block text-sm mb-1 opacity-70 text-left">Short Bio</label><textarea rows="3" onchange="appData.hero.bio=this.value" class="w-full p-2 rounded bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 text-left">${hero.bio}</textarea></div>
-                            <div class="text-left"><label class="block text-sm mb-1 opacity-70 text-left">Profile Pic (G-Drive Link)</label><input type="text" onchange="appData.hero.profileImageLink=this.value" value="${hero.profileImageLink}" class="w-full p-2 rounded bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 text-sm font-mono text-left"></div>
-                            <div class="text-left"><label class="block text-sm mb-1 opacity-70 text-left">Background Image (G-Drive Link)</label><input type="text" onchange="appData.hero.bgImageLink=this.value" value="${hero.bgImageLink}" class="w-full p-2 rounded bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 text-sm font-mono text-left"></div>
-                        </div>
-                    </div>
-                    
-                    <div class="bg-white dark:bg-darkCard p-6 rounded-xl shadow-sm border border-slate-200 dark:border-slate-700 text-left">
-                        <h3 class="text-xl font-bold mb-4 border-b border-slate-100 dark:border-slate-800 pb-2 text-left">Global UI Text & Contact Info</h3>
-                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4 text-left w-full">
-                            <div class="text-left md:col-span-2"><label class="block text-sm mb-1 opacity-70 text-left">Branding Logo (G-Drive Link or Image URL) - Optional</label><input type="text" onchange="appData.uiText.brandLogo=this.value" value="${ui.brandLogo || ''}" placeholder="Leave empty to use Site Title text" class="w-full p-2 rounded bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 text-sm font-mono text-left"></div>
-                            <div class="text-left"><label class="block text-sm mb-1 opacity-70 text-left">Site Title (Fallback)</label><input type="text" onchange="appData.uiText.siteTitle=this.value" value="${ui.siteTitle}" class="w-full p-2 rounded bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 text-left"></div>
-                            <div class="text-left"><label class="block text-sm mb-1 opacity-70 text-left">Chatbot Name</label><input type="text" onchange="appData.uiText.botName=this.value" value="${ui.botName}" class="w-full p-2 rounded bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 text-left"></div>
-                            <div class="text-left"><label class="block text-sm mb-1 opacity-70 text-left">Contact Email</label><input type="text" onchange="appData.uiText.contactEmail=this.value" value="${ui.contactEmail}" class="w-full p-2 rounded bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 text-left"></div>
-                            <div class="text-left"><label class="block text-sm mb-1 opacity-70 text-left">Contact Phone</label><input type="text" onchange="appData.uiText.contactPhone=this.value" value="${ui.contactPhone}" class="w-full p-2 rounded bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 text-left"></div>
-                            <div class="text-left"><label class="block text-sm mb-1 opacity-70 text-left">LinkedIn URL</label><input type="text" onchange="appData.uiText.linkedinLink=this.value" value="${ui.linkedinLink}" class="w-full p-2 rounded bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 text-left"></div>
-                            <div class="text-left"><label class="block text-sm mb-1 opacity-70 text-left">GitHub URL</label><input type="text" onchange="appData.uiText.githubLink=this.value" value="${ui.githubLink}" class="w-full p-2 rounded bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 text-left"></div>
+                <div class="space-y-8 text-left max-w-5xl mx-auto">
+                    <!-- SEO Settings -->
+                    <div class="bg-white dark:bg-darkCard p-6 md:p-8 rounded-2xl shadow-sm border border-slate-200 dark:border-slate-700 text-left relative overflow-hidden">
+                        <div class="absolute top-0 left-0 w-1 h-full bg-gradient-to-b from-blue-500 to-indigo-500"></div>
+                        <h3 class="text-xl font-bold mb-6 border-b border-slate-100 dark:border-slate-800 pb-3 flex items-center gap-3"><div class="w-8 h-8 rounded-lg bg-blue-50 dark:bg-blue-900/30 text-secondary flex items-center justify-center"><i class="fa-solid fa-magnifying-glass"></i></div> SEO & Social Meta Tags</h3>
+                        <p class="text-xs text-slate-500 dark:text-slate-400 mb-6 bg-slate-50 dark:bg-slate-900 p-3 rounded-lg border border-slate-200 dark:border-slate-700"><i class="fa-solid fa-circle-info text-secondary mr-1"></i> <strong>Note:</strong> WhatsApp & iMessage preview scrapers do not run JavaScript. To see previews on those apps, you must also manually copy these values into the raw <code class="bg-slate-200 dark:bg-slate-700 px-1 rounded">&lt;head&gt;</code> tags of your index.html file in your code editor.</p>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-5 w-full text-left">
+                            <div class="text-left space-y-1.5"><label class="${adminLabelCls}">Document Title</label><input type="text" onchange="appData.seo.title=this.value" value="${seo.title || appData.uiText.siteTitle}" class="${adminInputCls}"></div>
+                            <div class="text-left space-y-1.5"><label class="${adminLabelCls}">Open Graph Image (G-Drive or URL)</label><input type="text" onchange="appData.seo.image=this.value" value="${seo.image || ''}" class="${adminInputCls} font-mono" placeholder="Fallback to Hero Background"></div>
+                            <div class="md:col-span-2 text-left space-y-1.5"><label class="${adminLabelCls}">Search Engine Description</label><textarea rows="3" oninput="this.style.height='auto';this.style.height=this.scrollHeight+'px'" onchange="appData.seo.description=this.value" class="auto-expand ${adminInputCls} resize-y">${seo.description || appData.hero.bio}</textarea></div>
                         </div>
                     </div>
 
-                    <div class="bg-white dark:bg-darkCard p-6 rounded-xl shadow-sm border border-slate-200 dark:border-slate-700 text-left">
-                        <div class="flex justify-between items-center mb-6 border-b border-slate-100 dark:border-slate-800 pb-2 text-left">
-                            <h3 class="text-xl font-bold text-left"><i class="fa-solid fa-folder-tree mr-2"></i> Portfolio Content Architecture</h3>
-                            <button onclick="adminAddSection()" class="bg-secondary text-white px-4 py-2 rounded font-bold text-sm text-left shadow-sm hover:bg-blue-600 transition-colors"><i class="fa-solid fa-plus mr-1"></i> Add Root Section</button>
+                    <div class="bg-white dark:bg-darkCard p-6 md:p-8 rounded-2xl shadow-sm border border-slate-200 dark:border-slate-700 text-left relative overflow-hidden">
+                        <div class="absolute top-0 left-0 w-1 h-full bg-gradient-to-b from-purple-500 to-pink-500"></div>
+                        <h3 class="text-xl font-bold mb-6 border-b border-slate-100 dark:border-slate-800 pb-3 flex items-center gap-3"><div class="w-8 h-8 rounded-lg bg-purple-50 dark:bg-purple-900/30 text-purple-500 flex items-center justify-center"><i class="fa-solid fa-image"></i></div> Landing Page (Hero)</h3>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-5 w-full text-left">
+                            <div class="text-left space-y-1.5"><label class="${adminLabelCls}">Full Name</label><input type="text" onchange="appData.hero.name=this.value" value="${hero.name}" class="${adminInputCls}"></div>
+                            <div class="text-left space-y-1.5"><label class="${adminLabelCls}">Animated Sentences (Comma separated)</label><input type="text" onchange="appData.hero.animatedTitles=this.value" value="${hero.animatedTitles}" class="${adminInputCls}"></div>
+                            <div class="md:col-span-2 text-left space-y-1.5"><label class="${adminLabelCls}">Short Bio</label><textarea rows="3" oninput="this.style.height='auto';this.style.height=this.scrollHeight+'px'" onchange="appData.hero.bio=this.value" class="auto-expand ${adminInputCls} resize-y">${hero.bio}</textarea></div>
+                            <div class="text-left space-y-1.5"><label class="${adminLabelCls}">Profile Pic (G-Drive Link)</label><input type="text" onchange="appData.hero.profileImageLink=this.value" value="${hero.profileImageLink}" class="${adminInputCls} font-mono"></div>
+                            <div class="text-left space-y-1.5"><label class="${adminLabelCls}">Background Image (G-Drive Link)</label><input type="text" onchange="appData.hero.bgImageLink=this.value" value="${hero.bgImageLink}" class="${adminInputCls} font-mono"></div>
                         </div>
-                        ${sectionsHtml || '<p class="text-sm opacity-50 text-left">No sections exist yet. Build your portfolio here!</p>'}
+                    </div>
+                    
+                    <div class="bg-white dark:bg-darkCard p-6 md:p-8 rounded-2xl shadow-sm border border-slate-200 dark:border-slate-700 text-left relative overflow-hidden">
+                        <div class="absolute top-0 left-0 w-1 h-full bg-gradient-to-b from-green-500 to-emerald-500"></div>
+                        <h3 class="text-xl font-bold mb-6 border-b border-slate-100 dark:border-slate-800 pb-3 flex items-center gap-3"><div class="w-8 h-8 rounded-lg bg-green-50 dark:bg-green-900/30 text-green-500 flex items-center justify-center"><i class="fa-solid fa-address-card"></i></div> Global UI Text & Contact</h3>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-5 w-full text-left">
+                            <div class="text-left space-y-1.5 md:col-span-2"><label class="${adminLabelCls}">Branding Logo (G-Drive Link or Image URL)</label><input type="text" onchange="appData.uiText.brandLogo=this.value" value="${ui.brandLogo || ''}" placeholder="Leave empty to use Site Title text" class="${adminInputCls} font-mono"></div>
+                            <div class="text-left space-y-1.5"><label class="${adminLabelCls}">Site Title (Fallback)</label><input type="text" onchange="appData.uiText.siteTitle=this.value" value="${ui.siteTitle}" class="${adminInputCls}"></div>
+                            <div class="text-left space-y-1.5"><label class="${adminLabelCls}">Chatbot Name</label><input type="text" onchange="appData.uiText.botName=this.value" value="${ui.botName}" class="${adminInputCls}"></div>
+                            <div class="text-left space-y-1.5"><label class="${adminLabelCls}">Contact Email</label><input type="text" onchange="appData.uiText.contactEmail=this.value" value="${ui.contactEmail}" class="${adminInputCls}"></div>
+                            <div class="text-left space-y-1.5"><label class="${adminLabelCls}">Contact Phone</label><input type="text" onchange="appData.uiText.contactPhone=this.value" value="${ui.contactPhone}" class="${adminInputCls}"></div>
+                            <div class="text-left space-y-1.5"><label class="${adminLabelCls}">LinkedIn URL</label><input type="text" onchange="appData.uiText.linkedinLink=this.value" value="${ui.linkedinLink}" class="${adminInputCls} font-mono"></div>
+                            <div class="text-left space-y-1.5"><label class="${adminLabelCls}">GitHub URL</label><input type="text" onchange="appData.uiText.githubLink=this.value" value="${ui.githubLink}" class="${adminInputCls} font-mono"></div>
+                        </div>
+                    </div>
+
+                    <div class="bg-white dark:bg-darkCard p-6 md:p-8 rounded-2xl shadow-sm border border-slate-200 dark:border-slate-700 text-left relative overflow-hidden">
+                        <div class="absolute top-0 left-0 w-1 h-full bg-gradient-to-b from-orange-500 to-amber-500"></div>
+                        <div class="flex justify-between items-center mb-8 border-b border-slate-100 dark:border-slate-800 pb-4 text-left">
+                            <h3 class="text-2xl font-bold flex items-center gap-3"><div class="w-10 h-10 rounded-lg bg-orange-50 dark:bg-orange-900/30 text-orange-500 flex items-center justify-center"><i class="fa-solid fa-folder-tree"></i></div> Content Architecture</h3>
+                            <button onclick="adminAddSection()" class="bg-secondary text-white px-5 py-2.5 rounded-xl font-bold text-sm shadow-md hover:bg-blue-600 transition-colors flex items-center gap-2"><i class="fa-solid fa-plus"></i> Add Root Section</button>
+                        </div>
+                        ${sectionsHtml || '<div class="p-12 text-center border-2 border-dashed border-slate-300 dark:border-slate-700 rounded-xl text-slate-500">No sections exist yet. Build your portfolio here!</div>'}
                     </div>
                 </div>
             `;
+        }
+
+        function adminToggleRelatedTile(sId, ssId, tId, relatedId, isChecked) {
+            const tile = appData.sections.find(s=>s.id===sId).subsections.find(ss=>ss.id===ssId).tiles.find(t=>t.id===tId);
+            if(!tile.relatedTiles) tile.relatedTiles = [];
+            if(isChecked) {
+                if(!tile.relatedTiles.includes(relatedId)) tile.relatedTiles.push(relatedId);
+            } else {
+                tile.relatedTiles = tile.relatedTiles.filter(id => id !== relatedId);
+            }
+            adminRenderWithScroll();
         }
 
         function renderAdminTile(tile) {
@@ -1874,54 +1962,79 @@
                 if (t.id !== tile.id) allTiles.push({id: t.id, name: getEffectiveHeading(t), sid: s.name});
             })));
 
-            let selectHtml = `<select multiple onchange="adminUpdateRelatedTiles('${adminPath[0]}', '${adminPath[1]}', '${tile.id}', this)" class="w-full p-2 rounded bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 h-32 text-sm text-left">`;
-            allTiles.forEach(t => { const isSel = (tile.relatedTiles || []).includes(t.id) ? 'selected' : ''; selectHtml += `<option value="${t.id}" ${isSel}>${t.sid} > ${t.name}</option>`; });
-            selectHtml += `</select>`;
+            let relatedHtml = `<div class="grid grid-cols-1 md:grid-cols-2 gap-2 max-h-[400px] overflow-y-auto p-4 border border-slate-300 dark:border-slate-600 rounded-xl bg-slate-50 dark:bg-slate-900/50 resize-y min-h-[200px]">`;
+            allTiles.forEach(t => { 
+                const isSel = (tile.relatedTiles || []).includes(t.id);
+                relatedHtml += `
+                <label class="flex items-start gap-3 p-3 rounded-lg border cursor-pointer transition-colors shadow-sm ${isSel ? 'bg-blue-50 dark:bg-blue-900/20 border-secondary' : 'bg-white dark:bg-slate-800 border-slate-200 dark:border-slate-700 hover:border-slate-300 dark:hover:border-slate-600'}">
+                    <input type="checkbox" onchange="adminToggleRelatedTile('${adminPath[0]}', '${adminPath[1]}', '${tile.id}', '${t.id}', this.checked)" ${isSel ? 'checked' : ''} class="mt-1 w-4 h-4 text-secondary rounded border-slate-300 focus:ring-secondary">
+                    <span class="flex-1 overflow-hidden">
+                        <span class="font-semibold block truncate text-slate-800 dark:text-slate-200 text-sm mb-0.5">${t.name}</span>
+                        <span class="text-[10px] text-slate-500 uppercase tracking-widest bg-slate-100 dark:bg-slate-700 px-1.5 py-0.5 rounded inline-block">${t.sid}</span>
+                    </span>
+                </label>`; 
+            });
+            relatedHtml += `</div>`;
 
             let mediaHtml = (tile.mediaLinks || []).map((link, i) => `
-                <div class="flex gap-2 mb-2 text-left">
-                    <input type="text" onchange="adminUpdateMedia('${adminPath[0]}', '${adminPath[1]}', '${tile.id}', ${i}, this.value)" value="${link.replace(/"/g, '&quot;')}" class="flex-1 p-2 rounded bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 text-sm font-mono text-left" placeholder="G-Drive Link, Image URL, or <iframe src='...'></iframe>">
-                    <button onclick="adminRemoveMedia('${adminPath[0]}', '${adminPath[1]}', '${tile.id}', ${i})" class="bg-red-500 text-white px-3 rounded text-left"><i class="fa-solid fa-trash"></i></button>
+                <div class="flex gap-3 mb-3 text-left">
+                    <div class="flex-1 relative">
+                        <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none"><i class="fa-solid fa-link text-slate-400"></i></div>
+                        <input type="text" onchange="adminUpdateMedia('${adminPath[0]}', '${adminPath[1]}', '${tile.id}', ${i}, this.value)" value="${link.replace(/"/g, '&quot;')}" class="${adminInputCls} pl-10 font-mono" placeholder="G-Drive Link, Image URL, or <iframe src='...'></iframe>">
+                    </div>
+                    <button onclick="adminRemoveMedia('${adminPath[0]}', '${adminPath[1]}', '${tile.id}', ${i})" class="bg-red-50 hover:bg-red-100 dark:bg-red-900/20 dark:hover:bg-red-900/40 text-red-500 border border-red-200 dark:border-red-800 px-4 rounded-xl text-left transition-colors"><i class="fa-solid fa-trash"></i></button>
                 </div>
             `).join('');
 
             return `
-                <div class="bg-white dark:bg-darkCard p-6 rounded-xl shadow-sm border border-slate-200 dark:border-slate-700 space-y-6 text-left">
-                    <div class="flex justify-between items-center border-b border-slate-100 dark:border-slate-800 pb-2">
-                        <h3 class="text-xl font-bold text-left">Edit Tile Details</h3>
-                        <button onclick="adminNavigate([])" class="text-sm text-slate-500 hover:text-secondary"><i class="fa-solid fa-arrow-left mr-1"></i> Back to Architecture</button>
-                    </div>
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4 text-left w-full">
-                        <div class="md:col-span-2 text-left mb-2">
-                            <label class="block text-sm mb-1 opacity-70 text-left font-bold text-secondary"><i class="fa-solid fa-rectangle-ad mr-1"></i> Top Banner Media (Optional)</label>
-                            <input type="text" onchange="adminUpdateTileProp('${adminPath[0]}', '${adminPath[1]}', '${tile.id}', 'banner', this.value)" value="${(tile.banner || '').replace(/"/g, '&quot;')}" class="w-full p-2 rounded bg-slate-50 dark:bg-slate-900 border border-blue-200 dark:border-blue-900 text-sm font-mono text-left focus:border-secondary outline-none" placeholder="Paste YouTube link, G-Drive link, or Image URL">
-                            <p class="text-[10px] text-slate-500 mt-1">Adding a banner automatically expands this tile to span the full width of the row to catch a recruiter's eye.</p>
-                        </div>
-                        <div class="md:col-span-2 text-left"><label class="block text-sm mb-1 opacity-70 text-left">Tile Heading (Optional)</label><input type="text" onchange="adminUpdateTileProp('${adminPath[0]}', '${adminPath[1]}', '${tile.id}', 'heading', this.value)" value="${tile.heading || ''}" class="w-full p-2 rounded bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 font-bold text-left" placeholder="Leave empty for auto-heading: Role, Base Subject (Specialisation) @ Employer"></div>
-                        <div class="text-left"><label class="block text-sm mb-1 opacity-70 text-left">Role / Title (e.g. JRF, BTech, Engineer)</label><input type="text" onchange="adminUpdateTileProp('${adminPath[0]}', '${adminPath[1]}', '${tile.id}', 'role', this.value)" value="${tile.role || tile.subtitle || ''}" class="w-full p-2 rounded bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 text-left"></div>
-                        <div class="text-left"><label class="block text-sm mb-1 opacity-70 text-left">Base Subject / Major (e.g. Mechanical Eng)</label><input type="text" onchange="adminUpdateTileProp('${adminPath[0]}', '${adminPath[1]}', '${tile.id}', 'baseSubject', this.value)" value="${tile.baseSubject || ''}" class="w-full p-2 rounded bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 text-left"></div>
-                        <div class="text-left"><label class="block text-sm mb-1 opacity-70 text-left">Specialisation / Minor (e.g. Robotics)</label><input type="text" onchange="adminUpdateTileProp('${adminPath[0]}', '${adminPath[1]}', '${tile.id}', 'specialisation', this.value)" value="${tile.specialisation || ''}" class="w-full p-2 rounded bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 text-left"></div>
-                        <div class="text-left"><label class="block text-sm mb-1 opacity-70 text-left">Employer / Organization</label><input type="text" onchange="adminUpdateTileProp('${adminPath[0]}', '${adminPath[1]}', '${tile.id}', 'employer', this.value)" value="${tile.employer || ''}" class="w-full p-2 rounded bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 text-left"></div>
-                        <div class="text-left"><label class="block text-sm mb-1 opacity-70 text-left">Employer Official URL</label><input type="text" onchange="adminUpdateTileProp('${adminPath[0]}', '${adminPath[1]}', '${tile.id}', 'employerUrl', this.value)" value="${tile.employerUrl || ''}" class="w-full p-2 rounded bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 font-mono text-sm text-left" placeholder="https://..."></div>
-                        <div class="text-left"><label class="block text-sm mb-1 opacity-70 text-left">Score / GPA</label><input type="text" onchange="adminUpdateTileProp('${adminPath[0]}', '${adminPath[1]}', '${tile.id}', 'score', this.value)" value="${tile.score || ''}" class="w-full p-2 rounded bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 text-left" placeholder="e.g. 7.5, 3.8, or 90%"></div>
-                        <div class="text-left"><label class="block text-sm mb-1 opacity-70 text-left">Max Possible Score</label><input type="text" onchange="adminUpdateTileProp('${adminPath[0]}', '${adminPath[1]}', '${tile.id}', 'maxScore', this.value)" value="${tile.maxScore || ''}" class="w-full p-2 rounded bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 text-left" placeholder="e.g. 9.0, 4.0, or 100%"></div>
-                        <div class="text-left"><label class="block text-sm mb-1 opacity-70 text-left">Date / Timeline</label><input type="text" onchange="adminUpdateTileProp('${adminPath[0]}', '${adminPath[1]}', '${tile.id}', 'date', this.value)" value="${tile.date || ''}" class="w-full p-2 rounded bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 text-left"></div>
-                        <div class="text-left"><label class="block text-sm mb-1 opacity-70 text-left">Location</label><input type="text" onchange="adminUpdateTileProp('${adminPath[0]}', '${adminPath[1]}', '${tile.id}', 'location', this.value)" value="${tile.location || ''}" class="w-full p-2 rounded bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 text-left"></div>
-                        <div class="text-left"><label class="block text-sm mb-1 opacity-70 text-left">Icon (FontAwesome Class)</label><input type="text" onchange="adminUpdateTileProp('${adminPath[0]}', '${adminPath[1]}', '${tile.id}', 'icon', this.value)" value="${tile.icon || 'fa-cube'}" class="w-full p-2 rounded bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 font-mono text-sm text-left"></div>
-                        <div class="md:col-span-2 text-left"><label class="block text-sm mb-1 opacity-70 text-left">Card Description (Short snippet)</label><textarea rows="3" onchange="adminUpdateTileProp('${adminPath[0]}', '${adminPath[1]}', '${tile.id}', 'description', this.value)" class="w-full p-2 rounded bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 text-left">${tile.description || ''}</textarea></div>
-                        <div class="md:col-span-2 text-left"><label class="block text-sm mb-1 opacity-70 text-left">Tab Detailed Content (Extended text for side pane)</label><textarea rows="5" onchange="adminUpdateTileProp('${adminPath[0]}', '${adminPath[1]}', '${tile.id}', 'tabText', this.value)" class="w-full p-2 rounded bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 text-left">${tile.tabText || ''}</textarea></div>
-                        <div class="md:col-span-2 text-left"><label class="block text-sm mb-1 opacity-70 text-left">Tile Background Image (G-Drive or URL)</label><input type="text" onchange="adminUpdateTileProp('${adminPath[0]}', '${adminPath[1]}', '${tile.id}', 'bgImage', this.value)" value="${tile.bgImage || ''}" class="w-full p-2 rounded bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 font-mono text-sm text-left"></div>
+                <div class="bg-white dark:bg-darkCard p-6 md:p-8 rounded-2xl shadow-sm border border-slate-200 dark:border-slate-700 space-y-8 text-left max-w-5xl mx-auto">
+                    <div class="flex justify-between items-center border-b border-slate-100 dark:border-slate-800 pb-4">
+                        <h3 class="text-2xl font-bold text-left flex items-center gap-3"><div class="w-10 h-10 bg-slate-100 dark:bg-slate-800 rounded-lg flex items-center justify-center text-slate-500"><i class="fa-solid fa-pen-nib"></i></div> Edit Tile Details</h3>
+                        <button onclick="adminNavigate([])" class="text-sm font-semibold bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 px-4 py-2 rounded-lg text-slate-600 dark:text-slate-300 transition-colors"><i class="fa-solid fa-arrow-left mr-2"></i> Architecture</button>
                     </div>
                     
-                    <div class="border-t border-slate-100 dark:border-slate-800 pt-4 text-left w-full">
-                        <h4 class="font-bold mb-2 text-left">Media Attachments (Side Pane)</h4>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6 text-left w-full">
+                        <div class="md:col-span-2 text-left mb-2 bg-blue-50 dark:bg-slate-800/50 p-5 rounded-xl border border-blue-100 dark:border-slate-700">
+                            <label class="${adminLabelCls} text-secondary"><i class="fa-solid fa-rectangle-ad mr-1"></i> Top Banner Media (Optional)</label>
+                            <input type="text" onchange="adminUpdateTileProp('${adminPath[0]}', '${adminPath[1]}', '${tile.id}', 'banner', this.value)" value="${(tile.banner || '').replace(/"/g, '&quot;')}" class="${adminInputCls} font-mono" placeholder="Paste YouTube link, G-Drive link, or Image URL">
+                            <p class="text-xs text-slate-500 mt-2"><i class="fa-solid fa-info-circle mr-1"></i> Adding a banner automatically expands this tile to span the full width of the row.</p>
+                        </div>
+                        
+                        <div class="md:col-span-2 text-left space-y-1.5"><label class="${adminLabelCls}">Tile Heading Override (Optional)</label><input type="text" onchange="adminUpdateTileProp('${adminPath[0]}', '${adminPath[1]}', '${tile.id}', 'heading', this.value)" value="${tile.heading || ''}" class="${adminInputCls} font-bold text-lg" placeholder="Leave empty to auto-generate from below fields"></div>
+                        <div class="text-left space-y-1.5"><label class="${adminLabelCls}">Role / Title</label><input type="text" onchange="adminUpdateTileProp('${adminPath[0]}', '${adminPath[1]}', '${tile.id}', 'role', this.value)" value="${tile.role || tile.subtitle || ''}" class="${adminInputCls}" placeholder="e.g. Mechanical Engineer"></div>
+                        <div class="text-left space-y-1.5"><label class="${adminLabelCls}">Base Subject / Major</label><input type="text" onchange="adminUpdateTileProp('${adminPath[0]}', '${adminPath[1]}', '${tile.id}', 'baseSubject', this.value)" value="${tile.baseSubject || ''}" class="${adminInputCls}" placeholder="e.g. Mechanical Engineering"></div>
+                        <div class="text-left space-y-1.5"><label class="${adminLabelCls}">Specialisation / Minor</label><input type="text" onchange="adminUpdateTileProp('${adminPath[0]}', '${adminPath[1]}', '${tile.id}', 'specialisation', this.value)" value="${tile.specialisation || ''}" class="${adminInputCls}" placeholder="e.g. Robotics"></div>
+                        <div class="text-left space-y-1.5"><label class="${adminLabelCls}">Employer / Organization</label><input type="text" onchange="adminUpdateTileProp('${adminPath[0]}', '${adminPath[1]}', '${tile.id}', 'employer', this.value)" value="${tile.employer || ''}" class="${adminInputCls}" placeholder="e.g. Cyient"></div>
+                        <div class="text-left space-y-1.5"><label class="${adminLabelCls}">Employer Official URL</label><input type="text" onchange="adminUpdateTileProp('${adminPath[0]}', '${adminPath[1]}', '${tile.id}', 'employerUrl', this.value)" value="${tile.employerUrl || ''}" class="${adminInputCls} font-mono text-sm" placeholder="https://..."></div>
+                        <div class="text-left space-y-1.5"><label class="${adminLabelCls}">Score / GPA</label><input type="text" onchange="adminUpdateTileProp('${adminPath[0]}', '${adminPath[1]}', '${tile.id}', 'score', this.value)" value="${tile.score || ''}" class="${adminInputCls}" placeholder="e.g. 7.5"></div>
+                        <div class="text-left space-y-1.5"><label class="${adminLabelCls}">Max Possible Score</label><input type="text" onchange="adminUpdateTileProp('${adminPath[0]}', '${adminPath[1]}', '${tile.id}', 'maxScore', this.value)" value="${tile.maxScore || ''}" class="${adminInputCls}" placeholder="e.g. 10.0"></div>
+                        <div class="text-left space-y-1.5"><label class="${adminLabelCls}">Date / Timeline</label><input type="text" onchange="adminUpdateTileProp('${adminPath[0]}', '${adminPath[1]}', '${tile.id}', 'date', this.value)" value="${tile.date || ''}" class="${adminInputCls}" placeholder="e.g. 2021 - 2023"></div>
+                        <div class="text-left space-y-1.5"><label class="${adminLabelCls}">Location</label><input type="text" onchange="adminUpdateTileProp('${adminPath[0]}', '${adminPath[1]}', '${tile.id}', 'location', this.value)" value="${tile.location || ''}" class="${adminInputCls}" placeholder="e.g. Hyderabad, India"></div>
+                        <div class="text-left space-y-1.5"><label class="${adminLabelCls}">Icon (FontAwesome Class)</label><input type="text" onchange="adminUpdateTileProp('${adminPath[0]}', '${adminPath[1]}', '${tile.id}', 'icon', this.value)" value="${tile.icon || 'fa-cube'}" class="${adminInputCls} font-mono" placeholder="e.g. fa-rocket"></div>
+                        
+                        <div class="md:col-span-2 text-left space-y-1.5">
+                            <label class="${adminLabelCls} flex items-center justify-between">Card Description (Short snippet)</label>
+                            <textarea rows="3" oninput="this.style.height='auto';this.style.height=this.scrollHeight+'px'" onchange="adminUpdateTileProp('${adminPath[0]}', '${adminPath[1]}', '${tile.id}', 'description', this.value)" class="auto-expand ${adminInputCls} resize-y">${tile.description || ''}</textarea>
+                        </div>
+                        
+                        <div class="md:col-span-2 text-left space-y-1.5">
+                            <label class="${adminLabelCls} flex items-center justify-between">Tab Detailed Content (Extended side pane text)</label>
+                            <textarea rows="6" oninput="this.style.height='auto';this.style.height=this.scrollHeight+'px'" onchange="adminUpdateTileProp('${adminPath[0]}', '${adminPath[1]}', '${tile.id}', 'tabText', this.value)" class="auto-expand ${adminInputCls} resize-y">${tile.tabText || ''}</textarea>
+                        </div>
+                        
+                        <div class="md:col-span-2 text-left space-y-1.5"><label class="${adminLabelCls}">Tile Background Image (G-Drive or URL)</label><input type="text" onchange="adminUpdateTileProp('${adminPath[0]}', '${adminPath[1]}', '${tile.id}', 'bgImage', this.value)" value="${tile.bgImage || ''}" class="${adminInputCls} font-mono"></div>
+                    </div>
+                    
+                    <div class="border-t border-slate-100 dark:border-slate-800 pt-8 text-left w-full">
+                        <h4 class="text-lg font-bold mb-4 text-left flex items-center gap-2"><i class="fa-solid fa-photo-film text-slate-400"></i> Side Pane Media Attachments</h4>
                         ${mediaHtml}
-                        <button onclick="adminAddMedia('${adminPath[0]}', '${adminPath[1]}', '${tile.id}')" class="text-sm bg-slate-200 dark:bg-slate-700 px-3 py-1 rounded mt-2 text-left"><i class="fa-solid fa-plus"></i> Add Media Link</button>
+                        <button onclick="adminAddMedia('${adminPath[0]}', '${adminPath[1]}', '${tile.id}')" class="text-sm font-bold bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-600 dark:text-slate-300 px-5 py-2.5 rounded-xl mt-2 text-left transition-colors flex items-center gap-2"><i class="fa-solid fa-plus"></i> Add Media Link</button>
                     </div>
 
-                    <div class="border-t border-slate-100 dark:border-slate-800 pt-4 text-left w-full">
-                        <h4 class="font-bold mb-2 text-left">Related Tabs</h4>
-                        ${selectHtml}
+                    <div class="border-t border-slate-100 dark:border-slate-800 pt-8 text-left w-full">
+                        <h4 class="text-lg font-bold mb-4 text-left flex items-center gap-2"><i class="fa-solid fa-link text-slate-400"></i> Related Cross-References (Metrics Pills)</h4>
+                        <p class="text-sm text-slate-500 mb-4">Select tiles to instantly generate clickable metrics pills at the bottom of this card.</p>
+                        ${relatedHtml}
                     </div>
                 </div>
             `;
