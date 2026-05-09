@@ -1,0 +1,409 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Parametric Torsion Spring Solver</title>
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Phosphor Icons -->
+    <script src="https://unpkg.com/@phosphor-icons/web"></script>
+
+    <!-- PyScript -->
+    <link rel="stylesheet" href="https://pyscript.net/releases/2024.1.1/core.css">
+    <script type="module" src="https://pyscript.net/releases/2024.1.1/core.js"></script>
+
+    <!-- MathJax for LaTeX Rendering -->
+    <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+
+    <!-- Prism.js for Python Code Highlighting -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism-tomorrow.min.css" rel="stylesheet" />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-python.min.js"></script>
+
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+        
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #0f172a; 
+            color: #f8fafc; 
+        }
+
+        .glass-panel {
+            background: rgba(30, 41, 59, 0.7);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .input-field {
+            background: rgba(15, 23, 42, 0.6);
+            border: 1px solid rgba(100, 116, 139, 0.5);
+            color: white;
+            transition: all 0.2s ease;
+        }
+
+        .input-field:focus {
+            outline: none;
+            border-color: #3b82f6; 
+            box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.2);
+        }
+
+        /* MathJax overrides for dark mode readability */
+        .MathJax {
+            color: #e2e8f0 !important;
+            font-size: 1.05em !important;
+        }
+
+        /* Tabs styling */
+        .tab-btn.active {
+            border-bottom: 2px solid #38bdf8;
+            color: #38bdf8;
+        }
+        
+        pre[class*="language-"] {
+            margin: 0;
+            border-radius: 0.5rem;
+            background: #1e293b;
+        }
+    </style>
+</head>
+<body class="min-h-screen p-4 md:p-8 flex flex-col items-center">
+
+    <header class="w-full max-w-7xl mb-8 flex items-center justify-between">
+        <div>
+            <h1 class="text-3xl md:text-4xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-sky-400 to-indigo-400 flex items-center gap-3">
+                <i class="ph ph-cpu text-sky-400"></i>
+                Parametric Spring Solver
+            </h1>
+            <p class="text-slate-400 mt-2 text-sm md:text-base">Automated Design Space Exploration & Academic Proof Generator</p>
+        </div>
+    </header>
+
+    <main class="w-full max-w-7xl grid grid-cols-1 lg:grid-cols-12 gap-6">
+        
+        <!-- Left Column: Inputs -->
+        <div class="lg:col-span-4 glass-panel rounded-2xl p-6 shadow-xl h-fit">
+            <h2 class="text-xl font-semibold mb-6 flex items-center gap-2 border-b border-slate-700 pb-3">
+                <i class="ph ph-sliders-horizontal"></i> Constraints & Targets
+            </h2>
+
+            <div class="space-y-4">
+                <div>
+                    <label class="block text-sm font-medium text-slate-300 mb-1">Cross-Section Type</label>
+                    <select id="wire_type" class="input-field w-full rounded-lg px-4 py-2.5 appearance-none">
+                        <option value="rectangular">Rectangular Wire</option>
+                        <option value="circular">Circular Wire</option>
+                    </select>
+                </div>
+
+                <div>
+                    <label class="block text-sm font-medium text-slate-300 mb-1">Target Stiffness (R)</label>
+                    <div class="relative">
+                        <input type="number" id="target_stiffness" value="5.0" step="0.1" class="input-field w-full rounded-lg px-4 py-2.5">
+                        <span class="absolute right-4 top-2.5 text-slate-500 text-sm">N-m/deg</span>
+                    </div>
+                </div>
+
+                <div>
+                    <label class="block text-sm font-medium text-slate-300 mb-1">Applied Torque (M)</label>
+                    <div class="relative">
+                        <input type="number" id="torque_M" value="100.0" step="5" class="input-field w-full rounded-lg px-4 py-2.5">
+                        <span class="absolute right-4 top-2.5 text-slate-500 text-sm">N-m</span>
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-2 gap-4">
+                    <div>
+                        <label class="block text-sm font-medium text-slate-300 mb-1">Max OD</label>
+                        <div class="relative">
+                            <input type="number" id="max_od" value="120" step="1" class="input-field w-full rounded-lg px-3 py-2.5">
+                            <span class="absolute right-3 top-2.5 text-slate-500 text-xs">mm</span>
+                        </div>
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-slate-300 mb-1">Min ID</label>
+                        <div class="relative">
+                            <input type="number" id="min_id" value="40" step="1" class="input-field w-full rounded-lg px-3 py-2.5">
+                            <span class="absolute right-3 top-2.5 text-slate-500 text-xs">mm</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div>
+                    <label class="block text-sm font-medium text-slate-300 mb-1">Modulus of Elasticity (E)</label>
+                    <div class="relative">
+                        <input type="number" id="modulus_E" value="206800" step="1000" class="input-field w-full rounded-lg px-4 py-2.5">
+                        <span class="absolute right-4 top-2.5 text-slate-500 text-sm">MPa</span>
+                    </div>
+                </div>
+
+                <button id="solve_btn" class="w-full mt-6 bg-indigo-600 hover:bg-indigo-500 text-white font-semibold py-3 px-4 rounded-lg transition-colors flex justify-center items-center gap-2 shadow-lg shadow-indigo-900/20">
+                    <i class="ph ph-magic-wand"></i> Run Parametric Solver
+                </button>
+            </div>
+        </div>
+
+        <!-- Right Column: Outputs -->
+        <div class="lg:col-span-8 flex flex-col glass-panel rounded-2xl overflow-hidden shadow-xl min-h-[600px]">
+            
+            <!-- Tabs -->
+            <div class="flex border-b border-slate-700 bg-slate-800/50">
+                <button onclick="switchTab('report')" id="tab-report" class="tab-btn active px-6 py-4 text-sm font-medium text-slate-300 hover:text-white transition-colors flex items-center gap-2">
+                    <i class="ph ph-file-text"></i> Analytical Report
+                </button>
+                <button onclick="switchTab('code')" id="tab-code" class="tab-btn px-6 py-4 text-sm font-medium text-slate-300 hover:text-white transition-colors flex items-center gap-2">
+                    <i class="ph ph-code"></i> Python Source Code
+                </button>
+            </div>
+
+            <!-- Report Content -->
+            <div id="content-report" class="p-6 overflow-y-auto flex-grow">
+                <div id="loading_state" class="text-center py-12 text-slate-400">
+                    <i class="ph ph-spinner-gap animate-spin text-4xl mb-4 text-indigo-400"></i>
+                    <p>Initializing Python Engine...</p>
+                </div>
+                <div id="report_output" class="hidden space-y-6">
+                    <!-- Report generated by Python will be injected here -->
+                </div>
+            </div>
+
+            <!-- Code Content -->
+            <div id="content-code" class="hidden overflow-y-auto flex-grow bg-[#1e293b]">
+                <pre><code id="python_code_display" class="language-python text-sm"></code></pre>
+            </div>
+        </div>
+    </main>
+
+    <!-- Tab Logic -->
+    <script>
+        function switchTab(tabId) {
+            document.getElementById('content-report').classList.add('hidden');
+            document.getElementById('content-code').classList.add('hidden');
+            document.getElementById('tab-report').classList.remove('active');
+            document.getElementById('tab-code').classList.remove('active');
+
+            document.getElementById(`content-${tabId}`).classList.remove('hidden');
+            document.getElementById(`tab-${tabId}`).classList.add('active');
+        }
+
+        // Render MathJax globally callable by PyScript
+        window.renderLaTeX = function() {
+            if (window.MathJax) {
+                MathJax.typesetPromise([document.getElementById('report_output')]).catch(function (err) {
+                    console.error('MathJax rendering error: ' + err.message);
+                });
+            }
+        };
+
+        // Extract Python code and syntax highlight it
+        document.addEventListener("DOMContentLoaded", () => {
+            const pyEngineContent = document.getElementById("py_engine").textContent;
+            
+            // Clean up leading/trailing whitespace for display
+            const lines = pyEngineContent.split('\n');
+            // Remove empty lines at start and end
+            while(lines.length > 0 && lines[0].trim() === '') lines.shift();
+            while(lines.length > 0 && lines[lines.length-1].trim() === '') lines.pop();
+            
+            document.getElementById("python_code_display").textContent = lines.join('\n');
+            Prism.highlightAll();
+        });
+    </script>
+
+    <!-- PyScript Python Engine -->
+    <script type="py" id="py_engine">
+from js import document, window
+import math
+
+def solve_spring_parametric(event=None):
+    try:
+        # 1. Gather Inputs
+        wire_type = document.getElementById("wire_type").value
+        R_target_Nm_deg = float(document.getElementById("target_stiffness").value)
+        torque_Nm = float(document.getElementById("torque_M").value)
+        E = float(document.getElementById("modulus_E").value)
+        max_od = float(document.getElementById("max_od").value)
+        min_id = float(document.getElementById("min_id").value)
+
+        # Convert units for internal standard formulas
+        R_target_Nmm_deg = R_target_Nm_deg * 1000.0  # N-mm/deg
+        R_target_turn = R_target_Nmm_deg * 360.0     # N-mm/turn
+        torque_Nmm = torque_Nm * 1000.0              # N-mm
+
+        best_design = None
+        min_stress = float('inf')
+
+        # 2. Design Space Exploration Algorithm
+        if wire_type == "circular":
+            # Sweep wire diameter (d) from 1.0mm to 30.0mm
+            for d_int in range(10, 301): 
+                d = d_int / 10.0
+                
+                # Available mean diameter space
+                D_min = min_id + d
+                D_max = max_od - d
+                if D_min >= D_max: continue
+                
+                # Sweep mean diameter (D)
+                for D_int in range(int(math.ceil(D_min)), int(math.floor(D_max)) + 1):
+                    D = float(D_int)
+                    C = D / d
+                    
+                    # Enforce standard manufacturability limits (Spring Index)
+                    if C < 4.0 or C > 15.0: continue
+                    
+                    # Calculate required active coils to perfectly match target stiffness
+                    # Formula: R_turn = (E * d^4) / (10.8 * D * Na) -> Solving for Na
+                    Na = (E * (d**4)) / (10.8 * D * R_target_turn)
+                    
+                    # Reject unfeasible coil counts
+                    if Na < 1.5 or Na > 50.0: continue
+                    
+                    # Calculate Maximum Bending Stress
+                    Ki = (4*(C**2) - C - 1) / (4*C*(C - 1))
+                    sigma = Ki * (32 * torque_Nmm) / (math.pi * (d**3))
+                    
+                    # Optimize for lowest stress
+                    if sigma < min_stress:
+                        min_stress = sigma
+                        best_design = {
+                            "d": d, "D": D, "Na": Na, "sigma": sigma, 
+                            "C": C, "Ki": Ki, "type": "circular"
+                        }
+                        
+        elif wire_type == "rectangular":
+            # Sweep radial thickness (h) and axial width (b)
+            # Utilizing a constrained aspect ratio 1 <= b/h <= 3 for stability
+            for h_int in range(10, 201): # 1.0 to 20.0 mm
+                h = h_int / 10.0
+                for b_int in range(int(h*10), int(h*30) + 1, 5): 
+                    b = b_int / 10.0
+                    
+                    D_min = min_id + h
+                    D_max = max_od - h
+                    if D_min >= D_max: continue
+                    
+                    for D_int in range(int(math.ceil(D_min)), int(math.floor(D_max)) + 1):
+                        D = float(D_int)
+                        C = D / h
+                        
+                        if C < 4.0 or C > 15.0: continue
+                        
+                        # Rectangular stiffness formula: R_turn = (E * b * h^3) / (6 * D * Na)
+                        Na = (E * b * (h**3)) / (6 * D * R_target_turn)
+                        
+                        if Na < 1.5 or Na > 50.0: continue
+                        
+                        # Simplified Wahl factor for rectangular cross-sections
+                        Ki = (4*C - 1) / (4*C - 4)
+                        sigma = Ki * (6 * torque_Nmm) / (b * (h**2))
+                        
+                        if sigma < min_stress:
+                            min_stress = sigma
+                            best_design = {
+                                "b": b, "h": h, "D": D, "Na": Na, "sigma": sigma, 
+                                "C": C, "Ki": Ki, "type": "rectangular"
+                            }
+
+        # 3. Generate HTML Report
+        report_div = document.getElementById("report_output")
+        document.getElementById("loading_state").classList.add("hidden")
+        report_div.classList.remove("hidden")
+
+        if not best_design:
+            report_div.innerHTML = '''
+                <div class="bg-red-900/40 border border-red-500/50 p-4 rounded-xl text-red-200">
+                    <h3 class="font-semibold text-lg mb-2">No Feasible Geometry Found</h3>
+                    <p>The solver explored the design space but could not find a configuration satisfying all constraints (Stiffness, Max OD, Min ID, and practical spring index limits). Try relaxing the diameter constraints or target stiffness.</p>
+                </div>
+            '''
+            return
+
+        # Build proof of concept report
+        html = f"""
+        <div class="border-b border-slate-700 pb-4 mb-4 flex justify-between items-start">
+            <div>
+                <h3 class="text-2xl font-bold text-white mb-1">Analytical Design Report</h3>
+                <p class="text-slate-400 text-sm">Optimal geometry isolated from parametric exploration space.</p>
+            </div>
+            <div class="bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 px-3 py-1 rounded-full text-xs font-semibold">
+                Feasible Solution Validated
+            </div>
+        </div>
+        """
+        
+        if best_design['type'] == 'rectangular':
+            b, h, D, Na = best_design['b'], best_design['h'], best_design['D'], best_design['Na']
+            Ki, sigma, C = best_design['Ki'], best_design['sigma'], best_design['C']
+            
+            html += f"""
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
+                <div class="bg-slate-800/60 p-3 rounded-lg border border-slate-700"><div class="text-xs text-slate-400">Width (b)</div><div class="text-lg font-bold text-white">{b:.1f} mm</div></div>
+                <div class="bg-slate-800/60 p-3 rounded-lg border border-slate-700"><div class="text-xs text-slate-400">Thickness (h)</div><div class="text-lg font-bold text-white">{h:.1f} mm</div></div>
+                <div class="bg-slate-800/60 p-3 rounded-lg border border-slate-700"><div class="text-xs text-slate-400">Mean Dia (D)</div><div class="text-lg font-bold text-white">{D:.1f} mm</div></div>
+                <div class="bg-slate-800/60 p-3 rounded-lg border border-slate-700"><div class="text-xs text-slate-400">Active Coils (Na)</div><div class="text-lg font-bold text-sky-400">{Na:.2f}</div></div>
+            </div>
+            
+            <h4 class="text-lg font-semibold text-indigo-300 mb-2">1. Stiffness & Geometric Constraints</h4>
+            <p class="text-sm text-slate-300 mb-4">The algorithm determines the required active coils ($N_a$) exactly by rearranging the rectangular wire bending stiffness equation to match the target torque response. The nominal error for stiffness is therefore 0%.</p>
+            <div class="overflow-x-auto bg-slate-900/50 p-4 rounded-xl mb-6">
+                $$R_{turn} = \\frac{{E \\cdot b \\cdot h^3}}{{6 \\cdot D \\cdot N_a}} \\implies N_a = \\frac{{E \\cdot b \\cdot h^3}}{{6 \\cdot D \\cdot (R_{deg} \\times 360)}}$$
+                $$N_a = \\frac{{{E} \\cdot {b:.1f} \\cdot {h:.1f}^3}}{{6 \\cdot {D:.1f} \\cdot ({R_target_Nmm_deg} \\times 360)}} = {Na:.2f} \\text{{ turns}}$$
+            </div>
+
+            <h4 class="text-lg font-semibold text-indigo-300 mb-2">2. Maximum Bending Stress Calculation</h4>
+            <p class="text-sm text-slate-300 mb-4">Stress concentrations occur at the inner surface of the coil. The Wahl factor ($K_i$) for rectangular wire is derived from the spring index $C = D/h$.</p>
+            <div class="overflow-x-auto bg-slate-900/50 p-4 rounded-xl">
+                $$C = \\frac{{D}}{{h}} = \\frac{{{D:.1f}}}{{{h:.1f}}} = {C:.2f}$$
+                $$K_i \\approx \\frac{{4C - 1}}{{4C - 4}} = \\frac{{4({C:.2f}) - 1}}{{4({C:.2f}) - 4}} = {Ki:.3f}$$
+                $$\\sigma_{{max}} = K_i \\left( \\frac{{6 \\cdot M}}{{b \\cdot h^2}} \\right) = {Ki:.3f} \\left( \\frac{{6 \\cdot {torque_Nmm}}}{{{b:.1f} \\cdot {h:.1f}^2}} \\right) = {sigma:.1f} \\text{{ MPa}}$$
+            </div>
+            """
+        else:
+            d, D, Na = best_design['d'], best_design['D'], best_design['Na']
+            Ki, sigma, C = best_design['Ki'], best_design['sigma'], best_design['C']
+            
+            html += f"""
+            <div class="grid grid-cols-2 md:grid-cols-3 gap-4 mb-8">
+                <div class="bg-slate-800/60 p-3 rounded-lg border border-slate-700"><div class="text-xs text-slate-400">Wire Dia (d)</div><div class="text-lg font-bold text-white">{d:.1f} mm</div></div>
+                <div class="bg-slate-800/60 p-3 rounded-lg border border-slate-700"><div class="text-xs text-slate-400">Mean Dia (D)</div><div class="text-lg font-bold text-white">{D:.1f} mm</div></div>
+                <div class="bg-slate-800/60 p-3 rounded-lg border border-slate-700"><div class="text-xs text-slate-400">Active Coils (Na)</div><div class="text-lg font-bold text-sky-400">{Na:.2f}</div></div>
+            </div>
+            
+            <h4 class="text-lg font-semibold text-indigo-300 mb-2">1. Stiffness & Geometric Constraints</h4>
+            <p class="text-sm text-slate-300 mb-4">The algorithm isolates $N_a$ based on standard circular wire mechanics to guarantee matching the requested stiffness precisely.</p>
+            <div class="overflow-x-auto bg-slate-900/50 p-4 rounded-xl mb-6">
+                $$R_{turn} = \\frac{{E \\cdot d^4}}{{10.8 \\cdot D \\cdot N_a}} \\implies N_a = \\frac{{E \\cdot d^4}}{{10.8 \\cdot D \\cdot (R_{deg} \\times 360)}}$$
+                $$N_a = \\frac{{{E} \\cdot {d:.1f}^4}}{{10.8 \\cdot {D:.1f} \\cdot ({R_target_Nmm_deg} \\times 360)}} = {Na:.2f} \\text{{ turns}}$$
+            </div>
+
+            <h4 class="text-lg font-semibold text-indigo-300 mb-2">2. Maximum Bending Stress Calculation</h4>
+            <p class="text-sm text-slate-300 mb-4">Bending stress incorporates the Wahl stress correction factor ($K_i$) corresponding to the geometry's spring index ($C = D/d$).</p>
+            <div class="overflow-x-auto bg-slate-900/50 p-4 rounded-xl">
+                $$C = \\frac{{D}}{{d}} = \\frac{{{D:.1f}}}{{{d:.1f}}} = {C:.2f}$$
+                $$K_i = \\frac{{4C^2 - C - 1}}{{4C(C - 1)}} = {Ki:.3f}$$
+                $$\\sigma_{{max}} = K_i \\left( \\frac{{32 \\cdot M}}{{\\pi \\cdot d^3}} \\right) = {Ki:.3f} \\left( \\frac{{32 \\cdot {torque_Nmm}}}{{\\pi \\cdot {d:.1f}^3}} \\right) = {sigma:.1f} \\text{{ MPa}}$$
+            </div>
+            """
+
+        report_div.innerHTML = html
+
+        # Trigger MathJax to render the LaTeX code written in the HTML
+        window.renderLaTeX()
+
+    except Exception as e:
+        document.getElementById("report_output").innerHTML = f"<div class='text-red-400 p-4'>Error during calculation: {str(e)}</div>"
+
+# Bind button event
+document.getElementById("solve_btn").addEventListener("click", solve_spring_parametric)
+
+# Auto-run once PyScript finishes loading
+solve_spring_parametric(None)
+    </script>
+</body>
+</html>
