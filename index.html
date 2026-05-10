@@ -189,10 +189,10 @@
         let chatHistory = [{ sender: 'bot', text: "Hello! I am Virtual Rahul. I can help you navigate the portfolio or answer quick questions." }];
         let titleInterval;
         let profileBlobShape = "50%";
+        let adminTileView = "grid"; // State for list vs grid layout
 
-        // ==========================================
-        // 2. DEFAULT DATA STRUCTURE 
-        // ==========================================
+        // Pill Isolate State
+        let activePillId = null;
         let appData = {
             seo: {
                 title: "Rahul Natha | Portfolio",
@@ -1206,6 +1206,10 @@
         }
 
         document.addEventListener('click', (e) => {
+            // Critical fix: Ignore clicks originating from elements that were just removed from the DOM 
+            // (prevents dropdowns/settings from randomly closing when the UI rebuilds underneath them)
+            if (!document.body.contains(e.target)) return;
+
             const menu = document.getElementById('settings-menu');
             const btn = document.getElementById('settings-toggle-btn');
             if (isSettingsOpen && menu && !menu.contains(e.target) && (!btn || !btn.contains(e.target))) {
@@ -1716,9 +1720,45 @@
             `;
         }
 
-        function adminNavigate(pathArray) { adminPath = pathArray; renderApp(); }
+        function adminNavigate(pathArray) { adminPath = pathArray; adminRenderWithScroll(); }
         function toggleAdminExpand(id) { adminExpanded[id] = !adminExpanded[id]; adminRenderWithScroll(); }
         
+        function adminToggleTileView() { 
+            adminTileView = adminTileView === 'grid' ? 'list' : 'grid'; 
+            adminRenderWithScroll(); 
+        }
+
+        function adminExpandAll() {
+            appData.sections.forEach(s => {
+                adminExpanded[s.id] = true;
+                s.subsections.forEach(ss => adminExpanded[ss.id] = true);
+            });
+            adminRenderWithScroll();
+        }
+
+        function adminCollapseSubs() {
+            appData.sections.forEach(s => {
+                adminExpanded[s.id] = true;
+                s.subsections.forEach(ss => adminExpanded[ss.id] = false);
+            });
+            adminRenderWithScroll();
+        }
+
+        function adminCollapseAll() {
+            appData.sections.forEach(s => {
+                adminExpanded[s.id] = false;
+                s.subsections.forEach(ss => adminExpanded[ss.id] = false);
+            });
+            adminRenderWithScroll();
+        }
+        
+        function getTileByAdminPath() {
+            if (adminPath.length !== 3) return null;
+            try {
+                return appData.sections.find(s => s.id === adminPath[0]).subsections.find(ss => ss.id === adminPath[1]).tiles.find(t => t.id === adminPath[2]);
+            } catch(e) { return null; }
+        }
+
         function toggleAdminSelect(id) {
             if (adminSelected[id]) delete adminSelected[id];
             else adminSelected[id] = true;
@@ -1732,24 +1772,18 @@
 
         function renderAdminDashboard() {
             let breadcrumbs = `<button onclick="adminNavigate([])" class="hover:text-secondary font-medium">Root (Global)</button>`;
-            let editorHtml = '';
-
+            
             if (adminPath.length === 3) {
-                const sec = appData.sections.find(s => s.id === adminPath[0]);
-                const sub = sec?.subsections.find(s => s.id === adminPath[1]);
-                const tile = sub?.tiles.find(t => t.id === adminPath[2]);
-
+                const tile = getTileByAdminPath();
                 if (tile) {
+                    const sec = appData.sections.find(s => s.id === adminPath[0]);
+                    const sub = sec?.subsections.find(s => s.id === adminPath[1]);
                     breadcrumbs += ` <i class="fa-solid fa-chevron-right text-xs mx-2 text-slate-400"></i> <span class="text-slate-400">${sec.name}</span>`;
                     breadcrumbs += ` <i class="fa-solid fa-chevron-right text-xs mx-2 text-slate-400"></i> <span class="text-slate-400">${sub.name}</span>`;
-                    breadcrumbs += ` <i class="fa-solid fa-chevron-right text-xs mx-2 text-slate-400"></i> <span class="text-slate-400">${getEffectiveHeading(tile)}</span>`;
-                    editorHtml = renderAdminTile(tile);
+                    breadcrumbs += ` <i class="fa-solid fa-chevron-right text-xs mx-2 text-slate-400"></i> <span class="text-slate-400 truncate max-w-[150px] inline-block align-bottom">${getEffectiveHeading(tile)}</span>`;
                 } else {
-                    editorHtml = renderAdminRoot();
                     adminPath = []; 
                 }
-            } else {
-                editorHtml = renderAdminRoot();
             }
 
             const isDark = document.documentElement.classList.contains('dark');
@@ -1760,27 +1794,27 @@
             const selCount = Object.keys(adminSelected).length;
             if (selCount > 0 && adminPath.length !== 3) { 
                 bulkToolbar = `
-                    <div class="fixed bottom-6 left-1/2 transform -translate-x-1/2 bg-slate-900 text-white px-5 py-3 rounded-full shadow-[0_20px_50px_rgba(0,0,0,0.5)] border border-slate-700 z-[100] flex items-center gap-5 text-sm font-semibold transition-all duration-300">
-                        <div class="bg-slate-800 px-3 py-1 rounded-full text-secondary whitespace-nowrap">${selCount} Selected</div>
-                        <div class="h-6 w-px bg-slate-700"></div>
-                        <button onclick="adminBulkAction('visible')" class="hover:text-green-400 transition-colors flex items-center gap-2" title="Set Visible"><i class="fa-solid fa-eye"></i></button>
-                        <button onclick="adminBulkAction('hidden')" class="hover:text-red-400 transition-colors flex items-center gap-2" title="Set Strictly Hidden"><i class="fa-solid fa-eye-slash"></i></button>
-                        <button onclick="adminBulkAction('archived')" class="hover:text-purple-400 transition-colors flex items-center gap-2" title="Set Easter Egg (Archive)"><i class="fa-solid fa-ghost"></i></button>
-                        <div class="h-6 w-px bg-slate-700"></div>
-                        <button onclick="adminBulkAction('duplicate')" class="hover:text-blue-400 transition-colors flex items-center gap-2" title="Duplicate"><i class="fa-solid fa-copy"></i></button>
-                        <button onclick="adminBulkAction('delete')" class="hover:text-red-500 transition-colors flex items-center gap-2" title="Delete"><i class="fa-solid fa-trash"></i></button>
-                        <div class="h-6 w-px bg-slate-700"></div>
-                        <button onclick="clearAdminSelection()" class="hover:text-slate-400 transition-colors" title="Clear Selection"><i class="fa-solid fa-xmark text-lg"></i></button>
+                    <div class="fixed bottom-6 left-1/2 transform -translate-x-1/2 bg-slate-900 text-white px-5 py-3 rounded-full shadow-[0_20px_50px_rgba(0,0,0,0.5)] border border-slate-700 z-[100] flex items-center gap-5 text-sm font-semibold transition-all duration-300 w-[max-content] max-w-[95vw] overflow-x-auto no-scrollbar">
+                        <div class="bg-slate-800 px-3 py-1 rounded-full text-secondary whitespace-nowrap flex-shrink-0">${selCount} Selected</div>
+                        <div class="h-6 w-px bg-slate-700 flex-shrink-0"></div>
+                        <button onclick="adminBulkAction('visible')" class="hover:text-green-400 transition-colors flex items-center gap-2 flex-shrink-0" title="Set Visible"><i class="fa-solid fa-eye"></i></button>
+                        <button onclick="adminBulkAction('hidden')" class="hover:text-red-400 transition-colors flex items-center gap-2 flex-shrink-0" title="Set Strictly Hidden"><i class="fa-solid fa-eye-slash"></i></button>
+                        <button onclick="adminBulkAction('archived')" class="hover:text-purple-400 transition-colors flex items-center gap-2 flex-shrink-0" title="Set Easter Egg (Archive)"><i class="fa-solid fa-ghost"></i></button>
+                        <div class="h-6 w-px bg-slate-700 flex-shrink-0"></div>
+                        <button onclick="adminBulkAction('duplicate')" class="hover:text-blue-400 transition-colors flex items-center gap-2 flex-shrink-0" title="Duplicate"><i class="fa-solid fa-copy"></i></button>
+                        <button onclick="adminBulkAction('delete')" class="hover:text-red-500 transition-colors flex items-center gap-2 flex-shrink-0" title="Delete"><i class="fa-solid fa-trash"></i></button>
+                        <div class="h-6 w-px bg-slate-700 flex-shrink-0"></div>
+                        <button onclick="clearAdminSelection()" class="hover:text-slate-400 transition-colors flex-shrink-0" title="Clear Selection"><i class="fa-solid fa-xmark text-lg"></i></button>
                     </div>
                 `;
             }
 
             return `
-                <div class="h-screen w-full bg-slate-50 dark:bg-darkBg text-slate-800 dark:text-slate-200 flex flex-col text-left">
-                    <div class="bg-white dark:bg-darkCard p-4 border-b border-slate-200 dark:border-slate-800 flex justify-between items-center sticky top-0 z-50 shadow-sm text-left">
-                        <div class="text-sm truncate mr-4 text-left flex-1">${breadcrumbs}</div>
+                <div class="h-screen w-full bg-slate-50 dark:bg-darkBg text-slate-800 dark:text-slate-200 flex flex-col text-left overflow-hidden">
+                    <div class="bg-white dark:bg-darkCard p-4 border-b border-slate-200 dark:border-slate-800 flex justify-between items-center shrink-0 shadow-sm text-left z-[60]">
+                        <div class="text-sm truncate mr-4 text-left flex-1 whitespace-nowrap">${breadcrumbs}</div>
                         <div class="flex gap-3 flex-shrink-0 text-left items-center">
-                            <div class="flex items-center mr-2 border-r border-slate-200 dark:border-slate-700 pr-4">
+                            <div class="hidden sm:flex items-center mr-2 border-r border-slate-200 dark:border-slate-700 pr-4">
                                 <span class="text-xs font-semibold mr-2 opacity-70">Dark Mode</span>
                                 <button onclick="toggleUserTheme()" class="relative inline-flex h-6 w-12 flex-shrink-0 items-center rounded-full transition-colors focus:outline-none ${themeToggleBgClass}">
                                     <span class="inline-block h-4 w-4 transform rounded-full bg-white transition-transform duration-200 ease-in-out ${themeToggleKnobClass} shadow-sm"></span>
@@ -1790,8 +1824,16 @@
                             <button onclick="savePortfolioData()" id="save-btn" class="px-4 py-2 bg-green-500 text-white rounded text-sm font-bold shadow-md hover:bg-green-600 transition-colors text-left"><i class="fa-solid fa-floppy-disk mr-1"></i> Save</button>
                         </div>
                     </div>
-                    <div id="admin-scroll-container" class="flex-1 w-full p-4 md:p-6 overflow-y-auto pb-32 text-left relative">
-                        ${editorHtml}
+                    
+                    <div class="flex flex-1 overflow-hidden relative">
+                        <div id="admin-scroll-container" class="flex-1 w-full p-4 md:p-8 overflow-y-auto pb-32 text-left relative">
+                            ${renderAdminRoot()}
+                        </div>
+                        
+                        <!-- Smooth Side Pane Editor -->
+                        <aside class="absolute inset-0 md:relative md:inset-auto w-full md:w-[450px] lg:w-[500px] xl:w-[600px] flex flex-col bg-white dark:bg-darkCard border-l border-slate-200 dark:border-slate-800 shadow-2xl md:shadow-none z-[80] transform transition-transform duration-300 ${adminPath.length === 3 ? 'translate-x-0' : 'translate-x-full md:hidden'}">
+                            ${renderAdminTile(getTileByAdminPath())}
+                        </aside>
                     </div>
                     ${bulkToolbar}
                 </div>
@@ -1815,25 +1857,58 @@
                     const isSubExpanded = adminExpanded[sub.id];
                     const chevronSub = isSubExpanded ? 'fa-chevron-down' : 'fa-chevron-right';
 
-                    let tilesHtml = sub.tiles.map((tile, k) => `
-                        <div class="flex justify-between items-center p-3 bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-xl mb-3 text-left ml-6 shadow-sm hover:border-secondary transition-colors group">
-                            <div class="flex items-center flex-1 mr-4 gap-3 text-left">
-                                <input type="checkbox" onclick="event.stopPropagation()" onchange="toggleAdminSelect('${tile.id}')" ${adminSelected[tile.id] ? 'checked' : ''} class="w-4 h-4 cursor-pointer flex-shrink-0 text-secondary rounded border-slate-300 focus:ring-secondary">
-                                <div class="w-8 h-8 rounded-lg bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 flex items-center justify-center flex-shrink-0 shadow-sm"><i class="fa-solid ${tile.icon} text-secondary text-xs"></i></div>
-                                <div class="flex-1">
-                                    <input type="text" onchange="adminUpdateTileProp('${sec.id}', '${sub.id}', '${tile.id}', 'heading', this.value)" value="${(tile.heading || '').replace(/"/g, '&quot;')}" placeholder="${getEffectiveHeading({...tile, heading: ''}).replace(/"/g, '&quot;')}" class="w-full bg-transparent border-none text-sm font-semibold text-slate-800 dark:text-slate-200 focus:outline-none focus:ring-0 placeholder-slate-400 dark:placeholder-slate-500" title="Tile Heading Override">
+                    let tilesHtml = '';
+                    if (sub.tiles.length > 0) {
+                        if (adminTileView === 'grid') {
+                            tilesHtml = `<div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 p-4 bg-slate-50/50 dark:bg-slate-900/30">`;
+                            tilesHtml += sub.tiles.map((tile, k) => `
+                                <div class="flex flex-col bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl shadow-sm hover:shadow-md hover:border-secondary dark:hover:border-secondary transition-all relative overflow-hidden group">
+                                    <div class="p-3 flex items-start justify-between border-b border-slate-100 dark:border-slate-700/50 bg-slate-50/50 dark:bg-slate-900/50">
+                                        <div class="flex items-center gap-2">
+                                            <input type="checkbox" onclick="event.stopPropagation()" onchange="toggleAdminSelect('${tile.id}')" ${adminSelected[tile.id] ? 'checked' : ''} class="w-4 h-4 cursor-pointer text-secondary rounded border-slate-300 focus:ring-secondary">
+                                            <div class="w-6 h-6 rounded bg-blue-50 dark:bg-blue-900/30 flex items-center justify-center"><i class="fa-solid ${tile.icon} text-secondary text-[10px]"></i></div>
+                                        </div>
+                                        <div class="flex items-center gap-1 opacity-100 lg:opacity-0 group-hover:opacity-100 transition-opacity">
+                                            <button onclick="adminMoveTile('${sec.id}', '${sub.id}', ${k}, -1)" class="text-slate-400 hover:text-secondary p-1 rounded hover:bg-slate-200 dark:hover:bg-slate-700 ${k === 0 ? 'invisible' : ''}" title="Move Left/Up"><i class="fa-solid fa-arrow-left text-xs"></i></button>
+                                            <button onclick="adminMoveTile('${sec.id}', '${sub.id}', ${k}, 1)" class="text-slate-400 hover:text-secondary p-1 rounded hover:bg-slate-200 dark:hover:bg-slate-700 ${k === sub.tiles.length - 1 ? 'invisible' : ''}" title="Move Right/Down"><i class="fa-solid fa-arrow-right text-xs"></i></button>
+                                        </div>
+                                    </div>
+                                    <div class="p-4 flex-1 flex flex-col min-w-0">
+                                        <input type="text" onchange="adminUpdateTileProp('${sec.id}', '${sub.id}', '${tile.id}', 'heading', this.value)" value="${(tile.heading || '').replace(/"/g, '&quot;')}" placeholder="${getEffectiveHeading({...tile, heading: ''}).replace(/"/g, '&quot;')}" class="w-full bg-transparent border-none text-sm font-bold text-slate-800 dark:text-slate-200 focus:outline-none focus:ring-0 placeholder-slate-400 dark:placeholder-slate-500 mb-4 p-0 overflow-x-auto whitespace-nowrap scroll-smooth" title="Tile Heading Override">
+                                        <div class="flex items-center justify-between mt-auto">
+                                            <div>${getVisBadge(tile.visibility || 'visible')}</div>
+                                            <button onclick="adminNavigate(['${sec.id}', '${sub.id}', '${tile.id}'])" class="bg-secondary text-white px-3 py-1.5 rounded-lg text-xs font-semibold shadow-sm hover:bg-blue-600 transition-colors flex items-center gap-1.5"><i class="fa-solid fa-pen text-[10px]"></i> Edit Details</button>
+                                        </div>
+                                    </div>
                                 </div>
-                                ${getVisBadge(tile.visibility || 'visible')}
-                            </div>
-                            <div class="flex gap-2 text-left items-center flex-shrink-0">
-                                <div class="flex gap-1 border-r border-slate-200 dark:border-slate-600 pr-2 mr-1 opacity-0 group-hover:opacity-100 transition-opacity">
-                                    <button onclick="adminMoveTile('${sec.id}', '${sub.id}', ${k}, -1)" class="text-slate-400 hover:text-secondary p-1 rounded hover:bg-slate-200 dark:hover:bg-slate-800 ${k === 0 ? 'invisible' : ''}" title="Move Up"><i class="fa-solid fa-arrow-up text-xs"></i></button>
-                                    <button onclick="adminMoveTile('${sec.id}', '${sub.id}', ${k}, 1)" class="text-slate-400 hover:text-secondary p-1 rounded hover:bg-slate-200 dark:hover:bg-slate-800 ${k === sub.tiles.length - 1 ? 'invisible' : ''}" title="Move Down"><i class="fa-solid fa-arrow-down text-xs"></i></button>
+                            `).join('');
+                            tilesHtml += `</div>`;
+                        } else {
+                            tilesHtml = `<div class="flex flex-col gap-3 p-4 bg-slate-50/50 dark:bg-slate-900/30">`;
+                            tilesHtml += sub.tiles.map((tile, k) => `
+                                <div class="flex justify-between items-center p-3 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl shadow-sm hover:border-secondary transition-colors group">
+                                    <div class="flex items-center flex-1 mr-4 gap-3 text-left min-w-0">
+                                        <input type="checkbox" onclick="event.stopPropagation()" onchange="toggleAdminSelect('${tile.id}')" ${adminSelected[tile.id] ? 'checked' : ''} class="w-4 h-4 cursor-pointer flex-shrink-0 text-secondary rounded border-slate-300 focus:ring-secondary">
+                                        <div class="w-8 h-8 rounded-lg bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 flex items-center justify-center flex-shrink-0 shadow-sm"><i class="fa-solid ${tile.icon} text-secondary text-xs"></i></div>
+                                        <div class="flex-1 min-w-0">
+                                            <input type="text" onchange="adminUpdateTileProp('${sec.id}', '${sub.id}', '${tile.id}', 'heading', this.value)" value="${(tile.heading || '').replace(/"/g, '&quot;')}" placeholder="${getEffectiveHeading({...tile, heading: ''}).replace(/"/g, '&quot;')}" class="w-full bg-transparent border-none text-sm font-semibold text-slate-800 dark:text-slate-200 focus:outline-none focus:ring-0 placeholder-slate-400 dark:placeholder-slate-500 overflow-x-auto whitespace-nowrap scroll-smooth" title="Tile Heading Override">
+                                        </div>
+                                        ${getVisBadge(tile.visibility || 'visible')}
+                                    </div>
+                                    <div class="flex gap-2 text-left items-center flex-shrink-0">
+                                        <div class="flex gap-1 border-r border-slate-200 dark:border-slate-600 pr-2 mr-1 opacity-100 lg:opacity-0 group-hover:opacity-100 transition-opacity">
+                                            <button onclick="adminMoveTile('${sec.id}', '${sub.id}', ${k}, -1)" class="text-slate-400 hover:text-secondary p-1 rounded hover:bg-slate-200 dark:hover:bg-slate-800 ${k === 0 ? 'invisible' : ''}" title="Move Up"><i class="fa-solid fa-arrow-up text-xs"></i></button>
+                                            <button onclick="adminMoveTile('${sec.id}', '${sub.id}', ${k}, 1)" class="text-slate-400 hover:text-secondary p-1 rounded hover:bg-slate-200 dark:hover:bg-slate-800 ${k === sub.tiles.length - 1 ? 'invisible' : ''}" title="Move Down"><i class="fa-solid fa-arrow-down text-xs"></i></button>
+                                        </div>
+                                        <button onclick="adminNavigate(['${sec.id}', '${sub.id}', '${tile.id}'])" class="bg-secondary text-white px-3 py-1.5 rounded-lg text-xs font-semibold shadow-sm hover:bg-blue-600 transition-colors flex items-center gap-1.5"><i class="fa-solid fa-pen text-[10px]"></i> Edit</button>
+                                    </div>
                                 </div>
-                                <button onclick="adminNavigate(['${sec.id}', '${sub.id}', '${tile.id}'])" class="bg-secondary text-white px-3 py-1.5 rounded-lg text-xs font-semibold shadow-sm hover:bg-blue-600 transition-colors flex items-center gap-1.5"><i class="fa-solid fa-pen text-[10px]"></i> Edit</button>
-                            </div>
-                        </div>
-                    `).join('');
+                            `).join('');
+                            tilesHtml += `</div>`;
+                        }
+                    } else {
+                        tilesHtml = `<p class="text-xs text-slate-500 italic p-4 mb-2">No tiles in this subsection.</p>`;
+                    }
 
                     return `
                         <div class="mb-4 border border-slate-200 dark:border-slate-700 rounded-xl bg-white dark:bg-slate-800/50 text-left overflow-hidden shadow-sm">
@@ -1851,9 +1926,11 @@
                                     </div>
                                 </div>
                             </div>
-                            <div class="${isSubExpanded ? 'p-4 bg-white dark:bg-slate-800/20' : 'hidden'}">
-                                ${tilesHtml || '<p class="text-xs text-slate-500 italic ml-6 mb-3">No tiles in this subsection.</p>'}
-                                <button onclick="adminAddTile('${sec.id}', '${sub.id}')" class="text-xs border-2 border-dashed border-slate-300 dark:border-slate-600 text-slate-500 dark:text-slate-400 hover:border-secondary hover:text-secondary dark:hover:border-secondary transition-colors px-4 py-2 rounded-xl ml-6 font-semibold w-[calc(100%-1.5rem)] text-center mt-2 flex items-center justify-center gap-2"><i class="fa-solid fa-plus"></i> Add New Tile</button>
+                            <div class="${isSubExpanded ? 'bg-white dark:bg-slate-800/20' : 'hidden'}">
+                                ${tilesHtml}
+                                <div class="px-4 pb-4">
+                                    <button onclick="adminAddTile('${sec.id}', '${sub.id}')" class="text-xs border-2 border-dashed border-slate-300 dark:border-slate-600 text-slate-500 dark:text-slate-400 hover:border-secondary hover:text-secondary dark:hover:border-secondary transition-colors px-4 py-2.5 rounded-xl font-semibold w-full text-center flex items-center justify-center gap-2"><i class="fa-solid fa-plus"></i> Add New Tile</button>
+                                </div>
                             </div>
                         </div>
                     `;
@@ -1935,8 +2012,17 @@
 
                     <div class="bg-white dark:bg-darkCard p-6 md:p-8 rounded-2xl shadow-sm border border-slate-200 dark:border-slate-700 text-left relative overflow-hidden">
                         <div class="absolute top-0 left-0 w-1 h-full bg-gradient-to-b from-orange-500 to-amber-500"></div>
-                        <div class="flex justify-between items-center mb-8 border-b border-slate-100 dark:border-slate-800 pb-4 text-left">
-                            <h3 class="text-2xl font-bold flex items-center gap-3"><div class="w-10 h-10 rounded-lg bg-orange-50 dark:bg-orange-900/30 text-orange-500 flex items-center justify-center"><i class="fa-solid fa-folder-tree"></i></div> Content Architecture</h3>
+                        <div class="flex justify-between items-center mb-8 border-b border-slate-100 dark:border-slate-800 pb-4 text-left flex-wrap gap-4">
+                            <div class="flex items-center gap-4 flex-wrap">
+                                <h3 class="text-2xl font-bold flex items-center gap-3"><div class="w-10 h-10 rounded-lg bg-orange-50 dark:bg-orange-900/30 text-orange-500 flex items-center justify-center"><i class="fa-solid fa-folder-tree"></i></div> Content Architecture</h3>
+                                <div class="flex items-center gap-1 sm:gap-2 bg-slate-100 dark:bg-slate-800 p-1 rounded-lg">
+                                    <button onclick="adminToggleTileView()" class="text-xs px-3 py-1.5 rounded text-slate-600 dark:text-slate-300 hover:bg-white dark:hover:bg-slate-700 hover:shadow-sm transition-all font-semibold" title="Toggle Grid/List View"><i class="fa-solid ${adminTileView === 'grid' ? 'fa-list' : 'fa-border-all'}"></i></button>
+                                    <div class="w-px h-4 bg-slate-300 dark:bg-slate-600 hidden sm:block"></div>
+                                    <button onclick="adminExpandAll()" class="text-xs px-3 py-1.5 rounded text-slate-600 dark:text-slate-300 hover:bg-white dark:hover:bg-slate-700 hover:shadow-sm transition-all font-semibold">Expand All</button>
+                                    <button onclick="adminCollapseSubs()" class="text-xs px-3 py-1.5 rounded text-slate-600 dark:text-slate-300 hover:bg-white dark:hover:bg-slate-700 hover:shadow-sm transition-all font-semibold">Collapse Subs</button>
+                                    <button onclick="adminCollapseAll()" class="text-xs px-3 py-1.5 rounded text-slate-600 dark:text-slate-300 hover:bg-white dark:hover:bg-slate-700 hover:shadow-sm transition-all font-semibold">Collapse All</button>
+                                </div>
+                            </div>
                             <button onclick="adminAddSection()" class="bg-secondary text-white px-5 py-2.5 rounded-xl font-bold text-sm shadow-md hover:bg-blue-600 transition-colors flex items-center gap-2"><i class="fa-solid fa-plus"></i> Add Root Section</button>
                         </div>
                         ${sectionsHtml || '<div class="p-12 text-center border-2 border-dashed border-slate-300 dark:border-slate-700 rounded-xl text-slate-500">No sections exist yet. Build your portfolio here!</div>'}
@@ -1966,12 +2052,13 @@
         }
 
         function renderAdminTile(tile) {
+            if (!tile) return '';
             let allTiles = [];
             appData.sections.forEach(s => s.subsections.forEach(ss => ss.tiles.forEach(t => {
                 if (t.id !== tile.id) allTiles.push({id: t.id, name: getEffectiveHeading(t), sid: s.name, ssid: ss.name});
             })));
 
-            let relatedHtml = `<div id="related-tiles-scroller" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-2 max-h-[400px] overflow-y-auto p-4 border border-slate-300 dark:border-slate-600 rounded-xl bg-slate-50 dark:bg-slate-900/50 resize-y min-h-[200px]">`;
+            let relatedHtml = `<div id="related-tiles-scroller" class="grid grid-cols-1 gap-2 max-h-[300px] overflow-y-auto p-3 border border-slate-300 dark:border-slate-600 rounded-xl bg-slate-50 dark:bg-slate-900/50 resize-y min-h-[150px]">`;
             allTiles.forEach(t => { 
                 const isSel = (tile.relatedTiles || []).includes(t.id);
                 relatedHtml += `
@@ -1996,54 +2083,58 @@
             `).join('');
 
             return `
-                <div class="bg-white dark:bg-darkCard p-6 md:p-8 rounded-2xl shadow-sm border border-slate-200 dark:border-slate-700 space-y-8 text-left w-full">
-                    <div class="flex justify-between items-center border-b border-slate-100 dark:border-slate-800 pb-4">
-                        <h3 class="text-2xl font-bold text-left flex items-center gap-3"><div class="w-10 h-10 bg-slate-100 dark:bg-slate-800 rounded-lg flex items-center justify-center text-slate-500"><i class="fa-solid fa-pen-nib"></i></div> Edit Tile Details</h3>
-                        <button onclick="adminNavigate([])" class="text-sm font-semibold bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 px-4 py-2 rounded-lg text-slate-600 dark:text-slate-300 transition-colors"><i class="fa-solid fa-arrow-left mr-2"></i> Architecture</button>
+                <div class="h-full flex flex-col w-full bg-white dark:bg-darkCard overflow-hidden">
+                    <div class="flex justify-between items-center p-4 border-b border-slate-200 dark:border-slate-800 shrink-0 shadow-sm z-10 bg-white dark:bg-darkCard">
+                        <h3 class="text-lg font-bold text-left flex items-center gap-3"><div class="w-8 h-8 bg-slate-100 dark:bg-slate-800 rounded-lg flex items-center justify-center text-slate-500"><i class="fa-solid fa-pen-nib text-sm"></i></div> Edit Tile Details</h3>
+                        <button onclick="adminNavigate([])" class="w-8 h-8 flex items-center justify-center rounded-full bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-600 dark:text-slate-300 transition-colors"><i class="fa-solid fa-xmark"></i></button>
                     </div>
                     
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6 text-left w-full">
-                        <div class="md:col-span-2 text-left mb-2 bg-blue-50 dark:bg-slate-800/50 p-5 rounded-xl border border-blue-100 dark:border-slate-700">
+                    <div id="admin-side-pane-scroller" class="flex-1 overflow-y-auto p-4 md:p-6 space-y-6 text-left w-full">
+                        <div class="text-left bg-blue-50 dark:bg-slate-800/50 p-4 rounded-xl border border-blue-100 dark:border-slate-700">
                             <label class="${adminLabelCls} text-secondary"><i class="fa-solid fa-rectangle-ad mr-1"></i> Top Banner Media (Optional)</label>
-                            <input type="text" onchange="adminUpdateTileProp('${adminPath[0]}', '${adminPath[1]}', '${tile.id}', 'banner', this.value)" value="${(tile.banner || '').replace(/"/g, '&quot;')}" class="${adminInputCls} font-mono" placeholder="Paste YouTube link, G-Drive link, or Image URL">
-                            <p class="text-xs text-slate-500 mt-2"><i class="fa-solid fa-info-circle mr-1"></i> Adding a banner automatically expands this tile to span the full width of the row.</p>
+                            <input type="text" onchange="adminUpdateTileProp('${adminPath[0]}', '${adminPath[1]}', '${tile.id}', 'banner', this.value)" value="${(tile.banner || '').replace(/"/g, '&quot;')}" class="${adminInputCls} font-mono" placeholder="YouTube link, G-Drive link, or Image URL">
+                            <p class="text-xs text-slate-500 mt-2"><i class="fa-solid fa-info-circle mr-1"></i> Adding a banner automatically expands this tile to span the full width.</p>
                         </div>
                         
-                        <div class="md:col-span-2 text-left space-y-1.5"><label class="${adminLabelCls}">Tile Heading Override (Optional)</label><input type="text" onchange="adminUpdateTileProp('${adminPath[0]}', '${adminPath[1]}', '${tile.id}', 'heading', this.value)" value="${tile.heading || ''}" class="${adminInputCls} font-bold text-lg" placeholder="Leave empty to auto-generate from below fields"></div>
-                        <div class="text-left space-y-1.5"><label class="${adminLabelCls}">Role / Title</label><input type="text" onchange="adminUpdateTileProp('${adminPath[0]}', '${adminPath[1]}', '${tile.id}', 'role', this.value)" value="${tile.role || tile.subtitle || ''}" class="${adminInputCls}" placeholder="e.g. Mechanical Engineer"></div>
-                        <div class="text-left space-y-1.5"><label class="${adminLabelCls}">Base Subject / Major</label><input type="text" onchange="adminUpdateTileProp('${adminPath[0]}', '${adminPath[1]}', '${tile.id}', 'baseSubject', this.value)" value="${tile.baseSubject || ''}" class="${adminInputCls}" placeholder="e.g. Mechanical Engineering"></div>
-                        <div class="text-left space-y-1.5"><label class="${adminLabelCls}">Specialisation / Minor</label><input type="text" onchange="adminUpdateTileProp('${adminPath[0]}', '${adminPath[1]}', '${tile.id}', 'specialisation', this.value)" value="${tile.specialisation || ''}" class="${adminInputCls}" placeholder="e.g. Robotics"></div>
-                        <div class="text-left space-y-1.5"><label class="${adminLabelCls}">Employer / Organization</label><input type="text" onchange="adminUpdateTileProp('${adminPath[0]}', '${adminPath[1]}', '${tile.id}', 'employer', this.value)" value="${tile.employer || ''}" class="${adminInputCls}" placeholder="e.g. Cyient"></div>
-                        <div class="text-left space-y-1.5"><label class="${adminLabelCls}">Employer Official URL</label><input type="text" onchange="adminUpdateTileProp('${adminPath[0]}', '${adminPath[1]}', '${tile.id}', 'employerUrl', this.value)" value="${tile.employerUrl || ''}" class="${adminInputCls} font-mono text-sm" placeholder="https://..."></div>
-                        <div class="text-left space-y-1.5"><label class="${adminLabelCls}">Score / GPA</label><input type="text" onchange="adminUpdateTileProp('${adminPath[0]}', '${adminPath[1]}', '${tile.id}', 'score', this.value)" value="${tile.score || ''}" class="${adminInputCls}" placeholder="e.g. 7.5"></div>
-                        <div class="text-left space-y-1.5"><label class="${adminLabelCls}">Max Possible Score</label><input type="text" onchange="adminUpdateTileProp('${adminPath[0]}', '${adminPath[1]}', '${tile.id}', 'maxScore', this.value)" value="${tile.maxScore || ''}" class="${adminInputCls}" placeholder="e.g. 10.0"></div>
-                        <div class="text-left space-y-1.5"><label class="${adminLabelCls}">Date / Timeline</label><input type="text" onchange="adminUpdateTileProp('${adminPath[0]}', '${adminPath[1]}', '${tile.id}', 'date', this.value)" value="${tile.date || ''}" class="${adminInputCls}" placeholder="e.g. 2021 - 2023"></div>
-                        <div class="text-left space-y-1.5"><label class="${adminLabelCls}">Location</label><input type="text" onchange="adminUpdateTileProp('${adminPath[0]}', '${adminPath[1]}', '${tile.id}', 'location', this.value)" value="${tile.location || ''}" class="${adminInputCls}" placeholder="e.g. Hyderabad, India"></div>
-                        <div class="text-left space-y-1.5"><label class="${adminLabelCls}">Icon (FontAwesome Class)</label><input type="text" onchange="adminUpdateTileProp('${adminPath[0]}', '${adminPath[1]}', '${tile.id}', 'icon', this.value)" value="${tile.icon || 'fa-cube'}" class="${adminInputCls} font-mono" placeholder="e.g. fa-rocket"></div>
-                        
-                        <div class="md:col-span-2 text-left space-y-1.5">
-                            <label class="${adminLabelCls} flex items-center justify-between">Card Description (Short snippet)</label>
-                            <textarea rows="3" oninput="this.style.height='auto';this.style.height=this.scrollHeight+'px'" onchange="adminUpdateTileProp('${adminPath[0]}', '${adminPath[1]}', '${tile.id}', 'description', this.value)" class="auto-expand ${adminInputCls} resize-y">${tile.description || ''}</textarea>
+                        <div class="space-y-4">
+                            <div class="text-left space-y-1.5"><label class="${adminLabelCls}">Tile Heading Override (Optional)</label><input type="text" onchange="adminUpdateTileProp('${adminPath[0]}', '${adminPath[1]}', '${tile.id}', 'heading', this.value)" value="${tile.heading || ''}" class="${adminInputCls} font-bold text-lg" placeholder="Leave empty to auto-generate"></div>
+                            <div class="text-left space-y-1.5"><label class="${adminLabelCls}">Role / Title</label><input type="text" onchange="adminUpdateTileProp('${adminPath[0]}', '${adminPath[1]}', '${tile.id}', 'role', this.value)" value="${tile.role || tile.subtitle || ''}" class="${adminInputCls}" placeholder="e.g. Mechanical Engineer"></div>
+                            <div class="text-left space-y-1.5"><label class="${adminLabelCls}">Base Subject / Major</label><input type="text" onchange="adminUpdateTileProp('${adminPath[0]}', '${adminPath[1]}', '${tile.id}', 'baseSubject', this.value)" value="${tile.baseSubject || ''}" class="${adminInputCls}" placeholder="e.g. Mechanical Engineering"></div>
+                            <div class="text-left space-y-1.5"><label class="${adminLabelCls}">Specialisation / Minor</label><input type="text" onchange="adminUpdateTileProp('${adminPath[0]}', '${adminPath[1]}', '${tile.id}', 'specialisation', this.value)" value="${tile.specialisation || ''}" class="${adminInputCls}" placeholder="e.g. Robotics"></div>
+                            <div class="text-left space-y-1.5"><label class="${adminLabelCls}">Employer / Organization</label><input type="text" onchange="adminUpdateTileProp('${adminPath[0]}', '${adminPath[1]}', '${tile.id}', 'employer', this.value)" value="${tile.employer || ''}" class="${adminInputCls}" placeholder="e.g. Cyient"></div>
+                            <div class="text-left space-y-1.5"><label class="${adminLabelCls}">Employer Official URL</label><input type="text" onchange="adminUpdateTileProp('${adminPath[0]}', '${adminPath[1]}', '${tile.id}', 'employerUrl', this.value)" value="${tile.employerUrl || ''}" class="${adminInputCls} font-mono text-sm" placeholder="https://..."></div>
+                            <div class="flex gap-4">
+                                <div class="text-left space-y-1.5 flex-1"><label class="${adminLabelCls}">Score / GPA</label><input type="text" onchange="adminUpdateTileProp('${adminPath[0]}', '${adminPath[1]}', '${tile.id}', 'score', this.value)" value="${tile.score || ''}" class="${adminInputCls}" placeholder="e.g. 7.5"></div>
+                                <div class="text-left space-y-1.5 flex-1"><label class="${adminLabelCls}">Max Score</label><input type="text" onchange="adminUpdateTileProp('${adminPath[0]}', '${adminPath[1]}', '${tile.id}', 'maxScore', this.value)" value="${tile.maxScore || ''}" class="${adminInputCls}" placeholder="e.g. 10.0"></div>
+                            </div>
+                            <div class="text-left space-y-1.5"><label class="${adminLabelCls}">Date / Timeline</label><input type="text" onchange="adminUpdateTileProp('${adminPath[0]}', '${adminPath[1]}', '${tile.id}', 'date', this.value)" value="${tile.date || ''}" class="${adminInputCls}" placeholder="e.g. 2021 - 2023"></div>
+                            <div class="text-left space-y-1.5"><label class="${adminLabelCls}">Location</label><input type="text" onchange="adminUpdateTileProp('${adminPath[0]}', '${adminPath[1]}', '${tile.id}', 'location', this.value)" value="${tile.location || ''}" class="${adminInputCls}" placeholder="e.g. Hyderabad, India"></div>
+                            <div class="text-left space-y-1.5"><label class="${adminLabelCls}">Icon (FontAwesome)</label><input type="text" onchange="adminUpdateTileProp('${adminPath[0]}', '${adminPath[1]}', '${tile.id}', 'icon', this.value)" value="${tile.icon || 'fa-cube'}" class="${adminInputCls} font-mono" placeholder="e.g. fa-rocket"></div>
+                            
+                            <div class="text-left space-y-1.5">
+                                <label class="${adminLabelCls}">Card Description (Short snippet)</label>
+                                <textarea rows="3" oninput="this.style.height='auto';this.style.height=this.scrollHeight+'px'" onchange="adminUpdateTileProp('${adminPath[0]}', '${adminPath[1]}', '${tile.id}', 'description', this.value)" class="auto-expand ${adminInputCls} resize-y">${tile.description || ''}</textarea>
+                            </div>
+                            
+                            <div class="text-left space-y-1.5">
+                                <label class="${adminLabelCls}">Tab Detailed Content (Side pane text)</label>
+                                <textarea rows="6" oninput="this.style.height='auto';this.style.height=this.scrollHeight+'px'" onchange="adminUpdateTileProp('${adminPath[0]}', '${adminPath[1]}', '${tile.id}', 'tabText', this.value)" class="auto-expand ${adminInputCls} resize-y">${tile.tabText || ''}</textarea>
+                            </div>
+                            
+                            <div class="text-left space-y-1.5"><label class="${adminLabelCls}">Background Image (G-Drive or URL)</label><input type="text" onchange="adminUpdateTileProp('${adminPath[0]}', '${adminPath[1]}', '${tile.id}', 'bgImage', this.value)" value="${tile.bgImage || ''}" class="${adminInputCls} font-mono"></div>
                         </div>
                         
-                        <div class="md:col-span-2 text-left space-y-1.5">
-                            <label class="${adminLabelCls} flex items-center justify-between">Tab Detailed Content (Extended side pane text)</label>
-                            <textarea rows="6" oninput="this.style.height='auto';this.style.height=this.scrollHeight+'px'" onchange="adminUpdateTileProp('${adminPath[0]}', '${adminPath[1]}', '${tile.id}', 'tabText', this.value)" class="auto-expand ${adminInputCls} resize-y">${tile.tabText || ''}</textarea>
+                        <div class="border-t border-slate-100 dark:border-slate-800 pt-6 text-left w-full">
+                            <h4 class="text-base font-bold mb-4 text-left flex items-center gap-2"><i class="fa-solid fa-photo-film text-slate-400"></i> Media Attachments</h4>
+                            ${mediaHtml}
+                            <button onclick="adminAddMedia('${adminPath[0]}', '${adminPath[1]}', '${tile.id}')" class="text-sm font-bold bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-600 dark:text-slate-300 px-4 py-2.5 rounded-xl mt-2 text-left transition-colors flex items-center gap-2 w-full justify-center"><i class="fa-solid fa-plus"></i> Add Media Link</button>
                         </div>
-                        
-                        <div class="md:col-span-2 text-left space-y-1.5"><label class="${adminLabelCls}">Tile Background Image (G-Drive or URL)</label><input type="text" onchange="adminUpdateTileProp('${adminPath[0]}', '${adminPath[1]}', '${tile.id}', 'bgImage', this.value)" value="${tile.bgImage || ''}" class="${adminInputCls} font-mono"></div>
-                    </div>
-                    
-                    <div class="border-t border-slate-100 dark:border-slate-800 pt-8 text-left w-full">
-                        <h4 class="text-lg font-bold mb-4 text-left flex items-center gap-2"><i class="fa-solid fa-photo-film text-slate-400"></i> Side Pane Media Attachments</h4>
-                        ${mediaHtml}
-                        <button onclick="adminAddMedia('${adminPath[0]}', '${adminPath[1]}', '${tile.id}')" class="text-sm font-bold bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-600 dark:text-slate-300 px-5 py-2.5 rounded-xl mt-2 text-left transition-colors flex items-center gap-2"><i class="fa-solid fa-plus"></i> Add Media Link</button>
-                    </div>
 
-                    <div class="border-t border-slate-100 dark:border-slate-800 pt-8 text-left w-full">
-                        <h4 class="text-lg font-bold mb-4 text-left flex items-center gap-2"><i class="fa-solid fa-link text-slate-400"></i> Related Cross-References (Metrics Pills)</h4>
-                        <p class="text-sm text-slate-500 mb-4">Select tiles to instantly generate clickable metrics pills at the bottom of this card.</p>
-                        ${relatedHtml}
+                        <div class="border-t border-slate-100 dark:border-slate-800 pt-6 text-left w-full pb-8">
+                            <h4 class="text-base font-bold mb-2 text-left flex items-center gap-2"><i class="fa-solid fa-link text-slate-400"></i> Metrics Pills Relations</h4>
+                            <p class="text-xs text-slate-500 mb-4 leading-relaxed">Select tiles to generate clickable metrics pills below this card.</p>
+                            ${relatedHtml}
+                        </div>
                     </div>
                 </div>
             `;
@@ -2057,6 +2148,9 @@
             const relScroller = document.getElementById('related-tiles-scroller');
             const relScrollPos = relScroller ? relScroller.scrollTop : 0;
 
+            const sidePaneScroller = document.getElementById('admin-side-pane-scroller');
+            const sidePaneScrollPos = sidePaneScroller ? sidePaneScroller.scrollTop : 0;
+
             renderApp();
             
             const newScroller = document.getElementById('admin-scroll-container');
@@ -2064,6 +2158,9 @@
             
             const newRelScroller = document.getElementById('related-tiles-scroller');
             if (newRelScroller) newRelScroller.scrollTop = relScrollPos;
+
+            const newSidePaneScroller = document.getElementById('admin-side-pane-scroller');
+            if (newSidePaneScroller) newSidePaneScroller.scrollTop = sidePaneScrollPos;
         }
 
         function adminBulkAction(action) {
@@ -2127,7 +2224,7 @@
         function adminUpdateTileProp(sId, ssId, tId, prop, val) { appData.sections.find(s=>s.id===sId).subsections.find(ss=>ss.id===ssId).tiles.find(t=>t.id===tId)[prop] = val; adminRenderWithScroll(); }
         function adminAddSection() { appData.sections.push({id: generateId(), name: "New Section", bgImage: "", visibility: "visible", subsections: []}); adminRenderWithScroll(); }
         function adminAddSub(sId) { appData.sections.find(s=>s.id===sId).subsections.push({id: generateId(), name: "New Subsection", visibility: "visible", tiles: []}); adminRenderWithScroll(); }
-        function adminAddTile(sId, ssId) { appData.sections.find(s=>s.id===sId).subsections.find(ss=>ss.id===ssId).tiles.push({id: generateId(), heading: "", role: "New Role", baseSubject: "", specialisation: "", employer: "Company", employerUrl: "", score: "", maxScore: "", date: "", location: "", description: "", tabText: "", icon: "fa-cube", bgImage: "", banner: "", visibility: "visible", mediaLinks: [], relatedTiles: []}); adminRenderWithScroll(); }
+        function adminAddTile(sId, ssId) { appData.sections.find(s=>s.id===sId).subsections.find(ss=>ss.id===ssId).tiles.push({id: generateId(), heading: "", role: "", baseSubject: "", specialisation: "", employer: "", employerUrl: "", score: "", maxScore: "", date: "", location: "", description: "", tabText: "", icon: "fa-cube", bgImage: "", banner: "", visibility: "visible", mediaLinks: [], relatedTiles: []}); adminRenderWithScroll(); }
         function adminDeleteSection(idx) { if(confirm("Delete section?")) { appData.sections.splice(idx, 1); adminRenderWithScroll(); } }
         function adminDeleteSub(sId, idx) { if(confirm("Delete subsection?")) { appData.sections.find(s=>s.id===sId).subsections.splice(idx, 1); adminRenderWithScroll(); } }
         function adminDeleteTile(sId, ssId, idx) { if(confirm("Delete tile?")) { appData.sections.find(s=>s.id===sId).subsections.find(ss=>ss.id===ssId).tiles.splice(idx, 1); adminRenderWithScroll(); } }
