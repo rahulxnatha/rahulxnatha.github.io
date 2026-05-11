@@ -230,6 +230,7 @@
         let titleInterval;
         let profileBlobShape = "50%";
         let adminTileView = "grid"; 
+        let adminCurrentTab = "architecture"; // State for Admin tabs
 
         // State for animations and hover previews
         let activePillId = null;
@@ -249,6 +250,9 @@
                 brandLogo: "", 
                 siteTitle: "Rahul Natha",
                 botName: "Virtual Rahul",
+                botGreeting: "Hello! I am Virtual Rahul. You can ask me about specific skills, my work experience, or how to contact me.",
+                botEmptyQuery: "Could you be a bit more specific? I can tell you about my education, experience, or specific skills!",
+                botFallback: "I couldn't find specific details about that in the portfolio data. Feel free to browse the categories or <a href='mailto:rahulnatha.pro@gmail.com' class='text-secondary hover:underline'>contact me directly</a>!",
                 relatedTabsBtn: "See Related Items",
                 contactEmail: "rahulnatha.pro@gmail.com",
                 contactPhone: "+91 98492 49677",
@@ -262,6 +266,11 @@
                 profileImageLink: "",
                 bgImageLink: ""
             },
+            botKnowledge: [
+                { id: "faq_1", keywords: "resume, cv, download, pdf", answer: "You can download my full resume here: <a href='#' class='text-secondary font-bold hover:underline'>[Insert G-Drive Link in Admin View]</a>" },
+                { id: "faq_2", keywords: "relocate, relocation, move, visa", answer: "Yes, I am open to relocation for the right opportunity." },
+                { id: "faq_3", keywords: "notice period, join, availability", answer: "I am currently serving a 30-day notice period and can join promptly." }
+            ],
             sections: [
                 {
                     id: "sec_exp",
@@ -530,14 +539,31 @@
                 const data = await response.json();
                 if (data && data.uiText) {
                     if (!data.seo) data.seo = appData.seo;
+                    if (!data.botKnowledge) data.botKnowledge = appData.botKnowledge; // Fallback for old data
                     return data;
                 }
                 return appData;
             } catch (e) { return appData; }
         }
 
+        function showToast(msg) {
+            const toast = document.createElement('div');
+            toast.className = 'fixed bottom-6 left-1/2 transform -translate-x-1/2 bg-slate-900 text-white px-6 py-3 rounded-full shadow-2xl z-[9999] font-bold text-sm transition-all duration-300 translate-y-10 opacity-0 border border-slate-700';
+            toast.innerText = msg;
+            document.body.appendChild(toast);
+            requestAnimationFrame(() => {
+                toast.classList.remove('translate-y-10', 'opacity-0');
+                toast.classList.add('translate-y-0', 'opacity-100');
+            });
+            setTimeout(() => {
+                toast.classList.remove('translate-y-0', 'opacity-100');
+                toast.classList.add('translate-y-10', 'opacity-0');
+                setTimeout(() => toast.remove(), 300);
+            }, 3000);
+        }
+
         async function savePortfolioData() {
-            if (!GOOGLE_SCRIPT_URL) return alert("Missing Google Script URL.");
+            if (!GOOGLE_SCRIPT_URL) return showToast("Missing Google Script URL.");
             const btn = document.getElementById('save-btn');
             if(btn) { btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Saving...'; btn.disabled = true; }
             try {
@@ -547,11 +573,11 @@
                     body: JSON.stringify({ passcode: passcode, portfolioData: appData })
                 });
                 const result = await response.json();
-                if (result.success) alert("Saved to Cloud!");
-                else alert("Error: " + (result.error || "Wrong passcode."));
-            } catch (e) { alert("Network error."); }
+                if (result.success) showToast("Saved to Cloud successfully!");
+                else showToast("Error: " + (result.error || "Wrong passcode."));
+            } catch (e) { showToast("Network error while saving."); }
             if(btn) { btn.innerHTML = '<i class="fa-solid fa-floppy-disk"></i> Save'; btn.disabled = false; }
-            renderApp();
+            // Omitted renderApp() here to completely prevent the page from jumping or resetting scroll on save!
         }
 
         // ==========================================
@@ -1722,7 +1748,7 @@
             const lowerQuery = query.toLowerCase();
 
             if (lowerQuery.match(/^(hi|hello|hey|greetings|start)/)) {
-                return `Hello! I'm ${appData.uiText.botName.split(' ')[0]}. You can ask me about specific skills, my work experience, or how to contact me.`;
+                return appData.uiText.botGreeting || `Hello! I'm ${appData.uiText.botName.split(' ')[0]}. You can ask me about specific skills, my work experience, or how to contact me.`;
             }
             if (fuzzyMatch('contact', lowerQuery) || fuzzyMatch('email', lowerQuery) || fuzzyMatch('phone', lowerQuery) || fuzzyMatch('hire', lowerQuery)) {
                 return `You can reach me via email at <a href="mailto:${appData.uiText.contactEmail}" class="text-secondary hover:underline">${appData.uiText.contactEmail}</a> or call ${appData.uiText.contactPhone}. Let's connect!`;
@@ -1731,10 +1757,40 @@
             const stopWords = ['a', 'an', 'the', 'is', 'at', 'in', 'of', 'for', 'to', 'and', 'or', 'with', 'about', 'my', 'your', 'i', 'me', 'tell', 'what', 'where', 'how', 'do', 'you', 'have', 'know', 'can', 'show', 'any', 'please'];
             const keywords = lowerQuery.replace(/[^\w\s]/g, '').split(/\s+/).filter(w => !stopWords.includes(w) && w.length > 1);
 
-            if (keywords.length === 0) {
-                return "Could you be a bit more specific? I can tell you about my education, experience, or specific skills!";
+            // 1. Prioritize Chatbot Brain (Recruiter FAQs)
+            if (appData.botKnowledge && appData.botKnowledge.length > 0) {
+                let bestFaq = null;
+                let highestScore = 0;
+
+                appData.botKnowledge.forEach(faq => {
+                    let score = 0;
+                    const triggerWords = faq.keywords.toLowerCase().split(',').map(k => k.trim()).filter(k => k);
+                    
+                    triggerWords.forEach(tw => {
+                        // Exact phrase match gets highest priority
+                        if (lowerQuery.includes(tw)) score += 20;
+                        else {
+                            // Fuzzy match individual words
+                            keywords.forEach(kw => {
+                                if (fuzzyMatch(kw, tw)) score += 5;
+                            });
+                        }
+                    });
+
+                    if (score > highestScore && score >= 5) {
+                        highestScore = score;
+                        bestFaq = faq;
+                    }
+                });
+
+                if (bestFaq) return bestFaq.answer;
             }
 
+            if (keywords.length === 0) {
+                return appData.uiText.botEmptyQuery || "Could you be a bit more specific? I can tell you about my education, experience, or specific skills!";
+            }
+
+            // 2. Fallback to Content Architecture Search
             let scoredSections = [];
             let scoredSubsections = [];
             let scoredTiles = [];
@@ -1789,7 +1845,7 @@
             const maxScore = Math.max(topSecScore, topSubScore, topTileScore);
 
             if (maxScore === 0) {
-                return `I couldn't find specific details about that in the portfolio data. Feel free to browse the categories or <a href="mailto:${appData.uiText.contactEmail}" class="text-secondary hover:underline">contact me directly</a>!`;
+                return appData.uiText.botFallback || `I couldn't find specific details about that in the portfolio data. Feel free to browse the categories or <a href="mailto:${appData.uiText.contactEmail}" class="text-secondary hover:underline">contact me directly</a>!`;
             }
 
             if (topSecScore === maxScore || topSubScore === maxScore) {
@@ -2147,7 +2203,7 @@
 
             let bulkToolbar = '';
             const selCount = Object.keys(adminSelected).length;
-            if (selCount > 0 && adminPath.length !== 3) { 
+            if (selCount > 0 && adminPath.length !== 3 && adminCurrentTab === 'architecture') { 
                 bulkToolbar = `
                     <div class="fixed bottom-6 left-1/2 transform -translate-x-1/2 bg-slate-900 text-white px-5 py-3 rounded-full shadow-[0_20px_50px_rgba(0,0,0,0.5)] border border-slate-700 z-[100] flex items-center gap-5 text-sm font-semibold transition-all duration-300 w-[max-content] max-w-[95vw] overflow-x-auto no-scrollbar">
                         <div class="bg-slate-800 px-3 py-1 rounded-full text-secondary whitespace-nowrap flex-shrink-0">${selCount} Selected</div>
@@ -2166,8 +2222,23 @@
 
             return `
                 <div class="h-screen w-full bg-slate-50 dark:bg-darkBg text-slate-800 dark:text-slate-200 flex flex-col text-left overflow-hidden">
-                    <div class="bg-white dark:bg-darkCard p-4 border-b border-slate-200 dark:border-slate-800 flex justify-between items-center shrink-0 shadow-sm text-left z-[60]">
-                        <div class="text-sm truncate mr-4 text-left flex-1 whitespace-nowrap">${breadcrumbs}</div>
+                    <div class="bg-white dark:bg-darkCard p-4 border-b border-slate-200 dark:border-slate-800 flex justify-between items-center shrink-0 shadow-sm text-left z-[60] flex-wrap gap-4">
+                        <div class="text-sm mr-4 text-left flex-1 flex items-center gap-4 min-w-0">
+                            <div class="whitespace-nowrap hidden lg:block truncate">${breadcrumbs}</div>
+                            
+                            <!-- Admin Tab Navigation Pill -->
+                            <div class="relative items-center bg-slate-100 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-full shadow-inner text-sm font-medium text-slate-700 dark:text-slate-200 text-left flex flex-shrink-0 max-w-full">
+                                <select onchange="adminCurrentTab=this.value; adminNavigate([])" class="appearance-none bg-transparent py-2 pl-5 pr-10 focus:outline-none cursor-pointer font-bold text-secondary dark:text-blue-400 w-full">
+                                    <option value="architecture" ${adminCurrentTab === 'architecture' ? 'selected' : ''}>Content Architecture</option>
+                                    <option value="seo" ${adminCurrentTab === 'seo' ? 'selected' : ''}>SEO & Meta Tags</option>
+                                    <option value="hero" ${adminCurrentTab === 'hero' ? 'selected' : ''}>Landing Page (Hero)</option>
+                                    <option value="ui" ${adminCurrentTab === 'ui' ? 'selected' : ''}>Global UI & Contact</option>
+                                    <option value="bot" ${adminCurrentTab === 'bot' ? 'selected' : ''}>Chatbot Knowledge Base</option>
+                                </select>
+                                <i class="fa-solid fa-chevron-down absolute right-4 top-1/2 transform -translate-y-1/2 text-xs text-slate-500 pointer-events-none"></i>
+                            </div>
+                        </div>
+
                         <div class="flex gap-3 flex-shrink-0 text-left items-center">
                             <div class="hidden sm:flex items-center mr-2 border-r border-slate-200 dark:border-slate-700 pr-4">
                                 <span class="text-xs font-semibold mr-2 opacity-70">Dark Mode</span>
@@ -2185,7 +2256,7 @@
                             ${renderAdminRoot()}
                         </div>
                         
-                        <!-- Smooth Side Pane Editor -->
+                        <!-- Smooth Side Pane Editor (Only shown when drilling down into a tile) -->
                         <aside class="absolute inset-0 md:relative md:inset-auto w-full md:w-[450px] lg:w-[500px] xl:w-[600px] flex flex-col bg-white dark:bg-darkCard border-l border-slate-200 dark:border-slate-800 shadow-2xl md:shadow-none z-[80] transform transition-transform duration-300 ${adminPath.length === 3 ? 'translate-x-0' : 'translate-x-full md:hidden'}">
                             ${renderAdminTile(getTileByAdminPath())}
                         </aside>
@@ -2204,134 +2275,10 @@
         function renderAdminRoot() {
             const ui = appData.uiText; const hero = appData.hero; const seo = appData.seo || {};
             
-            let sectionsHtml = appData.sections.map((sec, i) => {
-                const isSecExpanded = adminExpanded[sec.id];
-                const chevronSec = isSecExpanded ? 'fa-chevron-down' : 'fa-chevron-right';
+            let html = '<div class="space-y-8 text-left w-full">';
 
-                let subsHtml = sec.subsections.map((sub, j) => {
-                    const isSubExpanded = adminExpanded[sub.id];
-                    const chevronSub = isSubExpanded ? 'fa-chevron-down' : 'fa-chevron-right';
-
-                    let tilesHtml = '';
-                    if (sub.tiles.length > 0) {
-                        if (adminTileView === 'grid') {
-                            tilesHtml = `<div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 p-4 bg-slate-50/50 dark:bg-slate-900/30">`;
-                            tilesHtml += sub.tiles.map((tile, k) => `
-                                <div class="flex flex-col bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl shadow-sm hover:shadow-md hover:border-secondary dark:hover:border-secondary transition-all relative overflow-hidden group">
-                                    <div class="p-3 flex items-start justify-between border-b border-slate-100 dark:border-slate-700/50 bg-slate-50/50 dark:bg-slate-900/50">
-                                        <div class="flex items-center gap-2">
-                                            <input type="checkbox" onclick="event.stopPropagation()" onchange="toggleAdminSelect('${tile.id}')" ${adminSelected[tile.id] ? 'checked' : ''} class="w-4 h-4 cursor-pointer text-secondary rounded border-slate-300 focus:ring-secondary">
-                                            <div class="w-6 h-6 rounded bg-blue-50 dark:bg-blue-900/30 flex items-center justify-center"><i class="fa-solid ${tile.icon} text-secondary text-[10px]"></i></div>
-                                        </div>
-                                        <div class="flex items-center gap-1 opacity-100 lg:opacity-0 group-hover:opacity-100 transition-opacity">
-                                            <button onclick="adminMoveTile('${sec.id}', '${sub.id}', ${k}, -1)" class="text-slate-400 hover:text-secondary p-1 rounded hover:bg-slate-200 dark:hover:bg-slate-700 ${k === 0 ? 'invisible' : ''}" title="Move Left/Up"><i class="fa-solid fa-arrow-left text-xs"></i></button>
-                                            <button onclick="adminMoveTile('${sec.id}', '${sub.id}', ${k}, 1)" class="text-slate-400 hover:text-secondary p-1 rounded hover:bg-slate-200 dark:hover:bg-slate-700 ${k === sub.tiles.length - 1 ? 'invisible' : ''}" title="Move Right/Down"><i class="fa-solid fa-arrow-right text-xs"></i></button>
-                                        </div>
-                                    </div>
-                                    <div class="p-4 flex-1 flex flex-col min-w-0">
-                                        <input type="text" onchange="adminUpdateTileProp('${sec.id}', '${sub.id}', '${tile.id}', 'heading', this.value)" value="${(tile.heading || '').replace(/"/g, '&quot;')}" placeholder="${getEffectiveHeading({...tile, heading: ''}).replace(/"/g, '&quot;')}" class="w-full bg-transparent border-none text-sm font-bold text-slate-800 dark:text-slate-200 focus:outline-none focus:ring-0 placeholder-slate-400 dark:placeholder-slate-500 mb-4 p-0 overflow-x-auto whitespace-nowrap scroll-smooth" title="Tile Heading Override">
-                                        <div class="flex items-center justify-between mt-auto">
-                                            <div>${getVisBadge(tile.visibility || 'visible')}</div>
-                                            <button onclick="adminNavigate(['${sec.id}', '${sub.id}', '${tile.id}'])" class="bg-secondary text-white px-3 py-1.5 rounded-lg text-xs font-semibold shadow-sm hover:bg-blue-600 transition-colors flex items-center gap-1.5"><i class="fa-solid fa-pen text-[10px]"></i> Edit Details</button>
-                                        </div>
-                                    </div>
-                                </div>
-                            `).join('');
-                            tilesHtml += `</div>`;
-                        } else {
-                            tilesHtml = `<div class="flex flex-col gap-3 p-4 bg-slate-50/50 dark:bg-slate-900/30">`;
-                            tilesHtml += sub.tiles.map((tile, k) => `
-                                <div class="flex justify-between items-center p-3 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl shadow-sm hover:border-secondary transition-colors group">
-                                    <div class="flex items-center flex-1 mr-4 gap-3 text-left min-w-0">
-                                        <input type="checkbox" onclick="event.stopPropagation()" onchange="toggleAdminSelect('${tile.id}')" ${adminSelected[tile.id] ? 'checked' : ''} class="w-4 h-4 cursor-pointer flex-shrink-0 text-secondary rounded border-slate-300 focus:ring-secondary">
-                                        <div class="w-8 h-8 rounded-lg bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 flex items-center justify-center flex-shrink-0 shadow-sm"><i class="fa-solid ${tile.icon} text-secondary text-xs"></i></div>
-                                        <div class="flex-1 min-w-0">
-                                            <input type="text" onchange="adminUpdateTileProp('${sec.id}', '${sub.id}', '${tile.id}', 'heading', this.value)" value="${(tile.heading || '').replace(/"/g, '&quot;')}" placeholder="${getEffectiveHeading({...tile, heading: ''}).replace(/"/g, '&quot;')}" class="w-full bg-transparent border-none text-sm font-semibold text-slate-800 dark:text-slate-200 focus:outline-none focus:ring-0 placeholder-slate-400 dark:placeholder-slate-500 overflow-x-auto whitespace-nowrap scroll-smooth" title="Tile Heading Override">
-                                        </div>
-                                        ${getVisBadge(tile.visibility || 'visible')}
-                                    </div>
-                                    <div class="flex gap-2 text-left items-center flex-shrink-0">
-                                        <div class="flex gap-1 border-r border-slate-200 dark:border-slate-600 pr-2 mr-1 opacity-100 lg:opacity-0 group-hover:opacity-100 transition-opacity">
-                                            <button onclick="adminMoveTile('${sec.id}', '${sub.id}', ${k}, -1)" class="text-slate-400 hover:text-secondary p-1 rounded hover:bg-slate-200 dark:hover:bg-slate-800 ${k === 0 ? 'invisible' : ''}" title="Move Up"><i class="fa-solid fa-arrow-up text-xs"></i></button>
-                                            <button onclick="adminMoveTile('${sec.id}', '${sub.id}', ${k}, 1)" class="text-slate-400 hover:text-secondary p-1 rounded hover:bg-slate-200 dark:hover:bg-slate-800 ${k === sub.tiles.length - 1 ? 'invisible' : ''}" title="Move Down"><i class="fa-solid fa-arrow-down text-xs"></i></button>
-                                        </div>
-                                        <button onclick="adminNavigate(['${sec.id}', '${sub.id}', '${tile.id}'])" class="bg-secondary text-white px-3 py-1.5 rounded-lg text-xs font-semibold shadow-sm hover:bg-blue-600 transition-colors flex items-center gap-1.5"><i class="fa-solid fa-pen text-[10px]"></i> Edit</button>
-                                    </div>
-                                </div>
-                            `).join('');
-                            tilesHtml += `</div>`;
-                        }
-                    } else {
-                        tilesHtml = `<p class="text-xs text-slate-500 italic p-4 mb-2">No tiles in this subsection.</p>`;
-                    }
-
-                    return `
-                        <div class="mb-4 border border-slate-200 dark:border-slate-700 rounded-xl bg-white dark:bg-slate-800/50 text-left overflow-hidden shadow-sm">
-                            <div class="flex items-center justify-between p-3 bg-slate-50/50 dark:bg-slate-900/50 border-b border-transparent data-[expanded=true]:border-slate-200 dark:data-[expanded=true]:border-slate-700 transition-colors group" data-expanded="${isSubExpanded}">
-                                <div class="flex items-center gap-3 flex-1 mr-4">
-                                    <input type="checkbox" onclick="event.stopPropagation()" onchange="toggleAdminSelect('${sub.id}')" ${adminSelected[sub.id] ? 'checked' : ''} class="w-4 h-4 ml-1 cursor-pointer flex-shrink-0 text-secondary rounded border-slate-300 focus:ring-secondary">
-                                    <button onclick="toggleAdminExpand('${sub.id}')" class="text-slate-400 hover:text-secondary w-7 h-7 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded shadow-sm flex items-center justify-center transition-colors"><i class="fa-solid ${chevronSub} text-xs"></i></button>
-                                    <input type="text" onchange="adminUpdateSub('${sec.id}', '${sub.id}', 'name', this.value)" value="${sub.name}" class="flex-1 bg-transparent border-none text-sm font-bold text-slate-800 dark:text-slate-200 focus:outline-none focus:ring-0 placeholder-slate-400" placeholder="Subsection Name">
-                                    ${getVisBadge(sub.visibility || 'visible')}
-                                </div>
-                                <div class="flex gap-3 items-center flex-shrink-0 opacity-0 group-hover:opacity-100 transition-opacity">
-                                    <div class="flex gap-1 pr-3 mr-1">
-                                        <button onclick="adminMoveSub('${sec.id}', ${j}, -1)" class="text-slate-400 hover:text-secondary p-1 rounded hover:bg-slate-200 dark:hover:bg-slate-700 ${j === 0 ? 'invisible' : ''}" title="Move Up"><i class="fa-solid fa-arrow-up text-xs"></i></button>
-                                        <button onclick="adminMoveSub('${sec.id}', ${j}, 1)" class="text-slate-400 hover:text-secondary p-1 rounded hover:bg-slate-200 dark:hover:bg-slate-700 ${j === sec.subsections.length - 1 ? 'invisible' : ''}" title="Move Down"><i class="fa-solid fa-arrow-down text-xs"></i></button>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="${isSubExpanded ? 'bg-white dark:bg-slate-800/20' : 'hidden'}">
-                                <div class="ml-4 md:ml-6 my-3 p-3 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-lg">
-                                    <label class="${adminLabelCls} text-xs"><i class="fa-regular fa-image mr-1"></i> Subsection Background Image (Optional)</label>
-                                    <input type="text" onchange="adminUpdateSub('${sec.id}', '${sub.id}', 'bgImage', this.value)" value="${sub.bgImage || ''}" class="${adminInputCls} font-mono text-xs py-2" placeholder="G-Drive Link or URL">
-                                </div>
-                                ${tilesHtml}
-                                <div class="px-4 pb-4">
-                                    <button onclick="adminAddTile('${sec.id}', '${sub.id}')" class="text-xs border-2 border-dashed border-slate-300 dark:border-slate-600 text-slate-500 dark:text-slate-400 hover:border-secondary hover:text-secondary dark:hover:border-secondary transition-colors px-4 py-2.5 rounded-xl font-semibold w-full text-center flex items-center justify-center gap-2"><i class="fa-solid fa-plus"></i> Add New Tile</button>
-                                </div>
-                            </div>
-                        </div>
-                    `;
-                }).join('');
-
-                return `
-                    <div class="mb-6 border border-slate-300 dark:border-slate-600 rounded-2xl bg-white dark:bg-darkCard shadow-sm overflow-hidden text-left transition-all">
-                        <div class="flex items-center justify-between p-5 bg-slate-100/50 dark:bg-slate-800/50 border-b border-transparent data-[expanded=true]:border-slate-200 dark:data-[expanded=true]:border-slate-700 transition-colors group" data-expanded="${isSecExpanded}">
-                            <div class="flex items-center gap-4 flex-1 mr-4">
-                                <input type="checkbox" onclick="event.stopPropagation()" onchange="toggleAdminSelect('${sec.id}')" ${adminSelected[sec.id] ? 'checked' : ''} class="w-5 h-5 cursor-pointer flex-shrink-0 text-secondary rounded border-slate-300 focus:ring-secondary">
-                                <button onclick="toggleAdminExpand('${sec.id}')" class="text-slate-500 hover:text-secondary w-9 h-9 bg-white dark:bg-slate-700 border border-slate-300 dark:border-slate-600 shadow-sm flex items-center justify-center rounded-lg transition-colors"><i class="fa-solid ${chevronSec}"></i></button>
-                                <input type="text" onchange="adminUpdateSec('${sec.id}', 'name', this.value)" value="${sec.name}" class="flex-1 bg-transparent border-none font-extrabold text-xl text-slate-800 dark:text-slate-100 focus:outline-none focus:ring-0 placeholder-slate-400" placeholder="Section Name">
-                                ${getVisBadge(sec.visibility || 'visible')}
-                            </div>
-                            <div class="flex gap-3 items-center flex-shrink-0 opacity-0 group-hover:opacity-100 transition-opacity">
-                                <div class="flex gap-1 pr-3 mr-1">
-                                    <button onclick="adminMoveSection(${i}, -1)" class="text-slate-400 hover:text-secondary p-1.5 rounded hover:bg-slate-200 dark:hover:bg-slate-700 ${i === 0 ? 'invisible' : ''}" title="Move Up"><i class="fa-solid fa-arrow-up text-sm"></i></button>
-                                    <button onclick="adminMoveSection(${i}, 1)" class="text-slate-400 hover:text-secondary p-1.5 rounded hover:bg-slate-200 dark:hover:bg-slate-700 ${i === appData.sections.length - 1 ? 'invisible' : ''}" title="Move Down"><i class="fa-solid fa-arrow-down text-sm"></i></button>
-                                </div>
-                            </div>
-                        </div>
-                        
-                        <div class="${isSecExpanded ? 'p-6 bg-white dark:bg-darkCard' : 'hidden'}">
-                            <div class="mb-8 ml-2 bg-slate-50 dark:bg-slate-900/50 p-4 rounded-xl border border-slate-200 dark:border-slate-700">
-                                <label class="${adminLabelCls}"><i class="fa-regular fa-image mr-1 text-secondary"></i> Section Background Image</label>
-                                <input type="text" onchange="adminUpdateSec('${sec.id}', 'bgImage', this.value)" value="${sec.bgImage || ''}" class="${adminInputCls} font-mono" placeholder="G-Drive Link or URL (Leave empty for solid color)">
-                            </div>
-                            
-                            <div class="ml-4 pl-6 border-l-2 border-slate-200 dark:border-slate-700 relative">
-                                <div class="absolute -left-[11px] top-0 bottom-0 flex flex-col justify-between py-2"><div class="w-5 h-px bg-slate-200 dark:bg-slate-700"></div><div class="w-5 h-px bg-slate-200 dark:bg-slate-700"></div></div>
-                                <h4 class="text-sm font-bold mb-5 text-slate-500 dark:text-slate-400 uppercase tracking-wider flex items-center gap-2"><i class="fa-solid fa-layer-group"></i> Subsections</h4>
-                                ${subsHtml}
-                                <button onclick="adminAddSub('${sec.id}')" class="mt-4 w-full bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-slate-700 border border-slate-300 dark:border-slate-600 transition-colors px-4 py-3 rounded-xl font-bold shadow-sm flex items-center justify-center gap-2"><i class="fa-solid fa-plus"></i> Add New Subsection</button>
-                            </div>
-                        </div>
-                    </div>
-                `;
-            }).join('');
-
-            return `
-                <div class="space-y-8 text-left w-full">
-                    <!-- SEO Settings -->
+            if (adminCurrentTab === 'seo') {
+                html += `
                     <div class="bg-white dark:bg-darkCard p-6 md:p-8 rounded-2xl shadow-sm border border-slate-200 dark:border-slate-700 text-left relative overflow-hidden">
                         <div class="absolute top-0 left-0 w-1 h-full bg-gradient-to-b from-blue-500 to-indigo-500"></div>
                         <h3 class="text-xl font-bold mb-6 border-b border-slate-100 dark:border-slate-800 pb-3 flex items-center gap-3"><div class="w-8 h-8 rounded-lg bg-blue-50 dark:bg-blue-900/30 text-secondary flex items-center justify-center"><i class="fa-solid fa-magnifying-glass"></i></div> SEO & Social Meta Tags</h3>
@@ -2342,7 +2289,9 @@
                             <div class="md:col-span-2 text-left space-y-1.5"><label class="${adminLabelCls}">Search Engine Description</label><textarea rows="3" oninput="this.style.height='auto';this.style.height=this.scrollHeight+'px'" onchange="appData.seo.description=this.value" class="auto-expand ${adminInputCls} resize-y">${seo.description || appData.hero.bio}</textarea></div>
                         </div>
                     </div>
-
+                `;
+            } else if (adminCurrentTab === 'hero') {
+                html += `
                     <div class="bg-white dark:bg-darkCard p-6 md:p-8 rounded-2xl shadow-sm border border-slate-200 dark:border-slate-700 text-left relative overflow-hidden">
                         <div class="absolute top-0 left-0 w-1 h-full bg-gradient-to-b from-purple-500 to-pink-500"></div>
                         <h3 class="text-xl font-bold mb-6 border-b border-slate-100 dark:border-slate-800 pb-3 flex items-center gap-3"><div class="w-8 h-8 rounded-lg bg-purple-50 dark:bg-purple-900/30 text-purple-500 flex items-center justify-center"><i class="fa-solid fa-image"></i></div> Landing Page (Hero)</h3>
@@ -2354,7 +2303,9 @@
                             <div class="text-left space-y-1.5"><label class="${adminLabelCls}">Background Image (G-Drive Link)</label><input type="text" onchange="appData.hero.bgImageLink=this.value" value="${hero.bgImageLink}" class="${adminInputCls} font-mono"></div>
                         </div>
                     </div>
-                    
+                `;
+            } else if (adminCurrentTab === 'ui') {
+                html += `
                     <div class="bg-white dark:bg-darkCard p-6 md:p-8 rounded-2xl shadow-sm border border-slate-200 dark:border-slate-700 text-left relative overflow-hidden">
                         <div class="absolute top-0 left-0 w-1 h-full bg-gradient-to-b from-green-500 to-emerald-500"></div>
                         <h3 class="text-xl font-bold mb-6 border-b border-slate-100 dark:border-slate-800 pb-3 flex items-center gap-3"><div class="w-8 h-8 rounded-lg bg-green-50 dark:bg-green-900/30 text-green-500 flex items-center justify-center"><i class="fa-solid fa-address-card"></i></div> Global UI Text & Contact</h3>
@@ -2368,7 +2319,175 @@
                             <div class="text-left space-y-1.5"><label class="${adminLabelCls}">GitHub URL</label><input type="text" onchange="appData.uiText.githubLink=this.value" value="${ui.githubLink}" class="${adminInputCls} font-mono"></div>
                         </div>
                     </div>
+                `;
+            } else if (adminCurrentTab === 'bot') {
+                html += `
+                    <div class="bg-white dark:bg-darkCard p-6 md:p-8 rounded-2xl shadow-sm border border-slate-200 dark:border-slate-700 text-left relative overflow-hidden">
+                        <div class="absolute top-0 left-0 w-1 h-full bg-gradient-to-b from-teal-500 to-cyan-500"></div>
+                        <h3 class="text-xl font-bold mb-6 border-b border-slate-100 dark:border-slate-800 pb-3 flex items-center gap-3"><div class="w-8 h-8 rounded-lg bg-teal-50 dark:bg-teal-900/30 text-teal-500 flex items-center justify-center"><i class="fa-solid fa-brain"></i></div> Chatbot Knowledge Base (FAQs)</h3>
+                        
+                        <div class="mb-8 p-5 bg-slate-50 dark:bg-slate-900/50 border border-slate-200 dark:border-slate-700 rounded-xl space-y-4 text-left">
+                            <h4 class="font-bold text-slate-700 dark:text-slate-300 text-sm mb-3">Bot Personality & Defaults</h4>
+                            <div>
+                                <label class="${adminLabelCls}">Default Greeting ("hi", "hello")</label>
+                                <textarea rows="2" oninput="this.style.height='auto';this.style.height=this.scrollHeight+'px'" onchange="appData.uiText.botGreeting=this.value" class="auto-expand ${adminInputCls} resize-y">${ui.botGreeting || 'Hello! I am ' + ui.botName + '. You can ask me about specific skills, my work experience, or how to contact me.'}</textarea>
+                            </div>
+                            <div>
+                                <label class="${adminLabelCls}">Vague Query Response (Not enough keywords)</label>
+                                <textarea rows="2" oninput="this.style.height='auto';this.style.height=this.scrollHeight+'px'" onchange="appData.uiText.botEmptyQuery=this.value" class="auto-expand ${adminInputCls} resize-y">${ui.botEmptyQuery || 'Could you be a bit more specific? I can tell you about my education, experience, or specific skills!'}</textarea>
+                            </div>
+                            <div>
+                                <label class="${adminLabelCls}">Fallback Response (No matches found)</label>
+                                <textarea rows="2" oninput="this.style.height='auto';this.style.height=this.scrollHeight+'px'" onchange="appData.uiText.botFallback=this.value" class="auto-expand ${adminInputCls} resize-y">${ui.botFallback || "I couldn't find specific details about that in the portfolio data. Feel free to browse the categories or <a href='mailto:" + (ui.contactEmail || '') + "' class='text-secondary hover:underline'>contact me directly</a>!"}</textarea>
+                            </div>
+                        </div>
 
+                        <p class="text-sm text-slate-500 mb-6">Train your chatbot to answer custom intent-based questions that recruiters and professors frequently ask.</p>
+                        <div class="space-y-4 w-full">
+                            ${(appData.botKnowledge || []).map((faq, idx) => `
+                                <div class="p-4 bg-slate-50 dark:bg-slate-900/50 border border-slate-200 dark:border-slate-700 rounded-xl relative group transition-colors hover:border-slate-300 dark:hover:border-slate-600">
+                                    <button onclick="adminDeleteFaq(${idx})" class="absolute top-3 right-3 text-slate-400 hover:text-red-500 transition-colors bg-white dark:bg-slate-800 rounded shadow-sm w-8 h-8 flex items-center justify-center opacity-0 group-hover:opacity-100"><i class="fa-solid fa-trash text-xs"></i></button>
+                                    <div class="mb-4 pr-10">
+                                        <label class="${adminLabelCls}">Trigger Keywords (Comma separated)</label>
+                                        <input type="text" onchange="adminUpdateFaq(${idx}, 'keywords', this.value)" value="${faq.keywords}" class="${adminInputCls} text-xs font-mono" placeholder="e.g. relocate, relocation, move">
+                                    </div>
+                                    <div>
+                                        <label class="${adminLabelCls}">Bot Answer <span class="text-xs font-normal text-slate-400 ml-2">(HTML tags supported for links)</span></label>
+                                        <textarea rows="2" oninput="this.style.height='auto';this.style.height=this.scrollHeight+'px'" onchange="adminUpdateFaq(${idx}, 'answer', this.value)" class="auto-expand ${adminInputCls} resize-y">${faq.answer}</textarea>
+                                    </div>
+                                </div>
+                            `).join('')}
+                        </div>
+                        <button onclick="adminAddFaq()" class="mt-6 bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-slate-700 border border-slate-300 dark:border-slate-600 px-5 py-3 rounded-xl font-bold text-sm transition-colors flex items-center gap-2 shadow-sm w-full md:w-auto justify-center"><i class="fa-solid fa-plus"></i> Add New Recruiter FAQ</button>
+                    </div>
+                `;
+            } else if (adminCurrentTab === 'architecture') {
+                let sectionsHtml = appData.sections.map((sec, i) => {
+                    const isSecExpanded = adminExpanded[sec.id];
+                    const chevronSec = isSecExpanded ? 'fa-chevron-down' : 'fa-chevron-right';
+
+                    let subsHtml = sec.subsections.map((sub, j) => {
+                        const isSubExpanded = adminExpanded[sub.id];
+                        const chevronSub = isSubExpanded ? 'fa-chevron-down' : 'fa-chevron-right';
+
+                        let tilesHtml = '';
+                        if (sub.tiles.length > 0) {
+                            if (adminTileView === 'grid') {
+                                tilesHtml = `<div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 p-4 bg-slate-50/50 dark:bg-slate-900/30">`;
+                                tilesHtml += sub.tiles.map((tile, k) => `
+                                    <div class="flex flex-col bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl shadow-sm hover:shadow-md hover:border-secondary dark:hover:border-secondary transition-all relative overflow-hidden group">
+                                        <div class="p-3 flex items-start justify-between border-b border-slate-100 dark:border-slate-700/50 bg-slate-50/50 dark:bg-slate-900/50">
+                                            <div class="flex items-center gap-2">
+                                                <input type="checkbox" onclick="event.stopPropagation()" onchange="toggleAdminSelect('${tile.id}')" ${adminSelected[tile.id] ? 'checked' : ''} class="w-4 h-4 cursor-pointer text-secondary rounded border-slate-300 focus:ring-secondary">
+                                                <div class="w-6 h-6 rounded bg-blue-50 dark:bg-blue-900/30 flex items-center justify-center"><i class="fa-solid ${tile.icon} text-secondary text-[10px]"></i></div>
+                                            </div>
+                                            <div class="flex items-center gap-1 opacity-100 lg:opacity-0 group-hover:opacity-100 transition-opacity">
+                                                <button onclick="adminMoveTile('${sec.id}', '${sub.id}', ${k}, -1)" class="text-slate-400 hover:text-secondary p-1 rounded hover:bg-slate-200 dark:hover:bg-slate-700 ${k === 0 ? 'invisible' : ''}" title="Move Left/Up"><i class="fa-solid fa-arrow-left text-xs"></i></button>
+                                                <button onclick="adminMoveTile('${sec.id}', '${sub.id}', ${k}, 1)" class="text-slate-400 hover:text-secondary p-1 rounded hover:bg-slate-200 dark:hover:bg-slate-700 ${k === sub.tiles.length - 1 ? 'invisible' : ''}" title="Move Right/Down"><i class="fa-solid fa-arrow-right text-xs"></i></button>
+                                            </div>
+                                        </div>
+                                        <div class="p-4 flex-1 flex flex-col min-w-0">
+                                            <input type="text" onchange="adminUpdateTileProp('${sec.id}', '${sub.id}', '${tile.id}', 'heading', this.value)" value="${(tile.heading || '').replace(/"/g, '&quot;')}" placeholder="${getEffectiveHeading({...tile, heading: ''}).replace(/"/g, '&quot;')}" class="w-full bg-transparent border-none text-sm font-bold text-slate-800 dark:text-slate-200 focus:outline-none focus:ring-0 placeholder-slate-400 dark:placeholder-slate-500 mb-4 p-0 overflow-x-auto whitespace-nowrap scroll-smooth" title="Tile Heading Override">
+                                            <div class="flex items-center justify-between mt-auto">
+                                                <div>${getVisBadge(tile.visibility || 'visible')}</div>
+                                                <button onclick="adminNavigate(['${sec.id}', '${sub.id}', '${tile.id}'])" class="bg-secondary text-white px-3 py-1.5 rounded-lg text-xs font-semibold shadow-sm hover:bg-blue-600 transition-colors flex items-center gap-1.5"><i class="fa-solid fa-pen text-[10px]"></i> Edit Details</button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                `).join('');
+                                tilesHtml += `</div>`;
+                            } else {
+                                tilesHtml = `<div class="flex flex-col gap-3 p-4 bg-slate-50/50 dark:bg-slate-900/30">`;
+                                tilesHtml += sub.tiles.map((tile, k) => `
+                                    <div class="flex justify-between items-center p-3 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl shadow-sm hover:border-secondary transition-colors group">
+                                        <div class="flex items-center flex-1 mr-4 gap-3 text-left min-w-0">
+                                            <input type="checkbox" onclick="event.stopPropagation()" onchange="toggleAdminSelect('${tile.id}')" ${adminSelected[tile.id] ? 'checked' : ''} class="w-4 h-4 cursor-pointer flex-shrink-0 text-secondary rounded border-slate-300 focus:ring-secondary">
+                                            <div class="w-8 h-8 rounded-lg bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 flex items-center justify-center flex-shrink-0 shadow-sm"><i class="fa-solid ${tile.icon} text-secondary text-xs"></i></div>
+                                            <div class="flex-1 min-w-0">
+                                                <input type="text" onchange="adminUpdateTileProp('${sec.id}', '${sub.id}', '${tile.id}', 'heading', this.value)" value="${(tile.heading || '').replace(/"/g, '&quot;')}" placeholder="${getEffectiveHeading({...tile, heading: ''}).replace(/"/g, '&quot;')}" class="w-full bg-transparent border-none text-sm font-semibold text-slate-800 dark:text-slate-200 focus:outline-none focus:ring-0 placeholder-slate-400 dark:placeholder-slate-500 overflow-x-auto whitespace-nowrap scroll-smooth" title="Tile Heading Override">
+                                            </div>
+                                            ${getVisBadge(tile.visibility || 'visible')}
+                                        </div>
+                                        <div class="flex gap-2 text-left items-center flex-shrink-0">
+                                            <div class="flex gap-1 border-r border-slate-200 dark:border-slate-600 pr-2 mr-1 opacity-100 lg:opacity-0 group-hover:opacity-100 transition-opacity">
+                                                <button onclick="adminMoveTile('${sec.id}', '${sub.id}', ${k}, -1)" class="text-slate-400 hover:text-secondary p-1 rounded hover:bg-slate-200 dark:hover:bg-slate-800 ${k === 0 ? 'invisible' : ''}" title="Move Up"><i class="fa-solid fa-arrow-up text-xs"></i></button>
+                                                <button onclick="adminMoveTile('${sec.id}', '${sub.id}', ${k}, 1)" class="text-slate-400 hover:text-secondary p-1 rounded hover:bg-slate-200 dark:hover:bg-slate-800 ${k === sub.tiles.length - 1 ? 'invisible' : ''}" title="Move Down"><i class="fa-solid fa-arrow-down text-xs"></i></button>
+                                            </div>
+                                            <button onclick="adminNavigate(['${sec.id}', '${sub.id}', '${tile.id}'])" class="bg-secondary text-white px-3 py-1.5 rounded-lg text-xs font-semibold shadow-sm hover:bg-blue-600 transition-colors flex items-center gap-1.5"><i class="fa-solid fa-pen text-[10px]"></i> Edit</button>
+                                        </div>
+                                    </div>
+                                `).join('');
+                                tilesHtml += `</div>`;
+                            }
+                        } else {
+                            tilesHtml = `<p class="text-xs text-slate-500 italic p-4 mb-2">No tiles in this subsection.</p>`;
+                        }
+
+                        return `
+                            <div class="mb-4 border border-slate-200 dark:border-slate-700 rounded-xl bg-white dark:bg-slate-800/50 text-left overflow-hidden shadow-sm">
+                                <div class="flex items-center justify-between p-3 bg-slate-50/50 dark:bg-slate-900/50 border-b border-transparent data-[expanded=true]:border-slate-200 dark:data-[expanded=true]:border-slate-700 transition-colors group" data-expanded="${isSubExpanded}">
+                                    <div class="flex items-center gap-3 flex-1 mr-4">
+                                        <input type="checkbox" onclick="event.stopPropagation()" onchange="toggleAdminSelect('${sub.id}')" ${adminSelected[sub.id] ? 'checked' : ''} class="w-4 h-4 ml-1 cursor-pointer flex-shrink-0 text-secondary rounded border-slate-300 focus:ring-secondary">
+                                        <button onclick="toggleAdminExpand('${sub.id}')" class="text-slate-400 hover:text-secondary w-7 h-7 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded shadow-sm flex items-center justify-center transition-colors"><i class="fa-solid ${chevronSub} text-xs"></i></button>
+                                        <input type="text" onchange="adminUpdateSub('${sec.id}', '${sub.id}', 'name', this.value)" value="${sub.name}" class="flex-1 bg-transparent border-none text-sm font-bold text-slate-800 dark:text-slate-200 focus:outline-none focus:ring-0 placeholder-slate-400" placeholder="Subsection Name">
+                                        ${getVisBadge(sub.visibility || 'visible')}
+                                    </div>
+                                    <div class="flex gap-3 items-center flex-shrink-0 opacity-0 group-hover:opacity-100 transition-opacity">
+                                        <div class="flex gap-1 pr-3 mr-1">
+                                            <button onclick="adminMoveSub('${sec.id}', ${j}, -1)" class="text-slate-400 hover:text-secondary p-1 rounded hover:bg-slate-200 dark:hover:bg-slate-700 ${j === 0 ? 'invisible' : ''}" title="Move Up"><i class="fa-solid fa-arrow-up text-xs"></i></button>
+                                            <button onclick="adminMoveSub('${sec.id}', ${j}, 1)" class="text-slate-400 hover:text-secondary p-1 rounded hover:bg-slate-200 dark:hover:bg-slate-700 ${j === sec.subsections.length - 1 ? 'invisible' : ''}" title="Move Down"><i class="fa-solid fa-arrow-down text-xs"></i></button>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="${isSubExpanded ? 'bg-white dark:bg-slate-800/20' : 'hidden'}">
+                                    <div class="ml-4 md:ml-6 my-3 p-3 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-lg">
+                                        <label class="${adminLabelCls} text-xs"><i class="fa-regular fa-image mr-1"></i> Subsection Background Image (Optional)</label>
+                                        <input type="text" onchange="adminUpdateSub('${sec.id}', '${sub.id}', 'bgImage', this.value)" value="${sub.bgImage || ''}" class="${adminInputCls} font-mono text-xs py-2" placeholder="G-Drive Link or URL">
+                                    </div>
+                                    ${tilesHtml}
+                                    <div class="px-4 pb-4">
+                                        <button onclick="adminAddTile('${sec.id}', '${sub.id}')" class="text-xs border-2 border-dashed border-slate-300 dark:border-slate-600 text-slate-500 dark:text-slate-400 hover:border-secondary hover:text-secondary dark:hover:border-secondary transition-colors px-4 py-2.5 rounded-xl font-semibold w-full text-center flex items-center justify-center gap-2"><i class="fa-solid fa-plus"></i> Add New Tile</button>
+                                    </div>
+                                </div>
+                            </div>
+                        `;
+                    }).join('');
+
+                    return `
+                        <div class="mb-6 border border-slate-300 dark:border-slate-600 rounded-2xl bg-white dark:bg-darkCard shadow-sm overflow-hidden text-left transition-all">
+                            <div class="flex items-center justify-between p-5 bg-slate-100/50 dark:bg-slate-800/50 border-b border-transparent data-[expanded=true]:border-slate-200 dark:data-[expanded=true]:border-slate-700 transition-colors group" data-expanded="${isSecExpanded}">
+                                <div class="flex items-center gap-4 flex-1 mr-4">
+                                    <input type="checkbox" onclick="event.stopPropagation()" onchange="toggleAdminSelect('${sec.id}')" ${adminSelected[sec.id] ? 'checked' : ''} class="w-5 h-5 cursor-pointer flex-shrink-0 text-secondary rounded border-slate-300 focus:ring-secondary">
+                                    <button onclick="toggleAdminExpand('${sec.id}')" class="text-slate-500 hover:text-secondary w-9 h-9 bg-white dark:bg-slate-700 border border-slate-300 dark:border-slate-600 shadow-sm flex items-center justify-center rounded-lg transition-colors"><i class="fa-solid ${chevronSec}"></i></button>
+                                    <input type="text" onchange="adminUpdateSec('${sec.id}', 'name', this.value)" value="${sec.name}" class="flex-1 bg-transparent border-none font-extrabold text-xl text-slate-800 dark:text-slate-100 focus:outline-none focus:ring-0 placeholder-slate-400" placeholder="Section Name">
+                                    ${getVisBadge(sec.visibility || 'visible')}
+                                </div>
+                                <div class="flex gap-3 items-center flex-shrink-0 opacity-0 group-hover:opacity-100 transition-opacity">
+                                    <div class="flex gap-1 pr-3 mr-1">
+                                        <button onclick="adminMoveSection(${i}, -1)" class="text-slate-400 hover:text-secondary p-1.5 rounded hover:bg-slate-200 dark:hover:bg-slate-700 ${i === 0 ? 'invisible' : ''}" title="Move Up"><i class="fa-solid fa-arrow-up text-sm"></i></button>
+                                        <button onclick="adminMoveSection(${i}, 1)" class="text-slate-400 hover:text-secondary p-1.5 rounded hover:bg-slate-200 dark:hover:bg-slate-700 ${i === appData.sections.length - 1 ? 'invisible' : ''}" title="Move Down"><i class="fa-solid fa-arrow-down text-sm"></i></button>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="${isSecExpanded ? 'p-6 bg-white dark:bg-darkCard' : 'hidden'}">
+                                <div class="mb-8 ml-2 bg-slate-50 dark:bg-slate-900/50 p-4 rounded-xl border border-slate-200 dark:border-slate-700">
+                                    <label class="${adminLabelCls}"><i class="fa-regular fa-image mr-1 text-secondary"></i> Section Background Image</label>
+                                    <input type="text" onchange="adminUpdateSec('${sec.id}', 'bgImage', this.value)" value="${sec.bgImage || ''}" class="${adminInputCls} font-mono" placeholder="G-Drive Link or URL (Leave empty for solid color)">
+                                </div>
+                                
+                                <div class="ml-4 pl-6 border-l-2 border-slate-200 dark:border-slate-700 relative">
+                                    <div class="absolute -left-[11px] top-0 bottom-0 flex flex-col justify-between py-2"><div class="w-5 h-px bg-slate-200 dark:bg-slate-700"></div><div class="w-5 h-px bg-slate-200 dark:bg-slate-700"></div></div>
+                                    <h4 class="text-sm font-bold mb-5 text-slate-500 dark:text-slate-400 uppercase tracking-wider flex items-center gap-2"><i class="fa-solid fa-layer-group"></i> Subsections</h4>
+                                    ${subsHtml}
+                                    <button onclick="adminAddSub('${sec.id}')" class="mt-4 w-full bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-slate-700 border border-slate-300 dark:border-slate-600 transition-colors px-4 py-3 rounded-xl font-bold shadow-sm flex items-center justify-center gap-2"><i class="fa-solid fa-plus"></i> Add New Subsection</button>
+                                </div>
+                            </div>
+                        </div>
+                    `;
+                }).join('');
+
+                html += `
                     <div class="bg-white dark:bg-darkCard p-6 md:p-8 rounded-2xl shadow-sm border border-slate-200 dark:border-slate-700 text-left relative overflow-hidden">
                         <div class="absolute top-0 left-0 w-1 h-full bg-gradient-to-b from-orange-500 to-amber-500"></div>
                         <div class="flex justify-between items-center mb-8 border-b border-slate-100 dark:border-slate-800 pb-4 text-left flex-wrap gap-4">
@@ -2386,8 +2505,11 @@
                         </div>
                         ${sectionsHtml || '<div class="p-12 text-center border-2 border-dashed border-slate-300 dark:border-slate-700 rounded-xl text-slate-500">No sections exist yet. Build your portfolio here!</div>'}
                     </div>
-                </div>
-            `;
+                `;
+            }
+            
+            html += '</div>';
+            return html;
         }
 
         function adminToggleRelatedTile(sId, ssId, tId, relatedId, isChecked) {
@@ -2512,14 +2634,18 @@
 
             renderApp();
             
-            const newScroller = document.getElementById('admin-scroll-container');
-            if (newScroller) newScroller.scrollTop = scrollPos;
-            
-            const newRelScroller = document.getElementById('related-tiles-scroller');
-            if (newRelScroller) newRelScroller.scrollTop = relScrollPos;
+            // Wait precisely 60ms to let all textareas calculate their auto-expanded height,
+            // THEN restore scroll position. This entirely prevents scroll jumping!
+            setTimeout(() => {
+                const newScroller = document.getElementById('admin-scroll-container');
+                if (newScroller) newScroller.scrollTop = scrollPos;
+                
+                const newRelScroller = document.getElementById('related-tiles-scroller');
+                if (newRelScroller) newRelScroller.scrollTop = relScrollPos;
 
-            const newSidePaneScroller = document.getElementById('admin-side-pane-scroller');
-            if (newSidePaneScroller) newSidePaneScroller.scrollTop = sidePaneScrollPos;
+                const newSidePaneScroller = document.getElementById('admin-side-pane-scroller');
+                if (newSidePaneScroller) newSidePaneScroller.scrollTop = sidePaneScrollPos;
+            }, 60);
         }
 
         function adminBulkAction(action) {
@@ -2588,6 +2714,10 @@
         function adminDeleteSub(sId, idx) { if(confirm("Delete subsection?")) { appData.sections.find(s=>s.id===sId).subsections.splice(idx, 1); adminRenderWithScroll(); } }
         function adminDeleteTile(sId, ssId, idx) { if(confirm("Delete tile?")) { appData.sections.find(s=>s.id===sId).subsections.find(ss=>ss.id===ssId).tiles.splice(idx, 1); adminRenderWithScroll(); } }
         
+        function adminAddFaq() { if(!appData.botKnowledge) appData.botKnowledge = []; appData.botKnowledge.push({id: generateId(), keywords: "", answer: ""}); adminRenderWithScroll(); }
+        function adminUpdateFaq(idx, prop, val) { appData.botKnowledge[idx][prop] = val; adminRenderWithScroll(); }
+        function adminDeleteFaq(idx) { if(confirm("Delete this FAQ?")) { appData.botKnowledge.splice(idx, 1); adminRenderWithScroll(); } }
+
         function adminUpdateRelatedTiles(sId, ssId, tId, selectElem) { const selected = Array.from(selectElem.selectedOptions).map(opt => opt.value); appData.sections.find(s=>s.id===sId).subsections.find(ss=>ss.id===ssId).tiles.find(t=>t.id===tId).relatedTiles = selected; adminRenderWithScroll(); }
         function adminAddMedia(sId, ssId, tId) { appData.sections.find(s=>s.id===sId).subsections.find(ss=>ss.id===ssId).tiles.find(t=>t.id===tId).mediaLinks.push(""); adminRenderWithScroll(); }
         function adminUpdateMedia(sId, ssId, tId, idx, val) { appData.sections.find(s=>s.id===sId).subsections.find(ss=>ss.id===ssId).tiles.find(t=>t.id===tId).mediaLinks[idx] = val; adminRenderWithScroll(); }
