@@ -757,16 +757,16 @@
             return `
                 <div id="global-dark-curtain"></div>
                 <header class="fixed top-0 left-0 w-full z-[60] bg-white/80 dark:bg-slate-900/80 backdrop-blur-md border-b border-slate-200 dark:border-slate-800 flex justify-between items-center p-3 md:px-6 h-16 shadow-sm text-left">
-                    <div class="flex items-center gap-4 md:gap-8 flex-1 overflow-visible text-left">
+                    <div class="flex items-center gap-4 md:gap-8 flex-1 overflow-visible text-left min-w-0">
                         <div class="flex-shrink-0 flex items-center cursor-pointer text-left" onclick="scrollToNavTarget('top')">
                             ${brandHtml}
                         </div>
                         
-                        <div class="hidden sm:flex relative items-center bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-full py-1.5 px-4 shadow-sm text-sm font-medium text-slate-700 dark:text-slate-200 text-left" id="header-nav-container">
-                            <div id="dynamic-breadcrumbs" class="flex items-center gap-2 mr-2 text-left whitespace-nowrap overflow-x-auto no-scrollbar transition-[width] duration-1000 ease-in-out scroll-smooth max-w-[350px] xl:max-w-[500px]">
-                                <span onclick="scrollToNavTarget('top')" class="hover:text-secondary cursor-pointer transition-colors text-left font-semibold">Overview</span>
+                        <div class="hidden sm:flex relative items-center bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-full py-1.5 px-4 shadow-sm text-sm font-medium text-slate-700 dark:text-slate-200 text-left flex-shrink-0 max-w-full" id="header-nav-container">
+                            <div id="dynamic-breadcrumbs" class="flex items-center gap-2 mr-2 text-left whitespace-nowrap overflow-x-auto no-scrollbar transition-[width] duration-1000 ease-in-out scroll-smooth pr-1">
+                                <span onclick="scrollToNavTarget('top')" class="hover:text-secondary cursor-pointer transition-colors text-left font-semibold flex-shrink-0 whitespace-nowrap">Overview</span>
                             </div>
-                            <button onclick="toggleNavMenu(event)" id="nav-dropdown-btn" class="border-l border-slate-300 dark:border-slate-600 pl-3 text-slate-400 hover:text-secondary transition-colors focus:outline-none flex items-center justify-center">
+                            <button onclick="toggleNavMenu(event)" id="nav-dropdown-btn" class="border-l border-slate-300 dark:border-slate-600 pl-3 ml-1 text-slate-400 hover:text-secondary transition-colors focus:outline-none flex items-center justify-center flex-shrink-0">
                                 <i class="fa-solid fa-chevron-down text-xs transition-transform duration-300" id="nav-dropdown-icon"></i>
                             </button>
                             
@@ -2052,7 +2052,7 @@
             document.querySelectorAll('.nav-menu-item').forEach(el => el.classList.remove('text-secondary', 'dark:text-blue-400'));
             if (viewMode === 'timeline') {
                 container.style.width = 'auto';
-                container.innerHTML = `<span class="text-slate-500 font-semibold cursor-default text-left">Timeline View</span>`;
+                container.innerHTML = `<span class="text-slate-500 font-semibold cursor-default text-left flex-shrink-0 whitespace-nowrap">Timeline View</span>`;
                 currentBreadcrumbId = 'timeline';
                 return;
             }
@@ -2078,12 +2078,12 @@
 
             let html = '';
             if (!secObj || secObj.id === 'top') {
-                html = `<span onclick="scrollToNavTarget('top')" class="hover:text-secondary cursor-pointer transition-colors text-left font-semibold">Overview</span>`;
+                html = `<span onclick="scrollToNavTarget('top')" class="hover:text-secondary cursor-pointer transition-colors text-left font-semibold flex-shrink-0 whitespace-nowrap">Overview</span>`;
             } else {
-                html = `<span onclick="scrollToNavTarget('nav-sec-${secObj.id}')" class="hover:text-secondary cursor-pointer transition-colors text-left font-semibold" title="${secObj.name}">${secObj.name}</span>`;
+                html = `<span onclick="scrollToNavTarget('nav-sec-${secObj.id}')" class="hover:text-secondary cursor-pointer transition-colors text-left font-semibold flex-shrink-0 whitespace-nowrap" title="${secObj.name}">${secObj.name}</span>`;
                 if (subObj) {
                     html += `<span class="text-slate-400 dark:text-slate-500 text-[10px] flex-shrink-0"><i class="fa-solid fa-chevron-right"></i></span>`;
-                    html += `<span onclick="scrollToNavTarget('nav-sub-${subObj.id}')" class="hover:text-secondary cursor-pointer transition-colors text-left font-semibold" title="${subObj.name}">${subObj.name}</span>`;
+                    html += `<span onclick="scrollToNavTarget('nav-sub-${subObj.id}')" class="hover:text-secondary cursor-pointer transition-colors text-left font-semibold flex-shrink-0 whitespace-nowrap" title="${subObj.name}">${subObj.name}</span>`;
                 }
             }
 
@@ -2096,10 +2096,10 @@
                 container.style.width = oldWidth + 'px';
                 container.offsetHeight; // Force reflow
                 container.style.transition = 'width 1s cubic-bezier(0.25, 1, 0.5, 1)';
-                container.style.width = newWidth + 'px';
+                container.style.width = (newWidth + 6) + 'px'; // +6px safety buffer to prevent edge-letter clipping
             } else {
                 container.style.transition = 'none';
-                container.style.width = newWidth + 'px';
+                container.style.width = (newWidth + 6) + 'px';
             }
         }
 
@@ -2278,16 +2278,16 @@
         }
 
         function renderAdminDashboard() {
-            let breadcrumbs = `<button onclick="adminNavigate([])" class="hover:text-secondary font-medium">Root (Global)</button>`;
+            let breadcrumbs = `<button onclick="adminNavigate([])" class="hover:text-secondary font-medium whitespace-nowrap">Root (Global)</button>`;
             
             if (adminPath.length === 3) {
                 const tile = getTileByAdminPath();
                 if (tile) {
                     const sec = appData.sections.find(s => s.id === adminPath[0]);
                     const sub = sec?.subsections.find(s => s.id === adminPath[1]);
-                    breadcrumbs += ` <i class="fa-solid fa-chevron-right text-xs mx-2 text-slate-400"></i> <span class="text-slate-400">${sec.name}</span>`;
-                    breadcrumbs += ` <i class="fa-solid fa-chevron-right text-xs mx-2 text-slate-400"></i> <span class="text-slate-400">${sub.name}</span>`;
-                    breadcrumbs += ` <i class="fa-solid fa-chevron-right text-xs mx-2 text-slate-400"></i> <span class="text-slate-400 truncate max-w-[150px] inline-block align-bottom">${getEffectiveHeading(tile)}</span>`;
+                    breadcrumbs += ` <i class="fa-solid fa-chevron-right text-xs mx-2 text-slate-400"></i> <span class="text-slate-400 whitespace-nowrap">${sec.name}</span>`;
+                    breadcrumbs += ` <i class="fa-solid fa-chevron-right text-xs mx-2 text-slate-400"></i> <span class="text-slate-400 whitespace-nowrap">${sub.name}</span>`;
+                    breadcrumbs += ` <i class="fa-solid fa-chevron-right text-xs mx-2 text-slate-400"></i> <span class="text-slate-400 whitespace-nowrap">${getEffectiveHeading(tile)}</span>`;
                 } else {
                     adminPath = []; 
                 }
@@ -2322,12 +2322,12 @@
                 <div class="h-screen w-full bg-slate-50 dark:bg-darkBg text-slate-800 dark:text-slate-200 flex flex-col text-left overflow-hidden">
                     <div class="bg-white dark:bg-darkCard p-4 border-b border-slate-200 dark:border-slate-800 flex justify-between items-center shrink-0 shadow-sm text-left z-[60] flex-wrap gap-4">
                         <div class="text-sm mr-4 text-left flex-1 flex items-center gap-4 min-w-0">
-                            <div class="whitespace-nowrap hidden lg:block truncate">${breadcrumbs}</div>
+                            <div class="whitespace-nowrap hidden lg:flex items-center overflow-x-auto no-scrollbar max-w-[500px]">${breadcrumbs}</div>
                             
                             <!-- Custom Admin Tab Navigation Pill -->
                             <div class="custom-dropdown-wrapper relative items-center bg-slate-100 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-full shadow-inner text-sm font-medium text-slate-700 dark:text-slate-200 text-left flex flex-shrink-0 min-w-[240px]">
                                 <button onclick="toggleCustomDropdown(event, 'admin-tab-menu')" class="w-full py-2 pl-5 pr-10 focus:outline-none cursor-pointer font-bold text-secondary dark:text-blue-400 flex items-center justify-between text-left">
-                                    <span id="admin-tab-label" class="truncate">${tabLabels[adminCurrentTab]}</span>
+                                    <span id="admin-tab-label" class="whitespace-nowrap flex-shrink-0">${tabLabels[adminCurrentTab]}</span>
                                     <i class="fa-solid fa-chevron-down absolute right-4 text-xs text-slate-500 pointer-events-none"></i>
                                 </button>
                                 <div id="admin-tab-menu" class="custom-dropdown hidden absolute top-[calc(100%+0.5rem)] left-0 w-full bg-white dark:bg-darkCard rounded-xl shadow-xl border border-slate-200 dark:border-slate-700 overflow-hidden z-[80] flex-col">
