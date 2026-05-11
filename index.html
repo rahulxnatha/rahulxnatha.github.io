@@ -37,13 +37,14 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
     <style>
-        /* Aesthetic Scrollbars */
-        ::-webkit-scrollbar { width: 12px; height: 12px; }
+        /* Sleek Modern Scrollbars */
+        ::-webkit-scrollbar { width: 8px; height: 8px; }
         ::-webkit-scrollbar-track { background: transparent; }
-        ::-webkit-scrollbar-thumb { background: #94a3b8; border-radius: 6px; border: 3px solid transparent; background-clip: padding-box; }
-        .dark ::-webkit-scrollbar-thumb { background: #64748b; border: 3px solid transparent; background-clip: padding-box; }
-        ::-webkit-scrollbar-thumb:hover { background: #64748b; }
-        .dark ::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
+        ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 9999px; }
+        .dark ::-webkit-scrollbar-thumb { background: #475569; }
+        ::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
+        .dark ::-webkit-scrollbar-thumb:hover { background: #64748b; }
+        ::-webkit-scrollbar-corner { background: transparent; }
         
         .no-scrollbar::-webkit-scrollbar { display: none; }
         .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
@@ -683,33 +684,50 @@
             const menu = document.getElementById('settings-menu');
             if(!menu) return;
 
+            const isDark = document.documentElement.classList.contains('dark');
+            const themeLabel = isDark ? 'Dark Mode' : 'Light Mode';
+            const layoutLabel = aps === 'dock' ? 'Docked (Split Screen)' : (aps === 'max' ? 'Maximized (Full Screen)' : 'Hidden');
+            const animLabel = reduceAnimations ? 'Disabled' : 'Enabled (Default)';
+
             menu.innerHTML = `
                 <h3 class="font-bold text-primary dark:text-white mb-5 border-b border-slate-100 dark:border-slate-800 pb-3 text-left flex items-center"><i class="fa-solid fa-sliders text-secondary mr-2"></i> Quick Settings</h3>
                 
                 <div class="space-y-5 text-left">
-                    <div>
+                    <div class="custom-dropdown-wrapper relative">
                         <label class="block text-sm font-semibold text-slate-700 dark:text-slate-300 mb-1 text-left">App Theme</label>
-                        <select onchange="setThemeMode(this.value)" class="w-full bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-lg py-2.5 px-3 text-sm font-medium text-slate-700 dark:text-slate-200 focus:outline-none focus:border-secondary shadow-sm appearance-none cursor-pointer">
-                            <option value="light" ${!document.documentElement.classList.contains('dark') ? 'selected' : ''}>Light Mode</option>
-                            <option value="dark" ${document.documentElement.classList.contains('dark') ? 'selected' : ''}>Dark Mode</option>
-                        </select>
+                        <button onclick="toggleCustomDropdown(event, 'theme-dropdown')" class="w-full flex items-center justify-between bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-lg py-2.5 px-3 text-sm font-medium text-slate-700 dark:text-slate-200 focus:outline-none focus:border-secondary shadow-sm transition-colors">
+                            <span id="theme-label">${themeLabel}</span>
+                            <i class="fa-solid fa-chevron-down text-xs text-slate-500"></i>
+                        </button>
+                        <div id="theme-dropdown" class="custom-dropdown hidden absolute top-full left-0 mt-1 w-full bg-white dark:bg-darkCard rounded-lg shadow-xl border border-slate-200 dark:border-slate-700 overflow-hidden z-[80] flex-col">
+                            <div onclick="setThemeMode('light'); closeCustomDropdowns()" class="dropdown-item p-3 hover:bg-slate-50 dark:hover:bg-slate-700 cursor-pointer text-sm font-medium transition-colors" data-selected="${!isDark}">Light Mode</div>
+                            <div onclick="setThemeMode('dark'); closeCustomDropdowns()" class="dropdown-item p-3 hover:bg-slate-50 dark:hover:bg-slate-700 cursor-pointer text-sm font-medium transition-colors" data-selected="${isDark}">Dark Mode</div>
+                        </div>
                     </div>
                     
-                    <div>
+                    <div class="custom-dropdown-wrapper relative">
                         <label class="block text-sm font-semibold text-slate-700 dark:text-slate-300 mb-1 text-left">Panel Layout</label>
-                        <select onchange="setAsideState(this.value)" class="w-full bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-lg py-2.5 px-3 text-sm font-medium text-slate-700 dark:text-slate-200 focus:outline-none focus:border-secondary shadow-sm appearance-none cursor-pointer">
-                            <option value="dock" ${aps === 'dock' ? 'selected' : ''}>Docked (Split Screen)</option>
-                            <option value="max" ${aps === 'max' ? 'selected' : ''}>Maximized (Full Screen)</option>
-                            <option value="closed" ${aps === 'closed' ? 'selected' : ''}>Hidden</option>
-                        </select>
+                        <button onclick="toggleCustomDropdown(event, 'layout-dropdown')" class="w-full flex items-center justify-between bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-lg py-2.5 px-3 text-sm font-medium text-slate-700 dark:text-slate-200 focus:outline-none focus:border-secondary shadow-sm transition-colors">
+                            <span id="layout-label">${layoutLabel}</span>
+                            <i class="fa-solid fa-chevron-down text-xs text-slate-500"></i>
+                        </button>
+                        <div id="layout-dropdown" class="custom-dropdown hidden absolute top-full left-0 mt-1 w-full bg-white dark:bg-darkCard rounded-lg shadow-xl border border-slate-200 dark:border-slate-700 overflow-hidden z-[80] flex-col">
+                            <div onclick="setAsideState('dock'); closeCustomDropdowns()" class="dropdown-item p-3 hover:bg-slate-50 dark:hover:bg-slate-700 cursor-pointer text-sm font-medium transition-colors" data-selected="${aps === 'dock'}">Docked (Split Screen)</div>
+                            <div onclick="setAsideState('max'); closeCustomDropdowns()" class="dropdown-item p-3 hover:bg-slate-50 dark:hover:bg-slate-700 cursor-pointer text-sm font-medium transition-colors" data-selected="${aps === 'max'}">Maximized (Full Screen)</div>
+                            <div onclick="setAsideState('closed'); closeCustomDropdowns()" class="dropdown-item p-3 hover:bg-slate-50 dark:hover:bg-slate-700 cursor-pointer text-sm font-medium transition-colors" data-selected="${aps === 'closed'}">Hidden</div>
+                        </div>
                     </div>
 
-                    <div>
+                    <div class="custom-dropdown-wrapper relative">
                         <label class="block text-sm font-semibold text-slate-700 dark:text-slate-300 mb-1 text-left">Reduce Animations</label>
-                        <select onchange="setReduceAnimations(this.value === 'true')" class="w-full bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-lg py-2.5 px-3 text-sm font-medium text-slate-700 dark:text-slate-200 focus:outline-none focus:border-secondary shadow-sm appearance-none cursor-pointer">
-                            <option value="false" ${!reduceAnimations ? 'selected' : ''}>Enabled (Default)</option>
-                            <option value="true" ${reduceAnimations ? 'selected' : ''}>Disabled</option>
-                        </select>
+                        <button onclick="toggleCustomDropdown(event, 'anim-dropdown')" class="w-full flex items-center justify-between bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-lg py-2.5 px-3 text-sm font-medium text-slate-700 dark:text-slate-200 focus:outline-none focus:border-secondary shadow-sm transition-colors">
+                            <span id="anim-label">${animLabel}</span>
+                            <i class="fa-solid fa-chevron-down text-xs text-slate-500"></i>
+                        </button>
+                        <div id="anim-dropdown" class="custom-dropdown hidden absolute top-full left-0 mt-1 w-full bg-white dark:bg-darkCard rounded-lg shadow-xl border border-slate-200 dark:border-slate-700 overflow-hidden z-[80] flex-col">
+                            <div onclick="setReduceAnimations(false); closeCustomDropdowns()" class="dropdown-item p-3 hover:bg-slate-50 dark:hover:bg-slate-700 cursor-pointer text-sm font-medium transition-colors" data-selected="${!reduceAnimations}">Enabled (Default)</div>
+                            <div onclick="setReduceAnimations(true); closeCustomDropdowns()" class="dropdown-item p-3 hover:bg-slate-50 dark:hover:bg-slate-700 cursor-pointer text-sm font-medium transition-colors" data-selected="${reduceAnimations}">Disabled</div>
+                        </div>
                     </div>
                 </div>
             `;
@@ -745,14 +763,14 @@
                         </div>
                         
                         <div class="hidden sm:flex relative items-center bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-full py-1.5 px-4 shadow-sm text-sm font-medium text-slate-700 dark:text-slate-200 text-left" id="header-nav-container">
-                            <div id="dynamic-breadcrumbs" class="flex items-center gap-2 mr-2 text-left whitespace-nowrap overflow-visible transition-[width] duration-1000 ease-in-out">
+                            <div id="dynamic-breadcrumbs" class="flex items-center gap-2 mr-2 text-left whitespace-nowrap overflow-x-auto no-scrollbar transition-[width] duration-1000 ease-in-out scroll-smooth max-w-[350px] xl:max-w-[500px]">
                                 <span onclick="scrollToNavTarget('top')" class="hover:text-secondary cursor-pointer transition-colors text-left font-semibold">Overview</span>
                             </div>
                             <button onclick="toggleNavMenu(event)" id="nav-dropdown-btn" class="border-l border-slate-300 dark:border-slate-600 pl-3 text-slate-400 hover:text-secondary transition-colors focus:outline-none flex items-center justify-center">
                                 <i class="fa-solid fa-chevron-down text-xs transition-transform duration-300" id="nav-dropdown-icon"></i>
                             </button>
                             
-                            <div id="custom-nav-menu" class="absolute top-[calc(100%+0.75rem)] left-0 w-72 bg-white dark:bg-darkCard rounded-xl shadow-xl border border-slate-200 dark:border-slate-700 overflow-hidden z-50 flex-col max-h-[70vh] overflow-y-auto text-left transform opacity-0 scale-95 transition-all duration-200 origin-top-left invisible">
+                            <div id="custom-nav-menu" class="absolute top-[calc(100%+0.75rem)] left-0 w-72 bg-white dark:bg-darkCard rounded-xl shadow-xl border border-slate-200 dark:border-slate-700 overflow-hidden z-50 flex-col max-h-[70vh] overflow-y-auto text-left transform opacity-0 scale-95 transition-all duration-200 origin-top-left invisible scroll-smooth">
                                 ${dropdownMenuHtml}
                             </div>
                         </div>
@@ -1311,21 +1329,75 @@
         function setReduceAnimations(val) {
             reduceAnimations = val;
             localStorage.setItem('reduceAnimations', JSON.stringify(val));
+            updateSettingsMenuHTML();
         }
 
-        // Global scroll interceptor for dropdowns
+        function switchAdminTab(tabId) {
+            adminCurrentTab = tabId;
+            const container = document.getElementById('admin-tab-content');
+            if (container) {
+                container.innerHTML = renderAdminRoot();
+                // Ensure textareas resize properly inside the new tab content
+                setTimeout(() => {
+                    document.querySelectorAll('textarea.auto-expand').forEach(el => {
+                        el.style.height = 'auto';
+                        el.style.height = (el.scrollHeight) + 'px';
+                    });
+                }, 50);
+            }
+            // Update custom dropdown label
+            const labelEl = document.getElementById('admin-tab-label');
+            if(labelEl) {
+                const map = { 'architecture': 'Content Architecture', 'seo': 'SEO & Meta Tags', 'hero': 'Landing Page (Hero)', 'ui': 'Global UI & Contact', 'bot': 'Chatbot Knowledge Base', 'health': 'Platform Health Check' };
+                labelEl.innerText = map[tabId];
+            }
+        }
+
+        function toggleCustomDropdown(e, id) {
+            if(e) e.stopPropagation();
+            document.querySelectorAll('.custom-dropdown').forEach(el => {
+                if (el.id !== id) el.classList.add('hidden');
+            });
+            const el = document.getElementById(id);
+            if (el) el.classList.toggle('hidden');
+        }
+
+        function closeCustomDropdowns() {
+            document.querySelectorAll('.custom-dropdown').forEach(el => el.classList.add('hidden'));
+        }
+
+        // Global scroll interceptor for custom dropdowns
         document.addEventListener('wheel', (e) => {
-            const target = e.target.closest('select');
-            if (target) {
+            const customWrapper = e.target.closest('.custom-dropdown-wrapper');
+            if (customWrapper) {
                 e.preventDefault();
+                const items = Array.from(customWrapper.querySelectorAll('.dropdown-item'));
+                if (items.length === 0) return;
+                
+                let currentActiveIndex = items.findIndex(item => item.getAttribute('data-selected') === 'true');
+                if (currentActiveIndex === -1) currentActiveIndex = 0;
+                
                 const delta = Math.sign(e.deltaY);
-                let nextIdx = target.selectedIndex + delta;
-                if (nextIdx >= 0 && nextIdx < target.options.length) {
-                    target.selectedIndex = nextIdx;
-                    target.dispatchEvent(new Event('change'));
+                let nextIdx = currentActiveIndex + delta;
+                
+                if (nextIdx >= 0 && nextIdx < items.length) {
+                    items[nextIdx].click(); 
                 }
             }
         }, { passive: false });
+
+        document.addEventListener('DOMContentLoaded', () => {
+            // Setup horizontal scrolling with vertical mouse wheel for dynamic breadcrumbs
+            const breadcrumbContainer = document.getElementById('dynamic-breadcrumbs');
+            if (breadcrumbContainer) {
+                breadcrumbContainer.addEventListener('wheel', (e) => {
+                    if (e.deltaY !== 0) {
+                        e.preventDefault();
+                        breadcrumbContainer.scrollLeft += e.deltaY;
+                    }
+                }, { passive: false });
+            }
+        });
 
         document.addEventListener('click', (e) => {
             // Critical fix: Ignore clicks originating from elements that were just removed from the DOM 
@@ -1344,8 +1416,8 @@
                 toggleNavMenu(null, false);
             }
             
-            // Close pill dropdowns when clicking outside
-            document.querySelectorAll('.pill-dropdown-content').forEach(el => {
+            // Close pill dropdowns and custom dropdowns when clicking outside
+            document.querySelectorAll('.pill-dropdown-content, .custom-dropdown').forEach(el => {
                 if (!el.classList.contains('hidden') && !el.parentElement.contains(e.target)) {
                     el.classList.add('hidden');
                 }
@@ -1364,6 +1436,12 @@
                 menu.classList.remove('invisible', 'opacity-0', 'scale-95', 'pointer-events-none');
                 menu.classList.add('opacity-100', 'scale-100');
                 icon.style.transform = 'rotate(180deg)';
+                
+                // Auto-scroll the dropdown to the currently highlighted item
+                setTimeout(() => {
+                    const activeItem = menu.querySelector('.text-secondary.dark\\:text-blue-400');
+                    if (activeItem) activeItem.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+                }, 50);
             } else {
                 menu.classList.add('opacity-0', 'scale-95', 'pointer-events-none');
                 menu.classList.remove('opacity-100', 'scale-100');
@@ -2180,6 +2258,24 @@
             adminSelected = {};
             adminRenderWithScroll();
         }
+        
+        function adminToggleTheme() {
+            const isDark = !document.documentElement.classList.contains('dark');
+            setTheme(isDark);
+            syncStateToURL();
+            
+            // Direct DOM manipulation prevents rendering stutter in Admin View
+            const toggleBg = document.getElementById('admin-theme-toggle-bg');
+            const toggleKnob = document.getElementById('admin-theme-toggle-knob');
+            
+            if (isDark) {
+                if(toggleBg) toggleBg.className = "relative inline-flex h-6 w-12 flex-shrink-0 items-center rounded-full transition-colors focus:outline-none bg-secondary shadow-inner";
+                if(toggleKnob) toggleKnob.className = "inline-block h-4 w-4 transform rounded-full bg-white transition-transform duration-200 ease-in-out translate-x-6 shadow-sm";
+            } else {
+                if(toggleBg) toggleBg.className = "relative inline-flex h-6 w-12 flex-shrink-0 items-center rounded-full transition-colors focus:outline-none bg-slate-300 shadow-inner";
+                if(toggleKnob) toggleKnob.className = "inline-block h-4 w-4 transform rounded-full bg-white transition-transform duration-200 ease-in-out translate-x-1 shadow-sm";
+            }
+        }
 
         function renderAdminDashboard() {
             let breadcrumbs = `<button onclick="adminNavigate([])" class="hover:text-secondary font-medium">Root (Global)</button>`;
@@ -2199,7 +2295,9 @@
 
             const isDark = document.documentElement.classList.contains('dark');
             const themeToggleKnobClass = isDark ? 'translate-x-6' : 'translate-x-1';
-            const themeToggleBgClass = isDark ? 'bg-secondary' : 'bg-slate-300 dark:bg-slate-600';
+            const themeToggleBgClass = isDark ? 'bg-secondary' : 'bg-slate-300';
+            
+            const tabLabels = { 'architecture': 'Content Architecture', 'seo': 'SEO & Meta Tags', 'hero': 'Landing Page (Hero)', 'ui': 'Global UI & Contact', 'bot': 'Chatbot Knowledge Base', 'health': 'Platform Health Check' };
 
             let bulkToolbar = '';
             const selCount = Object.keys(adminSelected).length;
@@ -2226,24 +2324,28 @@
                         <div class="text-sm mr-4 text-left flex-1 flex items-center gap-4 min-w-0">
                             <div class="whitespace-nowrap hidden lg:block truncate">${breadcrumbs}</div>
                             
-                            <!-- Admin Tab Navigation Pill -->
-                            <div class="relative items-center bg-slate-100 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-full shadow-inner text-sm font-medium text-slate-700 dark:text-slate-200 text-left flex flex-shrink-0 max-w-full">
-                                <select onchange="adminCurrentTab=this.value; adminNavigate([])" class="appearance-none bg-transparent py-2 pl-5 pr-10 focus:outline-none cursor-pointer font-bold text-secondary dark:text-blue-400 w-full">
-                                    <option value="architecture" ${adminCurrentTab === 'architecture' ? 'selected' : ''}>Content Architecture</option>
-                                    <option value="seo" ${adminCurrentTab === 'seo' ? 'selected' : ''}>SEO & Meta Tags</option>
-                                    <option value="hero" ${adminCurrentTab === 'hero' ? 'selected' : ''}>Landing Page (Hero)</option>
-                                    <option value="ui" ${adminCurrentTab === 'ui' ? 'selected' : ''}>Global UI & Contact</option>
-                                    <option value="bot" ${adminCurrentTab === 'bot' ? 'selected' : ''}>Chatbot Knowledge Base</option>
-                                </select>
-                                <i class="fa-solid fa-chevron-down absolute right-4 top-1/2 transform -translate-y-1/2 text-xs text-slate-500 pointer-events-none"></i>
+                            <!-- Custom Admin Tab Navigation Pill -->
+                            <div class="custom-dropdown-wrapper relative items-center bg-slate-100 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-full shadow-inner text-sm font-medium text-slate-700 dark:text-slate-200 text-left flex flex-shrink-0 min-w-[240px]">
+                                <button onclick="toggleCustomDropdown(event, 'admin-tab-menu')" class="w-full py-2 pl-5 pr-10 focus:outline-none cursor-pointer font-bold text-secondary dark:text-blue-400 flex items-center justify-between text-left">
+                                    <span id="admin-tab-label" class="truncate">${tabLabels[adminCurrentTab]}</span>
+                                    <i class="fa-solid fa-chevron-down absolute right-4 text-xs text-slate-500 pointer-events-none"></i>
+                                </button>
+                                <div id="admin-tab-menu" class="custom-dropdown hidden absolute top-[calc(100%+0.5rem)] left-0 w-full bg-white dark:bg-darkCard rounded-xl shadow-xl border border-slate-200 dark:border-slate-700 overflow-hidden z-[80] flex-col">
+                                    <div onclick="switchAdminTab('architecture'); closeCustomDropdowns(); adminNavigate([])" class="dropdown-item p-3 hover:bg-slate-50 dark:hover:bg-slate-700 cursor-pointer font-semibold transition-colors" data-selected="${adminCurrentTab === 'architecture'}">Content Architecture</div>
+                                    <div onclick="switchAdminTab('seo'); closeCustomDropdowns(); adminNavigate([])" class="dropdown-item p-3 hover:bg-slate-50 dark:hover:bg-slate-700 cursor-pointer font-semibold transition-colors" data-selected="${adminCurrentTab === 'seo'}">SEO & Meta Tags</div>
+                                    <div onclick="switchAdminTab('hero'); closeCustomDropdowns(); adminNavigate([])" class="dropdown-item p-3 hover:bg-slate-50 dark:hover:bg-slate-700 cursor-pointer font-semibold transition-colors" data-selected="${adminCurrentTab === 'hero'}">Landing Page (Hero)</div>
+                                    <div onclick="switchAdminTab('ui'); closeCustomDropdowns(); adminNavigate([])" class="dropdown-item p-3 hover:bg-slate-50 dark:hover:bg-slate-700 cursor-pointer font-semibold transition-colors" data-selected="${adminCurrentTab === 'ui'}">Global UI & Contact</div>
+                                    <div onclick="switchAdminTab('bot'); closeCustomDropdowns(); adminNavigate([])" class="dropdown-item p-3 hover:bg-slate-50 dark:hover:bg-slate-700 cursor-pointer font-semibold transition-colors" data-selected="${adminCurrentTab === 'bot'}">Chatbot Knowledge Base</div>
+                                    <div onclick="switchAdminTab('health'); closeCustomDropdowns(); adminNavigate([])" class="dropdown-item p-3 bg-rose-50/50 hover:bg-rose-100 dark:bg-rose-900/10 dark:hover:bg-rose-900/30 text-rose-600 dark:text-rose-400 cursor-pointer font-bold transition-colors border-t border-slate-100 dark:border-slate-700" data-selected="${adminCurrentTab === 'health'}"><i class="fa-solid fa-heart-pulse mr-1"></i> Platform Health Check</div>
+                                </div>
                             </div>
                         </div>
 
                         <div class="flex gap-3 flex-shrink-0 text-left items-center">
                             <div class="hidden sm:flex items-center mr-2 border-r border-slate-200 dark:border-slate-700 pr-4">
                                 <span class="text-xs font-semibold mr-2 opacity-70">Dark Mode</span>
-                                <button onclick="toggleUserTheme()" class="relative inline-flex h-6 w-12 flex-shrink-0 items-center rounded-full transition-colors focus:outline-none ${themeToggleBgClass}">
-                                    <span class="inline-block h-4 w-4 transform rounded-full bg-white transition-transform duration-200 ease-in-out ${themeToggleKnobClass} shadow-sm"></span>
+                                <button onclick="adminToggleTheme()" id="admin-theme-toggle-bg" class="relative inline-flex h-6 w-12 flex-shrink-0 items-center rounded-full transition-colors focus:outline-none shadow-inner ${themeToggleBgClass}">
+                                    <span id="admin-theme-toggle-knob" class="inline-block h-4 w-4 transform rounded-full bg-white transition-transform duration-200 ease-in-out shadow-sm ${themeToggleKnobClass}"></span>
                                 </button>
                             </div>
                             <button onclick="window.location.hash=''" class="px-4 py-2 bg-slate-200 dark:bg-slate-700 rounded text-sm font-medium hover:bg-slate-300 dark:hover:bg-slate-600 transition-colors text-left">Exit</button>
@@ -2253,7 +2355,9 @@
                     
                     <div class="flex flex-1 overflow-hidden relative">
                         <div id="admin-scroll-container" class="flex-1 w-full p-4 md:p-8 overflow-y-auto pb-32 text-left relative">
-                            ${renderAdminRoot()}
+                            <div id="admin-tab-content" class="w-full">
+                                ${renderAdminRoot()}
+                            </div>
                         </div>
                         
                         <!-- Smooth Side Pane Editor (Only shown when drilling down into a tile) -->
@@ -2282,8 +2386,8 @@
                     <div class="bg-white dark:bg-darkCard p-6 md:p-8 rounded-2xl shadow-sm border border-slate-200 dark:border-slate-700 text-left relative overflow-hidden">
                         <div class="absolute top-0 left-0 w-1 h-full bg-gradient-to-b from-blue-500 to-indigo-500"></div>
                         <h3 class="text-xl font-bold mb-6 border-b border-slate-100 dark:border-slate-800 pb-3 flex items-center gap-3"><div class="w-8 h-8 rounded-lg bg-blue-50 dark:bg-blue-900/30 text-secondary flex items-center justify-center"><i class="fa-solid fa-magnifying-glass"></i></div> SEO & Social Meta Tags</h3>
-                        <p class="text-xs text-slate-500 dark:text-slate-400 mb-6 bg-slate-50 dark:bg-slate-900 p-3 rounded-lg border border-slate-200 dark:border-slate-700"><i class="fa-solid fa-circle-info text-secondary mr-1"></i> <strong>Note:</strong> WhatsApp & iMessage preview scrapers do not run JavaScript. To see previews on those apps, you must also manually copy these values into the raw <code class="bg-slate-200 dark:bg-slate-700 px-1 rounded">&lt;head&gt;</code> tags of your index.html file in your code editor.</p>
-                        <div class="grid grid-cols-1 md:grid-cols-2 gap-5 w-full text-left">
+                        <p class="text-xs text-slate-500 dark:text-slate-400 mb-6 bg-slate-50 dark:bg-slate-900 p-3 rounded-lg border border-slate-200 dark:border-slate-700 max-w-3xl"><i class="fa-solid fa-circle-info text-secondary mr-1"></i> <strong>Note:</strong> WhatsApp & iMessage preview scrapers do not run JavaScript. To see previews on those apps, you must also manually copy these values into the raw <code class="bg-slate-200 dark:bg-slate-700 px-1 rounded">&lt;head&gt;</code> tags of your index.html file in your code editor.</p>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-5 w-full text-left max-w-3xl">
                             <div class="text-left space-y-1.5"><label class="${adminLabelCls}">Document Title</label><input type="text" onchange="appData.seo.title=this.value" value="${seo.title || appData.uiText.siteTitle}" class="${adminInputCls}"></div>
                             <div class="text-left space-y-1.5"><label class="${adminLabelCls}">Open Graph Image (G-Drive or URL)</label><input type="text" onchange="appData.seo.image=this.value" value="${seo.image || ''}" class="${adminInputCls} font-mono" placeholder="Fallback to Hero Background"></div>
                             <div class="md:col-span-2 text-left space-y-1.5"><label class="${adminLabelCls}">Search Engine Description</label><textarea rows="3" oninput="this.style.height='auto';this.style.height=this.scrollHeight+'px'" onchange="appData.seo.description=this.value" class="auto-expand ${adminInputCls} resize-y">${seo.description || appData.hero.bio}</textarea></div>
@@ -2295,7 +2399,7 @@
                     <div class="bg-white dark:bg-darkCard p-6 md:p-8 rounded-2xl shadow-sm border border-slate-200 dark:border-slate-700 text-left relative overflow-hidden">
                         <div class="absolute top-0 left-0 w-1 h-full bg-gradient-to-b from-purple-500 to-pink-500"></div>
                         <h3 class="text-xl font-bold mb-6 border-b border-slate-100 dark:border-slate-800 pb-3 flex items-center gap-3"><div class="w-8 h-8 rounded-lg bg-purple-50 dark:bg-purple-900/30 text-purple-500 flex items-center justify-center"><i class="fa-solid fa-image"></i></div> Landing Page (Hero)</h3>
-                        <div class="grid grid-cols-1 md:grid-cols-2 gap-5 w-full text-left">
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-5 w-full text-left max-w-3xl">
                             <div class="text-left space-y-1.5"><label class="${adminLabelCls}">Full Name</label><input type="text" onchange="appData.hero.name=this.value" value="${hero.name}" class="${adminInputCls}"></div>
                             <div class="text-left space-y-1.5"><label class="${adminLabelCls}">Animated Sentences (Comma separated)</label><input type="text" onchange="appData.hero.animatedTitles=this.value" value="${hero.animatedTitles}" class="${adminInputCls}"></div>
                             <div class="md:col-span-2 text-left space-y-1.5"><label class="${adminLabelCls}">Short Bio</label><textarea rows="3" oninput="this.style.height='auto';this.style.height=this.scrollHeight+'px'" onchange="appData.hero.bio=this.value" class="auto-expand ${adminInputCls} resize-y">${hero.bio}</textarea></div>
@@ -2309,7 +2413,7 @@
                     <div class="bg-white dark:bg-darkCard p-6 md:p-8 rounded-2xl shadow-sm border border-slate-200 dark:border-slate-700 text-left relative overflow-hidden">
                         <div class="absolute top-0 left-0 w-1 h-full bg-gradient-to-b from-green-500 to-emerald-500"></div>
                         <h3 class="text-xl font-bold mb-6 border-b border-slate-100 dark:border-slate-800 pb-3 flex items-center gap-3"><div class="w-8 h-8 rounded-lg bg-green-50 dark:bg-green-900/30 text-green-500 flex items-center justify-center"><i class="fa-solid fa-address-card"></i></div> Global UI Text & Contact</h3>
-                        <div class="grid grid-cols-1 md:grid-cols-2 gap-5 w-full text-left">
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-5 w-full text-left max-w-3xl">
                             <div class="text-left space-y-1.5 md:col-span-2"><label class="${adminLabelCls}">Branding Logo (G-Drive Link or Image URL)</label><input type="text" onchange="appData.uiText.brandLogo=this.value" value="${ui.brandLogo || ''}" placeholder="Leave empty to use Site Title text" class="${adminInputCls} font-mono"></div>
                             <div class="text-left space-y-1.5"><label class="${adminLabelCls}">Site Title (Fallback)</label><input type="text" onchange="appData.uiText.siteTitle=this.value" value="${ui.siteTitle}" class="${adminInputCls}"></div>
                             <div class="text-left space-y-1.5"><label class="${adminLabelCls}">Chatbot Name</label><input type="text" onchange="appData.uiText.botName=this.value" value="${ui.botName}" class="${adminInputCls}"></div>
@@ -2326,7 +2430,7 @@
                         <div class="absolute top-0 left-0 w-1 h-full bg-gradient-to-b from-teal-500 to-cyan-500"></div>
                         <h3 class="text-xl font-bold mb-6 border-b border-slate-100 dark:border-slate-800 pb-3 flex items-center gap-3"><div class="w-8 h-8 rounded-lg bg-teal-50 dark:bg-teal-900/30 text-teal-500 flex items-center justify-center"><i class="fa-solid fa-brain"></i></div> Chatbot Knowledge Base (FAQs)</h3>
                         
-                        <div class="mb-8 p-5 bg-slate-50 dark:bg-slate-900/50 border border-slate-200 dark:border-slate-700 rounded-xl space-y-4 text-left">
+                        <div class="mb-8 p-5 bg-slate-50 dark:bg-slate-900/50 border border-slate-200 dark:border-slate-700 rounded-xl space-y-4 text-left max-w-3xl">
                             <h4 class="font-bold text-slate-700 dark:text-slate-300 text-sm mb-3">Bot Personality & Defaults</h4>
                             <div>
                                 <label class="${adminLabelCls}">Default Greeting ("hi", "hello")</label>
@@ -2342,8 +2446,8 @@
                             </div>
                         </div>
 
-                        <p class="text-sm text-slate-500 mb-6">Train your chatbot to answer custom intent-based questions that recruiters and professors frequently ask.</p>
-                        <div class="space-y-4 w-full">
+                        <p class="text-sm text-slate-500 mb-6 max-w-3xl">Train your chatbot to answer custom intent-based questions that recruiters and professors frequently ask.</p>
+                        <div class="space-y-4 w-full max-w-3xl">
                             ${(appData.botKnowledge || []).map((faq, idx) => `
                                 <div class="p-4 bg-slate-50 dark:bg-slate-900/50 border border-slate-200 dark:border-slate-700 rounded-xl relative group transition-colors hover:border-slate-300 dark:hover:border-slate-600">
                                     <button onclick="adminDeleteFaq(${idx})" class="absolute top-3 right-3 text-slate-400 hover:text-red-500 transition-colors bg-white dark:bg-slate-800 rounded shadow-sm w-8 h-8 flex items-center justify-center opacity-0 group-hover:opacity-100"><i class="fa-solid fa-trash text-xs"></i></button>
@@ -2358,7 +2462,61 @@
                                 </div>
                             `).join('')}
                         </div>
-                        <button onclick="adminAddFaq()" class="mt-6 bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-slate-700 border border-slate-300 dark:border-slate-600 px-5 py-3 rounded-xl font-bold text-sm transition-colors flex items-center gap-2 shadow-sm w-full md:w-auto justify-center"><i class="fa-solid fa-plus"></i> Add New Recruiter FAQ</button>
+                        <button onclick="adminAddFaq()" class="mt-6 bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-slate-700 border border-slate-300 dark:border-slate-600 px-5 py-3 rounded-xl font-bold text-sm transition-colors flex items-center gap-2 shadow-sm w-full max-w-3xl justify-center"><i class="fa-solid fa-plus"></i> Add New Recruiter FAQ</button>
+                    </div>
+                `;
+            } else if (adminCurrentTab === 'health') {
+                let issues = []; let warnings = []; let good = [];
+
+                if (GOOGLE_SCRIPT_URL) good.push("Cloud Database connected successfully.");
+                else issues.push("Google Script URL is missing. Cloud saving is totally disabled.");
+
+                if (passcode && passcode.length >= 4) good.push("Security Passcode is active.");
+                else warnings.push("Security Passcode is dangerously short or missing.");
+
+                if (appData.seo.title && appData.seo.description) good.push("SEO Meta Tags are populated.");
+                else warnings.push("SEO Metadata is incomplete. Search engines will struggle to index you.");
+
+                if (appData.hero.name && appData.hero.bio) good.push("Landing Page Hero content is solid.");
+                else issues.push("Hero Section is missing your Name or Bio.");
+
+                let emptySections = 0; let emptyTiles = 0; let invalidLinks = 0;
+                appData.sections.forEach(sec => {
+                    if (sec.subsections.length === 0) emptySections++;
+                    sec.subsections.forEach(sub => {
+                        if (sub.tiles.length === 0) emptySections++;
+                        sub.tiles.forEach(t => {
+                            if (!t.heading && !t.role && !t.employer) emptyTiles++;
+                            if (t.bgImage && !t.bgImage.includes('drive.google.com') && !t.bgImage.startsWith('http')) invalidLinks++;
+                        });
+                    });
+                });
+
+                if (emptySections > 0) warnings.push(`${emptySections} Sections/Subsections are completely empty and should be deleted or hidden.`);
+                else good.push("Content Architecture is well-structured with no empty containers.");
+
+                if (emptyTiles > 0) issues.push(`${emptyTiles} Tiles are missing critical identification (Heading, Role, or Employer).`);
+                else good.push("All Tiles have proper identification strings.");
+
+                if (invalidLinks > 0) warnings.push(`${invalidLinks} Tile Backgrounds use malformed links. Stick to Google Drive sharing links or raw image URLs.`);
+
+                const totalChecks = issues.length + warnings.length + good.length;
+                const score = Math.round((good.length / totalChecks) * 100) || 100;
+                let scoreColor = score > 80 ? 'text-green-500' : (score > 50 ? 'text-amber-500' : 'text-red-500');
+
+                html += `
+                    <div class="bg-white dark:bg-darkCard p-6 md:p-8 rounded-2xl shadow-sm border border-slate-200 dark:border-slate-700 text-left relative overflow-hidden max-w-4xl mx-auto mt-4">
+                        <div class="absolute top-0 left-0 w-1 h-full bg-gradient-to-b from-rose-500 to-red-500"></div>
+                        <div class="flex items-center justify-between mb-8 border-b border-slate-100 dark:border-slate-800 pb-4">
+                            <h3 class="text-2xl font-bold flex items-center gap-3"><div class="w-10 h-10 rounded-lg bg-rose-50 dark:bg-rose-900/30 text-rose-500 flex items-center justify-center"><i class="fa-solid fa-heart-pulse"></i></div> Platform Health Check</h3>
+                            <div class="text-4xl font-black ${scoreColor}">${score}%</div>
+                        </div>
+
+                        <div class="grid grid-cols-1 gap-4 text-left">
+                            ${issues.map(i => `<div class="p-5 bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-xl flex items-start gap-4 shadow-sm"><i class="fa-solid fa-circle-xmark text-red-500 text-lg mt-0.5"></i><span class="text-sm font-semibold text-red-700 dark:text-red-400 leading-relaxed">${i}</span></div>`).join('')}
+                            ${warnings.map(w => `<div class="p-5 bg-amber-50 dark:bg-amber-900/20 border border-amber-200 dark:border-amber-800 rounded-xl flex items-start gap-4 shadow-sm"><i class="fa-solid fa-triangle-exclamation text-amber-500 text-lg mt-0.5"></i><span class="text-sm font-semibold text-amber-700 dark:text-amber-400 leading-relaxed">${w}</span></div>`).join('')}
+                            ${good.map(g => `<div class="p-5 bg-green-50 dark:bg-green-900/20 border border-green-200 dark:border-green-800 rounded-xl flex items-start gap-4 shadow-sm"><i class="fa-solid fa-circle-check text-green-500 text-lg mt-0.5"></i><span class="text-sm font-semibold text-green-700 dark:text-green-400 leading-relaxed">${g}</span></div>`).join('')}
+                        </div>
                     </div>
                 `;
             } else if (adminCurrentTab === 'architecture') {
