@@ -198,13 +198,18 @@
         let db = { users: {}, chats: {} };
         let activeChatId = null;
         let pollInterval = null;
+        let pendingRoomId = null;
 
         // Auto-Login Check via URL Parameter
         const urlParams = new URLSearchParams(window.location.search);
         const autoLoginKey = urlParams.get('key');
+        const autoLoginRoom = urlParams.get('room');
 
         if (autoLoginKey) {
             currentUserKey = autoLoginKey;
+            if (autoLoginRoom) {
+                pendingRoomId = autoLoginRoom;
+            }
             // Clean the URL bar so the secret key isn't lingering visually
             window.history.replaceState({}, document.title, window.location.pathname);
         } else {
@@ -235,6 +240,35 @@
             setTimeout(() => {
                 toast.classList.add('translate-y-10', 'opacity-0');
             }, 3000);
+        }
+
+        function playNotificationSound() {
+            try {
+                const audio = new Audio('https://actions.google.com/sounds/v1/communication/pop_up_notification.ogg');
+                audio.volume = 0.5;
+                audio.play().catch(e => {}); 
+            } catch (e) {}
+        }
+
+        function notifyUser(chatName, senderName, text) {
+            playNotificationSound();
+            if ("Notification" in window && Notification.permission === "granted" && document.hidden) {
+                const notification = new Notification(`New message in ${chatName}`, {
+                    body: `${senderName}: ${text}`
+                });
+                notification.onclick = function() {
+                    window.focus();
+                    this.close();
+                };
+            } else {
+                showToast(`New msg from ${senderName} in ${chatName}`);
+            }
+        }
+
+        function requestNotificationPermission() {
+            if ("Notification" in window && Notification.permission !== "granted" && Notification.permission !== "denied") {
+                Notification.requestPermission();
+            }
         }
 
         function generateId(prefix) {
@@ -295,7 +329,14 @@
                 } else {
                     db.users = { [keyInput]: data.user };
                     db.chats = data.chats;
+                    requestNotificationPermission();
                     renderAppView();
+                    
+                    if (pendingRoomId && db.chats[pendingRoomId]) {
+                        selectChat(pendingRoomId);
+                        pendingRoomId = null;
+                    }
+                    
                     startPolling();
                 }
 
@@ -506,11 +547,39 @@
                 if (isAdmin || !currentUserKey) return;
                 try {
                     const data = await apiRequest({ action: 'fetch', userKey: currentUserKey });
-                    // Merge new messages without overriding optimistic unsent messages
-                    // For a simple app, we just overwrite because 'send' is fast enough.
+                    
+                    let hasNewMessages = false;
+                    let activeChatNeedsUpdate = false;
+                    
+                    for (let cId in data.chats) {
+                        const newMsgs = data.chats[cId].messages || [];
+                        const oldMsgs = db.chats[cId] ? (db.chats[cId].messages || []) : [];
+                        
+                        if (newMsgs.length > oldMsgs.length) {
+                            hasNewMessages = true;
+                            const newlyArrived = newMsgs.slice(oldMsgs.length);
+                            
+                            for (let msg of newlyArrived) {
+                                if (msg.sender !== currentUserKey) {
+                                    notifyUser(data.chats[cId].name, msg.senderName, msg.text);
+                                }
+                            }
+                            
+                            if (cId === activeChatId) {
+                                activeChatNeedsUpdate = true;
+                            }
+                        }
+                    }
+
                     db.chats = data.chats;
-                    renderAppView();
-                    renderMessages();
+                    
+                    if (hasNewMessages) {
+                        renderAppView();
+                    }
+                    if (activeChatNeedsUpdate) {
+                        renderMessages();
+                    }
+                    
                 } catch (e) { console.warn("Polling error", e); }
             }, 3000); // 3 seconds
         }
@@ -563,7 +632,8 @@
                     return `
                         <label class="flex items-center gap-2 p-2 rounded hover:bg-slate-100 dark:hover:bg-slate-800 cursor-pointer border ${isChecked ? 'border-brandAccent bg-blue-50 dark:bg-slate-800' : 'border-transparent'}">
                             <input type="checkbox" onchange="adminToggleParticipant('${cId}', '${uKey}', this.checked)" ${isChecked ? 'checked' : ''} class="w-4 h-4 text-brandAccent rounded focus:ring-brandAccent border-slate-300">
-                            <span class="text-sm font-semibold">${db.users[uKey].name}</span>
+                            <span class="text-sm font-semibold flex-1">${db.users[uKey].name}</span>
+                            ${isChecked ? `<button type="button" onclick="event.preventDefault(); navigator.clipboard.writeText('https://rahulxnatha.github.io/chat/?key=${uKey}&room=${cId}'); showToast('Direct room link copied!')" class="text-slate-400 hover:text-brandAccent text-xs px-2"><i class="fa-solid fa-link"></i></button>` : ''}
                         </label>
                     `;
                 }).join('');
