@@ -134,7 +134,7 @@
             
             <div id="input-area" class="p-4 bg-white dark:bg-brand border-t border-slate-200 dark:border-slate-800 hidden opacity-50 pointer-events-none transition-opacity">
                 <!-- Edit Indicator -->
-                <div id="edit-indicator" class="hidden max-w-4xl mx-auto w-full mb-2 flex justify-between items-center bg-blue-50 dark:bg-slate-800 text-brandAccent px-4 py-2 rounded-xl text-xs font-bold shadow-sm">
+                <div id="edit-indicator" class="hidden max-w-4xl mx-auto w-full mb-2 justify-between items-center bg-blue-50 dark:bg-slate-800 text-brandAccent px-4 py-2 rounded-xl text-xs font-bold shadow-sm">
                     <span><i class="fa-solid fa-pen mr-2"></i> Editing message...</span>
                     <button onclick="cancelEdit()" class="text-slate-500 hover:text-red-500 w-5 h-5 flex items-center justify-center rounded-full bg-white dark:bg-brand shadow-sm"><i class="fa-solid fa-xmark"></i></button>
                 </div>
@@ -362,7 +362,6 @@
                 localStorage.setItem('pc_user_key', keyInput);
                 isAdmin = data.isAdmin;
                 
-                // Initialize default config if missing
                 db.config = data.config || { deleteLimit: 1, editLimit: 24, historyLimit: 2 };
                 
                 if (isAdmin) {
@@ -382,7 +381,8 @@
                 }
 
                 document.getElementById('view-login').classList.add('hidden');
-                document.getElementById('user-profile-badge').classList.replace('hidden', 'flex');
+                document.getElementById('user-profile-badge').classList.remove('hidden');
+                document.getElementById('user-profile-badge').classList.add('flex');
                 document.getElementById('current-user-name').innerText = isAdmin ? 'Administrator' : data.user.name;
                 
             } catch (error) {
@@ -405,10 +405,18 @@
             localStorage.removeItem('pc_user_key');
             
             document.getElementById('login-key').value = '';
+            
             document.getElementById('view-login').classList.remove('hidden');
+            
             document.getElementById('view-app').classList.add('hidden');
+            document.getElementById('view-app').classList.remove('flex');
+            
             document.getElementById('view-admin').classList.add('hidden');
-            document.getElementById('user-profile-badge').classList.replace('flex', 'hidden');
+            document.getElementById('view-admin').classList.remove('flex');
+            
+            document.getElementById('user-profile-badge').classList.add('hidden');
+            document.getElementById('user-profile-badge').classList.remove('flex');
+            
             document.getElementById('admin-mode-indicator').classList.add('hidden');
             currentAdminView = 'dashboard';
         }
@@ -427,22 +435,28 @@
         function toggleAdminMode() {
             if (currentAdminView === 'dashboard') {
                 currentAdminView = 'chat';
-                document.getElementById('view-admin').classList.replace('flex', 'hidden');
-                document.getElementById('view-app').classList.replace('hidden', 'flex');
+                document.getElementById('view-admin').classList.add('hidden');
+                document.getElementById('view-admin').classList.remove('flex');
                 document.getElementById('admin-mode-indicator').classList.remove('hidden');
+                
                 renderAppView();
                 startPolling(); // Keep messages alive while admin reads
             } else {
                 currentAdminView = 'dashboard';
                 stopPolling();
-                document.getElementById('view-app').classList.replace('flex', 'hidden');
-                document.getElementById('view-admin').classList.replace('hidden', 'flex');
+                document.getElementById('view-app').classList.add('hidden');
+                document.getElementById('view-app').classList.remove('flex');
                 document.getElementById('admin-mode-indicator').classList.add('hidden');
+                
                 renderAdminView();
             }
         }
 
         function renderAppView() {
+            // Unhide the app screen wrapper!
+            document.getElementById('view-app').classList.remove('hidden');
+            document.getElementById('view-app').classList.add('flex');
+            
             const list = document.getElementById('chat-list');
             const chatIds = Object.keys(db.chats);
             
@@ -458,7 +472,7 @@
                 
                 let preview = 'New chat created...';
                 if (lastMsg) {
-                    preview = (lastMsg.sender === currentUserKey ? 'You: ' : '') + lastMsg.text;
+                    preview = (lastMsg.sender === currentUserKey ? 'You: ' : '') + lastMsg.text.replace(/\n/g, ' ');
                 }
                 
                 return `
@@ -472,7 +486,7 @@
 
         function selectChat(cId) {
             activeChatId = cId;
-            cancelEdit(); // Reset edit state when switching chats
+            cancelEdit(); 
             renderAppView(); 
             
             const chat = db.chats[cId];
@@ -525,7 +539,6 @@
                 
                 const hoursSinceSent = (Date.now() - msg.timestamp) / 3600000;
                 
-                // Rule engines
                 const canDelete = isAdmin || (isMe && hoursSinceSent <= (config.deleteLimit !== undefined ? config.deleteLimit : 1));
                 const canEdit = isAdmin || (isMe && hoursSinceSent <= (config.editLimit !== undefined ? config.editLimit : 24));
                 const hasHistory = msg.edits && msg.edits.length > 0;
@@ -584,13 +597,12 @@
             input.value = msg.text;
             input.focus();
             
-            // Adjust height
             input.style.height = 'auto';
             input.style.height = (input.scrollHeight) + 'px';
 
             document.getElementById('edit-indicator').classList.remove('hidden');
             document.getElementById('edit-indicator').classList.add('flex');
-            renderMessages(); // To show selection highlight
+            renderMessages(); 
         }
 
         function cancelEdit() {
@@ -601,7 +613,7 @@
             
             document.getElementById('edit-indicator').classList.add('hidden');
             document.getElementById('edit-indicator').classList.remove('flex');
-            renderMessages(); // To clear selection highlight
+            renderMessages(); 
         }
 
         function showEditHistory(timestamp) {
@@ -613,7 +625,6 @@
             const content = document.getElementById('history-modal-content');
 
             let html = '';
-            // Render oldest edit to newest
             msg.edits.forEach((edit, index) => {
                 html += `
                     <div class="relative pl-6 border-l-2 border-slate-200 dark:border-slate-700 pb-6">
@@ -626,7 +637,6 @@
                 `;
             });
             
-            // Current version
             html += `
                 <div class="relative pl-6 border-l-2 border-brandAccent pb-0">
                     <div class="absolute -left-[9px] top-0 w-4 h-4 rounded-full bg-brandAccent border-4 border-white dark:border-brand"></div>
@@ -640,7 +650,6 @@
             list.innerHTML = html;
             modal.classList.remove('hidden');
             
-            // Animation
             requestAnimationFrame(() => {
                 modal.classList.remove('opacity-0');
                 content.classList.remove('scale-95');
@@ -669,7 +678,6 @@
             btn.disabled = true;
 
             if (editingMsgId) {
-                // Optimistic Edit
                 const msgs = db.chats[activeChatId].messages;
                 const msg = msgs.find(m => m.timestamp === editingMsgId);
                 const oldText = msg.text;
@@ -687,7 +695,6 @@
                     await apiRequest({ action: 'edit', userKey: currentUserKey, chatId: activeChatId, timestamp: editIdObj, newText: text });
                 } catch (err) {
                     showToast(err.message, true);
-                    // Revert on fail
                     if(msg) { msg.text = oldText; msg.edits.pop(); renderMessages(); }
                 } finally {
                     btn.disabled = false;
@@ -695,7 +702,6 @@
                 }
 
             } else {
-                // Optimistic Send
                 const tempMsg = { sender: currentUserKey, senderName: isAdmin ? "Administrator" : db.users[currentUserKey].name, text: text, timestamp: new Date().getTime() };
                 if (!db.chats[activeChatId].messages) db.chats[activeChatId].messages = [];
                 db.chats[activeChatId].messages.push(tempMsg);
@@ -721,7 +727,6 @@
         async function deleteMessage(timestamp) {
             if (!confirm("Permanently delete this message?")) return;
             
-            // Optimistic Delete
             const msgs = db.chats[activeChatId].messages;
             const idx = msgs.findIndex(m => m.timestamp === timestamp);
             let backupMsg = null;
@@ -771,16 +776,12 @@
                         const newMsgs = data.chats[cId].messages || [];
                         const oldMsgs = db.chats[cId] ? (db.chats[cId].messages || []) : [];
                         
-                        // Check if a message was edited, deleted, or added
-                        // Since edits change internal array objects, simple length check isn't enough to catch edits
-                        // A deeper compare or relying on frontend to redraw helps.
                         const newStr = JSON.stringify(newMsgs);
                         const oldStr = JSON.stringify(oldMsgs);
 
                         if (newStr !== oldStr) {
                             if (cId === activeChatId) activeChatNeedsUpdate = true;
                             
-                            // Notify only on completely new messages, not edits or deletions
                             if (newMsgs.length > oldMsgs.length && !isAdmin) {
                                 hasNewMessages = true;
                                 const newlyArrived = newMsgs.slice(oldMsgs.length);
@@ -790,7 +791,7 @@
                                     }
                                 }
                             } else if (newMsgs.length !== oldMsgs.length) {
-                                hasNewMessages = true; // Sidebar preview might need update on delete
+                                hasNewMessages = true; 
                             }
                         }
                     }
@@ -798,7 +799,6 @@
                     db.chats = data.chats;
                     
                     if (hasNewMessages || activeChatNeedsUpdate) {
-                        // Don't re-render sidebar if user is typing a message to prevent lag
                         if(hasNewMessages) renderAppView(); 
                         if(activeChatNeedsUpdate) renderMessages();
                     }
@@ -815,9 +815,9 @@
         // ADMIN VIEW
         // ==========================================
         function renderAdminView() {
-            document.getElementById('view-admin').classList.replace('hidden', 'flex');
+            document.getElementById('view-admin').classList.remove('hidden');
+            document.getElementById('view-admin').classList.add('flex');
             
-            // Populate Configs
             const config = db.config || { deleteLimit: 1, editLimit: 24, historyLimit: 2 };
             document.getElementById('conf-delete').value = config.deleteLimit;
             document.getElementById('conf-edit').value = config.editLimit;
