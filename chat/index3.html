@@ -1,0 +1,934 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Professional Chat | DOCS from Rahul</title>
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        brand: '#1e293b',
+                        brandAccent: '#3b82f6',
+                        chatBg: '#f8fafc',
+                        darkChatBg: '#0f172a'
+                    }
+                }
+            }
+        }
+    </script>
+    
+    <!-- FontAwesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <style>
+        ::-webkit-scrollbar { width: 6px; height: 6px; }
+        ::-webkit-scrollbar-track { background: transparent; }
+        ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 10px; }
+        .dark ::-webkit-scrollbar-thumb { background: #475569; }
+        
+        body { -webkit-tap-highlight-color: transparent; }
+        .preserve-newlines { white-space: pre-wrap; word-wrap: break-word; }
+        
+        .message-bubble { animation: popIn 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards; }
+        @keyframes popIn {
+            0% { opacity: 0; transform: scale(0.95) translateY(10px); }
+            100% { opacity: 1; transform: scale(1) translateY(0); }
+        }
+        
+        @media (max-width: 768px) {
+            .mobile-hidden { display: none !important; }
+            .mobile-flex { display: flex !important; }
+        }
+    </style>
+</head>
+<body class="font-sans antialiased text-slate-800 bg-slate-100 dark:bg-slate-900 dark:text-slate-200 h-screen overflow-hidden flex flex-col selection:bg-brandAccent selection:text-white relative">
+
+    <script>
+        const GOOGLE_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwlbU-gk06opysLnE2r7u2xBwpvlS1xFwZtZvOSKZQF6ypj5cmAf6oPaVSL3XmU4W2j/exec";
+    </script>
+
+    <!-- Header -->
+    <header class="h-16 bg-white dark:bg-brand border-b border-slate-200 dark:border-slate-800 flex items-center justify-between px-4 lg:px-6 shadow-sm z-20 flex-shrink-0">
+        <div class="flex items-center gap-3">
+            <div class="w-8 h-8 rounded-lg bg-brandAccent flex items-center justify-center text-white font-bold shadow-sm">
+                <i class="fa-solid fa-comments"></i>
+            </div>
+            <div>
+                <h1 class="text-sm font-bold leading-tight flex items-center gap-2">
+                    Professional Chat 
+                    <button onclick="toggleAdminMode()" id="admin-mode-indicator" class="hidden text-[10px] bg-indigo-500 hover:bg-indigo-600 text-white px-2 py-0.5 rounded shadow transition-colors"><i class="fa-solid fa-shield-halved mr-1"></i> Admin View</button>
+                </h1>
+                <p class="text-[10px] text-slate-500 dark:text-slate-400 font-semibold tracking-wider uppercase">DOCS from Rahul</p>
+            </div>
+        </div>
+        
+        <div class="flex items-center gap-3 md:gap-4">
+            <!-- Settings Dropdown -->
+            <div class="relative" id="settings-dropdown-wrapper">
+                <button onclick="toggleDropdown('settings-menu')" class="text-slate-500 hover:text-brandAccent transition-colors w-8 h-8 flex items-center justify-center rounded-full hover:bg-slate-100 dark:hover:bg-slate-800">
+                    <i class="fa-solid fa-gear"></i>
+                </button>
+                <div id="settings-menu" class="hidden absolute right-0 top-10 w-56 bg-white dark:bg-brand border border-slate-200 dark:border-slate-700 rounded-xl shadow-xl z-50 p-2 text-left">
+                    <div class="p-2 border-b border-slate-100 dark:border-slate-800 mb-2">
+                        <h4 class="text-xs font-bold uppercase tracking-widest text-slate-400">Settings</h4>
+                    </div>
+                    <label class="flex items-center justify-between px-3 py-2 cursor-pointer rounded hover:bg-slate-50 dark:hover:bg-slate-800 transition-colors">
+                        <span class="text-sm font-semibold"><i class="fa-regular fa-bell mr-2 text-slate-400"></i> Notifications</span>
+                        <input type="checkbox" id="notif-toggle" onchange="handleNotificationToggle(event)" class="w-4 h-4 text-brandAccent rounded focus:ring-brandAccent border-slate-300">
+                    </label>
+                    <label class="flex items-center justify-between px-3 py-2 cursor-pointer rounded hover:bg-slate-50 dark:hover:bg-slate-800 transition-colors">
+                        <span class="text-sm font-semibold"><i class="fa-solid fa-moon mr-2 text-slate-400"></i> Dark Mode</span>
+                        <input type="checkbox" id="theme-toggle" onchange="toggleTheme()" class="w-4 h-4 text-brandAccent rounded focus:ring-brandAccent border-slate-300">
+                    </label>
+                </div>
+            </div>
+
+            <div id="user-profile-badge" class="hidden items-center gap-2 pl-3 md:pl-4 border-l border-slate-200 dark:border-slate-700">
+                <span id="current-user-name" class="text-sm font-bold truncate max-w-[80px] md:max-w-[100px]"></span>
+                <button onclick="logout()" class="text-xs text-red-500 hover:bg-red-50 dark:hover:bg-red-900/20 px-2 py-1 rounded transition-colors" title="Log Out"><i class="fa-solid fa-right-from-bracket"></i></button>
+            </div>
+        </div>
+    </header>
+
+    <!-- VIEW: LOGIN SCREEN -->
+    <div id="view-login" class="flex-1 flex items-center justify-center p-4">
+        <div class="bg-white dark:bg-brand p-8 rounded-2xl shadow-xl w-full max-w-sm border border-slate-200 dark:border-slate-800 text-center">
+            <div class="w-16 h-16 bg-blue-50 dark:bg-blue-900/30 text-brandAccent rounded-full flex items-center justify-center text-2xl mx-auto mb-6">
+                <i class="fa-solid fa-key"></i>
+            </div>
+            <h2 class="text-2xl font-bold mb-2">Access Portal</h2>
+            <p class="text-sm text-slate-500 dark:text-slate-400 mb-8">Enter your secure access key to join your assigned chat rooms.</p>
+            
+            <form onsubmit="handleLogin(event)" class="space-y-4">
+                <input type="password" id="login-key" required class="w-full bg-slate-50 dark:bg-slate-900 border border-slate-300 dark:border-slate-700 rounded-xl px-4 py-3 text-center font-mono tracking-widest focus:outline-none focus:border-brandAccent focus:ring-1 focus:ring-brandAccent transition-all" placeholder="••••••••">
+                <button type="submit" id="btn-login" class="w-full bg-brandAccent text-white font-bold py-3 rounded-xl hover:bg-blue-600 transition-all shadow-md shadow-blue-500/20 flex items-center justify-center gap-2">
+                    <span>Authenticate</span> <i class="fa-solid fa-arrow-right"></i>
+                </button>
+            </form>
+            <div id="login-error" class="text-red-500 text-sm mt-4 font-semibold hidden"></div>
+        </div>
+    </div>
+
+    <!-- VIEW: APP SCREEN -->
+    <div id="view-app" class="hidden flex-1 overflow-hidden relative">
+        <aside id="sidebar" class="absolute md:relative inset-y-0 left-0 w-full md:w-80 bg-white dark:bg-brand border-r border-slate-200 dark:border-slate-800 flex flex-col z-10 transition-transform duration-300 transform md:transform-none">
+            <div class="p-4 border-b border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-900/50 flex justify-between items-center">
+                <h2 class="text-xs font-bold text-slate-500 uppercase tracking-widest"><i class="fa-solid fa-layer-group mr-1"></i> Assigned Chats</h2>
+            </div>
+            <div id="chat-list" class="flex-1 overflow-y-auto p-2 space-y-1"></div>
+        </aside>
+
+        <main id="main-chat" class="flex-1 flex flex-col bg-chatBg dark:bg-darkChatBg relative z-0 h-full w-full">
+            <div class="md:hidden flex items-center gap-3 p-3 bg-white dark:bg-brand border-b border-slate-200 dark:border-slate-800 shadow-sm z-10">
+                <button onclick="toggleMobileSidebar()" class="w-8 h-8 rounded bg-slate-100 dark:bg-slate-800 flex items-center justify-center text-slate-600 dark:text-slate-300"><i class="fa-solid fa-chevron-left"></i></button>
+                <h3 id="mobile-chat-title" class="font-bold truncate flex-1">Select a chat</h3>
+            </div>
+            
+            <div id="messages-container" class="flex-1 overflow-y-auto p-4 md:p-6 space-y-6 scroll-smooth"></div>
+            
+            <div id="input-area" class="p-4 bg-white dark:bg-brand border-t border-slate-200 dark:border-slate-800 hidden opacity-50 pointer-events-none transition-opacity">
+                <!-- Edit Indicator -->
+                <div id="edit-indicator" class="hidden max-w-4xl mx-auto w-full mb-2 justify-between items-center bg-blue-50 dark:bg-slate-800 text-brandAccent px-4 py-2 rounded-xl text-xs font-bold shadow-sm">
+                    <span><i class="fa-solid fa-pen mr-2"></i> Editing message...</span>
+                    <button onclick="cancelEdit()" class="text-slate-500 hover:text-red-500 w-5 h-5 flex items-center justify-center rounded-full bg-white dark:bg-brand shadow-sm"><i class="fa-solid fa-xmark"></i></button>
+                </div>
+                
+                <form onsubmit="sendMessage(event)" class="flex items-end gap-3 max-w-4xl mx-auto w-full">
+                    <textarea id="message-input" rows="1" class="flex-1 bg-slate-100 dark:bg-slate-900 border border-slate-300 dark:border-slate-700 rounded-2xl px-4 py-3 text-sm focus:outline-none focus:border-brandAccent focus:ring-1 focus:ring-brandAccent transition-all resize-none preserve-newlines max-h-32" placeholder="Type a message..." onkeydown="handleEnter(event)"></textarea>
+                    <button type="submit" id="btn-send" class="w-12 h-12 rounded-full bg-brandAccent text-white flex items-center justify-center flex-shrink-0 hover:bg-blue-600 transition-colors shadow-md shadow-blue-500/20 disabled:opacity-50"><i class="fa-solid fa-paper-plane"></i></button>
+                </form>
+            </div>
+        </main>
+    </div>
+
+    <!-- VIEW: ADMIN DASHBOARD -->
+    <div id="view-admin" class="hidden flex-1 overflow-hidden bg-slate-50 dark:bg-darkChatBg flex-col">
+        <div class="bg-white dark:bg-brand border-b border-slate-200 dark:border-slate-800 p-4 lg:px-8 flex justify-between items-center shadow-sm z-10 flex-wrap gap-4">
+            <h2 class="text-xl font-bold flex items-center gap-2"><i class="fa-solid fa-shield-halved text-brandAccent"></i> Admin Control Panel</h2>
+            <div class="flex gap-3">
+                <button onclick="toggleAdminMode()" class="bg-slate-200 dark:bg-slate-800 hover:bg-slate-300 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-200 px-5 py-2 rounded-lg font-bold shadow-sm transition-colors flex items-center gap-2"><i class="fa-regular fa-comments"></i> Enter Chat Mode</button>
+                <button onclick="saveAdminData()" id="btn-admin-save" class="bg-emerald-500 hover:bg-emerald-600 text-white px-5 py-2 rounded-lg font-bold shadow-md transition-colors flex items-center gap-2"><i class="fa-solid fa-floppy-disk"></i> Save Data</button>
+            </div>
+        </div>
+        
+        <div class="flex-1 overflow-y-auto p-4 lg:p-8">
+            <div class="max-w-6xl mx-auto grid grid-cols-1 xl:grid-cols-2 gap-8">
+                
+                <!-- Global Chat Rules -->
+                <div class="xl:col-span-2 bg-white dark:bg-brand p-6 rounded-2xl shadow-sm border border-slate-200 dark:border-slate-800">
+                    <h3 class="font-bold text-lg mb-2"><i class="fa-solid fa-scale-balanced text-slate-400 mr-2"></i> Global Chat Rules</h3>
+                    <p class="text-sm text-slate-500 mb-6">Configure the time limits for user actions. Admins bypass all limits.</p>
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                        <div>
+                            <label class="block text-xs font-bold text-slate-500 uppercase tracking-widest mb-1">Delete Limit (Hours)</label>
+                            <input type="number" step="any" id="conf-delete" onchange="adminUpdateConfig('deleteLimit', this.value)" class="w-full bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-lg px-3 py-2 text-sm focus:outline-none focus:border-brandAccent shadow-sm">
+                        </div>
+                        <div>
+                            <label class="block text-xs font-bold text-slate-500 uppercase tracking-widest mb-1">Edit Limit (Hours)</label>
+                            <input type="number" step="any" id="conf-edit" onchange="adminUpdateConfig('editLimit', this.value)" class="w-full bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-lg px-3 py-2 text-sm focus:outline-none focus:border-brandAccent shadow-sm">
+                        </div>
+                        <div>
+                            <label class="block text-xs font-bold text-slate-500 uppercase tracking-widest mb-1">History Visibility (Hours)</label>
+                            <input type="number" step="any" id="conf-history" onchange="adminUpdateConfig('historyLimit', this.value)" class="w-full bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-lg px-3 py-2 text-sm focus:outline-none focus:border-brandAccent shadow-sm" title="How long standard users can view a message's edit history">
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Manage Users -->
+                <div class="bg-white dark:bg-brand p-6 rounded-2xl shadow-sm border border-slate-200 dark:border-slate-800">
+                    <div class="flex justify-between items-center mb-6">
+                        <h3 class="font-bold text-lg"><i class="fa-solid fa-users text-slate-400 mr-2"></i> Authorized Users</h3>
+                        <button onclick="adminAddUser()" class="text-xs bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 px-3 py-1.5 rounded-lg font-bold transition-colors"><i class="fa-solid fa-plus mr-1"></i> Add User</button>
+                    </div>
+                    <div id="admin-user-list" class="space-y-3"></div>
+                </div>
+
+                <!-- Manage Chats -->
+                <div class="bg-white dark:bg-brand p-6 rounded-2xl shadow-sm border border-slate-200 dark:border-slate-800">
+                    <div class="flex justify-between items-center mb-6">
+                        <h3 class="font-bold text-lg"><i class="fa-solid fa-comments text-slate-400 mr-2"></i> Chat Rooms</h3>
+                        <button onclick="adminAddChat()" class="text-xs bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 px-3 py-1.5 rounded-lg font-bold transition-colors"><i class="fa-solid fa-plus mr-1"></i> Create Room</button>
+                    </div>
+                    <div id="admin-chat-list" class="space-y-6"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Edit History Modal -->
+    <div id="history-modal" class="hidden fixed inset-0 z-[100] bg-slate-900/50 backdrop-blur-sm flex items-center justify-center p-4 opacity-0 transition-opacity duration-300">
+        <div class="bg-white dark:bg-brand w-full max-w-lg rounded-2xl shadow-2xl border border-slate-200 dark:border-slate-800 flex flex-col max-h-[80vh] transform scale-95 transition-transform duration-300" id="history-modal-content">
+            <div class="p-4 border-b border-slate-200 dark:border-slate-800 flex justify-between items-center">
+                <h3 class="font-bold text-lg"><i class="fa-solid fa-clock-rotate-left text-brandAccent mr-2"></i> Edit History</h3>
+                <button onclick="closeEditHistory()" class="w-8 h-8 rounded-full bg-slate-100 dark:bg-slate-800 flex items-center justify-center text-slate-500 hover:text-red-500 transition-colors"><i class="fa-solid fa-xmark"></i></button>
+            </div>
+            <div id="history-list" class="p-6 overflow-y-auto space-y-6">
+                <!-- Populated by JS -->
+            </div>
+        </div>
+    </div>
+
+    <div id="toast" class="fixed bottom-6 left-1/2 transform -translate-x-1/2 bg-slate-900 text-white px-6 py-3 rounded-full shadow-2xl z-[9999] font-bold text-sm transition-all duration-300 translate-y-10 opacity-0 pointer-events-none"></div>
+
+    <script>
+        // ==========================================
+        // STATE & INITIALIZATION
+        // ==========================================
+        let currentUserKey = null;
+        let isAdmin = false;
+        let currentAdminView = 'dashboard';
+        let db = { users: {}, chats: {}, config: { deleteLimit: 1, editLimit: 24, historyLimit: 2 } };
+        let activeChatId = null;
+        let pollInterval = null;
+        let pendingRoomId = null;
+        let editingMsgId = null; 
+
+        // Local Storage Settings
+        let notificationsEnabled = localStorage.getItem('pc_notif') === 'true';
+        document.getElementById('notif-toggle').checked = notificationsEnabled;
+        
+        let themeState = localStorage.getItem('theme') || (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+        if (themeState === 'dark') {
+            document.documentElement.classList.add('dark');
+            document.getElementById('theme-toggle').checked = true;
+        }
+
+        const urlParams = new URLSearchParams(window.location.search);
+        const autoLoginKey = urlParams.get('key');
+        const autoLoginRoom = urlParams.get('room');
+
+        if (autoLoginKey) {
+            currentUserKey = autoLoginKey;
+            if (autoLoginRoom) pendingRoomId = autoLoginRoom;
+            window.history.replaceState({}, document.title, window.location.pathname);
+        } else {
+            currentUserKey = localStorage.getItem('pc_user_key') || null;
+        }
+
+        // ==========================================
+        // UI HELPERS
+        // ==========================================
+        function toggleTheme() {
+            document.documentElement.classList.toggle('dark');
+            const isDark = document.documentElement.classList.contains('dark');
+            localStorage.setItem('theme', isDark ? 'dark' : 'light');
+            document.getElementById('theme-toggle').checked = isDark;
+        }
+
+        function toggleDropdown(id) {
+            const el = document.getElementById(id);
+            if (el.classList.contains('hidden')) {
+                document.querySelectorAll('[id$="-menu"]').forEach(m => m.classList.add('hidden'));
+                el.classList.remove('hidden');
+            } else {
+                el.classList.add('hidden');
+            }
+        }
+
+        document.addEventListener('click', (e) => {
+            if (!e.target.closest('#settings-dropdown-wrapper')) {
+                const sm = document.getElementById('settings-menu');
+                if(sm) sm.classList.add('hidden');
+            }
+        });
+
+        function handleNotificationToggle(e) {
+            notificationsEnabled = e.target.checked;
+            localStorage.setItem('pc_notif', notificationsEnabled);
+            if (notificationsEnabled) {
+                requestNotificationPermission();
+            }
+        }
+
+        function showToast(msg, isError = false) {
+            const toast = document.getElementById('toast');
+            toast.innerText = msg;
+            toast.className = `fixed bottom-6 left-1/2 transform -translate-x-1/2 px-6 py-3 rounded-full shadow-2xl z-[9999] font-bold text-sm transition-all duration-300 border ${isError ? 'bg-red-600 text-white border-red-700' : 'bg-slate-900 text-white border-slate-700'}`;
+            requestAnimationFrame(() => toast.classList.remove('translate-y-10', 'opacity-0'));
+            setTimeout(() => toast.classList.add('translate-y-10', 'opacity-0'), 3000);
+        }
+
+        function playNotificationSound() {
+            try {
+                if(!notificationsEnabled) return;
+                const audio = new Audio('https://actions.google.com/sounds/v1/communication/pop_up_notification.ogg');
+                audio.volume = 0.5;
+                audio.play().catch(e => {}); 
+            } catch (e) {}
+        }
+
+        function notifyUser(chatName, senderName, text) {
+            if (!notificationsEnabled) return;
+            playNotificationSound();
+            if ("Notification" in window && Notification.permission === "granted" && document.hidden) {
+                const notification = new Notification(`New message in ${chatName}`, { body: `${senderName}: ${text}` });
+                notification.onclick = function() { window.focus(); this.close(); };
+            } else {
+                showToast(`New msg from ${senderName} in ${chatName}`);
+            }
+        }
+
+        function requestNotificationPermission() {
+            if ("Notification" in window && Notification.permission !== "granted" && Notification.permission !== "denied") {
+                Notification.requestPermission().catch(e => {});
+            }
+        }
+
+        function generateId(prefix) { return prefix + '_' + Math.random().toString(36).substr(2, 6); }
+
+        function formatDate(timestamp) {
+            const date = new Date(timestamp);
+            const now = new Date();
+            const isToday = date.getDate() === now.getDate() && date.getMonth() === now.getMonth() && date.getFullYear() === now.getFullYear();
+            const timeStr = date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+            return isToday ? timeStr : `${date.toLocaleDateString([], { month: 'short', day: 'numeric' })}, ${timeStr}`;
+        }
+
+        // ==========================================
+        // NETWORKING
+        // ==========================================
+        async function apiRequest(payload) {
+            if (!GOOGLE_SCRIPT_URL || GOOGLE_SCRIPT_URL.includes("YOUR_GOOGLE_SCRIPT")) throw new Error("Backend URL missing.");
+            const response = await fetch(GOOGLE_SCRIPT_URL, { method: 'POST', body: JSON.stringify(payload) });
+            const data = await response.json();
+            if (data.error) throw new Error(data.error);
+            return data;
+        }
+
+        // ==========================================
+        // AUTHENTICATION
+        // ==========================================
+        async function handleLogin(e) {
+            if(e) e.preventDefault();
+            const keyInput = document.getElementById('login-key').value.trim();
+            const btn = document.getElementById('btn-login');
+            const errDiv = document.getElementById('login-error');
+            
+            if (!keyInput) return;
+            
+            btn.innerHTML = '<i class="fa-solid fa-circle-notch fa-spin"></i> Authenticating...';
+            btn.disabled = true;
+            errDiv.classList.add('hidden');
+
+            try {
+                const data = await apiRequest({ action: 'fetch', userKey: keyInput });
+                currentUserKey = keyInput;
+                localStorage.setItem('pc_user_key', keyInput);
+                isAdmin = data.isAdmin;
+                
+                db.config = data.config || { deleteLimit: 1, editLimit: 24, historyLimit: 2 };
+                
+                if (isAdmin) {
+                    db.users = data.db.users || {};
+                    db.chats = data.db.chats || {};
+                    renderAdminView();
+                } else {
+                    db.users = { [keyInput]: data.user };
+                    db.chats = data.chats || {};
+                    renderAppView();
+                    
+                    if (pendingRoomId && db.chats[pendingRoomId]) {
+                        selectChat(pendingRoomId);
+                        pendingRoomId = null;
+                    }
+                    startPolling();
+                }
+
+                document.getElementById('view-login').classList.add('hidden');
+                document.getElementById('user-profile-badge').classList.remove('hidden');
+                document.getElementById('user-profile-badge').classList.add('flex');
+                document.getElementById('current-user-name').innerText = isAdmin ? 'Administrator' : data.user.name;
+                
+            } catch (error) {
+                errDiv.innerText = error.message;
+                errDiv.classList.remove('hidden');
+                currentUserKey = null;
+                localStorage.removeItem('pc_user_key');
+            } finally {
+                btn.innerHTML = '<span>Authenticate</span> <i class="fa-solid fa-arrow-right"></i>';
+                btn.disabled = false;
+            }
+        }
+
+        function logout() {
+            stopPolling();
+            currentUserKey = null;
+            isAdmin = false;
+            activeChatId = null;
+            db = { users: {}, chats: {}, config: {} };
+            localStorage.removeItem('pc_user_key');
+            
+            document.getElementById('login-key').value = '';
+            
+            document.getElementById('view-login').classList.remove('hidden');
+            
+            document.getElementById('view-app').classList.add('hidden');
+            document.getElementById('view-app').classList.remove('flex');
+            
+            document.getElementById('view-admin').classList.add('hidden');
+            document.getElementById('view-admin').classList.remove('flex');
+            
+            document.getElementById('user-profile-badge').classList.add('hidden');
+            document.getElementById('user-profile-badge').classList.remove('flex');
+            
+            document.getElementById('admin-mode-indicator').classList.add('hidden');
+            currentAdminView = 'dashboard';
+        }
+
+        if (currentUserKey) {
+            document.getElementById('login-key').value = currentUserKey;
+            setTimeout(() => {
+                const btn = document.getElementById('btn-login');
+                if(btn) btn.click();
+            }, 100);
+        }
+
+        // ==========================================
+        // USER CHAT VIEW
+        // ==========================================
+        function toggleAdminMode() {
+            if (currentAdminView === 'dashboard') {
+                currentAdminView = 'chat';
+                document.getElementById('view-admin').classList.add('hidden');
+                document.getElementById('view-admin').classList.remove('flex');
+                document.getElementById('admin-mode-indicator').classList.remove('hidden');
+                
+                renderAppView();
+                startPolling(); // Keep messages alive while admin reads
+            } else {
+                currentAdminView = 'dashboard';
+                stopPolling();
+                document.getElementById('view-app').classList.add('hidden');
+                document.getElementById('view-app').classList.remove('flex');
+                document.getElementById('admin-mode-indicator').classList.add('hidden');
+                
+                renderAdminView();
+            }
+        }
+
+        function renderAppView() {
+            // Unhide the app screen wrapper!
+            document.getElementById('view-app').classList.remove('hidden');
+            document.getElementById('view-app').classList.add('flex');
+            
+            const list = document.getElementById('chat-list');
+            const chatIds = Object.keys(db.chats);
+            
+            if (chatIds.length === 0) {
+                list.innerHTML = `<div class="p-4 text-sm text-slate-500 text-center mt-4">No chats available.</div>`;
+                return;
+            }
+
+            list.innerHTML = chatIds.map(cId => {
+                const chat = db.chats[cId];
+                const isActive = cId === activeChatId;
+                const lastMsg = chat.messages && chat.messages.length > 0 ? chat.messages[chat.messages.length-1] : null;
+                
+                let preview = 'New chat created...';
+                if (lastMsg) {
+                    preview = (lastMsg.sender === currentUserKey ? 'You: ' : '') + lastMsg.text.replace(/\n/g, ' ');
+                }
+                
+                return `
+                    <div onclick="selectChat('${cId}')" class="p-3 rounded-xl cursor-pointer transition-all border ${isActive ? 'bg-blue-50 dark:bg-slate-800 border-brandAccent shadow-sm' : 'border-transparent hover:bg-slate-100 dark:hover:bg-slate-800/50'}">
+                        <h4 class="font-bold text-sm truncate ${isActive ? 'text-brandAccent' : 'text-slate-800 dark:text-slate-200'}">${chat.name}</h4>
+                        <p class="text-xs text-slate-500 truncate mt-1">${preview}</p>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        function selectChat(cId) {
+            activeChatId = cId;
+            cancelEdit(); 
+            renderAppView(); 
+            
+            const chat = db.chats[cId];
+            document.getElementById('mobile-chat-title').innerText = chat.name;
+            
+            const inputArea = document.getElementById('input-area');
+            inputArea.classList.remove('hidden', 'opacity-50', 'pointer-events-none');
+            
+            renderMessages();
+            
+            if (window.innerWidth < 768) {
+                document.getElementById('sidebar').classList.add('-translate-x-full');
+            }
+            
+            setTimeout(() => document.getElementById('message-input').focus(), 50);
+        }
+
+        function toggleMobileSidebar() {
+            document.getElementById('sidebar').classList.remove('-translate-x-full');
+            activeChatId = null;
+            cancelEdit();
+            document.getElementById('input-area').classList.add('opacity-50', 'pointer-events-none');
+            document.getElementById('messages-container').innerHTML = `
+                <div class="flex h-full items-center justify-center flex-col text-slate-400 opacity-50">
+                    <i class="fa-regular fa-comments text-6xl mb-4"></i>
+                    <p class="font-semibold">Select a chat to start messaging</p>
+                </div>
+            `;
+            renderAppView();
+        }
+
+        function renderMessages() {
+            if (!activeChatId || !db.chats[activeChatId]) return;
+            
+            const container = document.getElementById('messages-container');
+            const messages = db.chats[activeChatId].messages || [];
+            
+            if (messages.length === 0) {
+                container.innerHTML = `<div class="text-center text-xs font-bold text-slate-400 my-8 uppercase tracking-widest border-b border-slate-200 dark:border-slate-800 pb-2">Beginning of Chat</div>`;
+                return;
+            }
+
+            const config = db.config || { deleteLimit: 1, editLimit: 24, historyLimit: 2 };
+            let html = '';
+            let lastSender = null;
+
+            messages.forEach(msg => {
+                const isMe = msg.sender === currentUserKey || (isAdmin && msg.sender === currentUserKey);
+                const showHeader = !isMe && lastSender !== msg.sender;
+                
+                const hoursSinceSent = (Date.now() - msg.timestamp) / 3600000;
+                
+                const canDelete = isAdmin || (isMe && hoursSinceSent <= (config.deleteLimit !== undefined ? config.deleteLimit : 1));
+                const canEdit = isAdmin || (isMe && hoursSinceSent <= (config.editLimit !== undefined ? config.editLimit : 24));
+                const hasHistory = msg.edits && msg.edits.length > 0;
+                const canViewHistory = isAdmin || (hoursSinceSent <= (config.historyLimit !== undefined ? config.historyLimit : 2));
+
+                let actionButtons = '';
+                if (canEdit) actionButtons += `<button onclick="startEdit(${msg.timestamp})" class="w-7 h-7 flex items-center justify-center rounded-full bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 dark:hover:bg-slate-700 text-slate-500 hover:text-brandAccent transition-colors shadow-sm"><i class="fa-solid fa-pen text-[10px]"></i></button>`;
+                if (canDelete) actionButtons += `<button onclick="deleteMessage(${msg.timestamp})" class="w-7 h-7 flex items-center justify-center rounded-full bg-rose-50 hover:bg-rose-100 dark:bg-rose-900/20 dark:hover:bg-rose-900/40 text-rose-400 hover:text-rose-600 transition-colors shadow-sm"><i class="fa-solid fa-trash text-[10px]"></i></button>`;
+                
+                const actionMenu = (actionButtons) ? `<div class="absolute ${isMe ? '-left-16' : '-right-16'} top-1/2 transform -translate-y-1/2 opacity-0 group-hover:opacity-100 transition-opacity flex items-center gap-1 z-10">${actionButtons}</div>` : '';
+                
+                let editedTag = '';
+                if (hasHistory) {
+                    if (canViewHistory) {
+                        editedTag = `<span onclick="showEditHistory(${msg.timestamp})" class="text-[10px] ml-2 ${isMe ? 'text-blue-200 hover:text-white' : 'text-blue-500 hover:text-brandAccent'} cursor-pointer italic underline transition-colors">(Edited)</span>`;
+                    } else {
+                        editedTag = `<span class="text-[10px] ml-2 ${isMe ? 'text-blue-200/50' : 'text-slate-400/50'} italic">(Edited)</span>`;
+                    }
+                }
+
+                html += `
+                    <div class="flex w-full ${isMe ? 'justify-end' : 'justify-start'} mb-1">
+                        <div class="max-w-[85%] md:max-w-[70%] flex flex-col relative group">
+                            ${showHeader ? `<span class="text-[11px] font-bold text-slate-500 mb-1 ml-1">${msg.senderName}</span>` : ''}
+                            <div class="message-bubble relative rounded-2xl px-4 py-2.5 text-[15px] leading-relaxed shadow-sm ${isMe ? 'bg-brandAccent text-white rounded-br-sm' : 'bg-white dark:bg-brand text-slate-800 dark:text-slate-200 border border-slate-200 dark:border-slate-700 rounded-bl-sm'} ${editingMsgId === msg.timestamp ? 'ring-2 ring-offset-2 ring-brandAccent dark:ring-offset-darkChatBg opacity-50' : ''}">
+                                ${msg.text.replace(/\n/g, '<br>')}
+                                <span class="text-[9px] opacity-0 group-hover:opacity-70 transition-opacity absolute ${isMe ? '-left-12' : '-right-12'} bottom-1 whitespace-nowrap">${formatDate(msg.timestamp).split(',')[0]}</span>
+                                ${editedTag}
+                                ${actionMenu}
+                            </div>
+                        </div>
+                    </div>
+                `;
+                lastSender = msg.sender;
+            });
+
+            if (container.innerHTML !== html) {
+                const isNearBottom = container.scrollHeight - container.scrollTop - container.clientHeight < 100;
+                container.innerHTML = html;
+                if (isNearBottom || (messages.length > 0 && messages[messages.length-1].sender === currentUserKey)) {
+                    container.scrollTop = container.scrollHeight;
+                }
+            }
+        }
+
+        // ==========================================
+        // EDIT / DELETE HANDLERS
+        // ==========================================
+        function startEdit(timestamp) {
+            const msgs = db.chats[activeChatId].messages;
+            const msg = msgs.find(m => m.timestamp === timestamp);
+            if (!msg) return;
+
+            editingMsgId = timestamp;
+            const input = document.getElementById('message-input');
+            input.value = msg.text;
+            input.focus();
+            
+            input.style.height = 'auto';
+            input.style.height = (input.scrollHeight) + 'px';
+
+            document.getElementById('edit-indicator').classList.remove('hidden');
+            document.getElementById('edit-indicator').classList.add('flex');
+            renderMessages(); 
+        }
+
+        function cancelEdit() {
+            editingMsgId = null;
+            const input = document.getElementById('message-input');
+            input.value = '';
+            input.style.height = 'auto';
+            
+            document.getElementById('edit-indicator').classList.add('hidden');
+            document.getElementById('edit-indicator').classList.remove('flex');
+            renderMessages(); 
+        }
+
+        function showEditHistory(timestamp) {
+            const msg = db.chats[activeChatId].messages.find(m => m.timestamp === timestamp);
+            if (!msg || !msg.edits) return;
+
+            const modal = document.getElementById('history-modal');
+            const list = document.getElementById('history-list');
+            const content = document.getElementById('history-modal-content');
+
+            let html = '';
+            msg.edits.forEach((edit, index) => {
+                html += `
+                    <div class="relative pl-6 border-l-2 border-slate-200 dark:border-slate-700 pb-6">
+                        <div class="absolute -left-[9px] top-0 w-4 h-4 rounded-full bg-slate-200 dark:bg-slate-700 border-4 border-white dark:border-brand"></div>
+                        <p class="text-xs font-bold text-slate-500 mb-2">${index === 0 ? 'Original' : 'Edited'} • ${formatDate(edit.timestamp)}</p>
+                        <div class="bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-800 p-3 rounded-lg text-sm line-through opacity-70">
+                            ${edit.text.replace(/\n/g, '<br>')}
+                        </div>
+                    </div>
+                `;
+            });
+            
+            html += `
+                <div class="relative pl-6 border-l-2 border-brandAccent pb-0">
+                    <div class="absolute -left-[9px] top-0 w-4 h-4 rounded-full bg-brandAccent border-4 border-white dark:border-brand"></div>
+                    <p class="text-xs font-bold text-brandAccent mb-2">Current Version</p>
+                    <div class="bg-blue-50 dark:bg-slate-800 border border-brandAccent p-3 rounded-lg text-sm font-medium">
+                        ${msg.text.replace(/\n/g, '<br>')}
+                    </div>
+                </div>
+            `;
+
+            list.innerHTML = html;
+            modal.classList.remove('hidden');
+            
+            requestAnimationFrame(() => {
+                modal.classList.remove('opacity-0');
+                content.classList.remove('scale-95');
+            });
+        }
+
+        function closeEditHistory() {
+            const modal = document.getElementById('history-modal');
+            const content = document.getElementById('history-modal-content');
+            
+            modal.classList.add('opacity-0');
+            content.classList.add('scale-95');
+            setTimeout(() => modal.classList.add('hidden'), 300);
+        }
+
+        async function sendMessage(e) {
+            e.preventDefault();
+            if (!activeChatId) return;
+            
+            const input = document.getElementById('message-input');
+            const text = input.value.trim();
+            const btn = document.getElementById('btn-send');
+            
+            if (!text) return;
+            
+            btn.disabled = true;
+
+            if (editingMsgId) {
+                const msgs = db.chats[activeChatId].messages;
+                const msg = msgs.find(m => m.timestamp === editingMsgId);
+                const oldText = msg.text;
+                if (msg) {
+                    if(!msg.edits) msg.edits = [];
+                    msg.edits.push({text: oldText, timestamp: Date.now()});
+                    msg.text = text;
+                }
+                
+                const editIdObj = editingMsgId;
+                cancelEdit(); 
+                renderAppView(); 
+
+                try {
+                    await apiRequest({ action: 'edit', userKey: currentUserKey, chatId: activeChatId, timestamp: editIdObj, newText: text });
+                } catch (err) {
+                    showToast(err.message, true);
+                    if(msg) { msg.text = oldText; msg.edits.pop(); renderMessages(); }
+                } finally {
+                    btn.disabled = false;
+                    input.focus();
+                }
+
+            } else {
+                const tempMsg = { sender: currentUserKey, senderName: isAdmin ? "Administrator" : db.users[currentUserKey].name, text: text, timestamp: new Date().getTime() };
+                if (!db.chats[activeChatId].messages) db.chats[activeChatId].messages = [];
+                db.chats[activeChatId].messages.push(tempMsg);
+                
+                input.value = '';
+                input.style.height = 'auto'; 
+                renderMessages();
+                renderAppView(); 
+
+                try {
+                    await apiRequest({ action: 'send', userKey: currentUserKey, chatId: activeChatId, text: text });
+                } catch (err) {
+                    showToast("Failed to send message.", true);
+                    db.chats[activeChatId].messages.pop();
+                    renderMessages();
+                } finally {
+                    btn.disabled = false;
+                    input.focus();
+                }
+            }
+        }
+
+        async function deleteMessage(timestamp) {
+            if (!confirm("Permanently delete this message?")) return;
+            
+            const msgs = db.chats[activeChatId].messages;
+            const idx = msgs.findIndex(m => m.timestamp === timestamp);
+            let backupMsg = null;
+            if (idx > -1) {
+                backupMsg = msgs[idx];
+                msgs.splice(idx, 1);
+                renderMessages();
+                renderAppView();
+            }
+
+            try {
+                await apiRequest({ action: 'delete', userKey: currentUserKey, chatId: activeChatId, timestamp: timestamp });
+            } catch (err) {
+                showToast(err.message, true);
+                if (backupMsg && idx > -1) {
+                    msgs.splice(idx, 0, backupMsg);
+                    renderMessages();
+                }
+            }
+        }
+
+        function handleEnter(e) {
+            if (e.key === 'Enter' && !e.shiftKey) {
+                e.preventDefault();
+                sendMessage(e);
+            }
+            e.target.style.height = 'auto';
+            e.target.style.height = (e.target.scrollHeight) + 'px';
+        }
+
+        // ==========================================
+        // POLLING SYSTEM (Real-time Sync)
+        // ==========================================
+        function startPolling() {
+            if (pollInterval) clearInterval(pollInterval);
+            pollInterval = setInterval(async () => {
+                if (!currentUserKey) return;
+                try {
+                    const data = await apiRequest({ action: 'fetch', userKey: currentUserKey });
+                    
+                    if (data.config) db.config = data.config;
+
+                    let hasNewMessages = false;
+                    let activeChatNeedsUpdate = false;
+                    
+                    for (let cId in data.chats) {
+                        const newMsgs = data.chats[cId].messages || [];
+                        const oldMsgs = db.chats[cId] ? (db.chats[cId].messages || []) : [];
+                        
+                        const newStr = JSON.stringify(newMsgs);
+                        const oldStr = JSON.stringify(oldMsgs);
+
+                        if (newStr !== oldStr) {
+                            if (cId === activeChatId) activeChatNeedsUpdate = true;
+                            
+                            if (newMsgs.length > oldMsgs.length && !isAdmin) {
+                                hasNewMessages = true;
+                                const newlyArrived = newMsgs.slice(oldMsgs.length);
+                                for (let msg of newlyArrived) {
+                                    if (msg.sender !== currentUserKey) {
+                                        notifyUser(data.chats[cId].name, msg.senderName, msg.text);
+                                    }
+                                }
+                            } else if (newMsgs.length !== oldMsgs.length) {
+                                hasNewMessages = true; 
+                            }
+                        }
+                    }
+
+                    db.chats = data.chats;
+                    
+                    if (hasNewMessages || activeChatNeedsUpdate) {
+                        if(hasNewMessages) renderAppView(); 
+                        if(activeChatNeedsUpdate) renderMessages();
+                    }
+                    
+                } catch (e) { console.warn("Polling error", e); }
+            }, 3000); 
+        }
+
+        function stopPolling() {
+            if (pollInterval) clearInterval(pollInterval);
+        }
+
+        // ==========================================
+        // ADMIN VIEW
+        // ==========================================
+        function renderAdminView() {
+            document.getElementById('view-admin').classList.remove('hidden');
+            document.getElementById('view-admin').classList.add('flex');
+            
+            const config = db.config || { deleteLimit: 1, editLimit: 24, historyLimit: 2 };
+            document.getElementById('conf-delete').value = config.deleteLimit;
+            document.getElementById('conf-edit').value = config.editLimit;
+            document.getElementById('conf-history').value = config.historyLimit;
+
+            const userList = document.getElementById('admin-user-list');
+            userList.innerHTML = Object.keys(db.users).map(uKey => `
+                <div class="flex items-start gap-3 p-3 bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl">
+                    <div class="w-8 h-8 rounded-lg bg-indigo-50 dark:bg-indigo-900/30 text-indigo-500 flex items-center justify-center font-bold text-xs flex-shrink-0 mt-1">
+                        ${db.users[uKey].name.charAt(0).toUpperCase()}
+                    </div>
+                    <div class="flex-1 min-w-0">
+                        <input type="text" value="${db.users[uKey].name}" onchange="adminUpdateUser('${uKey}', this.value)" class="w-full bg-transparent border-none font-bold text-sm focus:outline-none mb-2 p-0" placeholder="User Name">
+                        <div class="flex flex-col gap-1.5">
+                            <div class="flex items-center gap-2">
+                                <span class="text-[10px] font-bold text-slate-400 uppercase w-8 flex-shrink-0">Key</span>
+                                <code class="text-xs bg-white dark:bg-brand px-2 py-1 rounded border border-slate-200 dark:border-slate-700 text-slate-500 select-all flex-1 truncate">${uKey}</code>
+                                <button onclick="navigator.clipboard.writeText('${uKey}'); showToast('Key copied!')" class="text-slate-400 hover:text-brandAccent px-1 flex-shrink-0" title="Copy Key"><i class="fa-regular fa-copy"></i></button>
+                            </div>
+                            <div class="flex items-center gap-2">
+                                <span class="text-[10px] font-bold text-slate-400 uppercase w-8 flex-shrink-0">Link</span>
+                                <code class="text-[10px] bg-white dark:bg-brand px-2 py-1 rounded border border-slate-200 dark:border-slate-700 text-slate-400 select-all flex-1 truncate">https://rahulxnatha.github.io/chat/?key=${uKey}</code>
+                                <button onclick="navigator.clipboard.writeText('https://rahulxnatha.github.io/chat/?key=${uKey}'); showToast('Auto-login link copied!')" class="text-slate-400 hover:text-brandAccent px-1 flex-shrink-0" title="Copy Link"><i class="fa-solid fa-link"></i></button>
+                            </div>
+                        </div>
+                    </div>
+                    <button onclick="adminDeleteUser('${uKey}')" class="w-8 h-8 flex items-center justify-center text-red-400 hover:text-red-600 hover:bg-red-50 dark:hover:bg-red-900/20 rounded transition-colors flex-shrink-0 mt-1"><i class="fa-solid fa-trash"></i></button>
+                </div>
+            `).join('');
+
+            const chatList = document.getElementById('admin-chat-list');
+            chatList.innerHTML = Object.keys(db.chats).map(cId => {
+                const chat = db.chats[cId];
+                
+                const participantsHtml = Object.keys(db.users).map(uKey => {
+                    const isChecked = (chat.participants || []).includes(uKey);
+                    return `
+                        <label class="flex items-center gap-2 p-2 rounded hover:bg-slate-100 dark:hover:bg-slate-800 cursor-pointer border ${isChecked ? 'border-brandAccent bg-blue-50 dark:bg-slate-800' : 'border-transparent'}">
+                            <input type="checkbox" onchange="adminToggleParticipant('${cId}', '${uKey}', this.checked)" ${isChecked ? 'checked' : ''} class="w-4 h-4 text-brandAccent rounded focus:ring-brandAccent border-slate-300">
+                            <span class="text-sm font-semibold flex-1">${db.users[uKey].name}</span>
+                            ${isChecked ? `<button type="button" onclick="event.preventDefault(); navigator.clipboard.writeText('https://rahulxnatha.github.io/chat/?key=${uKey}&room=${cId}'); showToast('Direct room link copied!')" class="text-slate-400 hover:text-brandAccent text-xs px-2"><i class="fa-solid fa-link"></i></button>` : ''}
+                        </label>
+                    `;
+                }).join('');
+
+                return `
+                    <div class="p-4 bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl relative group">
+                        <button onclick="adminDeleteChat('${cId}')" class="absolute top-4 right-4 w-8 h-8 flex items-center justify-center text-red-400 hover:text-red-600 hover:bg-red-50 dark:hover:bg-red-900/20 rounded transition-colors opacity-0 group-hover:opacity-100"><i class="fa-solid fa-trash"></i></button>
+                        
+                        <div class="mb-4 pr-10">
+                            <label class="block text-xs font-bold text-slate-500 uppercase tracking-widest mb-1">Room Name</label>
+                            <input type="text" value="${chat.name}" onchange="adminUpdateChat('${cId}', this.value)" class="w-full bg-white dark:bg-brand border border-slate-200 dark:border-slate-700 rounded-lg px-3 py-2 font-bold text-sm focus:outline-none focus:border-brandAccent shadow-sm" placeholder="Chat Name">
+                        </div>
+                        
+                        <div>
+                            <label class="block text-xs font-bold text-slate-500 uppercase tracking-widest mb-2"><i class="fa-solid fa-user-lock mr-1"></i> Authorized Participants</label>
+                            <div class="grid grid-cols-1 sm:grid-cols-2 gap-2 bg-white dark:bg-brand p-2 rounded-lg border border-slate-200 dark:border-slate-700 max-h-48 overflow-y-auto">
+                                ${participantsHtml || '<div class="text-xs text-slate-400 p-2 italic">Add users first...</div>'}
+                            </div>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        function adminUpdateConfig(prop, val) {
+            if (!db.config) db.config = {};
+            db.config[prop] = parseFloat(val) || 0;
+        }
+
+        function adminAddUser() { const key = generateId('usr'); db.users[key] = { name: "New User" }; renderAdminView(); }
+        function adminUpdateUser(uKey, name) { db.users[uKey].name = name; }
+        
+        function adminDeleteUser(uKey) {
+            if (!confirm("Remove user? They will instantly lose access.")) return;
+            delete db.users[uKey];
+            for (let cId in db.chats) {
+                if (db.chats[cId].participants) db.chats[cId].participants = db.chats[cId].participants.filter(k => k !== uKey);
+            }
+            renderAdminView();
+        }
+
+        function adminAddChat() { const cId = generateId('chat'); db.chats[cId] = { name: "New Chat Room", participants: [] }; renderAdminView(); }
+        function adminUpdateChat(cId, name) { db.chats[cId].name = name; }
+
+        function adminToggleParticipant(cId, uKey, isChecked) {
+            if (!db.chats[cId].participants) db.chats[cId].participants = [];
+            if (isChecked) { if (!db.chats[cId].participants.includes(uKey)) db.chats[cId].participants.push(uKey); }
+            else { db.chats[cId].participants = db.chats[cId].participants.filter(k => k !== uKey); }
+            renderAdminView(); 
+        }
+
+        function adminDeleteChat(cId) {
+            if (!confirm("Delete this chat room completely? Messages will be lost.")) return;
+            delete db.chats[cId];
+            renderAdminView();
+        }
+
+        async function saveAdminData() {
+            const btn = document.getElementById('btn-admin-save');
+            btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Saving...';
+            btn.disabled = true;
+            try {
+                await apiRequest({ action: 'admin_save', adminKey: currentUserKey, db: db });
+                showToast("Configuration saved securely!");
+            } catch (err) { showToast(err.message, true); }
+            finally {
+                btn.innerHTML = '<i class="fa-solid fa-floppy-disk"></i> Save Configuration';
+                btn.disabled = false;
+            }
+        }
+    </script>
+</body>
+</html>
