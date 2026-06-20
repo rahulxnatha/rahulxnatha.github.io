@@ -2,103 +2,1099 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
     <title>Professional Chat | DOCS from Rahul</title>
+    
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
-        tailwind.config = { darkMode: 'class', theme: { extend: { colors: { brand: '#1e293b', brandAccent: '#3b82f6', chatBg: '#f8fafc', darkChatBg: '#0f172a' } } } }
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        brand: '#1e293b',
+                        brandAccent: '#3b82f6',
+                        chatBg: '#e2e8f0',
+                        darkChatBg: '#0b1120'
+                    }
+                }
+            }
+        }
     </script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
     <style>
-        ::-webkit-scrollbar { width: 4px; height: 4px; }
-        ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 4px; }
+        ::-webkit-scrollbar { width: 6px; height: 6px; }
+        ::-webkit-scrollbar-track { background: transparent; }
+        ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 10px; }
         .dark ::-webkit-scrollbar-thumb { background: #475569; }
-        .message-bubble { position: relative; }
-        .action-overlay { position: absolute; right: 0; bottom: -28px; display: none; }
-        .message-bubble:hover .action-overlay { display: flex; gap: 4px; }
-        .admin-scroll-area { max-height: 400px; overflow-y: auto; }
+        
+        body { -webkit-tap-highlight-color: transparent; overscroll-behavior-y: none; }
+        .preserve-newlines { white-space: pre-wrap; word-wrap: break-word; }
+        
+        .msg-enter { animation: popIn 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards; }
+        @keyframes popIn {
+            0% { opacity: 0; transform: scale(0.95) translateY(10px); }
+            100% { opacity: 1; transform: scale(1) translateY(0); }
+        }
+
+        /* Upgraded Message Bubble CSS */
+        .msg-row { display: flex; align-items: flex-end; width: 100%; margin-bottom: 6px; transition: background-color 0.2s; padding: 2px 12px; }
+        .msg-row.selected { background-color: rgba(59, 130, 246, 0.15); }
+        .sel-col { width: 32px; display: none; align-items: center; justify-content: flex-start; flex-shrink: 0; padding-bottom: 12px; }
+        .selection-mode .sel-col { display: flex; cursor: pointer; }
+        
+        .msg-bubble { display: flex; flex-direction: column; padding: 6px 10px 4px 10px; border-radius: 12px; max-w: 85%; min-w: 90px; position: relative; box-shadow: 0 1px 2px rgba(0,0,0,0.05); }
+        .msg-me { background-color: #3b82f6; color: white; border-bottom-right-radius: 2px; }
+        .msg-them { background-color: white; color: #1e293b; border-bottom-left-radius: 2px; border: 1px solid #e2e8f0; }
+        .dark .msg-them { background-color: #1e293b; color: #e2e8f0; border-color: #334155; }
+        
+        .msg-meta { display: flex; align-items: center; justify-content: flex-end; gap: 4px; font-size: 10px; opacity: 0.85; margin-top: 2px; height: 16px; }
+        .msg-action-btn { opacity: 0; transition: opacity 0.2s; background: rgba(0,0,0,0.15); border-radius: 50%; width: 18px; height: 18px; display: flex; align-items: center; justify-content: center; cursor: pointer; }
+        .msg-row:hover .msg-action-btn { opacity: 1; }
+        .selection-mode .msg-action-btn { display: none !important; }
+        .editing-glow { box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.5); opacity: 0.7; }
+        .msg-checkbox-wrapper input:checked + div { background-color: #3b82f6; border-color: #3b82f6; }
+        .msg-checkbox-wrapper input:checked + div i { opacity: 1; }
     </style>
 </head>
-<body class="font-sans antialiased text-slate-800 bg-slate-100 dark:bg-slate-900 h-screen overflow-hidden flex flex-col">
+<body class="font-sans antialiased text-slate-800 bg-slate-100 dark:bg-slate-900 dark:text-slate-200 h-[100dvh] w-screen overflow-hidden flex flex-col selection:bg-brandAccent selection:text-white relative">
 
-    <script>const GOOGLE_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwlbU-gk06opysLnE2r7u2xBwpvlS1xFwZtZvOSKZQF6ypj5cmAf6oPaVSL3XmU4W2j/exec";</script>
+    <script>
+        const GOOGLE_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxqOFvUJF-pKd3xOzivUtJMkD1PWCkt-f5aE2lYFWIcynq9KpUonZjSBBjjkWgwUsL7/exec";
+    </script>
 
     <!-- Header -->
-    <header class="h-14 bg-white dark:bg-brand border-b border-slate-200 dark:border-slate-800 flex items-center justify-between px-4 shadow-sm flex-shrink-0 z-20">
-        <div class="flex items-center gap-2">
-            <div class="w-7 h-7 rounded bg-brandAccent flex items-center justify-center text-white font-bold"><i class="fa-solid fa-comments text-xs"></i></div>
-            <h1 class="text-sm font-bold tracking-tight">Professional Chat</h1>
+    <header id="main-header" class="h-14 bg-white dark:bg-brand border-b border-slate-200 dark:border-slate-800 flex items-center justify-between px-4 lg:px-6 shadow-sm z-30 flex-shrink-0">
+        <div class="flex items-center gap-3">
+            <div class="w-7 h-7 rounded bg-brandAccent flex items-center justify-center text-white font-bold shadow-sm text-sm">
+                <i class="fa-solid fa-comments"></i>
+            </div>
+            <div>
+                <h1 class="text-sm font-bold leading-tight flex items-center gap-2">
+                    Professional Chat 
+                    <button onclick="toggleAdminMode()" id="admin-mode-indicator" class="hidden text-[9px] bg-indigo-500 hover:bg-indigo-600 text-white px-1.5 py-0.5 rounded shadow transition-colors"><i class="fa-solid fa-shield-halved mr-1"></i> Admin</button>
+                </h1>
+            </div>
         </div>
-        <div class="flex items-center gap-2">
-            <button onclick="toggleTheme()" class="text-slate-500 w-8 h-8 hover:bg-slate-100 dark:hover:bg-slate-800 rounded"><i class="fa-solid fa-moon text-xs"></i></button>
-            <div id="user-profile-badge" class="hidden text-xs font-bold border-l pl-3 ml-1">Admin</div>
+        
+        <div class="flex items-center gap-3 md:gap-4">
+            <div class="relative" id="settings-dropdown-wrapper">
+                <button onclick="toggleDropdown('settings-menu')" class="text-slate-500 hover:text-brandAccent transition-colors w-8 h-8 flex items-center justify-center rounded-full hover:bg-slate-100 dark:hover:bg-slate-800">
+                    <i class="fa-solid fa-gear"></i>
+                </button>
+                <div id="settings-menu" class="hidden absolute right-0 top-10 w-72 bg-white dark:bg-brand border border-slate-200 dark:border-slate-700 rounded-xl shadow-xl z-50 p-2 text-left">
+                    <div class="p-2 border-b border-slate-100 dark:border-slate-800 mb-2">
+                        <h4 class="text-xs font-bold uppercase tracking-widest text-slate-400">Settings & Profile</h4>
+                    </div>
+                    
+                    <div class="px-3 py-2 border-b border-slate-100 dark:border-slate-800 mb-1 space-y-3">
+                        <div>
+                            <label class="block text-[10px] text-slate-500 font-bold mb-1 uppercase tracking-widest">Display Name</label>
+                            <input type="text" id="profile-name-input" class="w-full bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded px-2 py-1.5 text-sm focus:outline-none focus:border-brandAccent" placeholder="Your Name">
+                        </div>
+                        <div>
+                            <label class="block text-[10px] text-slate-500 font-bold mb-1 uppercase tracking-widest">Resume Link (PDF/G-Drive)</label>
+                            <input type="text" id="profile-resume-input" class="w-full bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded px-2 py-1.5 text-sm font-mono focus:outline-none focus:border-brandAccent" placeholder="https://...">
+                        </div>
+                        <button onclick="updateProfile()" class="w-full bg-brandAccent text-white px-2 py-1.5 rounded text-xs font-bold hover:bg-blue-600 transition-colors shadow-sm"><i class="fa-solid fa-cloud-arrow-up mr-1"></i> Save Profile</button>
+                    </div>
+
+                    <label class="flex items-center justify-between px-3 py-2 cursor-pointer rounded hover:bg-slate-50 dark:hover:bg-slate-800 transition-colors mt-1">
+                        <span class="text-sm font-semibold"><i class="fa-regular fa-bell mr-2 text-slate-400 w-4"></i> Notifications</span>
+                        <input type="checkbox" id="notif-toggle" onchange="handleNotificationToggle(event)" class="w-4 h-4 text-brandAccent rounded focus:ring-brandAccent border-slate-300">
+                    </label>
+                    <label class="flex items-center justify-between px-3 py-2 cursor-pointer rounded hover:bg-slate-50 dark:hover:bg-slate-800 transition-colors">
+                        <span class="text-sm font-semibold"><i class="fa-solid fa-moon mr-2 text-slate-400 w-4"></i> Dark Mode</span>
+                        <input type="checkbox" id="theme-toggle" onchange="toggleTheme()" class="w-4 h-4 text-brandAccent rounded focus:ring-brandAccent border-slate-300">
+                    </label>
+                </div>
+            </div>
+
+            <div id="user-profile-badge" class="hidden items-center gap-2 pl-3 md:pl-4 border-l border-slate-200 dark:border-slate-700">
+                <span id="current-user-name" class="text-sm font-bold truncate max-w-[80px] md:max-w-[100px]"></span>
+                <button onclick="logout()" class="text-xs text-red-500 hover:bg-red-50 dark:hover:bg-red-900/20 px-2 py-1 rounded transition-colors" title="Log Out"><i class="fa-solid fa-right-from-bracket"></i></button>
+            </div>
         </div>
     </header>
 
-    <!-- VIEW: LOGIN (Simplified) -->
-    <div id="view-login" class="flex-1 flex items-center justify-center p-4">
-        <form onsubmit="handleLogin(event)" class="bg-white dark:bg-brand p-6 rounded-2xl shadow-xl w-full max-w-xs border border-slate-200 dark:border-slate-800">
-            <h2 class="text-lg font-bold mb-4 text-center">Login Portal</h2>
-            <input type="password" id="login-key" class="w-full bg-slate-50 dark:bg-slate-900 border rounded-lg px-4 py-2 text-sm mb-4" placeholder="Access Key">
-            <button type="submit" class="w-full bg-brandAccent text-white font-bold py-2 rounded-lg text-sm">Enter</button>
-        </form>
+    <!-- Selection Action Bar -->
+    <div id="selection-bar" class="hidden absolute top-0 left-0 w-full h-14 bg-brandAccent text-white flex items-center justify-between px-4 lg:px-6 z-40 shadow-md transform transition-transform">
+        <div class="flex items-center gap-4">
+            <button onclick="toggleSelectionMode()" class="w-8 h-8 rounded-full hover:bg-blue-600 flex items-center justify-center transition-colors"><i class="fa-solid fa-xmark"></i></button>
+            <span id="select-count" class="font-bold text-sm tracking-wide">0 Selected</span>
+        </div>
+        <button onclick="executeBulkDelete()" class="px-4 py-1.5 bg-white text-brandAccent rounded-lg text-sm font-bold shadow-sm hover:bg-slate-50 transition-colors"><i class="fa-solid fa-trash mr-1"></i> Delete Selected</button>
     </div>
 
-    <!-- VIEW: APP (Chat) -->
-    <div id="view-app" class="hidden flex-1 overflow-hidden flex">
-        <aside id="sidebar" class="w-64 bg-white dark:bg-brand border-r flex-col hidden md:flex">
-            <div class="p-3 text-[10px] font-bold text-slate-400 uppercase tracking-widest border-b">Chats</div>
-            <div id="chat-list" class="flex-1 overflow-y-auto p-2"></div>
+    <!-- VIEW: LOGIN -->
+    <div id="view-login" class="flex-1 flex items-center justify-center p-4">
+        <div class="bg-white dark:bg-brand p-8 rounded-2xl shadow-xl w-full max-w-sm border border-slate-200 dark:border-slate-800 text-center">
+            <div class="w-16 h-16 bg-blue-50 dark:bg-blue-900/30 text-brandAccent rounded-full flex items-center justify-center text-2xl mx-auto mb-6">
+                <i class="fa-solid fa-key"></i>
+            </div>
+            <h2 class="text-2xl font-bold mb-2">Access Portal</h2>
+            <p class="text-sm text-slate-500 dark:text-slate-400 mb-8">Enter your secure access key to join your assigned chat rooms.</p>
+            
+            <form onsubmit="handleLogin(event)" class="space-y-4">
+                <input type="password" id="login-key" required class="w-full bg-slate-50 dark:bg-slate-900 border border-slate-300 dark:border-slate-700 rounded-xl px-4 py-3 text-center font-mono tracking-widest focus:outline-none focus:border-brandAccent focus:ring-1 focus:ring-brandAccent transition-all" placeholder="••••••••">
+                <button type="submit" id="btn-login" class="w-full bg-brandAccent text-white font-bold py-3 rounded-xl hover:bg-blue-600 transition-all shadow-md shadow-blue-500/20 flex items-center justify-center gap-2">
+                    <span>Authenticate</span> <i class="fa-solid fa-arrow-right"></i>
+                </button>
+            </form>
+            <div id="login-error" class="text-red-500 text-sm mt-4 font-semibold hidden"></div>
+        </div>
+    </div>
+
+    <!-- VIEW: APP SCREEN -->
+    <div id="view-app" class="hidden flex-1 overflow-hidden relative">
+        <aside id="sidebar" class="absolute md:relative inset-y-0 left-0 w-full md:w-80 bg-white dark:bg-brand border-r border-slate-200 dark:border-slate-800 flex flex-col z-20 transition-transform duration-300 transform md:transform-none">
+            <div class="p-3 border-b border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-900/50 flex justify-between items-center h-14 flex-shrink-0">
+                <h2 class="text-[11px] font-bold text-slate-500 uppercase tracking-widest"><i class="fa-solid fa-layer-group mr-1"></i> Assigned Chats</h2>
+            </div>
+            <div id="chat-list" class="flex-1 overflow-y-auto p-2 space-y-1"></div>
         </aside>
-        <main class="flex-1 flex flex-col bg-slate-50 dark:bg-darkChatBg">
-            <div id="messages-container" class="flex-1 overflow-y-auto p-4 space-y-4"></div>
-            <div id="input-area" class="p-3 bg-white dark:bg-brand border-t flex gap-2">
-                <textarea id="message-input" class="flex-1 bg-slate-100 dark:bg-slate-900 rounded-lg px-3 py-2 text-sm focus:outline-none" rows="1"></textarea>
-                <button onclick="sendMessage()" class="bg-brandAccent text-white px-4 rounded-lg text-sm"><i class="fa-solid fa-paper-plane"></i></button>
+
+        <!-- Use min-h-0 to ensure proper nested flexbox scrolling on mobile devices -->
+        <main id="main-chat" class="flex-1 flex flex-col bg-chatBg dark:bg-darkChatBg relative z-0 h-full w-full min-h-0 min-w-0">
+            <div class="flex items-center justify-between gap-3 p-2 bg-white dark:bg-brand border-b border-slate-200 dark:border-slate-800 shadow-sm z-10 flex-shrink-0 h-14 w-full">
+                <div class="flex items-center gap-3 overflow-hidden flex-1">
+                    <button onclick="toggleMobileSidebar()" class="md:hidden w-8 h-8 flex-shrink-0 rounded hover:bg-slate-100 dark:hover:bg-slate-800 flex items-center justify-center text-slate-600 dark:text-slate-300"><i class="fa-solid fa-chevron-left"></i></button>
+                    <div class="flex flex-col flex-1 min-w-0">
+                        <h3 id="chat-title-text" class="font-bold truncate text-sm text-slate-800 dark:text-slate-200">Select a chat</h3>
+                        <p id="chat-desc-text" class="text-[10px] text-slate-500 truncate hidden mt-0.5"></p>
+                    </div>
+                </div>
+                <button onclick="toggleSelectionMode()" id="btn-selection-toggle" class="hidden w-9 h-9 flex-shrink-0 rounded-full hover:bg-slate-100 dark:hover:bg-slate-800 flex items-center justify-center text-slate-500 transition-colors" title="Select messages">
+                    <i class="fa-solid fa-check-double text-xs"></i>
+                </button>
+            </div>
+            
+            <div id="messages-container" class="flex-1 overflow-y-auto py-4 scroll-smooth w-full flex flex-col"></div>
+            
+            <!-- mt-auto ensures the input explicitly sits at the absolute bottom of the flex container -->
+            <div id="input-area" class="bg-white dark:bg-brand border-t border-slate-200 dark:border-slate-800 hidden opacity-50 pointer-events-none transition-opacity flex-shrink-0 pb-[env(safe-area-inset-bottom)] relative mt-auto w-full">
+                
+                <!-- Typing Indicator -->
+                <div id="typing-indicator" class="hidden absolute -top-5 left-4 text-[10px] font-bold text-brandAccent animate-pulse px-2 py-0.5 bg-white dark:bg-brand rounded-t-lg shadow-sm border border-b-0 border-slate-200 dark:border-slate-800"></div>
+
+                <!-- Edit Indicator -->
+                <div id="edit-indicator" class="hidden max-w-4xl mx-auto w-full justify-between items-center bg-blue-50 dark:bg-slate-800/50 text-brandAccent px-4 py-1.5 border-b border-blue-100 dark:border-slate-700 text-xs font-bold">
+                    <span><i class="fa-solid fa-pen mr-2"></i> Editing message...</span>
+                    <button type="button" onclick="cancelEdit()" class="text-slate-500 hover:text-red-500 w-6 h-6 flex items-center justify-center rounded-full hover:bg-white dark:hover:bg-brand"><i class="fa-solid fa-xmark"></i></button>
+                </div>
+                
+                <form onsubmit="sendMessage(event)" class="flex items-end gap-2 max-w-4xl mx-auto w-full p-2 md:p-3">
+                    <textarea id="message-input" rows="1" oninput="handleInputTyping(); handleInputResize(this)" class="flex-1 bg-slate-100 dark:bg-slate-900 border border-slate-300 dark:border-slate-700 rounded-2xl px-4 py-2.5 text-[15px] focus:outline-none focus:border-brandAccent focus:ring-1 focus:ring-brandAccent transition-all resize-none preserve-newlines max-h-32" placeholder="Type a message..." onkeydown="handleEnter(event)"></textarea>
+                    <button type="submit" id="btn-send" class="w-11 h-11 rounded-full bg-brandAccent text-white flex items-center justify-center flex-shrink-0 hover:bg-blue-600 transition-colors shadow-sm disabled:opacity-50"><i class="fa-solid fa-paper-plane"></i></button>
+                </form>
             </div>
         </main>
     </div>
 
-    <!-- VIEW: ADMIN -->
-    <div id="view-admin" class="hidden flex-1 flex-col overflow-hidden bg-slate-50 dark:bg-slate-900 p-4 gap-4">
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-4 h-full overflow-hidden">
-            <!-- Users Card -->
-            <div class="bg-white dark:bg-brand rounded-xl border flex flex-col h-full shadow-sm">
-                <div class="px-4 py-3 border-b flex justify-between items-center flex-shrink-0">
-                    <h3 class="font-bold text-sm">Authorized Users</h3>
-                    <button onclick="adminAddUser()" class="text-[10px] bg-brandAccent text-white px-2 py-1 rounded">New User</button>
-                </div>
-                <div id="admin-user-list" class="admin-scroll-area p-2 space-y-2"></div>
+    <!-- VIEW: ADMIN DASHBOARD -->
+    <div id="view-admin" class="hidden flex-1 overflow-hidden bg-slate-50 dark:bg-darkChatBg flex-col">
+        <div class="bg-white dark:bg-brand border-b border-slate-200 dark:border-slate-800 p-2 lg:px-6 flex justify-between items-center shadow-sm z-10 flex-wrap gap-2 h-12 flex-shrink-0">
+            <h2 class="text-sm font-bold flex items-center gap-2"><i class="fa-solid fa-shield-halved text-brandAccent"></i> Admin Control Panel</h2>
+            <div class="flex gap-2">
+                <button onclick="toggleAdminMode()" class="bg-slate-200 dark:bg-slate-800 hover:bg-slate-300 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-200 px-3 py-1 rounded text-xs font-bold shadow-sm transition-colors flex items-center gap-1.5"><i class="fa-regular fa-comments"></i> <span class="hidden sm:inline">Chat Mode</span></button>
+                <button onclick="saveAdminData()" id="btn-admin-save" class="bg-emerald-500 hover:bg-emerald-600 text-white px-3 py-1 rounded text-xs font-bold shadow-sm transition-colors flex items-center gap-1.5"><i class="fa-solid fa-floppy-disk"></i> <span class="hidden sm:inline">Save Data</span></button>
             </div>
-            <!-- Chats Card -->
-            <div class="bg-white dark:bg-brand rounded-xl border flex flex-col h-full shadow-sm">
-                <div class="px-4 py-3 border-b flex justify-between items-center flex-shrink-0">
-                    <h3 class="font-bold text-sm">Chat Rooms</h3>
-                    <button onclick="adminAddChat()" class="text-[10px] bg-brandAccent text-white px-2 py-1 rounded">Create Room</button>
+        </div>
+        
+        <div class="flex-1 overflow-y-auto p-4">
+            <div class="max-w-6xl mx-auto grid grid-cols-1 lg:grid-cols-2 gap-6 h-[calc(100vh-100px)]">
+                
+                <!-- Manage Users Box with Sticky Header -->
+                <div class="flex flex-col bg-white dark:bg-brand rounded-xl border border-slate-200 dark:border-slate-800 shadow-sm overflow-hidden h-full max-h-[700px]">
+                    <div class="sticky top-0 bg-slate-50 dark:bg-slate-900 border-b border-slate-200 dark:border-slate-800 p-3 flex justify-between items-center z-10">
+                        <h3 class="font-bold text-sm"><i class="fa-solid fa-users text-slate-400 mr-2"></i> Authorized Users</h3>
+                        <button onclick="adminAddUser()" class="text-[10px] bg-white dark:bg-brand border border-slate-200 dark:border-slate-700 hover:border-brandAccent px-2 py-1 rounded font-bold transition-colors"><i class="fa-solid fa-plus mr-1"></i> Add User</button>
+                    </div>
+                    <div class="flex-1 overflow-y-auto p-3 space-y-2" id="admin-user-list"></div>
                 </div>
-                <div id="admin-chat-list" class="admin-scroll-area p-2 space-y-2"></div>
+
+                <div class="flex flex-col gap-6 h-full max-h-[700px]">
+                    <!-- Manage Chats Box with Sticky Header -->
+                    <div class="flex flex-col bg-white dark:bg-brand rounded-xl border border-slate-200 dark:border-slate-800 shadow-sm overflow-hidden flex-1 min-h-[250px]">
+                        <div class="sticky top-0 bg-slate-50 dark:bg-slate-900 border-b border-slate-200 dark:border-slate-800 p-3 flex justify-between items-center z-10">
+                            <h3 class="font-bold text-sm"><i class="fa-solid fa-comments text-slate-400 mr-2"></i> Chat Rooms</h3>
+                            <button onclick="adminAddChat()" class="text-[10px] bg-white dark:bg-brand border border-slate-200 dark:border-slate-700 hover:border-brandAccent px-2 py-1 rounded font-bold transition-colors"><i class="fa-solid fa-plus mr-1"></i> Create Room</button>
+                        </div>
+                        <div class="flex-1 overflow-y-auto p-3 space-y-4" id="admin-chat-list"></div>
+                    </div>
+                    
+                    <!-- Global Config Box -->
+                    <div class="bg-white dark:bg-brand p-4 rounded-xl shadow-sm border border-slate-200 dark:border-slate-800 flex-shrink-0">
+                        <h3 class="font-bold text-sm mb-3"><i class="fa-solid fa-scale-balanced text-slate-400 mr-2"></i> Global Chat Rules</h3>
+                        <div class="grid grid-cols-3 gap-3">
+                            <div>
+                                <label class="block text-[10px] font-bold text-slate-500 uppercase tracking-widest mb-1">Delete (Hrs)</label>
+                                <input type="number" step="any" id="conf-delete" onchange="adminUpdateConfig('deleteLimit', this.value)" class="w-full bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded px-2 py-1.5 text-xs focus:outline-none focus:border-brandAccent">
+                            </div>
+                            <div>
+                                <label class="block text-[10px] font-bold text-slate-500 uppercase tracking-widest mb-1">Edit (Hrs)</label>
+                                <input type="number" step="any" id="conf-edit" onchange="adminUpdateConfig('editLimit', this.value)" class="w-full bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded px-2 py-1.5 text-xs focus:outline-none focus:border-brandAccent">
+                            </div>
+                            <div>
+                                <label class="block text-[10px] font-bold text-slate-500 uppercase tracking-widest mb-1">History (Hrs)</label>
+                                <input type="number" step="any" id="conf-history" onchange="adminUpdateConfig('historyLimit', this.value)" class="w-full bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded px-2 py-1.5 text-xs focus:outline-none focus:border-brandAccent">
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
 
+    <!-- Edit History Modal -->
+    <div id="history-modal" class="hidden fixed inset-0 z-[100] bg-slate-900/50 backdrop-blur-sm flex items-center justify-center p-4 opacity-0 transition-opacity duration-300">
+        <div class="bg-white dark:bg-brand w-full max-w-lg rounded-2xl shadow-2xl border border-slate-200 dark:border-slate-800 flex flex-col max-h-[80vh] transform scale-95 transition-transform duration-300" id="history-modal-content">
+            <div class="p-3 border-b border-slate-200 dark:border-slate-800 flex justify-between items-center">
+                <h3 class="font-bold text-sm"><i class="fa-solid fa-clock-rotate-left text-brandAccent mr-2"></i> Edit History</h3>
+                <button onclick="closeEditHistory()" class="w-7 h-7 rounded-full bg-slate-100 dark:bg-slate-800 flex items-center justify-center text-slate-500 hover:text-red-500 transition-colors"><i class="fa-solid fa-xmark"></i></button>
+            </div>
+            <div id="history-list" class="p-4 overflow-y-auto space-y-4"></div>
+        </div>
+    </div>
+
+    <div id="toast" class="fixed bottom-[env(safe-area-inset-bottom,24px)] left-1/2 transform -translate-x-1/2 bg-slate-900 text-white px-6 py-3 rounded-full shadow-2xl z-[9999] font-bold text-sm transition-all duration-300 translate-y-10 opacity-0 pointer-events-none"></div>
+
     <script>
-        // ... [Include logic from previous version for auth/polling/etc] ...
-        // Re-implementing specific message rendering for the timestamp logic:
+        let currentUserKey = null;
+        let isAdmin = false;
+        let currentAdminView = 'dashboard';
+        let db = { users: {}, chats: {}, config: { deleteLimit: 1, editLimit: 24, historyLimit: 2 } };
+        let activeChatId = null;
+        let pollInterval = null;
+        let isPolling = false; // Anti-flood mechanism
+        let pendingRoomId = null;
+        let editingMsgId = null; 
+        
+        let pendingSends = []; 
+        let selectedMessages = new Set();
+        let isSelectionMode = false;
+        let lastSelectedTimestamp = null;
+        let allUsersDb = {}; 
+        let lastTypingSent = 0;
+
+        let notificationsEnabled = localStorage.getItem('pc_notif') === 'true';
+        document.getElementById('notif-toggle').checked = notificationsEnabled;
+        
+        let themeState = localStorage.getItem('theme') || (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+        if (themeState === 'dark') {
+            document.documentElement.classList.add('dark');
+            document.getElementById('theme-toggle').checked = true;
+        }
+
+        const urlParams = new URLSearchParams(window.location.search);
+        const autoLoginKey = urlParams.get('key');
+        const autoLoginRoom = urlParams.get('room');
+
+        if (autoLoginKey) {
+            currentUserKey = autoLoginKey;
+            if (autoLoginRoom) pendingRoomId = autoLoginRoom;
+            window.history.replaceState({}, document.title, window.location.pathname);
+        } else {
+            currentUserKey = localStorage.getItem('pc_user_key') || null;
+        }
+
+        function toggleTheme() {
+            document.documentElement.classList.toggle('dark');
+            const isDark = document.documentElement.classList.contains('dark');
+            localStorage.setItem('theme', isDark ? 'dark' : 'light');
+            document.getElementById('theme-toggle').checked = isDark;
+        }
+
+        function toggleDropdown(id) {
+            const el = document.getElementById(id);
+            if (el.classList.contains('hidden')) {
+                document.querySelectorAll('[id$="-menu"]').forEach(m => m.classList.add('hidden'));
+                el.classList.remove('hidden');
+                if(id === 'settings-menu') {
+                    document.getElementById('profile-name-input').value = db.users && db.users[currentUserKey] ? db.users[currentUserKey].name : '';
+                    document.getElementById('profile-resume-input').value = db.users && db.users[currentUserKey] && db.users[currentUserKey].resumeLink ? db.users[currentUserKey].resumeLink : '';
+                }
+            } else {
+                el.classList.add('hidden');
+            }
+        }
+
+        document.addEventListener('click', (e) => {
+            if (!e.target.closest('#settings-dropdown-wrapper')) {
+                const sm = document.getElementById('settings-menu');
+                if(sm) sm.classList.add('hidden');
+            }
+        });
+
+        function handleNotificationToggle(e) {
+            notificationsEnabled = e.target.checked;
+            localStorage.setItem('pc_notif', notificationsEnabled);
+            if (notificationsEnabled) requestNotificationPermission();
+        }
+
+        function showToast(msg, isError = false) {
+            const toast = document.getElementById('toast');
+            toast.innerText = msg;
+            toast.className = `fixed bottom-[env(safe-area-inset-bottom,24px)] left-1/2 transform -translate-x-1/2 px-6 py-3 rounded-full shadow-2xl z-[9999] font-bold text-sm transition-all duration-300 border ${isError ? 'bg-red-600 text-white border-red-700' : 'bg-slate-900 text-white border-slate-700'}`;
+            requestAnimationFrame(() => toast.classList.remove('translate-y-10', 'opacity-0'));
+            setTimeout(() => toast.classList.add('translate-y-10', 'opacity-0'), 3000);
+        }
+
+        function playNotificationSound() {
+            try {
+                if(!notificationsEnabled) return;
+                const audio = new Audio('https://actions.google.com/sounds/v1/communication/pop_up_notification.ogg');
+                audio.volume = 0.5;
+                audio.play().catch(e => {}); 
+            } catch (e) {}
+        }
+
+        function notifyUser(chatName, senderName, text) {
+            if (!notificationsEnabled) return;
+            playNotificationSound();
+            if ("Notification" in window && Notification.permission === "granted" && document.hidden) {
+                const notification = new Notification(`New message in ${chatName}`, { body: `${senderName}: ${text}` });
+                notification.onclick = function() { window.focus(); this.close(); };
+            } else {
+                showToast(`New msg from ${senderName} in ${chatName}`);
+            }
+        }
+
+        function requestNotificationPermission() {
+            if ("Notification" in window && Notification.permission !== "granted" && Notification.permission !== "denied") {
+                Notification.requestPermission().catch(e => {});
+            }
+        }
+
+        function generateId(prefix) { return prefix + '_' + Math.random().toString(36).substr(2, 6); }
+
+        function formatTime(timestamp) {
+            return new Date(timestamp).toLocaleTimeString([], { hour: 'numeric', minute: '2-digit' });
+        }
+
+        function formatDate(timestamp) {
+            return new Date(timestamp).toLocaleDateString([], { month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' });
+        }
+
+        function handleInputResize(el) {
+            el.style.height = 'auto';
+            el.style.height = (el.scrollHeight) + 'px';
+        }
+
+        // Hardened fetch to correctly parse failed network calls
+        async function apiRequest(payload) {
+            if (!GOOGLE_SCRIPT_URL || GOOGLE_SCRIPT_URL.includes("YOUR_GOOGLE_SCRIPT")) throw new Error("Backend URL missing.");
+            try {
+                const response = await fetch(GOOGLE_SCRIPT_URL, { 
+                    method: 'POST', 
+                    headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+                    body: JSON.stringify(payload) 
+                });
+                
+                const text = await response.text(); 
+                let data;
+                try {
+                    data = JSON.parse(text);
+                } catch (parseErr) {
+                    throw new Error("Server returned an invalid response. Please verify Google Apps Script deployment settings.");
+                }
+                
+                if (data.error) throw new Error(data.error);
+                return data;
+            } catch (networkErr) {
+                throw new Error(networkErr.message || "Network request failed.");
+            }
+        }
+
+        async function handleLogin(e) {
+            if(e) e.preventDefault();
+            const keyInput = document.getElementById('login-key').value.trim();
+            const btn = document.getElementById('btn-login');
+            const errDiv = document.getElementById('login-error');
+            if (!keyInput) return;
+            
+            btn.innerHTML = '<i class="fa-solid fa-circle-notch fa-spin"></i> Authenticating...';
+            btn.disabled = true;
+            errDiv.classList.add('hidden');
+
+            try {
+                const data = await apiRequest({ action: 'fetch', userKey: keyInput });
+                currentUserKey = keyInput;
+                localStorage.setItem('pc_user_key', keyInput);
+                isAdmin = data.isAdmin;
+                db.config = data.config || { deleteLimit: 1, editLimit: 24, historyLimit: 2 };
+                
+                if (isAdmin) {
+                    db.users = data.db.users || {};
+                    db.chats = data.db.chats || {};
+                    renderAdminView();
+                } else {
+                    db.users = { [keyInput]: data.user };
+                    db.chats = data.chats || {};
+                    allUsersDb = data.allUsers || {}; 
+                    renderAppView();
+                    if (pendingRoomId && db.chats[pendingRoomId]) {
+                        selectChat(pendingRoomId);
+                        pendingRoomId = null;
+                    }
+                    startPolling();
+                }
+
+                document.getElementById('view-login').classList.add('hidden');
+                document.getElementById('user-profile-badge').classList.remove('hidden');
+                document.getElementById('user-profile-badge').classList.add('flex');
+                document.getElementById('current-user-name').innerText = isAdmin ? 'Administrator' : data.user.name;
+            } catch (error) {
+                errDiv.innerText = error.message;
+                errDiv.classList.remove('hidden');
+                currentUserKey = null;
+                localStorage.removeItem('pc_user_key');
+            } finally {
+                btn.innerHTML = '<span>Authenticate</span> <i class="fa-solid fa-arrow-right"></i>';
+                btn.disabled = false;
+            }
+        }
+
+        function logout() {
+            stopPolling();
+            currentUserKey = null; isAdmin = false; activeChatId = null;
+            db = { users: {}, chats: {}, config: {} }; allUsersDb = {};
+            localStorage.removeItem('pc_user_key');
+            document.getElementById('login-key').value = '';
+            document.getElementById('view-login').classList.remove('hidden');
+            document.getElementById('view-app').classList.add('hidden');
+            document.getElementById('view-app').classList.remove('flex');
+            document.getElementById('view-admin').classList.add('hidden');
+            document.getElementById('view-admin').classList.remove('flex');
+            document.getElementById('user-profile-badge').classList.add('hidden');
+            document.getElementById('user-profile-badge').classList.remove('flex');
+            document.getElementById('admin-mode-indicator').classList.add('hidden');
+            currentAdminView = 'dashboard';
+            clearSelection();
+        }
+
+        if (currentUserKey) {
+            document.getElementById('login-key').value = currentUserKey;
+            setTimeout(() => { const btn = document.getElementById('btn-login'); if(btn) btn.click(); }, 100);
+        }
+
+        async function updateProfile() {
+            const nameInput = document.getElementById('profile-name-input').value.trim();
+            const resumeInput = document.getElementById('profile-resume-input').value.trim();
+            if (!nameInput) return;
+            const oldName = db.users[currentUserKey].name;
+            const oldResume = db.users[currentUserKey].resumeLink;
+            db.users[currentUserKey].name = nameInput;
+            db.users[currentUserKey].resumeLink = resumeInput;
+            document.getElementById('current-user-name').innerText = nameInput;
+            toggleDropdown('settings-menu');
+            try {
+                await apiRequest({ action: 'update_profile', userKey: currentUserKey, newName: nameInput, newResumeLink: resumeInput });
+                showToast("Profile updated successfully.");
+            } catch (e) {
+                showToast("Failed to update profile.", true);
+                db.users[currentUserKey].name = oldName;
+                db.users[currentUserKey].resumeLink = oldResume;
+                document.getElementById('current-user-name').innerText = oldName;
+            }
+        }
+
+        function toggleAdminMode() {
+            if (currentAdminView === 'dashboard') {
+                currentAdminView = 'chat';
+                document.getElementById('view-admin').classList.add('hidden');
+                document.getElementById('view-admin').classList.remove('flex');
+                document.getElementById('admin-mode-indicator').classList.remove('hidden');
+                renderAppView();
+                startPolling(); 
+            } else {
+                currentAdminView = 'dashboard';
+                stopPolling();
+                document.getElementById('view-app').classList.add('hidden');
+                document.getElementById('view-app').classList.remove('flex');
+                document.getElementById('admin-mode-indicator').classList.add('hidden');
+                renderAdminView();
+            }
+        }
+
+        function renderAppView() {
+            document.getElementById('view-app').classList.remove('hidden');
+            document.getElementById('view-app').classList.add('flex');
+            
+            const list = document.getElementById('chat-list');
+            const chatIds = Object.keys(db.chats);
+            
+            if (chatIds.length === 0) {
+                list.innerHTML = `<div class="p-4 text-[11px] font-bold text-slate-400 text-center mt-4">NO CHATS ASSIGNED</div>`;
+                return;
+            }
+
+            list.innerHTML = chatIds.map(cId => {
+                const chat = db.chats[cId];
+                const isActive = cId === activeChatId;
+                
+                const allMsgs = (chat.messages || []).concat(pendingSends.filter(p => p.chatId === cId));
+                allMsgs.sort((a,b) => a.timestamp - b.timestamp);
+                
+                const lastMsg = allMsgs.length > 0 ? allMsgs[allMsgs.length-1] : null;
+                let preview = 'New chat created...';
+                if (lastMsg) preview = (lastMsg.sender === currentUserKey ? 'You: ' : '') + lastMsg.text.replace(/\n/g, ' ');
+                
+                return `
+                    <div onclick="selectChat('${cId}')" class="p-2.5 rounded-xl cursor-pointer transition-all border ${isActive ? 'bg-blue-50 dark:bg-slate-800 border-brandAccent shadow-sm' : 'border-transparent hover:bg-slate-100 dark:hover:bg-slate-800/50'}">
+                        <h4 class="font-bold text-sm truncate ${isActive ? 'text-brandAccent' : 'text-slate-800 dark:text-slate-200'}">${chat.name}</h4>
+                        <p class="text-[11px] text-slate-500 truncate mt-0.5">${preview}</p>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        function selectChat(cId) {
+            activeChatId = cId;
+            cancelEdit(); 
+            clearSelection();
+            renderAppView(); 
+            
+            const chat = db.chats[cId];
+            const titleEl = document.getElementById('chat-title-text');
+            if (titleEl) titleEl.innerText = chat.name;
+            const descEl = document.getElementById('chat-desc-text');
+            if(descEl) {
+                if(chat.description) {
+                    descEl.innerText = chat.description;
+                    descEl.classList.remove('hidden');
+                } else {
+                    descEl.classList.add('hidden');
+                }
+            }
+            
+            const inputArea = document.getElementById('input-area');
+            if(inputArea) inputArea.classList.remove('hidden', 'opacity-50', 'pointer-events-none');
+            
+            const btnSel = document.getElementById('btn-selection-toggle');
+            if(btnSel) btnSel.classList.remove('hidden');
+            
+            renderMessages();
+            
+            if (window.innerWidth < 768) {
+                const sb = document.getElementById('sidebar');
+                if(sb) sb.classList.add('-translate-x-full');
+            }
+        }
+
+        function toggleMobileSidebar() {
+            document.getElementById('sidebar').classList.remove('-translate-x-full');
+            activeChatId = null;
+            cancelEdit();
+            clearSelection();
+            const inputArea = document.getElementById('input-area');
+            if(inputArea) inputArea.classList.add('opacity-50', 'pointer-events-none');
+            
+            const msgCont = document.getElementById('messages-container');
+            if(msgCont) msgCont.innerHTML = `
+                <div class="flex h-full items-center justify-center flex-col text-slate-400 opacity-50">
+                    <i class="fa-regular fa-comments text-5xl mb-3"></i>
+                    <p class="font-bold text-sm">Select a chat</p>
+                </div>
+            `;
+            const titleEl = document.getElementById('chat-title-text');
+            if(titleEl) titleEl.innerText = "Select a chat";
+            const descEl = document.getElementById('chat-desc-text');
+            if(descEl) descEl.classList.add('hidden');
+            const btnSel = document.getElementById('btn-selection-toggle');
+            if(btnSel) btnSel.classList.add('hidden');
+            renderAppView();
+        }
+
+        // --- CHECKBOX & BULK SELECTION ---
+        function toggleSelectionMode() {
+            isSelectionMode = !isSelectionMode;
+            if (!isSelectionMode) {
+                selectedMessages.clear();
+                lastSelectedTimestamp = null;
+                document.getElementById('selection-bar').classList.add('hidden');
+            } else {
+                document.getElementById('selection-bar').classList.remove('hidden');
+                document.getElementById('select-count').innerText = `0 Selected`;
+            }
+            
+            // Add a CSS class to body so bubbles update their rendering automatically
+            if (isSelectionMode) document.body.classList.add('selection-mode');
+            else document.body.classList.remove('selection-mode');
+            
+            renderMessages();
+        }
+
+        function toggleMsgSelect(e, timestamp) {
+            if(e) e.stopPropagation();
+            if (e.shiftKey && lastSelectedTimestamp && lastSelectedTimestamp !== timestamp) {
+                const combined = (db.chats[activeChatId].messages || []).concat(pendingSends.filter(p => p.chatId === activeChatId));
+                combined.sort((a,b) => a.timestamp - b.timestamp);
+                
+                const times = combined.map(m => m.timestamp);
+                const idx1 = times.indexOf(lastSelectedTimestamp);
+                const idx2 = times.indexOf(timestamp);
+                if (idx1 > -1 && idx2 > -1) {
+                    const start = Math.min(idx1, idx2);
+                    const end = Math.max(idx1, idx2);
+                    for(let i=start; i<=end; i++){
+                        const m = combined[i];
+                        if (isAdmin || m.sender === currentUserKey) selectedMessages.add(m.timestamp);
+                    }
+                }
+            } else {
+                if (selectedMessages.has(timestamp)) selectedMessages.delete(timestamp);
+                else selectedMessages.add(timestamp);
+            }
+            
+            lastSelectedTimestamp = timestamp;
+            
+            const selBar = document.getElementById('selection-bar');
+            if (isSelectionMode) {
+                selBar.classList.remove('hidden');
+                const selCount = document.getElementById('select-count');
+                if(selCount) selCount.innerText = `${selectedMessages.size} Selected`;
+            }
+            renderMessages();
+        }
+
+        function clearSelection() {
+            selectedMessages.clear();
+            isSelectionMode = false;
+            lastSelectedTimestamp = null;
+            document.body.classList.remove('selection-mode');
+            document.getElementById('selection-bar').classList.add('hidden');
+            renderMessages();
+        }
+
+        async function executeBulkDelete() {
+            if (selectedMessages.size === 0) {
+                clearSelection();
+                return;
+            }
+            if (!confirm(`Delete ${selectedMessages.size} selected messages permanently?`)) return;
+            
+            const timestampsArr = Array.from(selectedMessages);
+            const msgs = db.chats[activeChatId].messages || [];
+            const backupMsgs = [...msgs];
+            db.chats[activeChatId].messages = msgs.filter(m => !timestampsArr.includes(m.timestamp));
+            
+            clearSelection();
+            renderAppView();
+
+            try {
+                await apiRequest({ action: 'delete', userKey: currentUserKey, chatId: activeChatId, timestamps: timestampsArr });
+            } catch (e) {
+                showToast("Failed to delete some messages: " + e.message, true);
+                db.chats[activeChatId].messages = backupMsgs;
+                renderMessages();
+            }
+        }
+
         function renderMessages() {
-            // ... inside the loop ...
-            /* html += `
-                <div class="flex ${isMe ? 'justify-end' : 'justify-start'}">
-                    <div class="message-bubble bg-white dark:bg-slate-800 p-3 rounded-lg text-sm max-w-[80%]">
-                        ${msg.text}
-                        <div class="text-[9px] text-slate-400 mt-1 text-right">${formatDate(msg.timestamp)}</div>
-                        <div class="action-overlay">
-                            <button onclick="startEdit(${msg.timestamp})" class="bg-slate-200 p-1 rounded"><i class="fa-solid fa-pen text-[9px]"></i></button>
-                            <button onclick="deleteMessage(${msg.timestamp})" class="bg-rose-100 text-rose-600 p-1 rounded"><i class="fa-solid fa-trash text-[9px]"></i></button>
+            if (!activeChatId || !db.chats[activeChatId]) return;
+            
+            const container = document.getElementById('messages-container');
+            if(!container) return;
+            const confirmedMsgs = db.chats[activeChatId].messages || [];
+            const localPending = pendingSends.filter(p => p.chatId === activeChatId);
+            
+            let messages = confirmedMsgs.concat(localPending);
+            messages.sort((a,b) => a.timestamp - b.timestamp);
+            
+            if (messages.length === 0) {
+                container.innerHTML = `<div class="text-center text-[10px] font-bold text-slate-400 my-8 uppercase tracking-widest border-b border-slate-200 dark:border-slate-800 pb-2">Beginning of Chat</div>`;
+                return;
+            }
+
+            const config = db.config || { deleteLimit: 1, editLimit: 24, historyLimit: 2 };
+            let html = '';
+            let lastSender = null;
+            const chatObj = db.chats[activeChatId];
+            const otherParticipants = (chatObj.participants || []).filter(p => p !== currentUserKey);
+
+            messages.forEach(msg => {
+                const isMe = msg.sender === currentUserKey || (isAdmin && msg.sender === currentUserKey);
+                const showHeader = !isMe && lastSender !== msg.sender;
+                const isPending = !!msg.localId; 
+                const hoursSinceSent = (Date.now() - msg.timestamp) / 3600000;
+                
+                const canDelete = isAdmin || (isMe && hoursSinceSent <= (config.deleteLimit !== undefined ? config.deleteLimit : 1));
+                const canEdit = !isPending && (isAdmin || (isMe && hoursSinceSent <= (config.editLimit !== undefined ? config.editLimit : 24)));
+                const hasHistory = msg.edits && msg.edits.length > 0;
+                const canViewHistory = isAdmin || (hoursSinceSent <= (config.historyLimit !== undefined ? config.historyLimit : 2));
+                const isSelected = selectedMessages.has(msg.timestamp);
+
+                let ticksHtml = '';
+                if (isMe) {
+                    if (isPending) {
+                        ticksHtml = `<i class="fa-regular fa-clock text-[9px] opacity-70"></i>`;
+                    } else {
+                        let status = 'sent'; 
+                        if (otherParticipants.length > 0) {
+                            let readCount = 0; let deliveredCount = 0;
+                            otherParticipants.forEach(p => {
+                                const pData = allUsersDb[p];
+                                if (pData && pData.lastPolled >= msg.timestamp) deliveredCount++;
+                                if (chatObj.readReceipts && chatObj.readReceipts[p] >= msg.timestamp) readCount++;
+                            });
+                            if (readCount === otherParticipants.length) status = 'read';
+                            else if (deliveredCount === otherParticipants.length) status = 'delivered';
+                        }
+                        if (status === 'read') ticksHtml = `<i class="fa-solid fa-check-double text-[#60a5fa] drop-shadow-sm"></i>`;
+                        else if (status === 'delivered') ticksHtml = `<i class="fa-solid fa-check-double"></i>`;
+                        else ticksHtml = `<i class="fa-solid fa-check"></i>`;
+                    }
+                }
+
+                const checkboxHtml = canDelete ? `
+                    <div class="sel-col" onclick="toggleMsgSelect(event, ${msg.timestamp})">
+                        <div class="w-5 h-5 rounded-full border-2 flex items-center justify-center transition-colors ${isSelected ? 'bg-brandAccent border-brandAccent text-white' : 'border-slate-300 dark:border-slate-600 text-transparent'}">
+                            <i class="fa-solid fa-check text-[11px]"></i>
                         </div>
+                    </div>
+                ` : `<div class="sel-col"></div>`;
+
+                let actionBtn = '';
+                if (canEdit && !isSelectionMode) {
+                    actionBtn = `<div class="msg-action-btn" onclick="event.stopPropagation(); startEdit(${msg.timestamp})" title="Edit Message"><i class="fa-solid fa-pen text-[9px]"></i></div>`;
+                }
+                
+                let editedTag = '';
+                if (hasHistory) {
+                    if (canViewHistory) editedTag = `<span onclick="event.stopPropagation(); showEditHistory(${msg.timestamp})" class="${isMe ? 'text-blue-100 hover:text-white' : 'text-blue-500 hover:text-brandAccent'} cursor-pointer italic underline transition-colors">Edited</span>`;
+                    else editedTag = `<span class="${isMe ? 'text-blue-200/60' : 'text-slate-400/60'} italic">Edited</span>`;
+                }
+
+                let resumeBadge = '';
+                if (showHeader && !isMe) {
+                    const senderProfile = allUsersDb[msg.sender];
+                    if (senderProfile && senderProfile.resumeLink) {
+                        resumeBadge = `<a href="${senderProfile.resumeLink}" target="_blank" title="View Resume" class="ml-1.5 text-red-500 hover:text-red-600 transition-colors"><i class="fa-solid fa-file-pdf"></i></a>`;
+                    }
+                }
+
+                html += `
+                    <div class="msg-row ${isSelected ? 'selected' : ''} ${isPending ? 'msg-enter' : ''}" onclick="if(isSelectionMode) toggleMsgSelect(event, ${msg.timestamp})">
+                        ${isMe ? checkboxHtml : ''}
+                        
+                        <div class="flex flex-col w-full ${isMe ? 'items-end' : 'items-start'}">
+                            <div class="msg-bubble ${isMe ? 'msg-me' : 'msg-them'} ${editingMsgId === msg.timestamp ? 'editing-glow' : ''}">
+                                ${showHeader ? `<div class="text-[11px] font-bold mb-1 opacity-80">${msg.senderName}${resumeBadge}</div>` : ''}
+                                <div class="text-[14.5px] leading-snug preserve-newlines break-words">${msg.text.replace(/\n/g, '<br>')}</div>
+                                <div class="msg-meta">
+                                    ${actionBtn}
+                                    ${editedTag}
+                                    <span>${formatTime(msg.timestamp)}</span>
+                                    ${isMe ? `<span class="ml-0.5">${ticksHtml}</span>` : ''}
+                                </div>
+                            </div>
+                        </div>
+                        
+                        ${!isMe ? checkboxHtml : ''}
+                    </div>
+                `;
+                lastSender = msg.sender;
+            });
+
+            if (container.innerHTML !== html) {
+                const isNearBottom = container.scrollHeight - container.scrollTop - container.clientHeight < 150;
+                container.innerHTML = html;
+                if (isNearBottom || (messages.length > 0 && messages[messages.length-1].sender === currentUserKey)) {
+                    container.scrollTop = container.scrollHeight;
+                }
+            }
+        }
+
+        function startEdit(timestamp) {
+            const msgs = db.chats[activeChatId].messages;
+            const msg = msgs.find(m => m.timestamp === timestamp);
+            if (!msg) return;
+            editingMsgId = timestamp;
+            const input = document.getElementById('message-input');
+            input.value = msg.text;
+            input.focus();
+            handleInputResize(input);
+            const ind = document.getElementById('edit-indicator');
+            if(ind) { ind.classList.remove('hidden'); ind.classList.add('flex'); }
+            renderMessages(); 
+        }
+
+        function cancelEdit() {
+            editingMsgId = null;
+            const input = document.getElementById('message-input');
+            input.value = '';
+            input.style.height = 'auto';
+            const ind = document.getElementById('edit-indicator');
+            if(ind) { ind.classList.add('hidden'); ind.classList.remove('flex'); }
+            renderMessages(); 
+        }
+
+        function showEditHistory(timestamp) {
+            const msg = db.chats[activeChatId].messages.find(m => m.timestamp === timestamp);
+            if (!msg || !msg.edits) return;
+            const modal = document.getElementById('history-modal');
+            const list = document.getElementById('history-list');
+            const content = document.getElementById('history-modal-content');
+            let html = '';
+            msg.edits.forEach((edit, index) => {
+                html += `
+                    <div class="relative pl-5 border-l-2 border-slate-200 dark:border-slate-700 pb-4">
+                        <div class="absolute -left-[9px] top-0 w-4 h-4 rounded-full bg-slate-200 dark:bg-slate-700 border-4 border-white dark:border-brand"></div>
+                        <p class="text-[10px] font-bold text-slate-500 mb-1">${index === 0 ? 'Original' : 'Edited'} • ${formatDate(edit.timestamp)}</p>
+                        <div class="bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-800 p-2.5 rounded text-[13px] line-through opacity-70">
+                            ${edit.text.replace(/\n/g, '<br>')}
+                        </div>
+                    </div>
+                `;
+            });
+            html += `
+                <div class="relative pl-5 border-l-2 border-brandAccent pb-0">
+                    <div class="absolute -left-[9px] top-0 w-4 h-4 rounded-full bg-brandAccent border-4 border-white dark:border-brand"></div>
+                    <p class="text-[10px] font-bold text-brandAccent mb-1">Current Version</p>
+                    <div class="bg-blue-50 dark:bg-slate-800 border border-brandAccent p-2.5 rounded text-[13px] font-medium">
+                        ${msg.text.replace(/\n/g, '<br>')}
                     </div>
                 </div>
             `;
-            */
+            list.innerHTML = html;
+            modal.classList.remove('hidden');
+            requestAnimationFrame(() => {
+                modal.classList.remove('opacity-0');
+                content.classList.remove('scale-95');
+            });
+        }
+
+        function closeEditHistory() {
+            const modal = document.getElementById('history-modal');
+            const content = document.getElementById('history-modal-content');
+            modal.classList.add('opacity-0');
+            content.classList.add('scale-95');
+            setTimeout(() => modal.classList.add('hidden'), 300);
+        }
+
+        function handleInputTyping() {
+            if (!activeChatId) return;
+            const now = Date.now();
+            if (now - lastTypingSent > 3000) {
+                lastTypingSent = now;
+                fetch(GOOGLE_SCRIPT_URL, { 
+                    method: 'POST', 
+                    body: JSON.stringify({ action: 'typing', userKey: currentUserKey, chatId: activeChatId }) 
+                }).catch(e=>{});
+            }
+        }
+
+        async function sendMessage(e) {
+            e.preventDefault();
+            if (!activeChatId) return;
+            const input = document.getElementById('message-input');
+            const text = input.value.trim();
+            const btn = document.getElementById('btn-send');
+            if (!text) return;
+            btn.disabled = true;
+
+            if (editingMsgId) {
+                const msgs = db.chats[activeChatId].messages;
+                const msg = msgs.find(m => m.timestamp === editingMsgId);
+                const oldText = msg.text;
+                if (msg) {
+                    if(!msg.edits) msg.edits = [];
+                    msg.edits.push({text: oldText, timestamp: Date.now()});
+                    msg.text = text;
+                }
+                const editIdObj = editingMsgId;
+                cancelEdit(); 
+                renderAppView(); 
+                try {
+                    await apiRequest({ action: 'edit', userKey: currentUserKey, chatId: activeChatId, timestamp: editIdObj, newText: text });
+                } catch (err) {
+                    showToast(err.message, true);
+                    if(msg) { msg.text = oldText; msg.edits.pop(); renderMessages(); }
+                } finally {
+                    btn.disabled = false;
+                    // Auto-focus logic simplified to avoid weird mobile zooming
+                    if(window.innerWidth >= 768) input.focus();
+                }
+            } else {
+                const localId = generateId('loc');
+                const tempMsg = { localId: localId, chatId: activeChatId, sender: currentUserKey, senderName: isAdmin ? "Administrator" : db.users[currentUserKey].name, text: text, timestamp: new Date().getTime() };
+                pendingSends.push(tempMsg);
+                input.value = '';
+                input.style.height = 'auto'; 
+                renderMessages();
+                renderAppView(); 
+                try {
+                    const res = await apiRequest({ action: 'send', userKey: currentUserKey, chatId: activeChatId, text: text, localId: localId });
+                    pendingSends = pendingSends.filter(p => p.localId !== localId);
+                    if (!db.chats[activeChatId].messages) db.chats[activeChatId].messages = [];
+                    db.chats[activeChatId].messages.push(res.confirmedMsg);
+                    renderMessages();
+                } catch (err) {
+                    showToast(err.message, true);
+                    pendingSends = pendingSends.filter(p => p.localId !== localId);
+                    renderMessages();
+                } finally {
+                    btn.disabled = false;
+                    if(window.innerWidth >= 768) input.focus();
+                }
+            }
+        }
+
+        function handleEnter(e) {
+            if (e.key === 'Enter' && !e.shiftKey) {
+                e.preventDefault();
+                sendMessage(e);
+            }
+        }
+
+        function startPolling() {
+            if (pollInterval) clearInterval(pollInterval);
+            pollInterval = setInterval(async () => {
+                if (!currentUserKey || isPolling) return;
+                isPolling = true; // Set lock to prevent overlaps
+                try {
+                    const data = await apiRequest({ action: 'fetch', userKey: currentUserKey, activeChatId: activeChatId });
+                    if (data.config) db.config = data.config;
+                    if (data.allUsers) allUsersDb = data.allUsers;
+                    let hasNewMessages = false;
+                    let activeChatNeedsUpdate = false;
+                    for (let cId in data.chats) {
+                        const newMsgs = data.chats[cId].messages || [];
+                        const oldMsgs = db.chats[cId] ? (db.chats[cId].messages || []) : [];
+                        const newStr = JSON.stringify(newMsgs);
+                        const oldStr = JSON.stringify(oldMsgs);
+                        if (newStr !== oldStr) {
+                            if (cId === activeChatId) activeChatNeedsUpdate = true;
+                            if (newMsgs.length > oldMsgs.length && !isAdmin) {
+                                hasNewMessages = true;
+                                const newlyArrived = newMsgs.slice(oldMsgs.length);
+                                for (let msg of newlyArrived) {
+                                    if (msg.sender !== currentUserKey) notifyUser(data.chats[cId].name, msg.senderName, msg.text);
+                                }
+                            } else if (newMsgs.length !== oldMsgs.length) {
+                                hasNewMessages = true; 
+                            }
+                        }
+                    }
+                    db.chats = data.chats;
+                    if (hasNewMessages || activeChatNeedsUpdate) {
+                        if(hasNewMessages) renderAppView(); 
+                        if(activeChatNeedsUpdate) renderMessages();
+                    }
+                    const typeEl = document.getElementById('typing-indicator');
+                    if (typeEl) {
+                        if (data.typing && Object.keys(data.typing).length > 0) {
+                            const typists = Object.keys(data.typing).map(k => allUsersDb[k] ? allUsersDb[k].name : 'Someone');
+                            typeEl.innerText = typists.join(', ') + (typists.length > 1 ? ' are' : ' is') + ' typing...';
+                            typeEl.classList.remove('hidden');
+                        } else {
+                            typeEl.classList.add('hidden');
+                        }
+                    }
+                } catch (e) {
+                    console.warn("Polling error:", e.message);
+                } finally {
+                    isPolling = false; // Release lock
+                }
+            }, 3000); 
+        }
+
+        function stopPolling() { if (pollInterval) clearInterval(pollInterval); }
+
+        function renderAdminView() {
+            document.getElementById('view-admin').classList.remove('hidden');
+            document.getElementById('view-admin').classList.add('flex');
+            const config = db.config || { deleteLimit: 1, editLimit: 24, historyLimit: 2 };
+            document.getElementById('conf-delete').value = config.deleteLimit;
+            document.getElementById('conf-edit').value = config.editLimit;
+            document.getElementById('conf-history').value = config.historyLimit;
+            const userList = document.getElementById('admin-user-list');
+            userList.innerHTML = Object.keys(db.users).map(uKey => `
+                <div class="flex items-start gap-3 p-2 bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-lg">
+                    <div class="w-6 h-6 rounded bg-indigo-50 dark:bg-indigo-900/30 text-indigo-500 flex items-center justify-center font-bold text-[10px] flex-shrink-0 mt-0.5">${db.users[uKey].name.charAt(0).toUpperCase()}</div>
+                    <div class="flex-1 min-w-0">
+                        <input type="text" value="${db.users[uKey].name}" onchange="adminUpdateUser('${uKey}', this.value)" class="w-full bg-transparent border-none font-bold text-xs focus:outline-none mb-1 p-0" placeholder="User Name">
+                        <div class="flex flex-col gap-1">
+                            <div class="flex items-center gap-1.5">
+                                <span class="text-[9px] font-bold text-slate-400 uppercase w-6">Key</span>
+                                <code class="text-[10px] bg-white dark:bg-brand px-1.5 py-0.5 rounded border border-slate-200 dark:border-slate-700 text-slate-500 flex-1 truncate">${uKey}</code>
+                                <button onclick="navigator.clipboard.writeText('${uKey}'); showToast('Key copied!')" class="text-slate-400 hover:text-brandAccent text-[10px]"><i class="fa-regular fa-copy"></i></button>
+                            </div>
+                            <div class="flex items-center gap-1.5">
+                                <span class="text-[9px] font-bold text-slate-400 uppercase w-6">Link</span>
+                                <code class="text-[9px] bg-white dark:bg-brand px-1.5 py-0.5 rounded border border-slate-200 dark:border-slate-700 text-slate-400 flex-1 truncate">https://rahulxnatha.github.io/chat/?key=${uKey}</code>
+                                <button onclick="navigator.clipboard.writeText('https://rahulxnatha.github.io/chat/?key=${uKey}'); showToast('Auto-login link copied!')" class="text-slate-400 hover:text-brandAccent text-[10px]"><i class="fa-solid fa-link"></i></button>
+                            </div>
+                        </div>
+                    </div>
+                    <button onclick="adminDeleteUser('${uKey}')" class="w-6 h-6 flex items-center justify-center text-red-400 hover:text-red-600 hover:bg-red-50 dark:hover:bg-red-900/20 rounded transition-colors flex-shrink-0"><i class="fa-solid fa-trash text-[10px]"></i></button>
+                </div>
+            `).join('');
+
+            const chatList = document.getElementById('admin-chat-list');
+            chatList.innerHTML = Object.keys(db.chats).map(cId => {
+                const chat = db.chats[cId];
+                const participantsHtml = Object.keys(db.users).map(uKey => {
+                    const isChecked = (chat.participants || []).includes(uKey);
+                    return `
+                        <label class="flex items-center gap-2 p-1.5 rounded hover:bg-slate-100 dark:hover:bg-slate-800 cursor-pointer border ${isChecked ? 'border-brandAccent bg-blue-50 dark:bg-slate-800' : 'border-transparent'}">
+                            <input type="checkbox" onchange="adminToggleParticipant('${cId}', '${uKey}', this.checked)" ${isChecked ? 'checked' : ''} class="w-3.5 h-3.5 text-brandAccent rounded border-slate-300">
+                            <span class="text-xs font-semibold flex-1">${db.users[uKey].name}</span>
+                        </label>
+                    `;
+                }).join('');
+
+                return `
+                    <div class="p-3 bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl relative group">
+                        <button onclick="adminDeleteChat('${cId}')" class="absolute top-3 right-3 w-6 h-6 flex items-center justify-center text-red-400 hover:text-red-600 hover:bg-red-50 dark:hover:bg-red-900/20 rounded opacity-0 group-hover:opacity-100"><i class="fa-solid fa-trash text-[10px]"></i></button>
+                        <div class="mb-3 pr-8 space-y-2">
+                            <div>
+                                <label class="block text-[10px] font-bold text-slate-500 uppercase tracking-widest mb-1">Room Name</label>
+                                <input type="text" value="${chat.name}" onchange="adminUpdateChat('${cId}', 'name', this.value)" class="w-full bg-white dark:bg-brand border border-slate-200 dark:border-slate-700 rounded px-2 py-1 font-bold text-xs focus:outline-none focus:border-brandAccent">
+                            </div>
+                            <div>
+                                <label class="block text-[10px] font-bold text-slate-500 uppercase tracking-widest mb-1">Room Description</label>
+                                <textarea rows="2" onchange="adminUpdateChat('${cId}', 'description', this.value)" class="w-full bg-white dark:bg-brand border border-slate-200 dark:border-slate-700 rounded px-2 py-1 text-xs focus:outline-none focus:border-brandAccent resize-y">${chat.description || ''}</textarea>
+                            </div>
+                        </div>
+                        <div>
+                            <label class="block text-[10px] font-bold text-slate-500 uppercase tracking-widest mb-1"><i class="fa-solid fa-user-lock mr-1"></i> Participants</label>
+                            <div class="grid grid-cols-1 sm:grid-cols-2 gap-1 bg-white dark:bg-brand p-1.5 rounded border border-slate-200 dark:border-slate-700 max-h-32 overflow-y-auto">
+                                ${participantsHtml || '<div class="text-[10px] text-slate-400 p-1 italic">Add users first...</div>'}
+                            </div>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        function adminUpdateConfig(prop, val) { if (!db.config) db.config = {}; db.config[prop] = parseFloat(val) || 0; }
+        function adminAddUser() { const key = generateId('usr'); db.users[key] = { name: "New User" }; renderAdminView(); }
+        function adminUpdateUser(uKey, name) { db.users[uKey].name = name; }
+        function adminDeleteUser(uKey) { if (!confirm("Remove user?")) return; delete db.users[uKey]; renderAdminView(); }
+        function adminAddChat() { const cId = generateId('chat'); db.chats[cId] = { name: "New Room", participants: [], description: "" }; renderAdminView(); }
+        function adminUpdateChat(cId, prop, val) { db.chats[cId][prop] = val; }
+        function adminToggleParticipant(cId, uKey, isChecked) {
+            if (!db.chats[cId].participants) db.chats[cId].participants = [];
+            if (isChecked) { if (!db.chats[cId].participants.includes(uKey)) db.chats[cId].participants.push(uKey); }
+            else { db.chats[cId].participants = db.chats[cId].participants.filter(k => k !== uKey); }
+            renderAdminView(); 
+        }
+        function adminDeleteChat(cId) { if (!confirm("Delete room completely?")) return; delete db.chats[cId]; renderAdminView(); }
+        async function saveAdminData() {
+            const btn = document.getElementById('btn-admin-save');
+            btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> <span class="hidden sm:inline">Saving...</span>';
+            btn.disabled = true;
+            try {
+                await apiRequest({ action: 'admin_save', adminKey: currentUserKey, db: db });
+                showToast("Data saved securely!");
+            } catch (err) { showToast(err.message, true); }
+            finally {
+                btn.innerHTML = '<i class="fa-solid fa-floppy-disk"></i> <span class="hidden sm:inline">Save Data</span>';
+                btn.disabled = false;
+            }
         }
     </script>
 </body>
