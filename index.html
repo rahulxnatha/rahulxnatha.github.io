@@ -375,6 +375,7 @@
         let activePillId = null;
         let previewTabId = null;
         let hoverTimeoutId = null;
+        let hoverCloseTimeoutId;
         let hoverFocusTimeoutId = null;
         let reduceAnimations = JSON.parse(localStorage.getItem('reduceAnimations')) || false;
         let currentBreadcrumbId = '';
@@ -1726,15 +1727,16 @@
 
             clearTimeout(hoverTimeoutId);
             clearTimeout(hoverFocusTimeoutId);
+            clearTimeout(hoverCloseTimeoutId);
 
             hoverTimeoutId = setTimeout(() => {
                 previewTabId = tileId;
 
-aps = "dock";
-updateAsideUI();
+                aps = "dock";
+                updateAsideUI();
 
-// Hide real content instantly so it stays invisible during flight
-const asideContent = document.getElementById('aside-content');
+                // Hide real content instantly so it stays invisible during flight
+                const asideContent = document.getElementById('aside-content');
 
 
 
@@ -1785,10 +1787,28 @@ const asideContent = document.getElementById('aside-content');
             document.body.classList.remove('is-tile-focused');
             document.querySelectorAll('.is-focused-wrapper').forEach(el => el.classList.remove('is-focused-wrapper'));
 
+            
+
             if (previewTabId === tileId) {
-                previewTabId = null;
-                updateAsideUI();
-                updateTileHighlights();
+
+                hoverCloseTimeoutId = setTimeout(() => {
+
+                    const isRealTileActive =
+                        activeAsideTab &&
+                        activeAsideTab !== 'chatbot' &&
+                        !activeAsideTab.startsWith('newtab_');
+
+                    if (isRealTileActive) return;
+
+                    previewTabId = null;
+
+                    aps = "closed";
+
+                    updateAsideUI();
+                    updateTileHighlights();
+
+                }, 300);
+
             }
         }
 
