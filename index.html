@@ -253,6 +253,20 @@
                 opacity: 1;
             }
         }
+
+
+        #left-nav-placeholder {
+    width: 260px;
+    min-width: 260px;
+    max-width: 260px;
+    flex-shrink: 0;
+}
+
+@media (max-width: 768px) {
+    #left-nav-placeholder {
+        display: none;
+    }
+}
     </style>
 </head>
 
@@ -962,6 +976,7 @@ ${!isMobile ? `
                 </header>
 
                 <div id="main-wrapper" class="bg-slate-100 dark:bg-slate-900 text-left relative">
+                    <nav id="left-nav-placeholder"></nav>
                     <div id="left-content" class="pb-12 relative flex-1 text-left"></div>
 
                     <aside id="right-aside" class="border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 shadow-xl md:shadow-none text-left aps-${aps}">
