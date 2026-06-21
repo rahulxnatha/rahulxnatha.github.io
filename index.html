@@ -353,6 +353,11 @@
         let openTabs = ["chatbot"];
         let activeAsideTab = "chatbot";
         let aps = "closed";
+
+        if (window.innerWidth < 768) {
+            aps = "dock";
+        }
+
         let viewMode = "default";
         let isAsideOpenMobile = false;
         let isSettingsOpen = false;
@@ -1785,7 +1790,7 @@
             document.body.classList.remove('is-tile-focused');
             document.querySelectorAll('.is-focused-wrapper').forEach(el => el.classList.remove('is-focused-wrapper'));
 
-            
+
 
             if (previewTabId === tileId) {
 
