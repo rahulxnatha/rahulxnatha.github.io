@@ -261,7 +261,7 @@
 
             <div class="relative z-10 flex flex-col items-start pointer-events-none select-none text-left">
                 <h1 id="loader-main-text"
-                    class="text-4xl md:text-6xl font-bold tracking-wide text-slate-900 dark:text-white mb-6 drop-shadow-sm text-left">
+                    class="text-4xl md:text-6xl font-normal tracking-wide text-slate-900 dark:text-white mb-6 drop-shadow-sm text-left">
                     Loading<br />Platform</h1>
                 <div class="flex items-center gap-4 text-left">
                     <i class="fa-solid fa-circle-notch fa-spin text-secondary text-2xl"></i>
@@ -407,7 +407,7 @@
                 bgImageLink: ""
             },
             botKnowledge: [
-                { id: "faq_1", keywords: "resume, cv, download, pdf", answer: "You can download my full resume here: <a href='#' class='text-secondary font-bold hover:underline'>[Insert G-Drive Link in Admin View]</a>" },
+                { id: "faq_1", keywords: "resume, cv, download, pdf", answer: "You can download my full resume here: <a href='#' class='text-secondary font-normal hover:underline'>[Insert G-Drive Link in Admin View]</a>" },
                 { id: "faq_2", keywords: "relocate, relocation, move, visa", answer: "Yes, I am open to relocation for the right opportunity." },
                 { id: "faq_3", keywords: "notice period, join, availability", answer: "I am currently serving a 30-day notice period and can join promptly." }
             ],
@@ -688,7 +688,7 @@
 
         function showToast(msg) {
             const toast = document.createElement('div');
-            toast.className = 'fixed bottom-6 left-1/2 transform -translate-x-1/2 bg-slate-900 text-white px-6 py-3 rounded-full shadow-2xl z-[9999] font-bold text-sm transition-all duration-300 translate-y-10 opacity-0 border border-slate-700';
+            toast.className = 'fixed bottom-6 left-1/2 transform -translate-x-1/2 bg-slate-900 text-white px-6 py-3 rounded-full shadow-2xl z-[9999] font-normal text-sm transition-all duration-300 translate-y-10 opacity-0 border border-slate-700';
             toast.innerText = msg;
             document.body.appendChild(toast);
             requestAnimationFrame(() => {
@@ -833,7 +833,7 @@
                 
                 <div class="space-y-5 text-left">
                     <div class="custom-dropdown-wrapper relative">
-                        <label class="block text-sm font-semibold text-slate-700 dark:text-slate-300 mb-1 text-left">App Theme</label>
+                        <label class="block text-sm font-normal text-slate-700 dark:text-slate-300 mb-1 text-left">App Theme</label>
                         <button onclick="toggleCustomDropdown(event, 'theme-dropdown')" class="w-full flex items-center justify-between bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-lg py-2.5 px-3 text-sm font-medium text-slate-700 dark:text-slate-200 focus:outline-none focus:border-secondary shadow-sm transition-colors">
                             <span id="theme-label">${themeLabel}</span>
                             <i class="fa-solid fa-chevron-down text-xs text-slate-500"></i>
@@ -845,7 +845,7 @@
                     </div>
                     
                     <div class="custom-dropdown-wrapper relative">
-                        <label class="block text-sm font-semibold text-slate-700 dark:text-slate-300 mb-1 text-left">Panel Layout</label>
+                        <label class="block text-sm font-normal text-slate-700 dark:text-slate-300 mb-1 text-left">Panel Layout</label>
                         <button onclick="toggleCustomDropdown(event, 'layout-dropdown')" class="w-full flex items-center justify-between bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-lg py-2.5 px-3 text-sm font-medium text-slate-700 dark:text-slate-200 focus:outline-none focus:border-secondary shadow-sm transition-colors">
                             <span id="layout-label">${layoutLabel}</span>
                             <i class="fa-solid fa-chevron-down text-xs text-slate-500"></i>
@@ -858,7 +858,7 @@
                     </div>
 
                     <div class="custom-dropdown-wrapper relative">
-                        <label class="block text-sm font-semibold text-slate-700 dark:text-slate-300 mb-1 text-left">Reduce Animations</label>
+                        <label class="block text-sm font-normal text-slate-700 dark:text-slate-300 mb-1 text-left">Reduce Animations</label>
                         <button onclick="toggleCustomDropdown(event, 'anim-dropdown')" class="w-full flex items-center justify-between bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-lg py-2.5 px-3 text-sm font-medium text-slate-700 dark:text-slate-200 focus:outline-none focus:border-secondary shadow-sm transition-colors">
                             <span id="anim-label">${animLabel}</span>
                             <i class="fa-solid fa-chevron-down text-xs text-slate-500"></i>
@@ -881,10 +881,10 @@
             }
 
             let dropdownMenuHtml = `<div class="flex flex-col text-left">`;
-            dropdownMenuHtml += `<div id="menu-item-top" onclick="scrollToNavTarget('top')" class="nav-menu-item p-3 border-b border-slate-100 dark:border-slate-800 hover:bg-slate-50 dark:hover:bg-slate-700/50 cursor-pointer font-bold text-primary dark:text-white transition-colors text-left">Overview (Top)</div>`;
+            dropdownMenuHtml += `<div id="menu-item-top" onclick="scrollToNavTarget('top')" class="nav-menu-item p-3 border-b border-slate-100 dark:border-slate-800 hover:bg-slate-50 dark:hover:bg-slate-700/50 cursor-pointer font-normal text-primary dark:text-white transition-colors text-left">Overview (Top)</div>`;
 
             getVisibleSections().forEach(sec => {
-                dropdownMenuHtml += `<div id="menu-item-${sec.id}" onclick="scrollToNavTarget('nav-sec-${sec.id}')" class="nav-menu-item p-3 bg-slate-50/50 dark:bg-slate-800/50 hover:bg-slate-100 dark:hover:bg-slate-700 border-b border-slate-100 dark:border-slate-800 cursor-pointer font-semibold text-slate-800 dark:text-slate-200 transition-colors text-left">${sec.name}</div>`;
+                dropdownMenuHtml += `<div id="menu-item-${sec.id}" onclick="scrollToNavTarget('nav-sec-${sec.id}')" class="nav-menu-item p-3 bg-slate-50/50 dark:bg-slate-800/50 hover:bg-slate-100 dark:hover:bg-slate-700 border-b border-slate-100 dark:border-slate-800 cursor-pointer font-normal text-slate-800 dark:text-slate-200 transition-colors text-left">${sec.name}</div>`;
                 sec.subsections.forEach(sub => {
                     dropdownMenuHtml += `<div id="menu-item-${sub.id}" onclick="scrollToNavTarget('nav-sub-${sub.id}')" class="nav-menu-item p-3 pl-8 hover:bg-slate-50 dark:hover:bg-slate-800/80 cursor-pointer text-sm text-slate-600 dark:text-slate-400 border-b border-slate-50 dark:border-slate-800/50 transition-colors flex items-center gap-2 text-left">
                                             <div class="w-1 h-1 rounded-full bg-slate-300 dark:bg-slate-600"></div><span>${sub.name}</span>
@@ -903,7 +903,7 @@
                         
                         <div class="hidden sm:flex relative items-center bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-full py-1.5 px-4 shadow-sm text-sm font-medium text-slate-700 dark:text-slate-200 text-left flex-shrink-0 max-w-full" id="header-nav-container">
                             <div id="dynamic-breadcrumbs" class="flex items-center gap-2 mr-2 text-left whitespace-nowrap overflow-x-auto no-scrollbar transition-[width] duration-1000 ease-in-out scroll-smooth pr-1">
-                                <span onclick="scrollToNavTarget('top')" class="hover:text-secondary cursor-pointer transition-colors text-left font-semibold flex-shrink-0 whitespace-nowrap">Overview</span>
+                                <span onclick="scrollToNavTarget('top')" class="hover:text-secondary cursor-pointer transition-colors text-left font-normal flex-shrink-0 whitespace-nowrap">Overview</span>
                             </div>
                             <button onclick="toggleNavMenu(event)" id="nav-dropdown-btn" class="border-l border-slate-300 dark:border-slate-600 pl-3 ml-1 text-slate-400 hover:text-secondary transition-colors focus:outline-none flex items-center justify-center flex-shrink-0">
                                 <i class="fa-solid fa-chevron-down text-xs transition-transform duration-300" id="nav-dropdown-icon"></i>
@@ -918,8 +918,8 @@
                         <div class="hidden md:flex items-center bg-slate-200/50 dark:bg-slate-800 rounded-full p-1 shadow-inner text-sm ml-2 relative isolate w-[208px] flex-shrink-0" id="layout-view-pill">
                             <div id="layout-slider" class="absolute top-1 bottom-1 w-[100px] bg-white dark:bg-slate-600 rounded-full shadow-sm transition-all duration-[350ms] ease-in-out -z-10" style="left: ${viewMode === 'timeline' ? '104px' : '4px'}"></div>
                             
-                            <button id="btn-view-default" onclick="setViewMode('default')" class="py-1.5 w-[100px] text-center rounded-full text-[11px] font-bold transition-colors duration-[350ms] ${viewMode === 'default' ? 'text-secondary dark:text-white' : 'text-slate-500 hover:text-slate-700 dark:hover:text-slate-300'}">Categorised</button>
-                            <button id="btn-view-timeline" onclick="setViewMode('timeline')" class="py-1.5 w-[100px] text-center rounded-full text-[11px] font-bold transition-colors duration-[350ms] ${viewMode === 'timeline' ? 'text-secondary dark:text-white' : 'text-slate-500 hover:text-slate-700 dark:hover:text-slate-300'}">Chronological</button>
+                            <button id="btn-view-default" onclick="setViewMode('default')" class="py-1.5 w-[100px] text-center rounded-full text-[11px] font-normal transition-colors duration-[350ms] ${viewMode === 'default' ? 'text-secondary dark:text-white' : 'text-slate-500 hover:text-slate-700 dark:hover:text-slate-300'}">Categorised</button>
+                            <button id="btn-view-timeline" onclick="setViewMode('timeline')" class="py-1.5 w-[100px] text-center rounded-full text-[11px] font-normal transition-colors duration-[350ms] ${viewMode === 'timeline' ? 'text-secondary dark:text-white' : 'text-slate-500 hover:text-slate-700 dark:hover:text-slate-300'}">Chronological</button>
                         </div>
                     </div>
                     
@@ -996,8 +996,8 @@
                     ${heroOverlay}
                     <div class="relative z-10 max-w-4xl mx-auto w-full flex flex-col items-start text-left">
                         <div class="mb-8 text-left">${profileImgHtml}</div>
-                        <h1 class="text-5xl md:text-7xl font-bold text-primary dark:text-white tracking-tight mb-4 text-left w-full">${appData.hero.name}</h1>
-                        <div class="text-2xl md:text-3xl text-secondary font-semibold mb-8 text-left w-full">
+                        <h1 class="text-5xl md:text-7xl font-normal text-primary dark:text-white tracking-tight mb-4 text-left w-full">${appData.hero.name}</h1>
+                        <div class="text-2xl md:text-3xl text-secondary font-normal mb-8 text-left w-full">
                             <div id="hero-title-container" class="grid w-full text-left relative">
                                 <!-- Titles generated dynamically by JS grid technique -->
                             </div>
@@ -1036,8 +1036,8 @@
                     <section id="nav-sec-${sec.id}" class="relative py-20 px-6 md:px-12 border-b border-slate-200 dark:border-slate-800 text-left scroll-target nav-sec-container" data-name="${sec.name.replace(/"/g, '&quot;')}" style="${secBg}">
                         ${secOverlay}
                         
-                            <div class="relative max-w-5xl mx-auto w-full pr-12 text-left">
-                            <h2 class="text-3xl font-bold text-primary dark:text-white mb-12 flex items-center gap-4 text-left"><div class="w-8 h-1 bg-secondary rounded"></div> ${sec.name}</h2>
+                            <div class="relative max-w-5xl mx-auto w-full md:pr-12 text-left">
+                            <h2 class="text-3xl font-normal text-primary dark:text-white mb-12 flex items-center gap-4 text-left"><div class="w-8 h-1 bg-secondary rounded"></div> ${sec.name}</h2>
                             <div class="space-y-12 text-left w-full relative">
                                 <!-- Central connecting circuit line for desktop -->
                                 <div class="absolute left-[31px] top-4 bottom-8 w-[2px] bg-slate-200 dark:bg-slate-700 hidden md:block rounded-full"></div>
@@ -1057,7 +1057,7 @@
                                         <div class="absolute -left-[53px] top-[35px] w-3 h-3 rounded-full border-[3px] border-secondary bg-white dark:bg-darkBg hidden md:block"></div>
                                         
                                         <div class="relative">
-                                            <h3 class="text-lg font-bold text-slate-700 dark:text-slate-300 mb-6 text-left flex items-center gap-3"><i class="fa-solid fa-microchip text-slate-400"></i> ${sub.name}</h3>
+                                            <h3 class="text-lg font-normal text-slate-700 dark:text-slate-300 mb-6 text-left flex items-center gap-3"><i class="fa-solid fa-microchip text-slate-400"></i> ${sub.name}</h3>
                                             <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 w-full text-left">
                                                 ${sub.tiles.map(tile => generateTileCardHTML(tile)).join('')}
                                             </div>
@@ -1083,7 +1083,7 @@
             let html = `
                 <section class="py-20 px-6 md:px-12 text-left bg-slate-50 dark:bg-darkBg relative scroll-target">
                     <div class="max-w-4xl mx-auto w-full relative text-left">
-                        <h2 class="text-3xl font-bold text-primary dark:text-white mb-12 flex items-center gap-4 text-left"><div class="w-8 h-1 bg-secondary rounded"></div> Timeline View</h2>
+                        <h2 class="text-3xl font-normal text-primary dark:text-white mb-12 flex items-center gap-4 text-left"><div class="w-8 h-1 bg-secondary rounded"></div> Timeline View</h2>
                         <div class="border-l-2 border-slate-200 dark:border-slate-700 ml-4 md:ml-6 pl-8 md:pl-12 space-y-12 relative text-left">
             `;
 
@@ -1091,7 +1091,7 @@
                 html += `
                     <div class="relative text-left">
                         <div class="absolute -left-[41px] md:-left-[57px] top-6 w-5 h-5 rounded-full bg-secondary border-4 border-slate-50 dark:border-slate-900"></div>
-                        <div class="text-sm font-bold mt-1 mb-3 text-left">
+                        <div class="text-sm font-normal mt-1 mb-3 text-left">
                             <span class="text-secondary">${tile.date}</span> ${tile.location ? `<span class="font-normal text-slate-500">| ${tile.location}</span>` : ''}
                             <div class="text-slate-500 dark:text-slate-400 mt-1">${tile.secName} &gt; ${tile.subName}</div>
                         </div>
@@ -1108,7 +1108,7 @@
                 html += `
                     <section class="py-16 px-6 md:px-12 text-left bg-white dark:bg-slate-900 border-t border-slate-200 dark:border-slate-800">
                         <div class="max-w-4xl mx-auto w-full text-left">
-                            <h3 class="text-2xl font-bold text-slate-700 dark:text-slate-300 mb-8 flex items-center gap-4 text-left"><i class="fa-solid fa-list-ul text-slate-400"></i> Undated Elements</h3>
+                            <h3 class="text-2xl font-normal text-slate-700 dark:text-slate-300 mb-8 flex items-center gap-4 text-left"><i class="fa-solid fa-list-ul text-slate-400"></i> Undated Elements</h3>
                             <div class="grid grid-cols-1 md:grid-cols-2 gap-6 w-full text-left">
                                 ${undatedTiles.map(t => generateTileCardHTML(t)).join('')}
                             </div>
@@ -1152,7 +1152,7 @@
             if (tile.location) cardMetaItems.push(tile.location);
 
             const metaInfo = cardMetaItems.join(' | ');
-            const metaHTML = metaInfo ? `<p class="text-sm font-semibold mb-3 ${isDarkBg ? 'text-blue-300' : 'text-secondary'} text-left">${metaInfo}</p>` : '';
+            const metaHTML = metaInfo ? `<p class="text-sm font-normal mb-3 ${isDarkBg ? 'text-blue-300' : 'text-secondary'} text-left">${metaInfo}</p>` : '';
 
             let bannerHTML = '';
             let colSpanClass = '';
@@ -1190,7 +1190,7 @@
 
                     return `
                     <div class="relative inline-block text-left pill-dropdown-container">
-                        <button onclick="togglePillDropdown(event, 'dropdown-${pillId}')" class="flex items-center gap-1.5 px-3 py-1 border border-slate-200 dark:border-slate-700 hover:border-secondary dark:hover:border-secondary transition-all rounded-full text-xs font-semibold shadow-sm bg-white dark:bg-slate-800 text-slate-700 dark:text-slate-300 capitalize">
+                        <button onclick="togglePillDropdown(event, 'dropdown-${pillId}')" class="flex items-center gap-1.5 px-3 py-1 border border-slate-200 dark:border-slate-700 hover:border-secondary dark:hover:border-secondary transition-all rounded-full text-xs font-normal shadow-sm bg-white dark:bg-slate-800 text-slate-700 dark:text-slate-300 capitalize">
                             <span class="text-secondary dark:text-blue-400">${count}</span> <span>${key}</span> <i class="fa-solid fa-chevron-down text-[10px] ml-1 opacity-50 pointer-events-none"></i>
                         </button>
                         <div id="dropdown-${pillId}" class="pill-dropdown-content hidden absolute top-full left-0 mt-2 w-56 bg-white dark:bg-darkCard rounded-xl shadow-xl border border-slate-200 dark:border-slate-700 overflow-hidden z-[60] flex flex-col max-h-[40vh] overflow-y-auto">
@@ -1205,8 +1205,8 @@
                     <div id="dom-tile-${tile.id}" onclick="tileClicked('${tile.id}')" onmouseenter="handleTileHover('${tile.id}', this)" onmouseleave="handleTileLeave('${tile.id}')" class="portfolio-tile flex-1 group cursor-pointer rounded-xl border border-slate-200 dark:border-slate-700 shadow-sm transition-all bg-white dark:bg-darkCard relative overflow-hidden text-left flex flex-col" style="${tBg}">
                         ${bannerHTML}
                         <div class="p-6 flex-1 flex flex-col relative z-10">
-                            <div class="text-secondary mb-4 text-3xl text-left"><i class="fa-solid ${tile.icon || 'fa-cube'}"></i></div>
-                            <h4 class="text-xl font-bold mb-1 text-left ${titleClass}">${effectiveHeading}</h4>
+                            
+                            <h4 class="text-xl font-normal mb-1 text-left ${titleClass}">${effectiveHeading}</h4>
                             ${metaHTML}
                             <div class="text-sm line-clamp-3 text-left mb-2 ${textClass}">${formatText(tile.description, 'mt-3')}</div>
                         </div>
@@ -1242,7 +1242,7 @@
             effectiveOpenTabs.forEach(tabId => {
                 const isActive = tabId === effectiveActiveTab;
                 const activeClasses = isActive
-                    ? "bg-white dark:bg-slate-700 text-secondary dark:text-blue-400 font-bold shadow-sm border border-slate-200 dark:border-slate-600 rounded-t-xl py-2 pb-2.5 z-10 relative"
+                    ? "bg-white dark:bg-slate-700 text-secondary dark:text-blue-400 font-normal shadow-sm border border-slate-200 dark:border-slate-600 rounded-t-xl py-2 pb-2.5 z-10 relative"
                     : "bg-slate-200/50 hover:bg-slate-200 dark:bg-slate-800/40 dark:hover:bg-slate-700 text-slate-600 dark:text-slate-400 font-medium border border-transparent rounded-t-xl py-2 mb-0.5 transition-colors";
 
                 if (tabId === 'chatbot') {
@@ -1335,11 +1335,11 @@
                 <div class="p-6 absolute inset-0 overflow-y-auto text-left">
                     <button onclick="openTab('chatbot')" class="w-full p-6 bg-gradient-to-r from-blue-600 to-indigo-600 rounded-xl text-white shadow-lg mb-8 hover:shadow-xl transition-shadow text-left group flex flex-col justify-center">
                         <div class="text-3xl mb-2 group-hover:scale-110 transition-transform"><i class="fa-solid fa-robot"></i></div>
-                        <h2 class="text-xl font-bold mb-1 text-left">Chat with ${appData.uiText.botName}</h2>
+                        <h2 class="text-xl font-normal mb-1 text-left">Chat with ${appData.uiText.botName}</h2>
                         <p class="text-blue-100 text-sm text-left">Ask questions to quickly find what you're looking for.</p>
                     </button>
 
-                    <h3 class="text-sm font-bold text-slate-500 dark:text-slate-400 mb-4 text-left"><i class="fa-solid fa-compass mr-2"></i> Explore Portfolio</h3>
+                    <h3 class="text-sm font-normal text-slate-500 dark:text-slate-400 mb-4 text-left"><i class="fa-solid fa-compass mr-2"></i> Explore Portfolio</h3>
                     <div class="space-y-2 w-full text-left">
                         ${allTilesHtml.join('')}
                     </div>
@@ -1394,7 +1394,7 @@
 
                 relatedHtml = `
                     <div class="mt-8 pt-6 border-t border-slate-200 dark:border-slate-700 text-left w-full">
-                        <h5 class="text-sm font-bold text-slate-500 dark:text-slate-400 mb-4 text-left"><i class="fa-solid fa-link mr-2"></i> ${appData.uiText.relatedTabsBtn}</h5>
+                        <h5 class="text-sm font-normal text-slate-500 dark:text-slate-400 mb-4 text-left"><i class="fa-solid fa-link mr-2"></i> ${appData.uiText.relatedTabsBtn}</h5>
                         ${relatedLinks}
                     </div>
                 `;
@@ -1419,14 +1419,12 @@
             if (tile.date) metaItems.push(`<span>${tile.date}</span>`);
             if (tile.location) metaItems.push(`<span>${tile.location}</span>`);
 
-            const metaHTML = metaItems.length > 0 ? `<div class="text-[15px] font-semibold mb-6 text-slate-500 dark:text-slate-400 text-left flex flex-wrap gap-x-3 gap-y-1 items-center">` + metaItems.join('<span class="text-slate-300 dark:text-slate-600">|</span>') + `</div>` : '';
+            const metaHTML = metaItems.length > 0 ? `<div class="text-[15px] font-normal mb-6 text-slate-500 dark:text-slate-400 text-left flex flex-wrap gap-x-3 gap-y-1 items-center">` + metaItems.join('<span class="text-slate-300 dark:text-slate-600">|</span>') + `</div>` : '';
 
             return `
                 <div class="p-6 absolute inset-0 overflow-y-auto text-left">
-                    <div class="w-14 h-14 bg-blue-100 dark:bg-blue-900/30 text-secondary rounded-2xl flex items-center justify-center text-2xl mb-6 shadow-sm">
-                        <i class="fa-solid ${tile.icon}"></i>
-                    </div>
-                    <h2 class="text-2xl font-bold text-primary dark:text-white mb-2 text-left">${getEffectiveHeading(tile)}</h2>
+                    
+                    <h2 class="text-2xl font-normal text-primary dark:text-white mb-2 text-left">${getEffectiveHeading(tile)}</h2>
                     ${metaHTML}
                     <div class="text-slate-600 dark:text-slate-300 text-sm leading-relaxed mb-8 text-left">${formatText(tile.tabText || tile.description, 'mt-4')}</div>
                     
@@ -1602,12 +1600,12 @@
             if (slider && btnDef && btnTime) {
                 if (viewMode === 'default') {
                     slider.style.left = '4px';
-                    btnDef.className = "py-1.5 w-[100px] text-center rounded-full text-[11px] font-bold transition-colors duration-[350ms] text-secondary dark:text-white";
-                    btnTime.className = "py-1.5 w-[100px] text-center rounded-full text-[11px] font-bold transition-colors duration-[350ms] text-slate-500 hover:text-slate-700 dark:hover:text-slate-300";
+                    btnDef.className = "py-1.5 w-[100px] text-center rounded-full text-[11px] font-normal transition-colors duration-[350ms] text-secondary dark:text-white";
+                    btnTime.className = "py-1.5 w-[100px] text-center rounded-full text-[11px] font-normal transition-colors duration-[350ms] text-slate-500 hover:text-slate-700 dark:hover:text-slate-300";
                 } else {
                     slider.style.left = '104px';
-                    btnTime.className = "py-1.5 w-[100px] text-center rounded-full text-[11px] font-bold transition-colors duration-[350ms] text-secondary dark:text-white";
-                    btnDef.className = "py-1.5 w-[100px] text-center rounded-full text-[11px] font-bold transition-colors duration-[350ms] text-slate-500 hover:text-slate-700 dark:hover:text-slate-300";
+                    btnTime.className = "py-1.5 w-[100px] text-center rounded-full text-[11px] font-normal transition-colors duration-[350ms] text-secondary dark:text-white";
+                    btnDef.className = "py-1.5 w-[100px] text-center rounded-full text-[11px] font-normal transition-colors duration-[350ms] text-slate-500 hover:text-slate-700 dark:hover:text-slate-300";
                 }
             }
         }
@@ -1654,7 +1652,7 @@
             if (headingNode) {
                 headClone = document.createElement('div');
                 headClone.innerText = text;
-                headClone.className = "fixed z-[9999] pointer-events-none font-bold text-secondary truncate drop-shadow-md";
+                headClone.className = "fixed z-[9999] pointer-events-none font-normal text-secondary truncate drop-shadow-md";
                 const hRect = headingNode.getBoundingClientRect();
                 headClone.style.left = hRect.left + 'px';
                 headClone.style.top = hRect.top + 'px';
@@ -1966,7 +1964,7 @@
                     <div onclick="openTab('${t.id}')" class="p-3 border-b border-slate-100 dark:border-slate-700 hover:bg-slate-50 dark:hover:bg-slate-700 cursor-pointer flex items-center gap-3 text-left">
                         <i class="fa-solid ${t.icon} text-secondary"></i>
                         <div class="overflow-hidden text-left w-full">
-                            <div class="text-sm font-bold text-slate-800 dark:text-slate-200 truncate text-left w-full">${getEffectiveHeading(t)}</div>
+                            <div class="text-sm font-normal text-slate-800 dark:text-slate-200 truncate text-left w-full">${getEffectiveHeading(t)}</div>
                         </div>
                     </div>
                 `).join('');
@@ -2218,7 +2216,7 @@
             document.querySelectorAll('.nav-menu-item').forEach(el => el.classList.remove('text-secondary', 'dark:text-blue-400'));
             if (viewMode === 'timeline') {
                 container.style.width = 'auto';
-                container.innerHTML = `<span class="text-slate-500 font-semibold cursor-default text-left flex-shrink-0 whitespace-nowrap">Timeline View</span>`;
+                container.innerHTML = `<span class="text-slate-500 font-normal cursor-default text-left flex-shrink-0 whitespace-nowrap">Timeline View</span>`;
                 currentBreadcrumbId = 'timeline';
                 return;
             }
@@ -2244,12 +2242,12 @@
 
             let html = '';
             if (!secObj || secObj.id === 'top') {
-                html = `<span onclick="scrollToNavTarget('top')" class="hover:text-secondary cursor-pointer transition-colors text-left font-semibold flex-shrink-0 whitespace-nowrap">Overview</span>`;
+                html = `<span onclick="scrollToNavTarget('top')" class="hover:text-secondary cursor-pointer transition-colors text-left font-normal flex-shrink-0 whitespace-nowrap">Overview</span>`;
             } else {
-                html = `<span onclick="scrollToNavTarget('nav-sec-${secObj.id}')" class="hover:text-secondary cursor-pointer transition-colors text-left font-semibold flex-shrink-0 whitespace-nowrap" title="${secObj.name}">${secObj.name}</span>`;
+                html = `<span onclick="scrollToNavTarget('nav-sec-${secObj.id}')" class="hover:text-secondary cursor-pointer transition-colors text-left font-normal flex-shrink-0 whitespace-nowrap" title="${secObj.name}">${secObj.name}</span>`;
                 if (subObj) {
                     html += `<span class="text-slate-400 dark:text-slate-500 text-[10px] flex-shrink-0"><i class="fa-solid fa-chevron-right"></i></span>`;
-                    html += `<span onclick="scrollToNavTarget('nav-sub-${subObj.id}')" class="hover:text-secondary cursor-pointer transition-colors text-left font-semibold flex-shrink-0 whitespace-nowrap" title="${subObj.name}">${subObj.name}</span>`;
+                    html += `<span onclick="scrollToNavTarget('nav-sub-${subObj.id}')" class="hover:text-secondary cursor-pointer transition-colors text-left font-normal flex-shrink-0 whitespace-nowrap" title="${subObj.name}">${subObj.name}</span>`;
                 }
             }
 
@@ -2355,19 +2353,19 @@
         // 7. ADMIN VIEW RENDERING (DRILL-DOWN CMS)
         // ==========================================
         const adminInputCls = "w-full bg-slate-50 dark:bg-slate-900/50 border border-slate-300 dark:border-slate-600 rounded-xl px-4 py-3 text-sm text-slate-800 dark:text-slate-200 focus:outline-none focus:ring-2 focus:ring-secondary/50 focus:border-secondary transition-all shadow-sm";
-        const adminLabelCls = "block text-sm font-bold text-slate-700 dark:text-slate-300 mb-1.5";
+        const adminLabelCls = "block text-sm font-normal text-slate-700 dark:text-slate-300 mb-1.5";
 
         function renderAdminLogin() {
             return `
                 <div class="h-screen w-full flex items-center justify-center bg-slate-100 dark:bg-darkBg px-4 text-left overflow-y-auto">
                     <div class="bg-white dark:bg-darkCard p-8 rounded-2xl shadow-xl w-full max-w-md border border-slate-200 dark:border-slate-700">
-                        <h2 class="text-2xl font-bold mb-6 text-primary dark:text-white text-left flex items-center gap-3"><div class="w-10 h-10 bg-blue-100 dark:bg-blue-900/30 text-secondary rounded-xl flex items-center justify-center"><i class="fa-solid fa-lock"></i></div> Admin Login</h2>
+                        <h2 class="text-2xl font-normal mb-6 text-primary dark:text-white text-left flex items-center gap-3"><div class="w-10 h-10 bg-blue-100 dark:bg-blue-900/30 text-secondary rounded-xl flex items-center justify-center"><i class="fa-solid fa-lock"></i></div> Admin Login</h2>
                         <div class="space-y-4">
                             <div>
                                 <label class="${adminLabelCls}">Security Passcode</label>
                                 <input type="password" id="passcode-input" class="${adminInputCls}" placeholder="Enter Passcode">
                             </div>
-                            <button onclick="passcode=document.getElementById('passcode-input').value; renderApp()" class="w-full bg-secondary text-white font-bold py-3.5 rounded-xl hover:bg-blue-600 transition-colors shadow-md shadow-blue-500/20 text-center">Unlock Workspace</button>
+                            <button onclick="passcode=document.getElementById('passcode-input').value; renderApp()" class="w-full bg-secondary text-white font-normal py-3.5 rounded-xl hover:bg-blue-600 transition-colors shadow-md shadow-blue-500/20 text-center">Unlock Workspace</button>
                             <button onclick="window.location.hash=''" class="w-full text-slate-500 text-sm hover:text-slate-700 dark:hover:text-slate-300 transition-colors text-center">Return to site</button>
                         </div>
                     </div>
@@ -2469,7 +2467,7 @@
             const selCount = Object.keys(adminSelected).length;
             if (selCount > 0 && adminPath.length !== 3 && adminCurrentTab === 'architecture') {
                 bulkToolbar = `
-                    <div class="fixed bottom-6 left-1/2 transform -translate-x-1/2 bg-slate-900 text-white px-5 py-3 rounded-full shadow-[0_20px_50px_rgba(0,0,0,0.5)] border border-slate-700 z-[100] flex items-center gap-5 text-sm font-semibold transition-all duration-300 w-[max-content] max-w-[95vw] overflow-x-auto no-scrollbar">
+                    <div class="fixed bottom-6 left-1/2 transform -translate-x-1/2 bg-slate-900 text-white px-5 py-3 rounded-full shadow-[0_20px_50px_rgba(0,0,0,0.5)] border border-slate-700 z-[100] flex items-center gap-5 text-sm font-normal transition-all duration-300 w-[max-content] max-w-[95vw] overflow-x-auto no-scrollbar">
                         <div class="bg-slate-800 px-3 py-1 rounded-full text-secondary whitespace-nowrap flex-shrink-0">${selCount} Selected</div>
                         <div class="h-6 w-px bg-slate-700 flex-shrink-0"></div>
                         <button onclick="adminBulkAction('visible')" class="hover:text-green-400 transition-colors flex items-center gap-2 flex-shrink-0" title="Set Visible"><i class="fa-solid fa-eye"></i></button>
@@ -2492,30 +2490,30 @@
                             
                             <!-- Custom Admin Tab Navigation Pill -->
                             <div class="custom-dropdown-wrapper relative items-center bg-slate-100 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-full shadow-inner text-sm font-medium text-slate-700 dark:text-slate-200 text-left flex flex-shrink-0 min-w-[240px]">
-                                <button onclick="toggleCustomDropdown(event, 'admin-tab-menu')" class="w-full py-2 pl-5 pr-10 focus:outline-none cursor-pointer font-bold text-secondary dark:text-blue-400 flex items-center justify-between text-left">
+                                <button onclick="toggleCustomDropdown(event, 'admin-tab-menu')" class="w-full py-2 pl-5 pr-10 focus:outline-none cursor-pointer font-normal text-secondary dark:text-blue-400 flex items-center justify-between text-left">
                                     <span id="admin-tab-label" class="whitespace-nowrap flex-shrink-0">${tabLabels[adminCurrentTab]}</span>
                                     <i class="fa-solid fa-chevron-down absolute right-4 text-xs text-slate-500 pointer-events-none"></i>
                                 </button>
                                 <div id="admin-tab-menu" class="custom-dropdown hidden absolute top-[calc(100%+0.5rem)] left-0 w-full bg-white dark:bg-darkCard rounded-xl shadow-xl border border-slate-200 dark:border-slate-700 overflow-hidden z-[80] flex-col">
-                                    <div onclick="switchAdminTab('architecture'); closeCustomDropdowns(); adminNavigate([])" class="dropdown-item p-3 hover:bg-slate-50 dark:hover:bg-slate-700 cursor-pointer font-semibold transition-colors" data-selected="${adminCurrentTab === 'architecture'}">Content Architecture</div>
-                                    <div onclick="switchAdminTab('seo'); closeCustomDropdowns(); adminNavigate([])" class="dropdown-item p-3 hover:bg-slate-50 dark:hover:bg-slate-700 cursor-pointer font-semibold transition-colors" data-selected="${adminCurrentTab === 'seo'}">SEO & Meta Tags</div>
-                                    <div onclick="switchAdminTab('hero'); closeCustomDropdowns(); adminNavigate([])" class="dropdown-item p-3 hover:bg-slate-50 dark:hover:bg-slate-700 cursor-pointer font-semibold transition-colors" data-selected="${adminCurrentTab === 'hero'}">Landing Page (Hero)</div>
-                                    <div onclick="switchAdminTab('ui'); closeCustomDropdowns(); adminNavigate([])" class="dropdown-item p-3 hover:bg-slate-50 dark:hover:bg-slate-700 cursor-pointer font-semibold transition-colors" data-selected="${adminCurrentTab === 'ui'}">Global UI & Contact</div>
-                                    <div onclick="switchAdminTab('bot'); closeCustomDropdowns(); adminNavigate([])" class="dropdown-item p-3 hover:bg-slate-50 dark:hover:bg-slate-700 cursor-pointer font-semibold transition-colors" data-selected="${adminCurrentTab === 'bot'}">Chatbot Knowledge Base</div>
-                                    <div onclick="switchAdminTab('health'); closeCustomDropdowns(); adminNavigate([])" class="dropdown-item p-3 bg-rose-50/50 hover:bg-rose-100 dark:bg-rose-900/10 dark:hover:bg-rose-900/30 text-rose-600 dark:text-rose-400 cursor-pointer font-bold transition-colors border-t border-slate-100 dark:border-slate-700" data-selected="${adminCurrentTab === 'health'}"><i class="fa-solid fa-heart-pulse mr-1"></i> Platform Health Check</div>
+                                    <div onclick="switchAdminTab('architecture'); closeCustomDropdowns(); adminNavigate([])" class="dropdown-item p-3 hover:bg-slate-50 dark:hover:bg-slate-700 cursor-pointer font-normal transition-colors" data-selected="${adminCurrentTab === 'architecture'}">Content Architecture</div>
+                                    <div onclick="switchAdminTab('seo'); closeCustomDropdowns(); adminNavigate([])" class="dropdown-item p-3 hover:bg-slate-50 dark:hover:bg-slate-700 cursor-pointer font-normal transition-colors" data-selected="${adminCurrentTab === 'seo'}">SEO & Meta Tags</div>
+                                    <div onclick="switchAdminTab('hero'); closeCustomDropdowns(); adminNavigate([])" class="dropdown-item p-3 hover:bg-slate-50 dark:hover:bg-slate-700 cursor-pointer font-normal transition-colors" data-selected="${adminCurrentTab === 'hero'}">Landing Page (Hero)</div>
+                                    <div onclick="switchAdminTab('ui'); closeCustomDropdowns(); adminNavigate([])" class="dropdown-item p-3 hover:bg-slate-50 dark:hover:bg-slate-700 cursor-pointer font-normal transition-colors" data-selected="${adminCurrentTab === 'ui'}">Global UI & Contact</div>
+                                    <div onclick="switchAdminTab('bot'); closeCustomDropdowns(); adminNavigate([])" class="dropdown-item p-3 hover:bg-slate-50 dark:hover:bg-slate-700 cursor-pointer font-normal transition-colors" data-selected="${adminCurrentTab === 'bot'}">Chatbot Knowledge Base</div>
+                                    <div onclick="switchAdminTab('health'); closeCustomDropdowns(); adminNavigate([])" class="dropdown-item p-3 bg-rose-50/50 hover:bg-rose-100 dark:bg-rose-900/10 dark:hover:bg-rose-900/30 text-rose-600 dark:text-rose-400 cursor-pointer font-normal transition-colors border-t border-slate-100 dark:border-slate-700" data-selected="${adminCurrentTab === 'health'}"><i class="fa-solid fa-heart-pulse mr-1"></i> Platform Health Check</div>
                                 </div>
                             </div>
                         </div>
 
                         <div class="flex gap-3 flex-shrink-0 text-left items-center">
                             <div class="hidden sm:flex items-center mr-2 border-r border-slate-200 dark:border-slate-700 pr-4">
-                                <span class="text-xs font-semibold mr-2 opacity-70">Dark Mode</span>
+                                <span class="text-xs font-normal mr-2 opacity-70">Dark Mode</span>
                                 <button onclick="adminToggleTheme()" id="admin-theme-toggle-bg" class="relative inline-flex h-6 w-12 flex-shrink-0 items-center rounded-full transition-colors focus:outline-none shadow-inner ${themeToggleBgClass}">
                                     <span id="admin-theme-toggle-knob" class="inline-block h-4 w-4 transform rounded-full bg-white transition-transform duration-200 ease-in-out shadow-sm ${themeToggleKnobClass}"></span>
                                 </button>
                             </div>
                             <button onclick="window.location.hash=''" class="px-4 py-2 bg-slate-200 dark:bg-slate-700 rounded text-sm font-medium hover:bg-slate-300 dark:hover:bg-slate-600 transition-colors text-left">Exit</button>
-                            <button onclick="savePortfolioData()" id="save-btn" class="px-4 py-2 bg-green-500 text-white rounded text-sm font-bold shadow-md hover:bg-green-600 transition-colors text-left"><i class="fa-solid fa-floppy-disk mr-1"></i> Save</button>
+                            <button onclick="savePortfolioData()" id="save-btn" class="px-4 py-2 bg-green-500 text-white rounded text-sm font-normal shadow-md hover:bg-green-600 transition-colors text-left"><i class="fa-solid fa-floppy-disk mr-1"></i> Save</button>
                         </div>
                     </div>
                     
@@ -2537,8 +2535,8 @@
         }
 
         const getVisBadge = (v) => {
-            if (v === 'hidden') return '<span class="ml-2 px-1.5 py-0.5 text-[9px] font-bold uppercase tracking-widest bg-red-100 text-red-600 rounded">Hidden</span>';
-            if (v === 'archived') return '<span class="ml-2 px-1.5 py-0.5 text-[9px] font-bold uppercase tracking-widest bg-purple-100 text-purple-600 rounded"><i class="fa-solid fa-ghost mr-1"></i>Easter Egg</span>';
+            if (v === 'hidden') return '<span class="ml-2 px-1.5 py-0.5 text-[9px] font-normal uppercase tracking-widest bg-red-100 text-red-600 rounded">Hidden</span>';
+            if (v === 'archived') return '<span class="ml-2 px-1.5 py-0.5 text-[9px] font-normal uppercase tracking-widest bg-purple-100 text-purple-600 rounded"><i class="fa-solid fa-ghost mr-1"></i>Easter Egg</span>';
             return '';
         };
 
@@ -2551,7 +2549,7 @@
                 html += `
                     <div class="bg-white dark:bg-darkCard p-6 md:p-8 rounded-2xl shadow-sm border border-slate-200 dark:border-slate-700 text-left relative overflow-hidden">
                         <div class="absolute top-0 left-0 w-1 h-full bg-gradient-to-b from-blue-500 to-indigo-500"></div>
-                        <h3 class="text-xl font-bold mb-6 border-b border-slate-100 dark:border-slate-800 pb-3 flex items-center gap-3"><div class="w-8 h-8 rounded-lg bg-blue-50 dark:bg-blue-900/30 text-secondary flex items-center justify-center"><i class="fa-solid fa-magnifying-glass"></i></div> SEO & Social Meta Tags</h3>
+                        <h3 class="text-xl font-normal mb-6 border-b border-slate-100 dark:border-slate-800 pb-3 flex items-center gap-3"><div class="w-8 h-8 rounded-lg bg-blue-50 dark:bg-blue-900/30 text-secondary flex items-center justify-center"><i class="fa-solid fa-magnifying-glass"></i></div> SEO & Social Meta Tags</h3>
                         <p class="text-xs text-slate-500 dark:text-slate-400 mb-6 bg-slate-50 dark:bg-slate-900 p-3 rounded-lg border border-slate-200 dark:border-slate-700 max-w-3xl"><i class="fa-solid fa-circle-info text-secondary mr-1"></i> <strong>Note:</strong> WhatsApp & iMessage preview scrapers do not run JavaScript. To see previews on those apps, you must also manually copy these values into the raw <code class="bg-slate-200 dark:bg-slate-700 px-1 rounded">&lt;head&gt;</code> tags of your index.html file in your code editor.</p>
                         <div class="grid grid-cols-1 md:grid-cols-2 gap-5 w-full text-left max-w-3xl">
                             <div class="text-left space-y-1.5"><label class="${adminLabelCls}">Document Title</label><input type="text" onchange="appData.seo.title=this.value" value="${seo.title || appData.uiText.siteTitle}" class="${adminInputCls}"></div>
@@ -2564,7 +2562,7 @@
                 html += `
                     <div class="bg-white dark:bg-darkCard p-6 md:p-8 rounded-2xl shadow-sm border border-slate-200 dark:border-slate-700 text-left relative overflow-hidden">
                         <div class="absolute top-0 left-0 w-1 h-full bg-gradient-to-b from-purple-500 to-pink-500"></div>
-                        <h3 class="text-xl font-bold mb-6 border-b border-slate-100 dark:border-slate-800 pb-3 flex items-center gap-3"><div class="w-8 h-8 rounded-lg bg-purple-50 dark:bg-purple-900/30 text-purple-500 flex items-center justify-center"><i class="fa-solid fa-image"></i></div> Landing Page (Hero)</h3>
+                        <h3 class="text-xl font-normal mb-6 border-b border-slate-100 dark:border-slate-800 pb-3 flex items-center gap-3"><div class="w-8 h-8 rounded-lg bg-purple-50 dark:bg-purple-900/30 text-purple-500 flex items-center justify-center"><i class="fa-solid fa-image"></i></div> Landing Page (Hero)</h3>
                         <div class="grid grid-cols-1 md:grid-cols-2 gap-5 w-full text-left max-w-3xl">
                             <div class="text-left space-y-1.5"><label class="${adminLabelCls}">Full Name</label><input type="text" onchange="appData.hero.name=this.value" value="${hero.name}" class="${adminInputCls}"></div>
                             <div class="text-left space-y-1.5"><label class="${adminLabelCls}">Animated Sentences (Comma separated)</label><input type="text" onchange="appData.hero.animatedTitles=this.value" value="${hero.animatedTitles}" class="${adminInputCls}"></div>
@@ -2578,7 +2576,7 @@
                 html += `
                     <div class="bg-white dark:bg-darkCard p-6 md:p-8 rounded-2xl shadow-sm border border-slate-200 dark:border-slate-700 text-left relative overflow-hidden">
                         <div class="absolute top-0 left-0 w-1 h-full bg-gradient-to-b from-green-500 to-emerald-500"></div>
-                        <h3 class="text-xl font-bold mb-6 border-b border-slate-100 dark:border-slate-800 pb-3 flex items-center gap-3"><div class="w-8 h-8 rounded-lg bg-green-50 dark:bg-green-900/30 text-green-500 flex items-center justify-center"><i class="fa-solid fa-address-card"></i></div> Global UI Text & Contact</h3>
+                        <h3 class="text-xl font-normal mb-6 border-b border-slate-100 dark:border-slate-800 pb-3 flex items-center gap-3"><div class="w-8 h-8 rounded-lg bg-green-50 dark:bg-green-900/30 text-green-500 flex items-center justify-center"><i class="fa-solid fa-address-card"></i></div> Global UI Text & Contact</h3>
                         <div class="grid grid-cols-1 md:grid-cols-2 gap-5 w-full text-left max-w-3xl">
                             <div class="text-left space-y-1.5 md:col-span-2"><label class="${adminLabelCls}">Branding Logo (G-Drive Link or Image URL)</label><input type="text" onchange="appData.uiText.brandLogo=this.value" value="${ui.brandLogo || ''}" placeholder="Leave empty to use Site Title text" class="${adminInputCls} font-mono"></div>
                             <div class="text-left space-y-1.5"><label class="${adminLabelCls}">Site Title (Fallback)</label><input type="text" onchange="appData.uiText.siteTitle=this.value" value="${ui.siteTitle}" class="${adminInputCls}"></div>
@@ -2594,7 +2592,7 @@
                 html += `
                     <div class="bg-white dark:bg-darkCard p-6 md:p-8 rounded-2xl shadow-sm border border-slate-200 dark:border-slate-700 text-left relative overflow-hidden">
                         <div class="absolute top-0 left-0 w-1 h-full bg-gradient-to-b from-teal-500 to-cyan-500"></div>
-                        <h3 class="text-xl font-bold mb-6 border-b border-slate-100 dark:border-slate-800 pb-3 flex items-center gap-3"><div class="w-8 h-8 rounded-lg bg-teal-50 dark:bg-teal-900/30 text-teal-500 flex items-center justify-center"><i class="fa-solid fa-brain"></i></div> Chatbot Knowledge Base (FAQs)</h3>
+                        <h3 class="text-xl font-normal mb-6 border-b border-slate-100 dark:border-slate-800 pb-3 flex items-center gap-3"><div class="w-8 h-8 rounded-lg bg-teal-50 dark:bg-teal-900/30 text-teal-500 flex items-center justify-center"><i class="fa-solid fa-brain"></i></div> Chatbot Knowledge Base (FAQs)</h3>
                         
                         <div class="mb-8 p-5 bg-slate-50 dark:bg-slate-900/50 border border-slate-200 dark:border-slate-700 rounded-xl space-y-4 text-left max-w-3xl">
                             <h4 class="font-bold text-slate-700 dark:text-slate-300 text-sm mb-3">Bot Personality & Defaults</h4>
@@ -2628,7 +2626,7 @@
                                 </div>
                             `).join('')}
                         </div>
-                        <button onclick="adminAddFaq()" class="mt-6 bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-slate-700 border border-slate-300 dark:border-slate-600 px-5 py-3 rounded-xl font-bold text-sm transition-colors flex items-center gap-2 shadow-sm w-full max-w-3xl justify-center"><i class="fa-solid fa-plus"></i> Add New Recruiter FAQ</button>
+                        <button onclick="adminAddFaq()" class="mt-6 bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-slate-700 border border-slate-300 dark:border-slate-600 px-5 py-3 rounded-xl font-normal text-sm transition-colors flex items-center gap-2 shadow-sm w-full max-w-3xl justify-center"><i class="fa-solid fa-plus"></i> Add New Recruiter FAQ</button>
                     </div>
                 `;
             } else if (adminCurrentTab === 'health') {
@@ -2674,14 +2672,14 @@
                     <div class="bg-white dark:bg-darkCard p-6 md:p-8 rounded-2xl shadow-sm border border-slate-200 dark:border-slate-700 text-left relative overflow-hidden max-w-4xl mx-auto mt-4">
                         <div class="absolute top-0 left-0 w-1 h-full bg-gradient-to-b from-rose-500 to-red-500"></div>
                         <div class="flex items-center justify-between mb-8 border-b border-slate-100 dark:border-slate-800 pb-4">
-                            <h3 class="text-2xl font-bold flex items-center gap-3"><div class="w-10 h-10 rounded-lg bg-rose-50 dark:bg-rose-900/30 text-rose-500 flex items-center justify-center"><i class="fa-solid fa-heart-pulse"></i></div> Platform Health Check</h3>
+                            <h3 class="text-2xl font-normal flex items-center gap-3"><div class="w-10 h-10 rounded-lg bg-rose-50 dark:bg-rose-900/30 text-rose-500 flex items-center justify-center"><i class="fa-solid fa-heart-pulse"></i></div> Platform Health Check</h3>
                             <div class="text-4xl font-black ${scoreColor}">${score}%</div>
                         </div>
 
                         <div class="grid grid-cols-1 gap-4 text-left">
-                            ${issues.map(i => `<div class="p-5 bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-xl flex items-start gap-4 shadow-sm"><i class="fa-solid fa-circle-xmark text-red-500 text-lg mt-0.5"></i><span class="text-sm font-semibold text-red-700 dark:text-red-400 leading-relaxed">${i}</span></div>`).join('')}
-                            ${warnings.map(w => `<div class="p-5 bg-amber-50 dark:bg-amber-900/20 border border-amber-200 dark:border-amber-800 rounded-xl flex items-start gap-4 shadow-sm"><i class="fa-solid fa-triangle-exclamation text-amber-500 text-lg mt-0.5"></i><span class="text-sm font-semibold text-amber-700 dark:text-amber-400 leading-relaxed">${w}</span></div>`).join('')}
-                            ${good.map(g => `<div class="p-5 bg-green-50 dark:bg-green-900/20 border border-green-200 dark:border-green-800 rounded-xl flex items-start gap-4 shadow-sm"><i class="fa-solid fa-circle-check text-green-500 text-lg mt-0.5"></i><span class="text-sm font-semibold text-green-700 dark:text-green-400 leading-relaxed">${g}</span></div>`).join('')}
+                            ${issues.map(i => `<div class="p-5 bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-xl flex items-start gap-4 shadow-sm"><i class="fa-solid fa-circle-xmark text-red-500 text-lg mt-0.5"></i><span class="text-sm font-normal text-red-700 dark:text-red-400 leading-relaxed">${i}</span></div>`).join('')}
+                            ${warnings.map(w => `<div class="p-5 bg-amber-50 dark:bg-amber-900/20 border border-amber-200 dark:border-amber-800 rounded-xl flex items-start gap-4 shadow-sm"><i class="fa-solid fa-triangle-exclamation text-amber-500 text-lg mt-0.5"></i><span class="text-sm font-normal text-amber-700 dark:text-amber-400 leading-relaxed">${w}</span></div>`).join('')}
+                            ${good.map(g => `<div class="p-5 bg-green-50 dark:bg-green-900/20 border border-green-200 dark:border-green-800 rounded-xl flex items-start gap-4 shadow-sm"><i class="fa-solid fa-circle-check text-green-500 text-lg mt-0.5"></i><span class="text-sm font-normal text-green-700 dark:text-green-400 leading-relaxed">${g}</span></div>`).join('')}
                         </div>
                     </div>
                 `;
@@ -2711,10 +2709,10 @@
                                             </div>
                                         </div>
                                         <div class="p-4 flex-1 flex flex-col min-w-0">
-                                            <input type="text" onchange="adminUpdateTileProp('${sec.id}', '${sub.id}', '${tile.id}', 'heading', this.value)" value="${(tile.heading || '').replace(/"/g, '&quot;')}" placeholder="${getEffectiveHeading({ ...tile, heading: '' }).replace(/"/g, '&quot;')}" class="w-full bg-transparent border-none text-sm font-bold text-slate-800 dark:text-slate-200 focus:outline-none focus:ring-0 placeholder-slate-400 dark:placeholder-slate-500 mb-4 p-0 overflow-x-auto whitespace-nowrap scroll-smooth" title="Tile Heading Override">
+                                            <input type="text" onchange="adminUpdateTileProp('${sec.id}', '${sub.id}', '${tile.id}', 'heading', this.value)" value="${(tile.heading || '').replace(/"/g, '&quot;')}" placeholder="${getEffectiveHeading({ ...tile, heading: '' }).replace(/"/g, '&quot;')}" class="w-full bg-transparent border-none text-sm font-normal text-slate-800 dark:text-slate-200 focus:outline-none focus:ring-0 placeholder-slate-400 dark:placeholder-slate-500 mb-4 p-0 overflow-x-auto whitespace-nowrap scroll-smooth" title="Tile Heading Override">
                                             <div class="flex items-center justify-between mt-auto">
                                                 <div>${getVisBadge(tile.visibility || 'visible')}</div>
-                                                <button onclick="adminNavigate(['${sec.id}', '${sub.id}', '${tile.id}'])" class="bg-secondary text-white px-3 py-1.5 rounded-lg text-xs font-semibold shadow-sm hover:bg-blue-600 transition-colors flex items-center gap-1.5"><i class="fa-solid fa-pen text-[10px]"></i> Edit Details</button>
+                                                <button onclick="adminNavigate(['${sec.id}', '${sub.id}', '${tile.id}'])" class="bg-secondary text-white px-3 py-1.5 rounded-lg text-xs font-normal shadow-sm hover:bg-blue-600 transition-colors flex items-center gap-1.5"><i class="fa-solid fa-pen text-[10px]"></i> Edit Details</button>
                                             </div>
                                         </div>
                                     </div>
@@ -2728,7 +2726,7 @@
                                             <input type="checkbox" onclick="event.stopPropagation()" onchange="toggleAdminSelect('${tile.id}')" ${adminSelected[tile.id] ? 'checked' : ''} class="w-4 h-4 cursor-pointer flex-shrink-0 text-secondary rounded border-slate-300 focus:ring-secondary">
                                             <div class="w-8 h-8 rounded-lg bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 flex items-center justify-center flex-shrink-0 shadow-sm"><i class="fa-solid ${tile.icon} text-secondary text-xs"></i></div>
                                             <div class="flex-1 min-w-0">
-                                                <input type="text" onchange="adminUpdateTileProp('${sec.id}', '${sub.id}', '${tile.id}', 'heading', this.value)" value="${(tile.heading || '').replace(/"/g, '&quot;')}" placeholder="${getEffectiveHeading({ ...tile, heading: '' }).replace(/"/g, '&quot;')}" class="w-full bg-transparent border-none text-sm font-semibold text-slate-800 dark:text-slate-200 focus:outline-none focus:ring-0 placeholder-slate-400 dark:placeholder-slate-500 overflow-x-auto whitespace-nowrap scroll-smooth" title="Tile Heading Override">
+                                                <input type="text" onchange="adminUpdateTileProp('${sec.id}', '${sub.id}', '${tile.id}', 'heading', this.value)" value="${(tile.heading || '').replace(/"/g, '&quot;')}" placeholder="${getEffectiveHeading({ ...tile, heading: '' }).replace(/"/g, '&quot;')}" class="w-full bg-transparent border-none text-sm font-normal text-slate-800 dark:text-slate-200 focus:outline-none focus:ring-0 placeholder-slate-400 dark:placeholder-slate-500 overflow-x-auto whitespace-nowrap scroll-smooth" title="Tile Heading Override">
                                             </div>
                                             ${getVisBadge(tile.visibility || 'visible')}
                                         </div>
@@ -2737,7 +2735,7 @@
                                                 <button onclick="adminMoveTile('${sec.id}', '${sub.id}', ${k}, -1)" class="text-slate-400 hover:text-secondary p-1 rounded hover:bg-slate-200 dark:hover:bg-slate-800 ${k === 0 ? 'invisible' : ''}" title="Move Up"><i class="fa-solid fa-arrow-up text-xs"></i></button>
                                                 <button onclick="adminMoveTile('${sec.id}', '${sub.id}', ${k}, 1)" class="text-slate-400 hover:text-secondary p-1 rounded hover:bg-slate-200 dark:hover:bg-slate-800 ${k === sub.tiles.length - 1 ? 'invisible' : ''}" title="Move Down"><i class="fa-solid fa-arrow-down text-xs"></i></button>
                                             </div>
-                                            <button onclick="adminNavigate(['${sec.id}', '${sub.id}', '${tile.id}'])" class="bg-secondary text-white px-3 py-1.5 rounded-lg text-xs font-semibold shadow-sm hover:bg-blue-600 transition-colors flex items-center gap-1.5"><i class="fa-solid fa-pen text-[10px]"></i> Edit</button>
+                                            <button onclick="adminNavigate(['${sec.id}', '${sub.id}', '${tile.id}'])" class="bg-secondary text-white px-3 py-1.5 rounded-lg text-xs font-normal shadow-sm hover:bg-blue-600 transition-colors flex items-center gap-1.5"><i class="fa-solid fa-pen text-[10px]"></i> Edit</button>
                                         </div>
                                     </div>
                                 `).join('');
@@ -2753,7 +2751,7 @@
                                     <div class="flex items-center gap-3 flex-1 mr-4">
                                         <input type="checkbox" onclick="event.stopPropagation()" onchange="toggleAdminSelect('${sub.id}')" ${adminSelected[sub.id] ? 'checked' : ''} class="w-4 h-4 ml-1 cursor-pointer flex-shrink-0 text-secondary rounded border-slate-300 focus:ring-secondary">
                                         <button onclick="toggleAdminExpand('${sub.id}')" class="text-slate-400 hover:text-secondary w-7 h-7 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded shadow-sm flex items-center justify-center transition-colors"><i class="fa-solid ${chevronSub} text-xs"></i></button>
-                                        <input type="text" onchange="adminUpdateSub('${sec.id}', '${sub.id}', 'name', this.value)" value="${sub.name}" class="flex-1 bg-transparent border-none text-sm font-bold text-slate-800 dark:text-slate-200 focus:outline-none focus:ring-0 placeholder-slate-400" placeholder="Subsection Name">
+                                        <input type="text" onchange="adminUpdateSub('${sec.id}', '${sub.id}', 'name', this.value)" value="${sub.name}" class="flex-1 bg-transparent border-none text-sm font-normal text-slate-800 dark:text-slate-200 focus:outline-none focus:ring-0 placeholder-slate-400" placeholder="Subsection Name">
                                         ${getVisBadge(sub.visibility || 'visible')}
                                     </div>
                                     <div class="flex gap-3 items-center flex-shrink-0 opacity-0 group-hover:opacity-100 transition-opacity">
@@ -2770,7 +2768,7 @@
                                     </div>
                                     ${tilesHtml}
                                     <div class="px-4 pb-4">
-                                        <button onclick="adminAddTile('${sec.id}', '${sub.id}')" class="text-xs border-2 border-dashed border-slate-300 dark:border-slate-600 text-slate-500 dark:text-slate-400 hover:border-secondary hover:text-secondary dark:hover:border-secondary transition-colors px-4 py-2.5 rounded-xl font-semibold w-full text-center flex items-center justify-center gap-2"><i class="fa-solid fa-plus"></i> Add New Tile</button>
+                                        <button onclick="adminAddTile('${sec.id}', '${sub.id}')" class="text-xs border-2 border-dashed border-slate-300 dark:border-slate-600 text-slate-500 dark:text-slate-400 hover:border-secondary hover:text-secondary dark:hover:border-secondary transition-colors px-4 py-2.5 rounded-xl font-normal w-full text-center flex items-center justify-center gap-2"><i class="fa-solid fa-plus"></i> Add New Tile</button>
                                     </div>
                                 </div>
                             </div>
@@ -2802,9 +2800,9 @@
                                 
                                 <div class="ml-4 pl-6 border-l-2 border-slate-200 dark:border-slate-700 relative">
                                     <div class="absolute -left-[11px] top-0 bottom-0 flex flex-col justify-between py-2"><div class="w-5 h-px bg-slate-200 dark:bg-slate-700"></div><div class="w-5 h-px bg-slate-200 dark:bg-slate-700"></div></div>
-                                    <h4 class="text-sm font-bold mb-5 text-slate-500 dark:text-slate-400 uppercase tracking-wider flex items-center gap-2"><i class="fa-solid fa-layer-group"></i> Subsections</h4>
+                                    <h4 class="text-sm font-normal mb-5 text-slate-500 dark:text-slate-400 uppercase tracking-wider flex items-center gap-2"><i class="fa-solid fa-layer-group"></i> Subsections</h4>
                                     ${subsHtml}
-                                    <button onclick="adminAddSub('${sec.id}')" class="mt-4 w-full bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-slate-700 border border-slate-300 dark:border-slate-600 transition-colors px-4 py-3 rounded-xl font-bold shadow-sm flex items-center justify-center gap-2"><i class="fa-solid fa-plus"></i> Add New Subsection</button>
+                                    <button onclick="adminAddSub('${sec.id}')" class="mt-4 w-full bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-slate-700 border border-slate-300 dark:border-slate-600 transition-colors px-4 py-3 rounded-xl font-normal shadow-sm flex items-center justify-center gap-2"><i class="fa-solid fa-plus"></i> Add New Subsection</button>
                                 </div>
                             </div>
                         </div>
@@ -2816,7 +2814,7 @@
                         <div class="absolute top-0 left-0 w-1 h-full bg-gradient-to-b from-orange-500 to-amber-500"></div>
                         <div class="flex justify-between items-center mb-8 border-b border-slate-100 dark:border-slate-800 pb-4 text-left flex-wrap gap-4">
                             <div class="flex items-center gap-4 flex-wrap">
-                                <h3 class="text-2xl font-bold flex items-center gap-3"><div class="w-10 h-10 rounded-lg bg-orange-50 dark:bg-orange-900/30 text-orange-500 flex items-center justify-center"><i class="fa-solid fa-folder-tree"></i></div> Content Architecture</h3>
+                                <h3 class="text-2xl font-normal flex items-center gap-3"><div class="w-10 h-10 rounded-lg bg-orange-50 dark:bg-orange-900/30 text-orange-500 flex items-center justify-center"><i class="fa-solid fa-folder-tree"></i></div> Content Architecture</h3>
                                 <div class="flex items-center gap-1 sm:gap-2 bg-slate-100 dark:bg-slate-800 p-1 rounded-lg">
                                     <button onclick="adminToggleTileView()" class="text-xs px-3 py-1.5 rounded text-slate-600 dark:text-slate-300 hover:bg-white dark:hover:bg-slate-700 hover:shadow-sm transition-all font-semibold" title="Toggle Grid/List View"><i class="fa-solid ${adminTileView === 'grid' ? 'fa-list' : 'fa-border-all'}"></i></button>
                                     <div class="w-px h-4 bg-slate-300 dark:bg-slate-600 hidden sm:block"></div>
@@ -2825,7 +2823,7 @@
                                     <button onclick="adminCollapseAll()" class="text-xs px-3 py-1.5 rounded text-slate-600 dark:text-slate-300 hover:bg-white dark:hover:bg-slate-700 hover:shadow-sm transition-all font-semibold">Collapse All</button>
                                 </div>
                             </div>
-                            <button onclick="adminAddSection()" class="bg-secondary text-white px-5 py-2.5 rounded-xl font-bold text-sm shadow-md hover:bg-blue-600 transition-colors flex items-center gap-2"><i class="fa-solid fa-plus"></i> Add Root Section</button>
+                            <button onclick="adminAddSection()" class="bg-secondary text-white px-5 py-2.5 rounded-xl font-normal text-sm shadow-md hover:bg-blue-600 transition-colors flex items-center gap-2"><i class="fa-solid fa-plus"></i> Add Root Section</button>
                         </div>
                         ${sectionsHtml || '<div class="p-12 text-center border-2 border-dashed border-slate-300 dark:border-slate-700 rounded-xl text-slate-500">No sections exist yet. Build your portfolio here!</div>'}
                     </div>
@@ -2890,7 +2888,7 @@
             return `
                 <div class="h-full flex flex-col w-full bg-white dark:bg-darkCard overflow-hidden">
                     <div class="flex justify-between items-center p-4 border-b border-slate-200 dark:border-slate-800 shrink-0 shadow-sm z-10 bg-white dark:bg-darkCard">
-                        <h3 class="text-lg font-bold text-left flex items-center gap-3"><div class="w-8 h-8 bg-slate-100 dark:bg-slate-800 rounded-lg flex items-center justify-center text-slate-500"><i class="fa-solid fa-pen-nib text-sm"></i></div> Edit Tile Details</h3>
+                        <h3 class="text-lg font-normal text-left flex items-center gap-3"><div class="w-8 h-8 bg-slate-100 dark:bg-slate-800 rounded-lg flex items-center justify-center text-slate-500"><i class="fa-solid fa-pen-nib text-sm"></i></div> Edit Tile Details</h3>
                         <button onclick="adminNavigate([])" class="w-8 h-8 flex items-center justify-center rounded-full bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-600 dark:text-slate-300 transition-colors"><i class="fa-solid fa-xmark"></i></button>
                     </div>
                     
@@ -2902,7 +2900,7 @@
                         </div>
                         
                         <div class="space-y-4">
-                            <div class="text-left space-y-1.5"><label class="${adminLabelCls}">Tile Heading Override (Optional)</label><input type="text" onchange="adminUpdateTileProp('${adminPath[0]}', '${adminPath[1]}', '${tile.id}', 'heading', this.value)" value="${tile.heading || ''}" class="${adminInputCls} font-bold text-lg" placeholder="Leave empty to auto-generate"></div>
+                            <div class="text-left space-y-1.5"><label class="${adminLabelCls}">Tile Heading Override (Optional)</label><input type="text" onchange="adminUpdateTileProp('${adminPath[0]}', '${adminPath[1]}', '${tile.id}', 'heading', this.value)" value="${tile.heading || ''}" class="${adminInputCls} font-normal text-lg" placeholder="Leave empty to auto-generate"></div>
                             <div class="text-left space-y-1.5"><label class="${adminLabelCls}">Role / Title</label><input type="text" onchange="adminUpdateTileProp('${adminPath[0]}', '${adminPath[1]}', '${tile.id}', 'role', this.value)" value="${tile.role || tile.subtitle || ''}" class="${adminInputCls}" placeholder="e.g. Mechanical Engineer"></div>
                             <div class="text-left space-y-1.5"><label class="${adminLabelCls}">Base Subject / Major</label><input type="text" onchange="adminUpdateTileProp('${adminPath[0]}', '${adminPath[1]}', '${tile.id}', 'baseSubject', this.value)" value="${tile.baseSubject || ''}" class="${adminInputCls}" placeholder="e.g. Mechanical Engineering"></div>
                             <div class="text-left space-y-1.5"><label class="${adminLabelCls}">Specialisation / Minor</label><input type="text" onchange="adminUpdateTileProp('${adminPath[0]}', '${adminPath[1]}', '${tile.id}', 'specialisation', this.value)" value="${tile.specialisation || ''}" class="${adminInputCls}" placeholder="e.g. Robotics"></div>
@@ -2930,13 +2928,13 @@
                         </div>
                         
                         <div class="border-t border-slate-100 dark:border-slate-800 pt-6 text-left w-full">
-                            <h4 class="text-base font-bold mb-4 text-left flex items-center gap-2"><i class="fa-solid fa-photo-film text-slate-400"></i> Media Attachments</h4>
+                            <h4 class="text-base font-normal mb-4 text-left flex items-center gap-2"><i class="fa-solid fa-photo-film text-slate-400"></i> Media Attachments</h4>
                             ${mediaHtml}
-                            <button onclick="adminAddMedia('${adminPath[0]}', '${adminPath[1]}', '${tile.id}')" class="text-sm font-bold bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-600 dark:text-slate-300 px-4 py-2.5 rounded-xl mt-2 text-left transition-colors flex items-center gap-2 w-full justify-center"><i class="fa-solid fa-plus"></i> Add Media Link</button>
+                            <button onclick="adminAddMedia('${adminPath[0]}', '${adminPath[1]}', '${tile.id}')" class="text-sm font-normal bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-600 dark:text-slate-300 px-4 py-2.5 rounded-xl mt-2 text-left transition-colors flex items-center gap-2 w-full justify-center"><i class="fa-solid fa-plus"></i> Add Media Link</button>
                         </div>
 
                         <div class="border-t border-slate-100 dark:border-slate-800 pt-6 text-left w-full pb-8">
-                            <h4 class="text-base font-bold mb-2 text-left flex items-center gap-2"><i class="fa-solid fa-link text-slate-400"></i> Metrics Pills Relations</h4>
+                            <h4 class="text-base font-normal mb-2 text-left flex items-center gap-2"><i class="fa-solid fa-link text-slate-400"></i> Metrics Pills Relations</h4>
                             <p class="text-xs text-slate-500 mb-4 leading-relaxed">Select tiles to generate clickable metrics pills below this card.</p>
                             ${relatedHtml}
                         </div>
