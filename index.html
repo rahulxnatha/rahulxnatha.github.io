@@ -255,7 +255,7 @@
         }
 
 
-        
+
 
         #left-nav {
             width: 260px;
@@ -271,6 +271,14 @@
             background: rgb(15 23 42);
             border-right-color: rgb(51 65 85);
         }
+
+        .left-nav-active {
+            color: #3b82f6;
+        }
+
+        #left-nav .left-nav-active {
+    color: #3b82f6;
+}
 
         @media (max-width: 768px) {
             #left-nav {
@@ -414,6 +422,7 @@
         let hoverFocusTimeoutId = null;
         let reduceAnimations = JSON.parse(localStorage.getItem('reduceAnimations')) || false;
         let currentBreadcrumbId = '';
+        let isLeftNavHovered = false;
 
         let appData = {
             seo: {
@@ -805,6 +814,17 @@
                     container.innerHTML = renderPublicShell();
                     document.getElementById('left-content').innerHTML = renderLeftContent();
                     renderLeftNavigation();
+
+                    const leftNav = document.getElementById("left-nav");
+
+                    leftNav.addEventListener("mouseenter", () => {
+                        isLeftNavHovered = true;
+                    });
+
+                    leftNav.addEventListener("mouseleave", () => {
+                        isLeftNavHovered = false;
+                    });
+
                     setupAnimatedTitles();
                     setupScrollSpy();
 
@@ -1034,14 +1054,18 @@ ${!isMobile ? `
         <div class="sticky top-16 h-[calc(100vh-4rem)] overflow-y-auto border-r border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900">
     `;
 
-            html += `<div onclick="scrollToNavTarget('top')" class="p-4 cursor-pointer hover:bg-slate-100 dark:hover:bg-slate-800 font-normal">
+            html += `<div
+            id="left-nav-top"
+            onclick="scrollToNavTarget('top')" class="p-4 cursor-pointer hover:bg-slate-100 dark:hover:bg-slate-800 font-normal">
         Overview
     </div>`;
 
             getVisibleSections().forEach(sec => {
 
                 html += `
-            <div onclick="scrollToNavTarget('nav-sec-${sec.id}')"
+            <div 
+            id="left-nav-sec-${sec.id}"
+            onclick="scrollToNavTarget('nav-sec-${sec.id}')"
                  class="p-4 cursor-pointer hover:bg-slate-100 dark:hover:bg-slate-800 font-normal border-t border-slate-100 dark:border-slate-800">
                 ${sec.name}
             </div>
@@ -1050,7 +1074,9 @@ ${!isMobile ? `
                 sec.subsections.forEach(sub => {
 
                     html += `
-                <div onclick="scrollToNavTarget('nav-sub-${sub.id}')"
+                <div 
+                id="left-nav-sub-${sub.id}"
+                onclick="scrollToNavTarget('nav-sub-${sub.id}')"
                      class="pl-8 pr-4 py-2 cursor-pointer hover:bg-slate-50 dark:hover:bg-slate-800 text-sm text-slate-600 dark:text-slate-400">
                     ${sub.name}
                 </div>
@@ -2394,10 +2420,80 @@ ${!isMobile ? `
                     activeScrollSec = foundSec;
                     activeScrollSub = foundSub;
                     updateBreadcrumbs(activeScrollSec, activeScrollSub);
+                    console.log(activeScrollSec);
+                    console.log(activeScrollSub);
+                    updateLeftNavigation(activeScrollSec, activeScrollSub);
+
                 }
             });
 
             setTimeout(() => container.dispatchEvent(new Event('scroll')), 100);
+        }
+
+        let previousLeftNavItem = null;
+
+        function updateLeftNavigation(sec, sub) {
+
+            if (previousLeftNavItem) {
+                previousLeftNavItem.classList.remove("left-nav-active");
+            }
+
+            let element = null;
+
+            if (sub) {
+                element = document.getElementById(
+                    "left-nav-sub-" +
+                    sub.id.replace("nav-sub-", "")
+                );
+            }
+
+            if (!element && sec) {
+                element = document.getElementById(
+                    "left-nav-sec-" +
+                    sec.id.replace("nav-sec-", "")
+                );
+            }
+
+            if (!element && sec?.id === "top") {
+                element = document.getElementById("left-nav-top");
+            }
+
+            if (!element) return;
+
+            element.classList.add("left-nav-active");
+
+            previousLeftNavItem = element;
+
+            if (!isLeftNavHovered) {
+
+                const container = document.getElementById("left-nav");
+
+                container.scrollTo({
+
+                    top:
+                        element.offsetTop
+                        - container.clientHeight / 2
+                        + element.clientHeight / 2,
+
+                    behavior: "smooth"
+
+                });
+
+            }
+
+            //temporary add
+            if (sub) {
+    const lookupId =
+        "left-nav-sub-" +
+        sub.id.replace("nav-sub-", "");
+
+    console.log("Looking for:", lookupId);
+
+    element = document.getElementById(lookupId);
+
+    console.log("Found:", element);
+}
+
         }
 
         function setupAnimatedTitles() {
