@@ -1048,10 +1048,11 @@ ${!isMobile ? `
 
         function renderLeftNavigation() {
             const nav = document.getElementById("left-nav");
+            
             if (!nav) return;
 
             let html = `
-        <div class="sticky top-16 h-[calc(100vh-4rem)] overflow-y-auto border-r border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900">
+        <div id="left-nav-scroll" class="sticky top-16 h-[calc(100vh-4rem)] overflow-y-auto border-r border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900">
     `;
 
             html += `<div
@@ -2466,7 +2467,7 @@ ${!isMobile ? `
 
             if (!isLeftNavHovered) {
 
-                const container = document.getElementById("left-nav");
+                const container = document.getElementById("left-nav-scroll");
 
                 container.scrollTo({
 
