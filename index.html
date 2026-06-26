@@ -255,18 +255,28 @@
         }
 
 
-        #left-nav-placeholder {
-    width: 260px;
-    min-width: 260px;
-    max-width: 260px;
-    flex-shrink: 0;
-}
+        
 
-@media (max-width: 768px) {
-    #left-nav-placeholder {
-        display: none;
-    }
-}
+        #left-nav {
+            width: 260px;
+            min-width: 260px;
+            max-width: 260px;
+            flex-shrink: 0;
+
+            background: white;
+            border-right: 1px solid rgb(226 232 240);
+        }
+
+        .dark #left-nav {
+            background: rgb(15 23 42);
+            border-right-color: rgb(51 65 85);
+        }
+
+        @media (max-width: 768px) {
+            #left-nav {
+                display: none;
+            }
+        }
     </style>
 </head>
 
@@ -794,8 +804,10 @@
                 if (!document.getElementById('main-wrapper')) {
                     container.innerHTML = renderPublicShell();
                     document.getElementById('left-content').innerHTML = renderLeftContent();
+                    renderLeftNavigation();
                     setupAnimatedTitles();
                     setupScrollSpy();
+
 
                     const tabsContainer = document.getElementById('scrollable-tabs');
                     if (tabsContainer) {
@@ -976,7 +988,7 @@ ${!isMobile ? `
                 </header>
 
                 <div id="main-wrapper" class="bg-slate-100 dark:bg-slate-900 text-left relative">
-                    <nav id="left-nav-placeholder"></nav>
+                    <nav id="left-nav"></nav>
                     <div id="left-content" class="pb-12 relative flex-1 text-left"></div>
 
                     <aside id="right-aside" class="border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 shadow-xl md:shadow-none text-left aps-${aps}">
@@ -1012,6 +1024,45 @@ ${!isMobile ? `
                     </aside>
                 </div>
             `;
+        }
+
+        function renderLeftNavigation() {
+            const nav = document.getElementById("left-nav");
+            if (!nav) return;
+
+            let html = `
+        <div class="sticky top-16 h-[calc(100vh-4rem)] overflow-y-auto border-r border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900">
+    `;
+
+            html += `<div onclick="scrollToNavTarget('top')" class="p-4 cursor-pointer hover:bg-slate-100 dark:hover:bg-slate-800 font-normal">
+        Overview
+    </div>`;
+
+            getVisibleSections().forEach(sec => {
+
+                html += `
+            <div onclick="scrollToNavTarget('nav-sec-${sec.id}')"
+                 class="p-4 cursor-pointer hover:bg-slate-100 dark:hover:bg-slate-800 font-normal border-t border-slate-100 dark:border-slate-800">
+                ${sec.name}
+            </div>
+        `;
+
+                sec.subsections.forEach(sub => {
+
+                    html += `
+                <div onclick="scrollToNavTarget('nav-sub-${sub.id}')"
+                     class="pl-8 pr-4 py-2 cursor-pointer hover:bg-slate-50 dark:hover:bg-slate-800 text-sm text-slate-600 dark:text-slate-400">
+                    ${sub.name}
+                </div>
+            `;
+
+                });
+
+            });
+
+            html += `</div>`;
+
+            nav.innerHTML = html;
         }
 
         function renderLeftContent() {
