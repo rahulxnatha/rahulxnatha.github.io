@@ -276,8 +276,18 @@
             color: #3b82f6;
         }
 
-        #left-nav .left-nav-active {
+   
+
+#left-nav .left-nav-active {
     color: #3b82f6;
+    font-weight: 500;
+    background: rgba(59,130,246,.08);
+    opacity: 1;
+    border-radius: 0px;
+}
+
+#left-nav:hover .cursor-pointer {
+    opacity: 1;
 }
 
         @media (max-width: 768px) {
@@ -1057,7 +1067,7 @@ ${!isMobile ? `
 
             html += `<div
             id="left-nav-top"
-            onclick="scrollToNavTarget('top')" class="p-4 cursor-pointer hover:bg-slate-100 dark:hover:bg-slate-800 font-normal">
+            onclick="scrollToNavTarget('top')" class=" p-4 cursor-pointer hover:bg-slate-100 dark:hover:bg-slate-800 font-normal opacity-75 transition-all duration-300 ease-out">
         Overview
     </div>`;
 
@@ -1067,7 +1077,7 @@ ${!isMobile ? `
             <div 
             id="left-nav-sec-${sec.id}"
             onclick="scrollToNavTarget('nav-sec-${sec.id}')"
-                 class="p-4 cursor-pointer hover:bg-slate-100 dark:hover:bg-slate-800 font-normal border-t border-slate-100 dark:border-slate-800">
+                 class="p-4 cursor-pointer hover:bg-slate-100 dark:hover:bg-slate-800 font-normal border-t border-slate-100 dark:border-slate-800 opacity-75 transition-all duration-300 ease-out">
                 ${sec.name}
             </div>
         `;
@@ -1078,7 +1088,7 @@ ${!isMobile ? `
                 <div 
                 id="left-nav-sub-${sub.id}"
                 onclick="scrollToNavTarget('nav-sub-${sub.id}')"
-                     class="pl-8 pr-4 py-2 cursor-pointer hover:bg-slate-50 dark:hover:bg-slate-800 text-sm text-slate-600 dark:text-slate-400">
+                     class="pl-8 pr-4 py-2 cursor-pointer hover:bg-slate-50 dark:hover:bg-slate-800 text-sm text-slate-600 dark:text-slate-400 opacity-75 transition-all duration-300 ease-out">
                     ${sub.name}
                 </div>
             `;
