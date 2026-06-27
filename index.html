@@ -400,7 +400,8 @@
 
         let openTabs = ["chatbot"];
         let activeAsideTab = "chatbot";
-        let aps = "closed";
+        let aps = "dock";
+        aps = getUrlParam("aps") || "dock";
 
         if (window.innerWidth < 768) {
             aps = "dock";
