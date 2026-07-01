@@ -1190,6 +1190,28 @@ function verifySocialAccount() {
         result.innerHTML = "<span class='text-red-500 font-normal'>No.</span>";
     }
 
+    document.getElementById("verify-btn").disabled = true;
+document.getElementById("verify-btn").classList.add(
+    "opacity-50",
+    "cursor-not-allowed"
+);
+
+}
+
+function enableVerifyButton() {
+
+    const btn = document.getElementById("verify-btn");
+
+    btn.disabled = false;
+
+    btn.classList.remove(
+        "opacity-50",
+        "cursor-not-allowed"
+    );
+
+    document.getElementById("verification-result").innerHTML =
+    "⌛ Waiting for verification...";
+
 }
 
         function renderLeftContent() {
@@ -1240,6 +1262,7 @@ function verifySocialAccount() {
 
             <select
                 id="social-platform"
+                onchange="enableVerifyButton()"
                 class="px-4 py-3 rounded-xl bg-slate-50 dark:bg-slate-900 border border-slate-300 dark:border-slate-700">
 
                 ${appData.socialVerification.accounts
@@ -1251,11 +1274,13 @@ function verifySocialAccount() {
 
             <input
                 id="social-username"
+                oninput="enableVerifyButton()"
                 type="text"
                 placeholder="Enter username"
                 class="flex-1 min-w-[240px] px-4 py-3 rounded-xl bg-slate-50 dark:bg-slate-900 border border-slate-300 dark:border-slate-700">
 
             <button
+            id="verify-btn"
                 onclick="verifySocialAccount()"
                 class="px-6 py-3 rounded-xl bg-secondary text-white hover:opacity-90 transition-all">
 
