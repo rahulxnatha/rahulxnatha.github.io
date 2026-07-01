@@ -1180,15 +1180,15 @@ function verifySocialAccount() {
     const result = document.getElementById("verification-result");
 
     if (!account) {
-        result.innerHTML = "No.";
+        result.innerHTML = "<span class='text-red-500 font-normal'>⚠️ No, not verified.</span>";
         return;
     }
 
     if (username === account.username.trim().toLowerCase()) {
-        result.innerHTML = "<span class='text-green-500 font-normal'>Yes.</span>";
+        result.innerHTML = "<span class='text-green-500 font-normal'>✅ Yes, verified.</span>";
     } else {
-        result.innerHTML = "<span class='text-red-500 font-normal'>No.</span>";
-    }
+        result.innerHTML = "<span class='text-red-500 font-normal'>⚠️ No, not verified.</span>";
+    } 
 
     document.getElementById("verify-btn").disabled = true;
 document.getElementById("verify-btn").classList.add(
@@ -1275,6 +1275,7 @@ function enableVerifyButton() {
             <input
                 id="social-username"
                 oninput="enableVerifyButton()"
+                onkeydown="if(event.key === 'Enter' && !document.getElementById('verify-btn').disabled) verifySocialAccount();"
                 type="text"
                 placeholder="Enter username"
                 class="flex-1 min-w-[240px] px-4 py-3 rounded-xl bg-slate-50 dark:bg-slate-900 border border-slate-300 dark:border-slate-700">
