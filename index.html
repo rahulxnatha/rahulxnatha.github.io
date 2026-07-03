@@ -1205,6 +1205,26 @@ function enableVerifyButton() {
 
     const btn = document.getElementById("verify-btn");
 
+    const username = document
+        .getElementById("social-username")
+        .value
+        .trim();
+
+    if (username === "") {
+
+        btn.disabled = true;
+
+        btn.classList.add(
+            "opacity-50",
+            "cursor-not-allowed"
+        );
+
+        document.getElementById("verification-result").innerHTML =
+            "⌛ Waiting for verification...";
+
+        return;
+    }
+
     btn.disabled = false;
 
     btn.classList.remove(
@@ -1213,7 +1233,7 @@ function enableVerifyButton() {
     );
 
     document.getElementById("verification-result").innerHTML =
-    "⌛ Waiting for verification...";
+        "⌛ Waiting for verification...";
 
 }
 
