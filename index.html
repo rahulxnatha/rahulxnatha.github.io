@@ -1098,7 +1098,10 @@ ${!isMobile ? `
                             <div class="p-3 border-b border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 flex-shrink-0 relative text-left">
                                 <div class="relative text-left">
                                     <i class="fa-solid fa-search absolute left-3 top-2.5 text-slate-400 text-sm"></i>
-                                    <input type="text" id="aside-search-input" oninput="handleSearch(this.value)" class="w-full bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-lg py-2 pl-9 pr-4 text-sm text-slate-800 dark:text-slate-200 focus:outline-none focus:border-secondary transition-colors text-left" placeholder="Search portfolio headings...">
+                                    <input type="text" spellcheck="false"
+autocomplete="off"
+autocorrect="off"
+autocapitalize="off" id="aside-search-input" oninput="handleSearch(this.value)" class="w-full bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-lg py-2 pl-9 pr-4 text-sm text-slate-800 dark:text-slate-200 focus:outline-none focus:border-secondary transition-colors text-left" placeholder="Search portfolio headings...">
                                 </div>
                                 <div id="search-results" class="absolute left-3 right-3 top-full mt-1 bg-white dark:bg-darkCard border border-slate-200 dark:border-slate-700 shadow-xl rounded-lg overflow-hidden z-50 hidden max-h-64 overflow-y-auto text-left"></div>
                             </div>
@@ -1276,7 +1279,10 @@ function enableVerifyButton() {
                 id="social-username"
                 oninput="enableVerifyButton()"
                 onkeydown="if(event.key === 'Enter' && !document.getElementById('verify-btn').disabled) verifySocialAccount();"
-                type="text"
+                type="text" spellcheck="false"
+autocomplete="off"
+autocorrect="off"
+autocapitalize="off"
                 placeholder="Enter username"
                 class="flex-1 min-w-[240px] px-4 py-3 rounded-xl bg-slate-50 dark:bg-slate-900 border border-slate-300 dark:border-slate-700">
 
@@ -1608,7 +1614,10 @@ function enableVerifyButton() {
                     <div class="flex-1 p-4 overflow-y-auto" id="chat-window">${msgs}</div>
                     <div class="p-4 bg-white dark:bg-darkCard border-t border-slate-200 dark:border-slate-700 shadow-[0_-4px_6px_-1px_rgba(0,0,0,0.05)] w-full">
                         <form onsubmit="handleChatSubmit(event)" class="flex gap-2 w-full text-left">
-                            <input type="text" id="chat-input" class="flex-1 bg-slate-100 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 text-slate-800 dark:text-slate-200 text-sm rounded-full px-4 py-2 focus:outline-none focus:border-secondary text-left" placeholder="Ask a question...">
+                            <input type="text" spellcheck="false"
+autocomplete="off"
+autocorrect="off"
+autocapitalize="off" id="chat-input" class="flex-1 bg-slate-100 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 text-slate-800 dark:text-slate-200 text-sm rounded-full px-4 py-2 focus:outline-none focus:border-secondary text-left" placeholder="Ask a question...">
                             <button type="submit" class="bg-secondary hover:bg-blue-600 text-white rounded-full w-10 h-10 flex items-center justify-center transition-colors shadow-sm flex-shrink-0"><i class="fa-solid fa-paper-plane"></i></button>
                         </form>
                         <div class="flex flex-wrap gap-2 mt-3 w-full justify-start text-left">
@@ -3019,37 +3028,51 @@ function enableVerifyButton() {
 
     <div class="flex items-center justify-between mb-4">
 
-        <h4 class="text-base font-normal flex items-center gap-3">
+        <div class="flex-1">
 
-    <i class="${
-        {
-            LinkedIn: "fa-brands fa-linkedin",
-            GitHub: "fa-brands fa-github",
-            YouTube: "fa-brands fa-youtube",
-            Facebook: "fa-brands fa-facebook",
-            Instagram: "fa-brands fa-instagram",
-            Threads: "fa-brands fa-threads",
-            X: "fa-brands fa-x-twitter",
-            Telegram: "fa-brands fa-telegram",
-            Discord: "fa-brands fa-discord",
-            Snapchat: "fa-brands fa-snapchat"
-        }[acc.platform]
-    }"></i>
+    <label class="${adminLabelCls}">
+        Platform
+    </label>
 
-    ${acc.platform}
+    <input
+        type="text"
+        spellcheck="false"
+autocomplete="off"
+autocorrect="off"
+autocapitalize="off"
+        value="${acc.platform}"
+        onchange="appData.socialVerification.accounts[${index}].platform=this.value"
+        class="${adminInputCls}"
+        placeholder="Platform">
 
-</h4>
+</div>
 
-        <label class="flex items-center gap-2 text-sm">
+        <div class="flex items-center gap-4 ml-6">
 
-            <input
-                type="checkbox"
-                ${acc.verificationEnabled ? "checked" : ""}
-                onchange="appData.socialVerification.accounts[${index}].verificationEnabled=this.checked">
+    <label class="flex items-center gap-2 text-sm">
 
-            Enabled
+        <input
+            type="checkbox"
+            ${acc.verificationEnabled ? "checked" : ""}
+            onchange="appData.socialVerification.accounts[${index}].verificationEnabled=this.checked">
 
-        </label>
+        Enabled
+
+    </label>
+
+    <button
+        onclick="
+            appData.socialVerification.accounts.splice(${index},1);
+            switchAdminTab('social');
+        "
+        class="text-red-500 hover:text-red-600 transition"
+        title="Delete Platform">
+
+        <i class="fa-solid fa-trash"></i>
+
+    </button>
+
+</div>
 
     </div>
 
@@ -3059,6 +3082,10 @@ function enableVerifyButton() {
 
     <input
         type="text"
+        spellcheck="false"
+autocomplete="off"
+autocorrect="off"
+autocapitalize="off"
         value="${acc.username}"
         onchange="appData.socialVerification.accounts[${index}].username=this.value"
         class="${adminInputCls}"
@@ -3093,6 +3120,26 @@ Only platforms with <strong>Enabled</strong> checked will be available in the we
 </div>
 
             ${rows}
+
+            <div class="mt-6 flex justify-center">
+
+    <button
+    onclick="
+appData.socialVerification.accounts.push({
+    platform: '',
+    username: '',
+    verificationEnabled: true
+});
+switchAdminTab('social');
+"
+    class="px-5 py-3 rounded-xl bg-secondary text-white hover:opacity-90 transition">
+
+    <i class="fa-solid fa-plus mr-2"></i>
+    Add Platform
+
+</button>
+
+</div>
 
         </div>
     `;
