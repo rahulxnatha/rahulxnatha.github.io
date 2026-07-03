@@ -1236,6 +1236,8 @@ function enableVerifyButton() {
         "⌛ Waiting for verification...";
 
 }
+ 
+
 
         function renderLeftContent() {
             let heroBg = ""; let heroOverlay = "";
@@ -1307,9 +1309,9 @@ autocapitalize="off"
                 class="flex-1 min-w-[240px] px-4 py-3 rounded-xl bg-slate-50 dark:bg-slate-900 border border-slate-300 dark:border-slate-700">
 
             <button
-            id="verify-btn"
+            id="verify-btn" disabled
                 onclick="verifySocialAccount()"
-                class="px-6 py-3 rounded-xl bg-secondary text-white hover:opacity-90 transition-all">
+                class="opacity-50 cursor-not-allowed px-6 py-3 rounded-xl bg-secondary text-white transition-all">
 
                 Verify
 
@@ -3640,6 +3642,7 @@ switchAdminTab('social');
         }
 
         initApp();
+        
     </script>
 </body>
 
