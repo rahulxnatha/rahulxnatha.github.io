@@ -1609,8 +1609,9 @@ autocapitalize="off"
                 </div>
             `).join('');
 
+
             return `
-                <div class="flex flex-col h-full absolute inset-0 text-left">
+                <div  class="flex flex-col h-full absolute inset-0 text-left">
                     <div class="flex-1 p-4 overflow-y-auto" id="chat-window">${msgs}</div>
                     <div class="p-4 bg-white dark:bg-darkCard border-t border-slate-200 dark:border-slate-700 shadow-[0_-4px_6px_-1px_rgba(0,0,0,0.05)] w-full">
                         <form onsubmit="handleChatSubmit(event)" class="flex gap-2 w-full text-left">
