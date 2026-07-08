@@ -1808,19 +1808,121 @@ autocapitalize="off" id="chat-input" class="flex-1 bg-slate-100 dark:bg-slate-90
 
         function renderDocumentVerificationHTML(tile) {
 
-            return `
-        <div class="p-6">
-            <h2 class="text-2xl font-normal">
-                Digitally Verifiable
-            </h2>
+    return `
 
-            <p class="mt-4">
-                Document Verification UI coming soon...
-            </p>
-        </div>
-    `;
+<div class="p-6 absolute inset-0 overflow-y-auto text-left">
 
-        }
+    <h2 class="text-2xl font-normal text-primary dark:text-white mb-2">
+        Digitally verifiable
+    </h2>
+
+    <p class="text-slate-600 dark:text-slate-300 text-sm leading-relaxed mb-8">
+        Verify documents issued under <strong>DOCS from Rahul</strong>.
+    </p>
+
+    <!-- Upload -->
+
+    <div class="mb-8">
+
+        <label class="block text-sm font-medium text-slate-600 dark:text-slate-300 mb-3">
+            Browse PDF
+        </label>
+
+        <input
+            id="verify-file"
+            type="file"
+            accept=".pdf"
+            class="hidden">
+
+        <button
+            type="button"
+            onclick="document.getElementById('verify-file').click()"
+            class="w-full rounded-xl border border-slate-300 dark:border-slate-700 px-5 py-4 hover:bg-slate-50 dark:hover:bg-slate-800 transition">
+
+            <i class="fa-solid fa-file-arrow-up mr-2"></i>
+
+            Browse PDF
+
+        </button>
+
+        <p class="mt-2 text-xs text-slate-500">
+            SHA-256 is calculated locally. Your file is never uploaded.
+        </p>
+
+    </div>
+
+    <!-- OR -->
+
+    <div class="flex items-center gap-4 mb-8">
+
+        <div class="flex-1 border-t border-slate-200 dark:border-slate-700"></div>
+
+        <span class="text-xs text-slate-400 uppercase tracking-wider">
+            OR
+        </span>
+
+        <div class="flex-1 border-t border-slate-200 dark:border-slate-700"></div>
+
+    </div>
+
+    <!-- Link / SHA -->
+
+    <div class="mb-8">
+
+        <label class="block text-sm font-medium text-slate-600 dark:text-slate-300 mb-3">
+
+            Paste Link or SHA-256
+
+        </label>
+<textarea
+    id="verify-input"
+    rows="4"
+    spellcheck="false"
+    autocorrect="off"
+    autocomplete="off"
+    autocapitalize="off"
+    placeholder="Paste a Google Drive, Google Docs, OneDrive, YouTube, research publication, article link, or SHA-256 checksum."
+    class="w-full rounded-xl border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-900 px-4 py-3 text-sm resize-none focus:outline-none focus:ring-2 focus:ring-secondary"></textarea>
+
+    </div>
+
+    <!-- Verify -->
+
+    <button
+
+        id="verify-document-btn"
+
+        disabled
+
+        onclick="verifyDocument()"
+
+        class="w-full px-5 py-3 rounded-xl bg-secondary text-white opacity-50 cursor-not-allowed transition">
+
+        <i class="fa-solid fa-shield-check mr-2"></i>
+
+        Verify
+
+    </button>
+
+    <!-- Result -->
+
+    <div
+
+        id="verify-result"
+
+        class="mt-8">
+
+    </div>
+
+    <div class="h-8"></div>
+
+</div>
+
+`;
+
+}
+
+
         // ==========================================
         // 6. INTERACTIONS & LOGIC
         // ==========================================
