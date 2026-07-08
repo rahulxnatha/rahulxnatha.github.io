@@ -1166,77 +1166,77 @@ autocapitalize="off" id="aside-search-input" oninput="handleSearch(this.value)" 
             nav.innerHTML = html;
         }
 
-function verifySocialAccount() {
+        function verifySocialAccount() {
 
-    const platform = document.getElementById("social-platform").value;
+            const platform = document.getElementById("social-platform").value;
 
-    const username = document
-        .getElementById("social-username")
-        .value
-        .trim()
-        .toLowerCase();
+            const username = document
+                .getElementById("social-username")
+                .value
+                .trim()
+                .toLowerCase();
 
-    const account = appData.socialVerification.accounts.find(acc =>
-        acc.platform === platform
-    );
+            const account = appData.socialVerification.accounts.find(acc =>
+                acc.platform === platform
+            );
 
-    const result = document.getElementById("verification-result");
+            const result = document.getElementById("verification-result");
 
-    if (!account) {
-        result.innerHTML = "<span class='text-red-500 font-normal'>⚠️ No, not verified.</span>";
-        return;
-    }
+            if (!account) {
+                result.innerHTML = "<span class='text-red-500 font-normal'>⚠️ No, not verified.</span>";
+                return;
+            }
 
-    if (username === account.username.trim().toLowerCase()) {
-        result.innerHTML = "<span class='text-green-500 font-normal'>✅ Yes, verified.</span>";
-    } else {
-        result.innerHTML = "<span class='text-red-500 font-normal'>⚠️ No, not verified.</span>";
-    } 
+            if (username === account.username.trim().toLowerCase()) {
+                result.innerHTML = "<span class='text-green-500 font-normal'>✅ Yes, verified.</span>";
+            } else {
+                result.innerHTML = "<span class='text-red-500 font-normal'>⚠️ No, not verified.</span>";
+            }
 
-    document.getElementById("verify-btn").disabled = true;
-document.getElementById("verify-btn").classList.add(
-    "opacity-50",
-    "cursor-not-allowed"
-);
+            document.getElementById("verify-btn").disabled = true;
+            document.getElementById("verify-btn").classList.add(
+                "opacity-50",
+                "cursor-not-allowed"
+            );
 
-}
+        }
 
-function enableVerifyButton() {
+        function enableVerifyButton() {
 
-    const btn = document.getElementById("verify-btn");
+            const btn = document.getElementById("verify-btn");
 
-    const username = document
-        .getElementById("social-username")
-        .value
-        .trim();
+            const username = document
+                .getElementById("social-username")
+                .value
+                .trim();
 
-    if (username === "") {
+            if (username === "") {
 
-        btn.disabled = true;
+                btn.disabled = true;
 
-        btn.classList.add(
-            "opacity-50",
-            "cursor-not-allowed"
-        );
+                btn.classList.add(
+                    "opacity-50",
+                    "cursor-not-allowed"
+                );
 
-        document.getElementById("verification-result").innerHTML =
-            "⌛ Waiting for verification...";
+                document.getElementById("verification-result").innerHTML =
+                    "⌛ Waiting for verification...";
 
-        return;
-    }
+                return;
+            }
 
-    btn.disabled = false;
+            btn.disabled = false;
 
-    btn.classList.remove(
-        "opacity-50",
-        "cursor-not-allowed"
-    );
+            btn.classList.remove(
+                "opacity-50",
+                "cursor-not-allowed"
+            );
 
-    document.getElementById("verification-result").innerHTML =
-        "⌛ Waiting for verification...";
+            document.getElementById("verification-result").innerHTML =
+                "⌛ Waiting for verification...";
 
-}
- 
+        }
+
 
 
         function renderLeftContent() {
@@ -1270,7 +1270,7 @@ function enableVerifyButton() {
                 </section>
             `;
 
-     let verificationHTML = `
+            let verificationHTML = `
 
     <div class="my-10">
 
@@ -1685,6 +1685,26 @@ autocapitalize="off" id="chat-input" class="flex-1 bg-slate-100 dark:bg-slate-90
             const tile = getTileById(tileId);
             if (!tile) return `<div class="p-6 text-slate-500 text-left">Item not found.</div>`;
 
+            // ============================================================================
+            // Version 1.0 Temporary Embedded Application Hook
+            //
+            // This project currently stores only normal tab contents in Google Sheets.
+            // The "Digitally Verifiable" tab is the first interactive application that
+            // needs a custom JavaScript UI instead of normal text.
+            //
+            // Version 2.0:
+            // Replace this temporary ID check with a generic embedded application/content
+            // renderer (e.g. contentType, embeddedApp, renderContent(), etc.) so any tab
+            // can host a custom application (CAD Viewer, Presentation Viewer, Timeline,
+            // Reasoning Workspace, Document Verification, etc.) without hardcoding IDs.
+            // ============================================================================
+
+            if (tile.id === "id_ubx0l60bp") {
+                return renderDocumentVerificationHTML(tile);
+            }
+
+            
+
             let mediaHtml = (tile.mediaLinks || []).map(link => {
                 if (!link || !link.trim()) return '';
                 const trimmed = link.trim();
@@ -1768,6 +1788,39 @@ autocapitalize="off" id="chat-input" class="flex-1 bg-slate-100 dark:bg-slate-90
             `;
         }
 
+
+        function renderEmbeddedApp(appName, tile) {
+
+            switch (appName) {
+
+                case "documentVerification":
+                    return renderDocumentVerificationHTML(tile);
+
+                default:
+                    return `
+                <div class="p-6 text-slate-500">
+                    Unknown embedded application.
+                </div>
+            `;
+            }
+
+        }
+
+        function renderDocumentVerificationHTML(tile) {
+
+            return `
+        <div class="p-6">
+            <h2 class="text-2xl font-normal">
+                Digitally Verifiable
+            </h2>
+
+            <p class="mt-4">
+                Document Verification UI coming soon...
+            </p>
+        </div>
+    `;
+
+        }
         // ==========================================
         // 6. INTERACTIONS & LOGIC
         // ==========================================
@@ -3040,13 +3093,13 @@ autocapitalize="off" id="chat-input" class="flex-1 bg-slate-100 dark:bg-slate-90
 
 
 
-       } else if (adminCurrentTab === 'social') {
+            } else if (adminCurrentTab === 'social') {
 
-    let rows = "";
+                let rows = "";
 
-    appData.socialVerification.accounts.forEach((acc, index) => {
+                appData.socialVerification.accounts.forEach((acc, index) => {
 
-        rows += `
+                    rows += `
 <div class="bg-slate-50 dark:bg-slate-900/50 rounded-xl border border-slate-200 dark:border-slate-700 p-5 mb-4">
 
     <div class="flex items-center justify-between mb-4">
@@ -3117,9 +3170,9 @@ autocapitalize="off"
 </div>
 `;
 
-    });
+                });
 
-    html += `
+                html += `
         <div class="bg-white dark:bg-darkCard p-6 md:p-8 rounded-2xl shadow-sm border border-slate-200 dark:border-slate-700 text-left relative overflow-hidden">
 
             <div class="absolute top-0 left-0 w-1 h-full bg-gradient-to-b from-pink-500 to-violet-500"></div>
@@ -3642,7 +3695,7 @@ switchAdminTab('social');
         }
 
         initApp();
-        
+
     </script>
 </body>
 
