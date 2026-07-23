@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>DOCSdns</title>
+
+<style>
+
+*{
+    box-sizing:border-box;
+}
+
+body{
+
+    margin:0;
+
+    background:#111;
+    color:white;
+
+    font-family:Arial,sans-serif;
+
+    display:flex;
+    justify-content:center;
+    align-items:center;
+
+    height:100vh;
+
+}
+
+.container{
+
+    width:90%;
+    max-width:700px;
+
+    text-align:center;
+
+}
+
+h1{
+
+    margin-bottom:15px;
+    font-size:2.2rem;
+
+}
+
+.spinner{
+
+    width:60px;
+    height:60px;
+
+    margin:30px auto;
+
+    border:6px solid #444;
+    border-top:6px solid white;
+    border-radius:50%;
+
+    animation:spin 1s linear infinite;
+
+}
+
+@keyframes spin{
+
+    to{
+
+        transform:rotate(360deg);
+
+    }
+
+}
+
+#status{
+
+    font-size:1.1rem;
+    line-height:1.6;
+
+    opacity:.9;
+
+}
+
+small{
+
+    display:block;
+
+    margin-top:25px;
+
+    opacity:.5;
+
+}
+
+</style>
+
+</head>
+
+<body>
+
+<div class="container">
+
+<h1>DOCSdns</h1>
+
+<div class="spinner" id="spinner"></div>
+
+<div id="status">
+
+Resolving document...
+
+</div>
+
+<small>
+
+Document Origin Certification System
+
+</small>
+
+</div>
+
+<script>
+
+const SCRIPT_URL =
+"https://script.google.com/macros/s/AKfycbxH44DVavRq6Eyinb4vtoOCSIImrI9KyGby5Xd-1fbqFF5YT0GXxGmWxuckcSwPat4K/exec";
+
+const params = new URLSearchParams(window.location.search);
+
+const docsId = params.get("id");
+
+const statusElement = document.getElementById("status");
+const spinner = document.getElementById("spinner");
+
+function showMessage(message){
+
+    spinner.style.display="none";
+
+    statusElement.innerHTML=message;
+
+}
+
+if(!docsId){
+
+    showMessage("Invalid DOCSid.");
+
+}
+else{
+
+    fetch(
+        SCRIPT_URL +
+        "?id=" +
+        encodeURIComponent(docsId)
+    )
+
+    .then(response=>response.json())
+
+    .then(data=>{
+
+        if(!data.found){
+
+            showMessage(
+                "Document not found."
+            );
+
+            return;
+
+        }
+
+        if(!data.enabled){
+
+            showMessage(
+                "This file is no longer supported or available at DOCS."
+            );
+
+            return;
+
+        }
+
+        window.location.replace(data.url);
+
+    })
+
+    .catch(error=>{
+
+        console.error(error);
+
+        showMessage(
+            "Unable to contact DOCSdns."
+        );
+
+    });
+
+}
+
+</script>
+
+</body>
+
+</html>
