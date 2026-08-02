@@ -4,23 +4,88 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
-    <!-- STATIC FALLBACKS FOR WHATSAPP/IMESSAGE (Scrapers that do not run JavaScript) -->
-    <!-- You MUST manually edit the content below in your code editor before deploying to GitHub -->
-    <title>Rahul Natha | Portfolio</title>
+    <!-- Primary Metadata -->
+    <title>
+      Rahul Natha | Mechanical Engineer | Electromechanical Systems | Design
+      Automation
+    </title>
+
     <meta
       name="description"
-      content="Mechanical Engineer, Mechanical Design Engineer, Electromechanical Systems Specialist"
+      content="Mechanical Engineer specializing in electromechanical systems, precision mechanical design, CAD automation, FEA, and computational engineering. Explore projects, technical resources, engineering guides, and German learning resources."
     />
-    <meta property="og:title" content="Rahul Natha | Portfolio" />
+
+    <meta name="author" content="Rahul Natha" />
+    <meta name="robots" content="index, follow" />
+    <meta name="theme-color" content="#0f172a" />
+
+    <link rel="canonical" href="https://rahulxnatha.github.io/" />
+
+    <!-- Favicons (add these files later) -->
+     <!-- Favicons -->
+<link rel="icon" type="image/png" href="/assets/favicon/favicon-96x96.png?v=20260803" sizes="96x96" />
+<link rel="icon" type="image/svg+xml" href="/assets/favicon/favicon.svg?v=20260803" />
+<link rel="shortcut icon" href="/assets/favicon/favicon.ico?v=20260803" />
+<link rel="apple-touch-icon" sizes="180x180" href="/assets/favicon/apple-touch-icon.png?v=20260803" />
+<meta name="apple-mobile-web-app-title" content="Rahul Natha" />
+<link rel="manifest" href="/assets/favicon/site.webmanifest?v=20260803" />
+
+    <!-- Open Graph (Facebook, LinkedIn, WhatsApp, Discord, etc.) -->
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content="Rahul Natha" />
+    <meta property="og:url" content="https://rahulxnatha.github.io/" />
+    <meta
+      property="og:title"
+      content="Rahul Natha | Mechanical Engineer | Electromechanical Systems | Design Automation"
+    />
     <meta
       property="og:description"
-      content="5 years of experience across precision mechanical systems R&D and transportation industry."
+      content="Mechanical Engineer specializing in electromechanical systems, precision mechanical design, CAD automation, FEA, and computational engineering. Explore projects, technical resources, engineering guides, and German learning resources."
     />
+
+    <!-- Replace with your own image later MEDIA IMAGE-->
     <meta
-      property="og:image"
-      content="https://docs.google.com/drawings/d/e/2PACX-1vSf4YxEDM8j_U3WWkWNo2o7RESrfdSOyFKUBxJIxCGiXQKhdDyc0l0b9PxgLrwVsGCbbcnMyHWjJ6to/pub?w=1440&h=1080"
-    />
-    <meta property="og:type" content="website" />
+  property="og:image"
+  content="https://rahulxnatha.github.io/assets/media/social-preview.jpg"
+/>
+<meta property="og:image:width" content="1680" />
+<meta property="og:image:height" content="894" />
+
+<!-- X (formerly Twitter) -->
+<meta name="twitter:card" content="summary_large_image" />
+
+<meta
+  name="twitter:title"
+  content="Rahul Natha | Mechanical Engineer | Electromechanical Systems | Design Automation"
+/>
+
+<meta
+  name="twitter:description"
+  content="Mechanical Engineer specializing in electromechanical systems, precision mechanical design, CAD automation, FEA, and computational engineering. Explore projects, technical resources, engineering guides, and German learning resources."
+/>
+
+<meta
+  name="twitter:image"
+  content="https://rahulxnatha.github.io/assets/media/social-preview.jpg"
+/>
+
+    <!-- Structured Data -->
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@type": "Person",
+        "name": "Rahul Natha",
+        "url": "https://rahulxnatha.github.io/",
+        "jobTitle": "Mechanical Engineer",
+        "description": "Mechanical Engineer specializing in electromechanical systems, precision mechanical design, CAD automation, FEA, and computational engineering.",
+        "sameAs": [
+          "https://www.linkedin.com/in/rahulnatha/",
+          "https://github.com/rahulxnatha"
+        ]
+      }
+    </script>
+
+    <!-- This part do not touch -->
 
     <!-- Tailwind CSS with Dark Mode config -->
     <script src="https://cdn.tailwindcss.com"></script>
@@ -480,9 +545,10 @@
 
       let appData = {
         seo: {
-          title: "Rahul Natha | Portfolio",
+          title:
+            "Rahul Natha | Mechanical Engineer | Electromechanical Systems | Design Automation",
           description:
-            "Mechanical Engineer, Mechanical Design Engineer, Electromechanical Systems Specialist. 5 years of experience across precision mechanical systems R&D and transportation industry.",
+            "Mechanical Engineer specializing in electromechanical systems, precision mechanical design, CAD automation, FEA, and computational engineering. View projects, resources, and technical guides.",
           image: "",
         },
         uiText: {
@@ -2217,21 +2283,17 @@ Nothing is uploaded.
 
         verificationAlreadyPerformed = false;
 
-updateVerifyButtonState();
+        updateVerifyButtonState();
 
-clearTimeout(autoVerifyTimer);
+        clearTimeout(autoVerifyTimer);
 
-autoVerifyTimer = setTimeout(() => {
+        autoVerifyTimer = setTimeout(() => {
+          const input = document.getElementById("verify-file");
 
-    const input = document.getElementById("verify-file");
-
-    if (input.files.length > 0 && !verificationAlreadyPerformed) {
-
-        verifyDocument();
-
-    }
-
-}, 3000);
+          if (input.files.length > 0 && !verificationAlreadyPerformed) {
+            verifyDocument();
+          }
+        }, 3000);
       }
 
       function clearVerificationFile() {
