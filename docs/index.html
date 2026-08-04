@@ -229,6 +229,18 @@
       const docsId = params.get("id");
       const initialKey = params.get("key") || "";
 
+      const initialLicense = params.get("license") || "";
+
+      const initialMethod = params.get("method") || "";
+
+      let docsNode = localStorage.getItem("DOCSnode");
+
+      if (!docsNode) {
+        docsNode = crypto.randomUUID();
+
+        localStorage.setItem("DOCSnode", docsNode);
+      }
+
       const statusElement = document.getElementById("status");
       const footerElement = document.getElementById("footer");
 
@@ -238,14 +250,26 @@
         statusElement.innerHTML = message;
       }
 
-      function verify(key = "") {
+    function verify(
+
+  key = initialKey,
+  license = initialLicense,
+  method = initialMethod
+
+) {
         const start = performance.now();
         fetch(
           SCRIPT_URL +
             "?id=" +
             encodeURIComponent(docsId) +
             "&key=" +
-            encodeURIComponent(key),
+            encodeURIComponent(key) +
+            "&license=" +
+            encodeURIComponent(license) +
+            "&method=" +
+            encodeURIComponent(method) +
+            "&node=" +
+            encodeURIComponent(docsNode),
         )
           .then((r) => r.json())
 
@@ -274,6 +298,190 @@
               return;
             }
 
+
+            if (data.alreadyLicensed) {
+
+  footerElement.style.display = "none";
+
+  statusElement.innerHTML = `
+
+<div style="font-size:22px;color:#22c55e;margin-bottom:18px;">
+
+✓ Document verified.
+
+</div>
+
+<div style="margin-bottom:22px;">
+
+<div class="docsid-label">DOCSid</div>
+
+<div class="docsid-value">${docsId}</div>
+
+</div>
+
+<div style="margin-bottom:22px;">
+
+This browser already owns a valid DOCSlicense for this document.
+
+</div>
+
+<div style="display:flex;justify-content:center;align-items:center;gap:14px;">
+
+<div class="spinner" style="width:22px;height:22px;border-width:3px;margin:0;"></div>
+
+<div>
+
+Redirecting to the latest official revision...
+
+</div>
+
+</div>
+
+`;
+
+  setTimeout(() => {
+
+    window.location.replace(data.url);
+
+  }, 5000);
+
+  return;
+
+}
+
+if (data.chooseMethod) {
+
+ 
+  footerElement.style.display = "block";
+
+  statusElement.innerHTML = `
+
+<div style="font-size:22px;color:#22c55e;margin-bottom:18px;">
+
+✓ Document verified.
+
+</div>
+
+<div style="margin-bottom:22px;">
+
+<div class="docsid-label">DOCSid</div>
+
+<div class="docsid-value">${docsId}</div>
+
+</div>
+
+<div style="margin-bottom:24px;">
+
+This document can be accessed using either a
+<b>DOCSkey</b> or a <b>DOCSlicense</b>.
+
+</div>
+
+<button
+class="continue-button"
+onclick="verify('', '', 'key')">
+
+I have a DOCSkey
+
+</button>
+
+<br>
+
+<button
+class="continue-button"
+style="margin-top:14px;"
+onclick="verify('', '', 'license')">
+
+I have a DOCSlicense
+
+</button>
+
+`;
+
+  return;
+
+}
+
+if (data.licenseRequired) {
+
+  footerElement.style.display = "block";
+
+  statusElement.innerHTML = `
+
+<div style="font-size:22px;color:#22c55e;margin-bottom:18px;">
+
+✓ Document verified.
+
+</div>
+
+<div style="margin-bottom:22px;">
+
+<div class="docsid-label">DOCSid</div>
+<div class="docsid-value">${docsId}</div>
+
+</div>
+
+<div style="margin-bottom:18px;">
+
+This document is protected by DOCSlicense.
+
+</div>
+
+<input
+id="docslicense"
+class="docskey-input"
+type="text"
+placeholder="DOCSlicense"
+autocomplete="off"
+autocorrect="off"
+autocapitalize="off"
+spellcheck="false">
+
+<div
+id="license-error"
+style="
+display:${data.invalidLicense ? "block" : "none"};
+color:#ef4444;
+margin-top:12px;">
+
+Invalid DOCSlicense.
+
+</div>
+
+<button
+class="continue-button"
+onclick="verify(
+'',
+document.getElementById('docslicense').value,
+'license'
+)">
+Continue
+</button>
+
+`;
+
+  const docslicenseInput =
+    document.getElementById("docslicense");
+
+  docslicenseInput.addEventListener("keydown", function(e) {
+
+    if (e.key === "Enter") {
+
+      verify(
+        "",
+        this.value,
+        "license"
+      );
+
+    }
+
+  });
+
+  docslicenseInput.focus();
+
+  return;
+
+}
             if (data.protected) {
               footerElement.style.display = "block";
 
@@ -322,7 +530,7 @@ Invalid DOCSkey.
 <button
 id="continueButton"
 class="continue-button"
-onclick="verify(document.getElementById('docskey').value)">
+onclick="verify(document.getElementById('docskey').value, '', 'key')">
 Continue
 </button>
 
@@ -332,7 +540,7 @@ Continue
 
               docskeyInput.addEventListener("keydown", function (e) {
                 if (e.key === "Enter") {
-                  verify(this.value);
+                  verify(this.value, "", "key");
                 }
               });
 
@@ -386,7 +594,7 @@ DOCSdns is redirecting you to the latest official revision of this document...
       if (!docsId) {
         showMessage("Invalid DOCSid.");
       } else {
-        verify(initialKey);
+        verify();
       }
     </script>
   </body>
