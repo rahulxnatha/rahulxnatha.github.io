@@ -19,242 +19,204 @@
     <title>DOCSdns</title>
 
     <style>
-*{
-    box-sizing:border-box;
-}
+      * {
+        box-sizing: border-box;
+      }
 
-body{
+      body {
+        margin: 0;
 
-    margin:0;
+        background: #111;
+        color: #fff;
 
-    background:#111;
-    color:#fff;
+        font-family:
+          "Segoe UI", SegoeUI, "Helvetica Neue", Helvetica, Arial, sans-serif;
 
-    font-family:"Segoe UI",SegoeUI,"Helvetica Neue",Helvetica,Arial,sans-serif;
+        display: flex;
+        justify-content: center;
+        align-items: center;
 
-    display:flex;
-    justify-content:center;
-    align-items:center;
+        min-height: 100vh;
+      }
 
-    min-height:100vh;
+      .container {
+        width: 90%;
+        max-width: 700px;
 
-}
+        text-align: center;
 
-.container{
+        padding: 40px 0;
+      }
 
-    width:90%;
-    max-width:700px;
+      .logo {
+        width: 115px;
+        margin-bottom: 20px;
+      }
 
-    text-align:center;
+      .title {
+        font-size: 20px;
+        font-weight: 400;
 
-    padding:40px 0;
+        margin-bottom: 6px;
+      }
 
-}
+      .subtitle {
+        font-size: 14px;
 
-.logo{
+        color: #9ca3af;
 
-    width:115px;
-    margin-bottom:20px;
+        margin-bottom: 20px;
 
-}
+        font-size: 13px;
+        color: #7d8ca6;
+      }
 
-.title{
+      .divider {
+        border: none;
+        border-top: 1px solid #333;
 
-    font-size:20px;
-    font-weight:400;
+        margin: 0 0 16px 0;
+      }
 
-    margin-bottom:6px;
+      .spinner {
+        width: 60px;
+        height: 60px;
 
-}
+        margin: 30px auto;
 
-.subtitle{
+        border: 5px solid #444;
+        border-top-color: #fff;
 
-    font-size:14px;
+        border-radius: 50%;
 
-    color:#9ca3af;
+        animation: spin 1s linear infinite;
 
-    margin-bottom:20px;
+        display: inline-block;
 
-    font-size:13px;
-color:#7d8ca6;
+        will-change: transform;
 
-}
+        transform: translateZ(0);
 
-.divider{
+        backface-visibility: hidden;
+      }
 
-    border:none;
-    border-top:1px solid #333;
+      @keyframes spin {
+        from {
+          transform: rotate(0deg);
+        }
 
-    margin:0 0 16px 0;
+        to {
+          transform: rotate(360deg);
+        }
+      }
 
-}
+      #status {
+        font-size: 1.1rem;
+        line-height: 1.6;
 
-.spinner{
+        opacity: 0.95;
+      }
 
-    width:60px;
-    height:60px;
+      .footer {
+        display: none;
 
-    margin:30px auto;
+        margin-top: 28px;
+        padding-top: 24px;
 
-    border:5px solid #444;
-    border-top-color:#fff;
+        border-top: 1px solid #333;
 
-    border-radius:50%;
+        font-size: 13px;
+        line-height: 1.8;
 
-    animation:spin 1s linear infinite;
+        color: #888;
+        font-size: 12px;
 
-    display:inline-block;
+        line-height: 1.75;
+      }
 
-    will-change:transform;
+      .docskey-input {
+        width: 100%;
 
-    transform:translateZ(0);
+        padding: 13px 16px;
 
-    backface-visibility:hidden;
+        border-radius: 12px;
+        border: 1px solid #555;
 
-}
+        background: #1a1a1a;
+        color: #fff;
 
-@keyframes spin{
+        font-size: 16px;
 
-    from{
+        outline: none;
 
-        transform:rotate(0deg);
+        transition: 0.15s;
+        font-family: inherit;
+      }
 
-    }
+      .docskey-input::placeholder {
+        color: #666;
+      }
 
-    to{
+      .docskey-input:focus {
+        border-color: #16c60c;
 
-        transform:rotate(360deg);
+        box-shadow: 0 0 0 3px rgba(34, 197, 94, 0.15);
+      }
 
-    }
+      .continue-button {
+        margin-top: 20px;
 
-}
+        padding: 12px 34px;
 
-#status{
+        border: none;
+        border-radius: 12px;
 
-    font-size:1.1rem;
-    line-height:1.6;
+        font-size: 16px;
 
-    opacity:.95;
+        cursor: pointer;
 
-}
+        transition: 0.15s;
+        background: #d4d4d8;
+        font-family: inherit;
+        color: #111;
+      }
 
-.footer{
+      .continue-button:hover {
+        transform: translateY(-1px);
+      }
 
-    display:none;
+      .docsid-label {
+        color: #9ca3af;
 
-    margin-top:28px;
-    padding-top:24px;
+        font-size: 15px;
+      }
 
-    border-top:1px solid #333;
+      .docsid-value {
+        font-size: 18px;
 
-    font-size:13px;
-    line-height:1.8;
-
-    color:#888;
-    font-size:12px;
-
-    line-height:1.75;
-
-}
-
-.docskey-input{
-
-    width:100%;
-
-    padding:13px 16px;
-
-    border-radius:12px;
-    border:1px solid #555;
-
-    background:#1a1a1a;
-    color:#fff;
-
-    font-size:16px;
-
-    outline:none;
-
-    transition:.15s;
-    font-family:inherit;
-
-}
-
-.docskey-input::placeholder{
-
-    color:#666;
-
-}
-
-.docskey-input:focus{
-
-    border-color:#16c60c;
-
-    box-shadow:0 0 0 3px rgba(34,197,94,.15);
-
-}
-
-.continue-button{
-
-    margin-top:20px;
-
-    padding:12px 34px;
-
-    border:none;
-    border-radius:12px;
-
-    font-size:16px;
-
-
-    cursor:pointer;
-
-    transition:.15s;
-    background:#d4d4d8;
-    font-family:inherit;
-    color:#111;
-
-}
-
-.continue-button:hover{
-
-    transform:translateY(-1px);
-
-}
-
-.docsid-label{
-
-    color:#9ca3af;
-
-    font-size:15px;
-
-}
-
-.docsid-value{
-
-    font-size:18px;
-
-    font-weight:400;
-
-}
-</style>
+        font-weight: 400;
+      }
+    </style>
   </head>
 
   <body>
     <div class="container">
-      <img src="docs.png" alt="DOCS" class="logo">
+      <img src="docs.png" alt="DOCS" class="logo" />
 
-      <div class="title">
-        Document Origin Certification System
-      </div>
+      <div class="title">Document Origin Certification System</div>
 
-      <div class="subtitle">
-        from Rahul Natha
-      </div>
+      <div class="subtitle">from Rahul Natha</div>
 
-      <hr class="divider">
+      <hr class="divider" />
 
       <div id="status">Resolving document...</div>
 
-    <div id="footer" class="footer">
-        Clicking Continue with the correct DOCSkey ensures that you are always redirected to the latest official revision of the document via DOCSdns, a DOCS product that Directs to the Node of Source. Some documents are protected by DOCSkey, a document-specific access key required to access them.
+      <div id="footer" class="footer">
+        Clicking Continue with the correct DOCSkey ensures that you are always
+        redirected to the latest official revision of the document via DOCSdns,
+        a DOCS product that Directs to the Node of Source. Some documents are
+        protected by DOCSkey, a document-specific access key required to access
+        them.
       </div>
     </div>
 
@@ -277,6 +239,7 @@ color:#7d8ca6;
       }
 
       function verify(key = "") {
+        const start = performance.now();
         fetch(
           SCRIPT_URL +
             "?id=" +
@@ -285,6 +248,16 @@ color:#7d8ca6;
             encodeURIComponent(key),
         )
           .then((r) => r.json())
+
+          .then((data) => {
+            console.log(
+              "Response time:",
+              Math.round(performance.now() - start),
+              "ms",
+            );
+
+            return data;
+          })
 
           .then((data) => {
             if (!data.found) {
