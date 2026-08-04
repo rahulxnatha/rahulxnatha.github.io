@@ -19,107 +19,242 @@
     <title>DOCSdns</title>
 
     <style>
-      * {
-        box-sizing: border-box;
-      }
+*{
+    box-sizing:border-box;
+}
 
-      body {
-        margin: 0;
+body{
 
-        background: #111;
-        color: white;
+    margin:0;
 
-        font-family: Arial, sans-serif;
+    background:#111;
+    color:#fff;
 
-        display: flex;
-        justify-content: center;
-        align-items: center;
+    font-family:"Segoe UI",SegoeUI,"Helvetica Neue",Helvetica,Arial,sans-serif;
 
-        height: 100vh;
-      }
+    display:flex;
+    justify-content:center;
+    align-items:center;
 
-      .container {
-        width: 90%;
-        max-width: 700px;
+    min-height:100vh;
 
-        text-align: center;
-      }
+}
 
-      h1 {
-        margin-bottom: 15px;
-        font-size: 2.2rem;
-      }
+.container{
 
-      .spinner {
-        width: 60px;
-        height: 60px;
+    width:90%;
+    max-width:700px;
 
-        margin: 30px auto;
+    text-align:center;
 
-        border: 6px solid #444;
-        border-top: 6px solid white;
-        border-radius: 50%;
+    padding:40px 0;
 
-        animation: spin 1s linear infinite;
-      }
+}
 
-      @keyframes spin {
-        to {
-          transform: rotate(360deg);
-        }
-      }
+.logo{
 
-      #status {
-        font-size: 1.1rem;
-        line-height: 1.6;
+    width:115px;
+    margin-bottom:20px;
 
-        opacity: 0.9;
-      }
+}
 
-      small {
-        display: block;
+.title{
 
-        margin-top: 25px;
+    font-size:20px;
+    font-weight:400;
 
-        opacity: 0.5;
-      }
-    </style>
+    margin-bottom:6px;
+
+}
+
+.subtitle{
+
+    font-size:14px;
+
+    color:#9ca3af;
+
+    margin-bottom:20px;
+
+    font-size:13px;
+color:#7d8ca6;
+
+}
+
+.divider{
+
+    border:none;
+    border-top:1px solid #333;
+
+    margin:0 0 16px 0;
+
+}
+
+.spinner{
+
+    width:60px;
+    height:60px;
+
+    margin:30px auto;
+
+    border:5px solid #444;
+    border-top-color:#fff;
+
+    border-radius:50%;
+
+    animation:spin 1s linear infinite;
+
+    display:inline-block;
+
+    will-change:transform;
+
+    transform:translateZ(0);
+
+    backface-visibility:hidden;
+
+}
+
+@keyframes spin{
+
+    from{
+
+        transform:rotate(0deg);
+
+    }
+
+    to{
+
+        transform:rotate(360deg);
+
+    }
+
+}
+
+#status{
+
+    font-size:1.1rem;
+    line-height:1.6;
+
+    opacity:.95;
+
+}
+
+.footer{
+
+    display:none;
+
+    margin-top:28px;
+    padding-top:24px;
+
+    border-top:1px solid #333;
+
+    font-size:13px;
+    line-height:1.8;
+
+    color:#888;
+    font-size:12px;
+
+    line-height:1.75;
+
+}
+
+.docskey-input{
+
+    width:100%;
+
+    padding:13px 16px;
+
+    border-radius:12px;
+    border:1px solid #555;
+
+    background:#1a1a1a;
+    color:#fff;
+
+    font-size:16px;
+
+    outline:none;
+
+    transition:.15s;
+    font-family:inherit;
+
+}
+
+.docskey-input::placeholder{
+
+    color:#666;
+
+}
+
+.docskey-input:focus{
+
+    border-color:#16c60c;
+
+    box-shadow:0 0 0 3px rgba(34,197,94,.15);
+
+}
+
+.continue-button{
+
+    margin-top:20px;
+
+    padding:12px 34px;
+
+    border:none;
+    border-radius:12px;
+
+    font-size:16px;
+
+
+    cursor:pointer;
+
+    transition:.15s;
+    background:#d4d4d8;
+    font-family:inherit;
+    color:#111;
+
+}
+
+.continue-button:hover{
+
+    transform:translateY(-1px);
+
+}
+
+.docsid-label{
+
+    color:#9ca3af;
+
+    font-size:15px;
+
+}
+
+.docsid-value{
+
+    font-size:18px;
+
+    font-weight:400;
+
+}
+</style>
   </head>
 
   <body>
     <div class="container">
-      <img src="docs.png" alt="DOCS" style="width: 90px; margin-bottom: 18px" />
+      <img src="docs.png" alt="DOCS" class="logo">
 
-      <div style="font-size: 20px; font-weight: 500; margin-bottom: 6px">
+      <div class="title">
         Document Origin Certification System
       </div>
 
-      <div style="font-size: 14px; color: #9ca3af; margin-bottom: 22px">
+      <div class="subtitle">
         from Rahul Natha
       </div>
 
-      <hr
-        style="border: none; border-top: 1px solid #333; margin: 0 0 28px 0"
-      />
+      <hr class="divider">
 
       <div id="status">Resolving document...</div>
 
-      <div
-        id="footer"
-        style="
-          display: none;
-          margin-top: 28px;
-          padding-top: 24px;
-          border-top: 1px solid #333;
-          font-size: 13px;
-          line-height: 1.7;
-          color: #888;
-        "
-      >
-        DOCSdns is a DOCS product that Directs to the Node of Source, ensuring
-        that you are always redirected to the latest official revision of a
-        document. Some documents are protected by DOCSkey, a document-specific
-        access key required to access that document.
+    <div id="footer" class="footer">
+        Clicking Continue with the correct DOCSkey ensures that you are always redirected to the latest official revision of the document via DOCSdns, a DOCS product that Directs to the Node of Source. Some documents are protected by DOCSkey, a document-specific access key required to access them.
       </div>
     </div>
 
@@ -179,41 +314,26 @@
 
 <div style="margin-bottom:22px;">
 
-<strong>DOCSid</strong><br>
-
-${docsId}
+<div class="docsid-label">DOCSid</div>
+<div class="docsid-value">${docsId}</div>
 
 </div>
 
 <div style="margin-bottom:18px;">
 
-This document is protected by <strong>DOCSkey</strong>.
+This document is protected by DOCSkey.
 
 </div>
 
 <input
-
 id="docskey"
-
+class="docskey-input"
 type="text"
-
-placeholder="Enter DOCSkey"
-
+placeholder="DOCSkey"
 autocomplete="off"
 autocorrect="off"
 autocapitalize="off"
-spellcheck="false"
-name="docskey"
-
-style="
--webkit-text-security: disc;
-width:100%;
-padding:12px;
-border-radius:10px;
-border:1px solid #444;
-background:#1b1b1b;
-color:white;
-font-size:15px;">
+spellcheck="false">
 
 <div
 id="key-error"
@@ -227,21 +347,10 @@ Invalid DOCSkey.
 </div>
 
 <button
-
-onclick="verify(document.getElementById('docskey').value)"
-
-style="
-margin-top:18px;
-padding:12px 26px;
-border:none;
-border-radius:10px;
-background:white;
-color:black;
-font-size:15px;
-cursor:pointer;">
-
+id="continueButton"
+class="continue-button"
+onclick="verify(document.getElementById('docskey').value)">
 Continue
-
 </button>
 
 `;
@@ -271,7 +380,7 @@ Continue
 
 <div style="margin-bottom:22px;">
 
-<strong>DOCSid</strong><br>
+DOCSid<br>
 
 ${docsId}
 
