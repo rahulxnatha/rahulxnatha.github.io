@@ -88,124 +88,88 @@
 
   <body>
     <div class="container">
+      <img src="docs.png" alt="DOCS" style="width: 90px; margin-bottom: 18px" />
 
-<img
-    src="docs.png"
-    alt="DOCS"
-    style="
-    width:90px;
-    margin-bottom:18px;">
+      <div style="font-size: 20px; font-weight: 500; margin-bottom: 6px">
+        Document Origin Certification System
+      </div>
 
-<div
-    style="
-    font-size:20px;
-    font-weight:500;
-    margin-bottom:6px;">
+      <div style="font-size: 14px; color: #9ca3af; margin-bottom: 22px">
+        from Rahul Natha
+      </div>
 
-    Document Origin Certification System
+      <hr
+        style="border: none; border-top: 1px solid #333; margin: 0 0 28px 0"
+      />
 
-</div>
+      <div id="status">Resolving document...</div>
 
-<div
-    style="
-    font-size:14px;
-    color:#9ca3af;
-    margin-bottom:22px;">
-
-    from Rahul Natha
-
-</div>
-
-<hr style="
-border:none;
-border-top:1px solid #333;
-margin:0 0 28px 0;">
-
-<div id="status">
-
-Resolving document...
-
-</div>
-
-<div
-id="footer"
-
-style="
-display:none;
-margin-top:28px;
-padding-top:24px;
-border-top:1px solid #333;
-font-size:13px;
-line-height:1.7;
-color:#888;">
-
-DOCSdns is a DOCS product that Directs to the Node of Source, ensuring that you are always redirected to the latest official revision of a document. Some documents are protected by DOCSkey, a document-specific access key required to access that document.
-
-</div>
-
-</div>
+      <div
+        id="footer"
+        style="
+          display: none;
+          margin-top: 28px;
+          padding-top: 24px;
+          border-top: 1px solid #333;
+          font-size: 13px;
+          line-height: 1.7;
+          color: #888;
+        "
+      >
+        DOCSdns is a DOCS product that Directs to the Node of Source, ensuring
+        that you are always redirected to the latest official revision of a
+        document. Some documents are protected by DOCSkey, a document-specific
+        access key required to access that document.
+      </div>
+    </div>
 
     <script>
       const SCRIPT_URL =
-"https://script.google.com/macros/s/AKfycbxH44DVavRq6Eyinb4vtoOCSIImrI9KyGby5Xd-1fbqFF5YT0GXxGmWxuckcSwPat4K/exec";
+        "https://script.google.com/macros/s/AKfycbxH44DVavRq6Eyinb4vtoOCSIImrI9KyGby5Xd-1fbqFF5YT0GXxGmWxuckcSwPat4K/exec";
 
-const params = new URLSearchParams(window.location.search);
+      const params = new URLSearchParams(window.location.search);
 
-const docsId = params.get("id");
-const initialKey = params.get("key") || "";
+      const docsId = params.get("id");
+      const initialKey = params.get("key") || "";
 
-const statusElement = document.getElementById("status");
-const footerElement = document.getElementById("footer");
+      const statusElement = document.getElementById("status");
+      const footerElement = document.getElementById("footer");
 
-function showMessage(message){
+      function showMessage(message) {
+        footerElement.style.display = "none";
 
-    footerElement.style.display="none";
+        statusElement.innerHTML = message;
+      }
 
-    statusElement.innerHTML=message;
+      function verify(key = "") {
+        fetch(
+          SCRIPT_URL +
+            "?id=" +
+            encodeURIComponent(docsId) +
+            "&key=" +
+            encodeURIComponent(key),
+        )
+          .then((r) => r.json())
 
-}
+          .then((data) => {
+            if (!data.found) {
+              showMessage("❌ Document not found.");
 
-function verify(key=""){
+              return;
+            }
 
-    fetch(
+            if (!data.enabled) {
+              showMessage(
+                "⚠️ This file is no longer supported or available at DOCS.",
+              );
 
-        SCRIPT_URL +
+              return;
+            }
 
-        "?id=" +
+            if (data.protected) {
+              footerElement.style.display = "block";
 
-        encodeURIComponent(docsId) +
-
-        "&key=" +
-
-        encodeURIComponent(key)
-
-    )
-
-    .then(r=>r.json())
-
-    .then(data=>{
-
-        if(!data.found){
-
-            showMessage("❌ Document not found.");
-
-            return;
-
-        }
-
-        if(!data.enabled){
-
-            showMessage("⚠️ This file is no longer supported or available at DOCS.");
-
-            return;
-
-        }
-
-        if(data.protected){
-
-            footerElement.style.display="block";
-
-            statusElement.innerHTML=`
+              statusElement.innerHTML = `
 
 <div style="font-size:22px;color:#22c55e;margin-bottom:18px;">
 
@@ -254,7 +218,7 @@ font-size:15px;">
 <div
 id="key-error"
 style="
-display:${data.invalidKey?"block":"none"};
+display:${data.invalidKey ? "block" : "none"};
 color:#ef4444;
 margin-top:12px;">
 
@@ -282,25 +246,22 @@ Continue
 
 `;
 
-            document
-            .getElementById("docskey")
-            .addEventListener("keydown",function(e){
+              const docskeyInput = document.getElementById("docskey");
 
-                if(e.key==="Enter"){
-
-                    verify(this.value);
-
+              docskeyInput.addEventListener("keydown", function (e) {
+                if (e.key === "Enter") {
+                  verify(this.value);
                 }
+              });
 
-            });
+              docskeyInput.focus();
 
-            return;
+              return;
+            }
 
-        }
+            footerElement.style.display = "none";
 
-        footerElement.style.display="none";
-
-        statusElement.innerHTML=`
+            statusElement.innerHTML = `
 
 <div style="font-size:22px;color:#22c55e;margin-bottom:18px;">
 
@@ -330,32 +291,21 @@ DOCSdns is redirecting you to the latest official revision of this document...
 
 `;
 
-        setTimeout(()=>{
+            setTimeout(() => {
+              window.location.replace(data.url);
+            }, 700);
+          })
 
-            window.location.replace(data.url);
+          .catch(() => {
+            showMessage("Unable to contact DOCSdns.");
+          });
+      }
 
-        },700);
-
-    })
-
-    .catch(()=>{
-
-        showMessage("Unable to contact DOCSdns.");
-
-    });
-
-}
-
-if(!docsId){
-
-    showMessage("Invalid DOCSid.");
-
-}
-else{
-
-    verify(initialKey);
-
-}
+      if (!docsId) {
+        showMessage("Invalid DOCSid.");
+      } else {
+        verify(initialKey);
+      }
     </script>
   </body>
 </html>
