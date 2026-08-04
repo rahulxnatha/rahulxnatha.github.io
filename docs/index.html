@@ -1,114 +1,125 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
-<head>
+    <meta property="og:title" content="DOCSdns" />
+    <meta
+      property="og:description"
+      content="Permanent document link powered by DOCS. Click to access the latest official source."
+    />
+    <meta
+      property="og:image"
+      content="https://rahulxnatha.github.io/docs/docs.png"
+    />
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content="https://rahulxnatha.github.io/docs/" />
 
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DOCSdns</title>
 
-<meta property="og:title" content="DOCSdns">
-<meta property="og:description" content="Permanent document link powered by DOCS. Click to access the latest official source.">
-<meta property="og:image" content="https://rahulxnatha.github.io/docs/docs.png">
-<meta property="og:type" content="website">
-<meta property="og:url" content="https://rahulxnatha.github.io/docs/">
+    <style>
+      * {
+        box-sizing: border-box;
+      }
 
+      body {
+        margin: 0;
 
-<title>DOCSdns</title>
+        background: #111;
+        color: white;
 
-<style>
+        font-family: Arial, sans-serif;
 
-*{
-    box-sizing:border-box;
-}
+        display: flex;
+        justify-content: center;
+        align-items: center;
 
-body{
+        height: 100vh;
+      }
 
-    margin:0;
+      .container {
+        width: 90%;
+        max-width: 700px;
 
-    background:#111;
-    color:white;
+        text-align: center;
+      }
 
-    font-family:Arial,sans-serif;
+      h1 {
+        margin-bottom: 15px;
+        font-size: 2.2rem;
+      }
 
-    display:flex;
-    justify-content:center;
-    align-items:center;
+      .spinner {
+        width: 60px;
+        height: 60px;
 
-    height:100vh;
+        margin: 30px auto;
 
-}
+        border: 6px solid #444;
+        border-top: 6px solid white;
+        border-radius: 50%;
 
-.container{
+        animation: spin 1s linear infinite;
+      }
 
-    width:90%;
-    max-width:700px;
+      @keyframes spin {
+        to {
+          transform: rotate(360deg);
+        }
+      }
 
-    text-align:center;
+      #status {
+        font-size: 1.1rem;
+        line-height: 1.6;
 
-}
+        opacity: 0.9;
+      }
 
-h1{
+      small {
+        display: block;
 
-    margin-bottom:15px;
-    font-size:2.2rem;
+        margin-top: 25px;
 
-}
+        opacity: 0.5;
+      }
+    </style>
+  </head>
 
-.spinner{
+  <body>
+    <div class="container">
 
-    width:60px;
-    height:60px;
+<img
+    src="docs.png"
+    alt="DOCS"
+    style="
+    width:90px;
+    margin-bottom:18px;">
 
-    margin:30px auto;
+<div
+    style="
+    font-size:20px;
+    font-weight:500;
+    margin-bottom:6px;">
 
-    border:6px solid #444;
-    border-top:6px solid white;
-    border-radius:50%;
+    Document Origin Certification System
 
-    animation:spin 1s linear infinite;
+</div>
 
-}
+<div
+    style="
+    font-size:14px;
+    color:#9ca3af;
+    margin-bottom:22px;">
 
-@keyframes spin{
+    from Rahul Natha
 
-    to{
+</div>
 
-        transform:rotate(360deg);
-
-    }
-
-}
-
-#status{
-
-    font-size:1.1rem;
-    line-height:1.6;
-
-    opacity:.9;
-
-}
-
-small{
-
-    display:block;
-
-    margin-top:25px;
-
-    opacity:.5;
-
-}
-
-</style>
-
-</head>
-
-<body>
-
-<div class="container">
-
-<h1>DOCSdns</h1>
-
-<div class="spinner" id="spinner"></div>
+<hr style="
+border:none;
+border-top:1px solid #333;
+margin:0 0 28px 0;">
 
 <div id="status">
 
@@ -116,31 +127,222 @@ Resolving document...
 
 </div>
 
-<small>
+<div
+id="footer"
 
-Document Origin Certification System
+style="
+display:none;
+margin-top:28px;
+padding-top:24px;
+border-top:1px solid #333;
+font-size:13px;
+line-height:1.7;
+color:#888;">
 
-</small>
+DOCSdns is a DOCS product that Directs to the Node of Source, ensuring that you are always redirected to the latest official revision of a document. Some documents are protected by DOCSkey, a document-specific access key required to access that document.
 
 </div>
 
-<script>
+</div>
 
-const SCRIPT_URL =
+    <script>
+      const SCRIPT_URL =
 "https://script.google.com/macros/s/AKfycbxH44DVavRq6Eyinb4vtoOCSIImrI9KyGby5Xd-1fbqFF5YT0GXxGmWxuckcSwPat4K/exec";
 
 const params = new URLSearchParams(window.location.search);
 
 const docsId = params.get("id");
+const initialKey = params.get("key") || "";
 
 const statusElement = document.getElementById("status");
-const spinner = document.getElementById("spinner");
+const footerElement = document.getElementById("footer");
 
 function showMessage(message){
 
-    spinner.style.display="none";
+    footerElement.style.display="none";
 
     statusElement.innerHTML=message;
+
+}
+
+function verify(key=""){
+
+    fetch(
+
+        SCRIPT_URL +
+
+        "?id=" +
+
+        encodeURIComponent(docsId) +
+
+        "&key=" +
+
+        encodeURIComponent(key)
+
+    )
+
+    .then(r=>r.json())
+
+    .then(data=>{
+
+        if(!data.found){
+
+            showMessage("❌ Document not found.");
+
+            return;
+
+        }
+
+        if(!data.enabled){
+
+            showMessage("⚠️ This file is no longer supported or available at DOCS.");
+
+            return;
+
+        }
+
+        if(data.protected){
+
+            footerElement.style.display="block";
+
+            statusElement.innerHTML=`
+
+<div style="font-size:22px;color:#22c55e;margin-bottom:18px;">
+
+✓ Document verified.
+
+</div>
+
+<div style="margin-bottom:22px;">
+
+<strong>DOCSid</strong><br>
+
+${docsId}
+
+</div>
+
+<div style="margin-bottom:18px;">
+
+This document is protected by <strong>DOCSkey</strong>.
+
+</div>
+
+<input
+
+id="docskey"
+
+type="text"
+
+placeholder="Enter DOCSkey"
+
+autocomplete="off"
+autocorrect="off"
+autocapitalize="off"
+spellcheck="false"
+name="docskey"
+
+style="
+-webkit-text-security: disc;
+width:100%;
+padding:12px;
+border-radius:10px;
+border:1px solid #444;
+background:#1b1b1b;
+color:white;
+font-size:15px;">
+
+<div
+id="key-error"
+style="
+display:${data.invalidKey?"block":"none"};
+color:#ef4444;
+margin-top:12px;">
+
+Invalid DOCSkey.
+
+</div>
+
+<button
+
+onclick="verify(document.getElementById('docskey').value)"
+
+style="
+margin-top:18px;
+padding:12px 26px;
+border:none;
+border-radius:10px;
+background:white;
+color:black;
+font-size:15px;
+cursor:pointer;">
+
+Continue
+
+</button>
+
+`;
+
+            document
+            .getElementById("docskey")
+            .addEventListener("keydown",function(e){
+
+                if(e.key==="Enter"){
+
+                    verify(this.value);
+
+                }
+
+            });
+
+            return;
+
+        }
+
+        footerElement.style.display="none";
+
+        statusElement.innerHTML=`
+
+<div style="font-size:22px;color:#22c55e;margin-bottom:18px;">
+
+✓ Document verified.
+
+</div>
+
+<div style="margin-bottom:22px;">
+
+<strong>DOCSid</strong><br>
+
+${docsId}
+
+</div>
+
+<div style="display:flex;justify-content:center;align-items:center;gap:14px;">
+
+<div class="spinner" style="width:22px;height:22px;border-width:3px;margin:0;"></div>
+
+<div>
+
+DOCSdns is redirecting you to the latest official revision of this document...
+
+</div>
+
+</div>
+
+`;
+
+        setTimeout(()=>{
+
+            window.location.replace(data.url);
+
+        },700);
+
+    })
+
+    .catch(()=>{
+
+        showMessage("Unable to contact DOCSdns.");
+
+    });
 
 }
 
@@ -151,54 +353,9 @@ if(!docsId){
 }
 else{
 
-    fetch(
-        SCRIPT_URL +
-        "?id=" +
-        encodeURIComponent(docsId)
-    )
-
-    .then(response=>response.json())
-
-    .then(data=>{
-
-        if(!data.found){
-
-            showMessage(
-                "Document not found."
-            );
-
-            return;
-
-        }
-
-        if(!data.enabled){
-
-            showMessage(
-                "This file is no longer supported or available at DOCS."
-            );
-
-            return;
-
-        }
-
-        window.location.replace(data.url);
-
-    })
-
-    .catch(error=>{
-
-        console.error(error);
-
-        showMessage(
-            "Unable to contact DOCSdns."
-        );
-
-    });
+    verify(initialKey);
 
 }
-
-</script>
-
-</body>
-
+    </script>
+  </body>
 </html>
