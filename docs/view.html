@@ -158,65 +158,7 @@
         user-select: none;
       }
 
-      /* =========================
-   THEME TOGGLE
-   ========================= */
-
-      .theme-switch {
-        position: relative;
-
-        width: 52px;
-        height: 28px;
-
-        flex-shrink: 0;
-      }
-
-      .theme-switch input {
-        opacity: 0;
-
-        width: 0;
-        height: 0;
-      }
-
-      .theme-slider {
-        position: absolute;
-
-        inset: 0;
-
-        cursor: pointer;
-
-        background: #1a73e8;
-
-        border-radius: 999px;
-
-        transition: 0.25s;
-
-        box-shadow: inset 0 0 0 1px rgba(0, 0, 0, 0.08);
-      }
-
-      .theme-slider::before {
-        content: "";
-
-        position: absolute;
-
-        width: 22px;
-        height: 22px;
-
-        left: 3px;
-        top: 3px;
-
-        border-radius: 50%;
-
-        background: white;
-
-        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.25);
-
-        transition: 0.25s;
-      }
-
-      .theme-switch input:checked + .theme-slider::before {
-        transform: translateX(24px);
-      }
+      
 
       /* =========================
    SECTIONS
@@ -405,59 +347,51 @@
 
   <body>
     <header>
-      <div class="header-title">
-        <img src="docs.png" alt="DOCS" class="logo" />
-      </div>
-
-      <label class="theme-switch">
-        <input type="checkbox" id="themeToggle" />
-
-        <span class="theme-slider"></span>
-      </label>
-    </header>
+  <div class="header-title">
+    <img src="docs.png" alt="DOCS" class="logo" />
+  </div>
+</header>
 
     <div id="viewer"></div>
 
     <script>
-      /* =========================
-   THEME
+/* =========================
+   SYSTEM THEME
    ========================= */
 
-      const themeToggle = document.getElementById("themeToggle");
+const systemTheme =
+  window.matchMedia("(prefers-color-scheme: dark)");
 
-      function applyTheme(theme) {
-        if (theme === "dark") {
-          document.body.classList.add("dark-theme");
-          document.documentElement.classList.add("dark-theme");
-          themeToggle.checked = true;
-        } else {
-          document.body.classList.remove("dark-theme");
 
-          document.documentElement.classList.remove("dark-theme");
+function applySystemTheme() {
 
-          themeToggle.checked = false;
-        }
-      }
+  if (systemTheme.matches) {
 
-      /* Load saved theme */
+    document.body.classList.add("dark-theme");
+    document.documentElement.classList.add("dark-theme");
 
-      const savedTheme = localStorage.getItem("DOCS-theme");
+  } else {
 
-      if (savedTheme === "dark") {
-        applyTheme("dark");
-      } else {
-        applyTheme("light");
-      }
+    document.body.classList.remove("dark-theme");
+    document.documentElement.classList.remove("dark-theme");
 
-      /* Theme switch */
+  }
 
-      themeToggle.addEventListener("change", function () {
-        const newTheme = this.checked ? "dark" : "light";
+}
 
-        applyTheme(newTheme);
 
-        localStorage.setItem("DOCS-theme", newTheme);
-      });
+/* Apply system theme on page load */
+
+applySystemTheme();
+
+
+/* Follow system theme changes dynamically */
+
+systemTheme.addEventListener(
+  "change",
+  applySystemTheme
+);
+
 
       /* =========================
    DOCSviewer
