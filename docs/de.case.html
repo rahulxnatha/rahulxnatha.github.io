@@ -1,0 +1,670 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>German Case Assignment Algorithm</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f1f5f9;
+        }
+
+        :root {
+            --nom-color: #0ea5e9; /* Sky 500 */
+            --nom-bg: #e0f2fe;    /* Sky 100 */
+            --acc-color: #f43f5e; /* Rose 500 */
+            --acc-bg: #ffe4e6;    /* Rose 100 */
+            --dat-color: #d97706; /* Amber 600 */
+            --dat-bg: #fef3c7;    /* Amber 100 */
+            --gen-color: #059669; /* Emerald 600 */
+            --gen-bg: #d1fae5;    /* Emerald 100 */
+            --verb-color: #8b5cf6; /* Violet 500 */
+            --verb-bg: #ede9fe;   /* Violet 100 */
+            --aux-color: #a78bfa; /* Violet 400 */
+            --aux-bg: #f5f3ff;    /* Violet 50 */
+            --prep-color: #0d9488; /* Teal 600 */
+            --prep-bg: #ccfbf1;   /* Teal 100 */
+            --other-color: #64748b; /* Slate 500 */
+            --other-bg: #f8fafc;  /* Slate 50 */
+        }
+
+        ::-webkit-scrollbar { width: 8px; height: 8px; }
+        ::-webkit-scrollbar-track { background: transparent; }
+        ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 4px; }
+        ::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
+
+        svg {
+            width: 100%;
+            height: 850px;
+            display: block;
+        }
+
+        .node { cursor: pointer; }
+        .shape { transition: all 0.2s ease; }
+        .node text { pointer-events: none; }
+        
+        .node:hover .shape {
+            filter: brightness(0.95);
+            stroke-width: 3px;
+        }
+        .node.selected .shape {
+            stroke: #0f172a;
+            stroke-width: 4px;
+            filter: drop-shadow(0 4px 6px rgba(0,0,0,0.2));
+        }
+
+        .arrow { stroke: #94a3b8; stroke-width: 3; fill: none; }
+        .arrow-path { stroke: #94a3b8; stroke-width: 3; fill: none; stroke-dasharray: 6,4; }
+        .arrow-text { font-size: 13px; font-weight: 700; fill: #64748b; }
+
+        /* Node Types */
+        .start .shape { fill: #1e293b; stroke: #1e293b; }
+        .start text { fill: #ffffff; font-weight: 700; }
+        
+        .decision .shape { fill: #ffffff; stroke: #94a3b8; stroke-width: 2; }
+        .decision text { fill: #334155; font-weight: 600; }
+
+        /* Output Nodes mapping to case colors */
+        .out-nom .shape { fill: var(--nom-bg); stroke: var(--nom-color); stroke-width: 2; }
+        .out-nom text { fill: #0369a1; }
+        
+        .out-acc .shape { fill: var(--acc-bg); stroke: var(--acc-color); stroke-width: 2; }
+        .out-acc text { fill: #be123c; }
+        
+        .out-dat .shape { fill: var(--dat-bg); stroke: var(--dat-color); stroke-width: 2; }
+        .out-dat text { fill: #b45309; }
+        
+        .out-gen .shape { fill: var(--gen-bg); stroke: var(--gen-color); stroke-width: 2; }
+        .out-gen text { fill: #047857; }
+
+        .out-two-way .shape { fill: #f1f5f9; stroke: #94a3b8; stroke-width: 2; }
+        
+        .word-tag {
+            display: inline-block;
+            padding: 4px 10px;
+            margin: 4px 4px 4px 0;
+            border-radius: 8px;
+            font-weight: 600;
+            font-size: 1.1rem;
+            border-bottom: 3px solid rgba(0,0,0,0.1);
+        }
+
+        .tag-subject { background: var(--nom-bg); color: #0369a1; border-color: var(--nom-color); }
+        .tag-direct { background: var(--acc-bg); color: #be123c; border-color: var(--acc-color); }
+        .tag-indirect { background: var(--dat-bg); color: #b45309; border-color: var(--dat-color); }
+        .tag-genitive { background: var(--gen-bg); color: #047857; border-color: var(--gen-color); }
+        .tag-verb { background: var(--verb-bg); color: #5b21b6; border-color: var(--verb-color); }
+        .tag-aux { background: var(--aux-bg); color: #6d28d9; border-color: var(--aux-color); font-weight: 500;}
+        .tag-prep { background: var(--prep-bg); color: #0f766e; border-color: var(--prep-color); }
+        .tag-other { background: var(--other-bg); color: var(--other-color); border-color: #cbd5e1; font-weight: 400;}
+
+        .pill {
+            display: inline-block;
+            padding: 2px 8px;
+            border-radius: 9999px;
+            font-size: 0.75rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+        .pill-nom { background: var(--nom-bg); color: #0369a1; }
+        .pill-acc { background: var(--acc-bg); color: #be123c; }
+        .pill-dat { background: var(--dat-bg); color: #b45309; }
+        .pill-gen { background: var(--gen-bg); color: #047857; }
+        .pill-verb { background: var(--verb-bg); color: #5b21b6; }
+        .pill-prep { background: var(--prep-bg); color: #0f766e; }
+    </style>
+</head>
+<body class="h-screen flex flex-col overflow-hidden text-slate-800">
+
+    <!-- Header -->
+ 
+
+    <!-- Main Content Split -->
+    <main class="flex-1 flex flex-col lg:flex-row overflow-hidden min-h-0">
+        
+        <!-- Left Pane: Flowchart -->
+        <section class="w-full lg:w-3/5 bg-slate-50 border-r border-slate-200 overflow-y-auto relative p-4">
+            <div class="bg-white rounded-2xl shadow-sm border border-slate-200 p-2 min-w-[700px] mx-auto">
+                <h2 class="text-center font-bold text-lg pt-4 pb-2 text-slate-700 uppercase tracking-widest">The Waterfall Algorithm</h2>
+                
+                <svg viewBox="0 0 800 850">
+                    <defs>
+                        <marker id="arrowhead" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
+                            <polygon points="0 0, 10 3.5, 0 7" fill="#94a3b8" />
+                        </marker>
+                    </defs>
+
+                    <!-- Downward Spines (NO paths) -->
+                    <path class="arrow" marker-end="url(#arrowhead)" d="M 250 80 V 120" />
+                    <path class="arrow" marker-end="url(#arrowhead)" d="M 250 220 V 300" />
+                    <path class="arrow" marker-end="url(#arrowhead)" d="M 250 400 V 480" />
+                    
+                    <!-- Rightward Branches (YES paths) -->
+                    <!-- From Prep -->
+                    <path class="arrow" d="M 350 170 H 420" />
+                    <path class="arrow" marker-end="url(#arrowhead)" d="M 420 170 V 90 H 470" />
+                    <path class="arrow" marker-end="url(#arrowhead)" d="M 420 170 V 150 H 470" />
+                    <path class="arrow" marker-end="url(#arrowhead)" d="M 420 170 V 210 H 470" />
+                    <path class="arrow" marker-end="url(#arrowhead)" d="M 420 170 V 270 H 470" />
+                    
+                    <!-- From Verb -->
+                    <path class="arrow" d="M 350 350 H 420" />
+                    <path class="arrow" marker-end="url(#arrowhead)" d="M 420 350 V 310 H 470" />
+                    <path class="arrow" marker-end="url(#arrowhead)" d="M 420 350 V 370 H 470" />
+                    <path class="arrow" marker-end="url(#arrowhead)" d="M 420 350 V 430 H 470" />
+
+                    <!-- From Role -->
+                    <path class="arrow" d="M 350 530 H 420" />
+                    <path class="arrow" marker-end="url(#arrowhead)" d="M 420 530 V 490 H 470" />
+                    <path class="arrow" marker-end="url(#arrowhead)" d="M 420 530 V 550 H 470" />
+                    <path class="arrow" marker-end="url(#arrowhead)" d="M 420 530 V 610 H 470" />
+                    <path class="arrow" marker-end="url(#arrowhead)" d="M 420 530 V 670 H 470" />
+
+                    <!-- Labels on arrows -->
+                    <text x="260" y="260" class="arrow-text">NO</text>
+                    <text x="260" y="440" class="arrow-text">NO</text>
+                    
+                    <text x="375" y="160" class="arrow-text">YES</text>
+                    <text x="375" y="340" class="arrow-text">YES</text>
+                    <text x="370" y="520" class="arrow-text">Identified</text>
+
+                    <!-- START NODE -->
+                    <g class="node start" data-key="start">
+                        <rect class="shape" x="125" y="40" width="250" height="40" rx="20" />
+                        <text x="250" y="65" text-anchor="middle" font-size="14">START: Identify the noun phrase</text>
+                    </g>
+
+                    <!-- DECISION 1: PREPOSITION -->
+                    <g class="node decision" data-key="prepQ">
+                        <polygon class="shape" points="250,120 350,170 250,220 150,170" />
+                        <text x="250" y="165" text-anchor="middle" font-size="13">Is it governed by</text>
+                        <text x="250" y="180" text-anchor="middle" font-size="13">a preposition?</text>
+                    </g>
+
+                    <!-- PREP RESULTS -->
+                    <g class="node out-acc" data-key="accPrep">
+                        <rect class="shape" x="480" y="70" width="240" height="40" rx="8" />
+                        <text x="600" y="95" text-anchor="middle" font-size="14">Accusative Preposition → ACC.</text>
+                    </g>
+                    <g class="node out-dat" data-key="datPrep">
+                        <rect class="shape" x="480" y="130" width="240" height="40" rx="8" />
+                        <text x="600" y="155" text-anchor="middle" font-size="14">Dative Preposition → DAT.</text>
+                    </g>
+                    <g class="node out-gen" data-key="genPrep">
+                        <rect class="shape" x="480" y="190" width="240" height="40" rx="8" />
+                        <text x="600" y="215" text-anchor="middle" font-size="14">Genitive Preposition → GEN.</text>
+                    </g>
+                    <g class="node out-two-way" data-key="twoWay">
+                        <rect class="shape" x="480" y="245" width="240" height="50" rx="8" />
+                        <text x="600" y="265" text-anchor="middle" font-size="14" font-weight="bold">Two-Way Preposition</text>
+                        <text x="600" y="282" text-anchor="middle" font-size="11" fill="#64748b">Click for Destination vs Location</text>
+                    </g>
+
+                    <!-- DECISION 2: VERB -->
+                    <g class="node decision" data-key="verbQ">
+                        <polygon class="shape" points="250,300 350,350 250,400 150,350" />
+                        <text x="250" y="345" text-anchor="middle" font-size="13">Does a special verb</text>
+                        <text x="250" y="360" text-anchor="middle" font-size="13">dictate the case?</text>
+                    </g>
+
+                    <!-- VERB RESULTS -->
+                    <g class="node out-nom" data-key="linkVerb">
+                        <rect class="shape" x="480" y="290" width="240" height="40" rx="8" />
+                        <text x="600" y="315" text-anchor="middle" font-size="14">sein/werden/bleiben → NOM.</text>
+                    </g>
+                    <g class="node out-dat" data-key="datVerb">
+                        <rect class="shape" x="480" y="350" width="240" height="40" rx="8" />
+                        <text x="600" y="375" text-anchor="middle" font-size="14">Dative verb (helfen) → DAT.</text>
+                    </g>
+                    <g class="node out-acc" data-key="accVerb">
+                        <rect class="shape" x="480" y="410" width="240" height="40" rx="8" />
+                        <text x="600" y="435" text-anchor="middle" font-size="14">Accusative verb → ACC.</text>
+                    </g>
+
+                    <!-- DECISION 3: ROLE -->
+                    <g class="node decision" data-key="roleQ">
+                        <polygon class="shape" points="250,480 350,530 250,580 150,530" />
+                        <text x="250" y="525" text-anchor="middle" font-size="13">What is the noun's</text>
+                        <text x="250" y="540" text-anchor="middle" font-size="13">functional role?</text>
+                    </g>
+
+                    <!-- ROLE RESULTS -->
+                    <g class="node out-nom" data-key="subject">
+                        <rect class="shape" x="480" y="470" width="240" height="40" rx="8" />
+                        <text x="600" y="495" text-anchor="middle" font-size="14">Subject → NOMINATIVE</text>
+                    </g>
+                    <g class="node out-acc" data-key="direct">
+                        <rect class="shape" x="480" y="530" width="240" height="40" rx="8" />
+                        <text x="600" y="555" text-anchor="middle" font-size="14">Direct Object → ACCUSATIVE</text>
+                    </g>
+                    <g class="node out-dat" data-key="indirect">
+                        <rect class="shape" x="480" y="590" width="240" height="40" rx="8" />
+                        <text x="600" y="615" text-anchor="middle" font-size="14">Indirect Object → DATIVE</text>
+                    </g>
+                    <g class="node out-gen" data-key="possess">
+                        <rect class="shape" x="480" y="650" width="240" height="40" rx="8" />
+                        <text x="600" y="675" text-anchor="middle" font-size="14">Possession/Origin → GENITIVE</text>
+                    </g>
+
+                    <!-- FOOTER NOTE -->
+                    <g class="node" data-key="reminder">
+                        <rect class="shape" x="110" y="620" width="280" height="90" rx="12" fill="#fff" stroke="#e2e8f0" stroke-width="2"/>
+                        <text x="250" y="645" text-anchor="middle" font-size="14" font-weight="bold" fill="#475569">Crucial Rule</text>
+                        <text x="250" y="665" text-anchor="middle" font-size="12" fill="#64748b">A case is NOT a role itself.</text>
+                        <text x="250" y="680" text-anchor="middle" font-size="12" fill="#64748b">It is the form used to EXPRESS the role.</text>
+                        <text x="250" y="695" text-anchor="middle" font-size="12" fill="#64748b">Click here to learn more.</text>
+                    </g>
+
+                </svg>
+
+                <!-- Legend -->
+                <div class="flex justify-center gap-4 flex-wrap pb-4">
+                    <span class="text-xs font-semibold px-3 py-1 bg-sky-100 text-sky-700 rounded-full">Nominative</span>
+                    <span class="text-xs font-semibold px-3 py-1 bg-rose-100 text-rose-700 rounded-full">Accusative</span>
+                    <span class="text-xs font-semibold px-3 py-1 bg-amber-100 text-amber-700 rounded-full">Dative</span>
+                    <span class="text-xs font-semibold px-3 py-1 bg-emerald-100 text-emerald-700 rounded-full">Genitive</span>
+                </div>
+            </div>
+        </section>
+
+        <!-- Right Pane: Interactive Examples -->
+        <section class="w-full lg:w-2/5 bg-white overflow-y-auto p-6 md:p-8 flex flex-col relative shadow-[-4px_0_15px_rgba(0,0,0,0.03)] z-10">
+            
+            <div class="flex justify-between items-end mb-6 border-b border-slate-200 pb-4">
+                <div>
+                    <h2 class="text-sm font-bold tracking-widest text-blue-500 uppercase mb-1">Detailed Analysis</h2>
+                    <h3 id="exTitle" class="text-2xl font-bold text-slate-800 leading-tight">Start: Select a node</h3>
+                </div>
+                <div id="count" class="text-xs font-bold text-slate-400 bg-slate-100 px-3 py-1 rounded-full border border-slate-200 whitespace-nowrap mb-1">
+                    0 of 0
+                </div>
+            </div>
+
+            <!-- Sentence Display -->
+            <div class="bg-slate-50 border border-slate-200 rounded-2xl p-6 mb-8 shadow-sm">
+                <div class="text-xs font-semibold text-slate-400 uppercase tracking-widest mb-4">The Sentence</div>
+                <div id="sentence" class="flex flex-wrap items-center text-xl md:text-2xl leading-loose">
+                    <!-- Word tags injected here via JS -->
+                </div>
+            </div>
+
+            <!-- Breakdown Table -->
+            <div class="flex-grow">
+                <h4 class="text-lg font-bold text-slate-800 mb-4 flex items-center gap-2">
+                    <i class="fa-solid fa-microscope text-slate-400"></i> Structural Breakdown
+                </h4>
+                <div id="rows" class="space-y-3">
+                    <!-- Breakdown rows injected here via JS -->
+                </div>
+            </div>
+
+            <!-- Conceptual Tip -->
+            <div id="tip" class="mt-8 bg-blue-50 border border-blue-100 text-blue-800 p-5 rounded-xl text-sm leading-relaxed shadow-sm">
+                <!-- Tip injected here via JS -->
+            </div>
+            
+        </section>
+
+    </main>
+
+    <script>
+        // Data Structure for all flowchart examples
+        const contentData = {
+            start: [
+                {
+                    title: 'Start: Evaluate the whole sentence',
+                    sentence: [
+                        ['Der', 'subject'], ['Lehrer', 'subject'], 
+                        ['gibt', 'verb'], 
+                        ['dem', 'indirect'], ['Schüler', 'indirect'], 
+                        ['das', 'direct'], ['Buch', 'direct'], 
+                        ['.', 'other']
+                    ],
+                    breakdown: [
+                        ['Subject', 'Der Lehrer', 'Nominative', 'The person doing the action (giving).'],
+                        ['Action Verb', 'gibt', 'Verb', 'geben = to give. Establishes the relationships.'],
+                        ['Indirect Object', 'dem Schüler', 'Dative', 'The recipient of the object.'],
+                        ['Direct Object', 'das Buch', 'Accusative', 'The thing being directly given.']
+                    ],
+                    tip: 'To find the case for <strong>dem Schüler</strong>, start at the top of the waterfall: Is there a preposition? No. Does the verb force Dative? No (geben takes two objects). What is its role? It is the recipient (Indirect Object). Therefore, Dative.'
+                }
+            ],
+            prepQ: [
+                {
+                    title: 'Decision 1: Preposition exists',
+                    sentence: [
+                        ['Wir', 'subject'], ['gehen', 'verb'], 
+                        ['mit', 'prep'], ['dem', 'prep'], ['Hund', 'prep'], 
+                        ['.', 'other']
+                    ],
+                    breakdown: [
+                        ['Subject', 'Wir', 'Nominative', 'The people walking.'],
+                        ['Verb', 'gehen', 'Verb', 'gehen = to walk/go.'],
+                        ['Preposition', 'mit', 'Prep', 'mit ALWAYS requires the Dative case.'],
+                        ['Prep Phrase', 'mit dem Hund', 'Dative', 'The noun phrase governed by "mit".']
+                    ],
+                    tip: 'Because <strong>mit</strong> immediately governs the noun phrase, the case is locked in. We do not need to check the verb or the role.'
+                },
+                {
+                    title: 'Decision 1: No Preposition',
+                    sentence: [
+                        ['Ich', 'subject'], ['sehe', 'verb'], ['den', 'direct'], ['Hund', 'direct'], ['.', 'other']
+                    ],
+                    breakdown: [
+                        ['Subject', 'Ich', 'Nominative', 'Person doing the seeing.'],
+                        ['Verb', 'sehe', 'Verb', 'Action.'],
+                        ['Direct Object', 'den Hund', 'Accusative', 'No preposition governs it.']
+                    ],
+                    tip: 'Since there is no preposition before <strong>den Hund</strong>, we must continue down the waterfall to see what controls its case.'
+                }
+            ],
+            accPrep: [
+                {
+                    title: 'Accusative Preposition',
+                    sentence: [
+                        ['Das', 'subject'], ['Geschenk', 'subject'], ['ist', 'verb'], 
+                        ['für', 'prep'], ['den', 'prep'], ['Vater', 'prep'], ['.', 'other']
+                    ],
+                    breakdown: [
+                        ['Subject', 'Das Geschenk', 'Nominative', 'The item.'],
+                        ['Verb', 'ist', 'Verb', 'sein = to be.'],
+                        ['Preposition', 'für', 'Prep', 'für is strictly an Accusative preposition.'],
+                        ['Prep Phrase', 'für den Vater', 'Accusative', 'Governed completely by für.']
+                    ],
+                    tip: 'The acronym DOGFU (durch, ohne, gegen, für, um) helps remember strictly accusative prepositions.'
+                }
+            ],
+            datPrep: [
+                {
+                    title: 'Dative Preposition',
+                    sentence: [
+                        ['Er', 'subject'], ['kommt', 'verb'], 
+                        ['aus', 'prep'], ['der', 'prep'], ['Schule', 'prep'], ['.', 'other']
+                    ],
+                    breakdown: [
+                        ['Subject', 'Er', 'Nominative', 'The person.'],
+                        ['Verb', 'kommt', 'Verb', 'kommen = to come.'],
+                        ['Preposition', 'aus', 'Prep', 'aus is strictly a Dative preposition.'],
+                        ['Prep Phrase', 'aus der Schule', 'Dative', 'Governed by aus.']
+                    ],
+                    tip: 'Even though there is "movement" (coming from school), <strong>aus</strong> is strictly Dative. Prepositions outrank general movement rules.'
+                }
+            ],
+            genPrep: [
+                {
+                    title: 'Genitive Preposition',
+                    sentence: [
+                        ['Wir', 'subject'], ['spielen', 'verb'], 
+                        ['trotz', 'prep'], ['des', 'prep'], ['Regens', 'prep'], ['.', 'other']
+                    ],
+                    breakdown: [
+                        ['Subject', 'Wir', 'Nominative', 'The people playing.'],
+                        ['Verb', 'spielen', 'Verb', 'spielen = to play.'],
+                        ['Preposition', 'trotz', 'Prep', 'trotz governs the Genitive.'],
+                        ['Prep Phrase', 'trotz des Regens', 'Genitive', 'Notice the article (des) and noun ending (-s).']
+                    ],
+                    tip: 'Common Genitive prepositions include wegen (because of), während (during), and trotz (despite).'
+                }
+            ],
+            twoWay: [
+                {
+                    title: 'Two-Way: Direction (Wohin?) -> Accusative',
+                    sentence: [
+                        ['Ich', 'subject'], ['hänge', 'verb'], ['das', 'direct'], ['Bild', 'direct'],
+                        ['an', 'prep'], ['die', 'prep'], ['Wand', 'prep'], ['.', 'other']
+                    ],
+                    breakdown: [
+                        ['Subject', 'Ich', 'Nominative', 'Person acting.'],
+                        ['Direct Object', 'das Bild', 'Accusative', 'The thing being moved.'],
+                        ['Preposition', 'an', 'Prep', 'an is a two-way preposition (Wechselpräposition).'],
+                        ['Destination', 'an die Wand', 'Accusative', 'Answers "Where to?" (Wohin?). The picture is moving onto the wall.']
+                    ],
+                    tip: 'When a two-way preposition describes a <strong>change of state or destination</strong>, it takes the Accusative form to express that action.'
+                },
+                {
+                    title: 'Two-Way: Static Location (Wo?) -> Dative',
+                    sentence: [
+                        ['Das', 'subject'], ['Bild', 'subject'], ['hängt', 'verb'],
+                        ['an', 'prep'], ['der', 'prep'], ['Wand', 'prep'], ['.', 'other']
+                    ],
+                    breakdown: [
+                        ['Subject', 'Das Bild', 'Nominative', 'The item existing.'],
+                        ['Verb', 'hängt', 'Verb', 'hängen = to hang (state).'],
+                        ['Preposition', 'an', 'Prep', 'Two-way preposition.'],
+                        ['Location', 'an der Wand', 'Dative', 'Answers "Where?" (Wo?). It is already on the wall.']
+                    ],
+                    tip: 'When a two-way preposition describes a <strong>static location</strong> with no destination involved, it takes the Dative form.'
+                }
+            ],
+            verbQ: [
+                {
+                    title: 'Decision 2: Case-governing verb',
+                    sentence: [
+                        ['Die', 'subject'], ['Frau', 'subject'], ['hilft', 'verb'], ['dem', 'indirect'], ['Mann', 'indirect'], ['.', 'other']
+                    ],
+                    breakdown: [
+                        ['Subject', 'Die Frau', 'Nominative', 'Person acting.'],
+                        ['Verb', 'hilft', 'Verb', 'helfen = to help. This verb mandates Dative.'],
+                        ['Object of verb', 'dem Mann', 'Dative', 'Governed directly by helfen.']
+                    ],
+                    tip: 'Because there is no preposition, we check the verb. "helfen" is a special verb that forces its object into the Dative form, regardless of standard role rules.'
+                }
+            ],
+            linkVerb: [
+                {
+                    title: 'Linking Verb: Describing the Subject',
+                    sentence: [
+                        ['Mein', 'subject'], ['Bruder', 'subject'], ['wird', 'verb'], ['ein', 'subject'], ['Arzt', 'subject'], ['.', 'other']
+                    ],
+                    breakdown: [
+                        ['Subject', 'Mein Bruder', 'Nominative', 'The person.'],
+                        ['Verb', 'wird', 'Verb', 'werden = to become. A linking verb.'],
+                        ['Subject Description', 'ein Arzt', 'Nominative', 'Renames or describes the subject.']
+                    ],
+                    tip: 'Verbs like <strong>sein, werden, and bleiben</strong> act like an equals sign (=). Since they just rename the subject, the noun following them stays in the Nominative case.'
+                }
+            ],
+            datVerb: [
+                {
+                    title: 'Dative-only Verbs',
+                    sentence: [
+                        ['Das', 'subject'], ['Auto', 'subject'], ['gehört', 'verb'], ['meiner', 'indirect'], ['Mutter', 'indirect'], ['.', 'other']
+                    ],
+                    breakdown: [
+                        ['Subject', 'Das Auto', 'Nominative', 'The item.'],
+                        ['Verb', 'gehört', 'Verb', 'gehören = to belong to.'],
+                        ['Object', 'meiner Mutter', 'Dative', 'The noun governed by gehören.']
+                    ],
+                    tip: 'Certain verbs (helfen, danken, gehören, gefallen) strictly require the Dative case for their object.'
+                }
+            ],
+            accVerb: [
+                {
+                    title: 'Standard Accusative Verbs',
+                    sentence: [
+                        ['Ich', 'subject'], ['habe', 'aux'], ['einen', 'direct'], ['Hund', 'direct'], ['.', 'other']
+                    ],
+                    breakdown: [
+                        ['Subject', 'Ich', 'Nominative', 'The owner.'],
+                        ['Verb', 'habe', 'Verb', 'haben = to have. Requires Accusative.'],
+                        ['Object', 'einen Hund', 'Accusative', 'The item possessed.']
+                    ],
+                    tip: 'Most verbs in German (haben, sehen, kaufen, finden) require their direct object to be in the Accusative case.'
+                }
+            ],
+            roleQ: [
+                {
+                    title: 'Decision 3: Syntactic Role',
+                    sentence: [
+                        ['Der', 'subject'], ['Koch', 'subject'], ['schneidet', 'verb'], ['das', 'direct'], ['Gemüse', 'direct'], ['.', 'other']
+                    ],
+                    breakdown: [
+                        ['Subject', 'Der Koch', 'Nominative', 'The doer of the action.'],
+                        ['Verb', 'schneidet', 'Verb', 'schneiden = to cut.'],
+                        ['Direct Object', 'das Gemüse', 'Accusative', 'The receiver of the action.']
+                    ],
+                    tip: 'If there are no prepositions and no special verbs disrupting the rules, the case simply expresses the noun’s structural role in the sentence.'
+                }
+            ],
+            subject: [
+                {
+                    title: 'Subject (Nominative)',
+                    sentence: [
+                        ['Die', 'subject'], ['Katze', 'subject'], ['schläft', 'verb'], ['.', 'other']
+                    ],
+                    breakdown: [
+                        ['Subject', 'Die Katze', 'Nominative', 'The entity doing the sleeping.'],
+                        ['Verb', 'schläft', 'Verb', 'schlafen = to sleep.']
+                    ],
+                    tip: 'The subject is always expressed with the Nominative case. It dictates how the verb is conjugated.'
+                }
+            ],
+            direct: [
+                {
+                    title: 'Direct Object (Accusative)',
+                    sentence: [
+                        ['Wir', 'subject'], ['kaufen', 'verb'], ['einen', 'direct'], ['neuen', 'direct'], ['Tisch', 'direct'], ['.', 'other']
+                    ],
+                    breakdown: [
+                        ['Subject', 'Wir', 'Nominative', 'The buyers.'],
+                        ['Verb', 'kaufen', 'Verb', 'Action.'],
+                        ['Direct Object', 'einen neuen Tisch', 'Accusative', 'The entity being bought.']
+                    ],
+                    tip: 'The direct object is the person or thing directly affected by the action. It is expressed via the Accusative case.'
+                }
+            ],
+            indirect: [
+                {
+                    title: 'Indirect Object (Dative)',
+                    sentence: [
+                        ['Er', 'subject'], ['schreibt', 'verb'], ['seinem', 'indirect'], ['Freund', 'indirect'], ['einen', 'direct'], ['Brief', 'direct'], ['.', 'other']
+                    ],
+                    breakdown: [
+                        ['Subject', 'Er', 'Nominative', 'The writer.'],
+                        ['Verb', 'schreibt', 'Verb', 'Action.'],
+                        ['Indirect Object', 'seinem Freund', 'Dative', 'The recipient/beneficiary of the letter.'],
+                        ['Direct Object', 'einen Brief', 'Accusative', 'The thing being written.']
+                    ],
+                    tip: 'When a sentence has two objects, the recipient or beneficiary (to whom/for whom) is the Indirect Object, expressed in the Dative case.'
+                }
+            ],
+            possess: [
+                {
+                    title: 'Possessor (Genitive)',
+                    sentence: [
+                        ['Das', 'subject'], ['Dach', 'subject'], ['des', 'gen'], ['Hauses', 'gen'], ['ist', 'verb'], ['rot', 'other'], ['.', 'other']
+                    ],
+                    breakdown: [
+                        ['Subject Noun', 'Das Dach', 'Nominative', 'The roof.'],
+                        ['Possessor', 'des Hauses', 'Genitive', 'Belonging to the house.'],
+                        ['Verb', 'ist', 'Verb', 'sein = to be.'],
+                        ['Description', 'rot', 'Other', 'Adjective.']
+                    ],
+                    tip: 'To express possession, origin, or a close relationship between two nouns, we use the Genitive case form (des Hauses).'
+                }
+            ],
+            reminder: [
+                {
+                    title: 'Crucial Rule: Role vs Case',
+                    sentence: [
+                        ['Cases', 'subject'], ['express', 'verb'], ['roles', 'direct'], ['.', 'other']
+                    ],
+                    breakdown: [
+                        ['Concept 1', 'Role', 'Other', 'What the noun is doing (e.g., being a subject, receiving an action).'],
+                        ['Concept 2', 'Case', 'Other', 'The grammatical form used to express that role.']
+                    ],
+                    tip: 'A case is not itself "subject" or "possession". Those are functions. A case is the <strong>form</strong> used to express such a function.'
+                }
+            ]
+        };
+
+        // State tracker for cycling through examples
+        const clickState = {};
+        Object.keys(contentData).forEach(key => clickState[key] = 0);
+
+        function getPillMarkup(caseType) {
+            const map = {
+                'Nominative': 'pill-nom',
+                'Accusative': 'pill-acc',
+                'Dative': 'pill-dat',
+                'Genitive': 'pill-gen',
+                'Verb': 'pill-verb',
+                'Prep': 'pill-prep',
+                'Other': 'bg-slate-200 text-slate-600'
+            };
+            const className = map[caseType] || map['Other'];
+            return `<span class="pill ${className}">${caseType}</span>`;
+        }
+
+        function escapeHTML(str) {
+            return str.replace(/[&<>"']/g, m => ({
+                '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#039;'
+            })[m]);
+        }
+
+        function renderContent(nodeKey) {
+            const dataArray = contentData[nodeKey] || contentData.start;
+            const currentIndex = clickState[nodeKey] % dataArray.length;
+            const item = dataArray[currentIndex];
+
+            // 1. Update UI highlight state on flowchart
+            document.querySelectorAll('.node').forEach(n => n.classList.remove('selected'));
+            const activeSvgNode = document.querySelector(`[data-key="${nodeKey}"]`);
+            if (activeSvgNode) activeSvgNode.classList.add('selected');
+
+            // 2. Update Header & Counter
+            document.getElementById('exTitle').textContent = item.title;
+            document.getElementById('count').textContent = `Example ${currentIndex + 1} of ${dataArray.length}`;
+
+            // 3. Render Sentence Tags
+            const sentenceContainer = document.getElementById('sentence');
+            sentenceContainer.innerHTML = '';
+            item.sentence.forEach((wordPair, index) => {
+                const span = document.createElement('span');
+                // wordPair[0] is word, wordPair[1] is type mapping to tag-{type}
+                span.className = `word-tag tag-${wordPair[1]}`;
+                span.textContent = wordPair[0];
+                sentenceContainer.appendChild(span);
+            });
+
+            // 4. Render Breakdown Rows
+            const rowsContainer = document.getElementById('rows');
+            rowsContainer.innerHTML = item.breakdown.map(row => `
+                <div class="bg-white border border-slate-200 rounded-xl p-4 flex flex-col md:flex-row md:items-center gap-4">
+                    <div class="md:w-1/4 font-bold text-slate-700 text-sm uppercase tracking-wide">
+                        ${escapeHTML(row[0])}
+                    </div>
+                    <div class="md:w-3/4 flex flex-col sm:flex-row sm:items-center gap-2">
+                        <span class="text-lg font-bold text-slate-900">${escapeHTML(row[1])}</span>
+                        ${getPillMarkup(row[2])}
+                        <span class="text-slate-500 text-sm sm:ml-auto w-full sm:w-auto mt-1 sm:mt-0">${escapeHTML(row[3])}</span>
+                    </div>
+                </div>
+            `).join('');
+
+            // 5. Render Tip
+            document.getElementById('tip').innerHTML = `<i class="fa-solid fa-lightbulb text-yellow-500 mr-2"></i> ${item.tip}`;
+        }
+
+        // Attach Event Listeners to SVG Nodes
+        document.querySelectorAll('.node').forEach(node => {
+            node.addEventListener('click', () => {
+                const key = node.getAttribute('data-key');
+                clickState[key]++; // increment cycle
+                renderContent(key);
+            });
+        });
+
+        // Initialize state on load
+        window.addEventListener('DOMContentLoaded', () => {
+            renderContent('start');
+        });
+    </script>
+</body>
+</html>
