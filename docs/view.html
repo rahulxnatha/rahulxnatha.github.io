@@ -1,170 +1,507 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
 
-<title>DOCS</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
-<style>
-*{
-    margin:0;
-    padding:0;
-    box-sizing:border-box;
-}
+    <title>DOCS</title>
 
-body{
-  font-family:
-          "Segoe UI", SegoeUI, "Helvetica Neue", Helvetica, Arial, sans-serif;
-    background:#f5f5f5;
-}
-
-header{
-    background:#1a73e8;
-    color:white;
-    text-align:center;
-    padding:18px;
-    font-size:28px;
-    font-weight:400;
-    border-radius: 8px;
-}
-
-section{
-    margin:20px;
-    border: 1px solid #ddd;
-    border-radius: 8px;
-    overflow:hidden;
-    
-}
-
-h2{
-    padding:15px 20px;
-    background:#ffffff;
-    color:#102847;
-    border-left:6px solid #0e2c55;
-    font-size:28px;
-    font-weight:400;
-  
-}
-
-iframe{
-    width:100%;
-    height:600px;
-    border-radius: 8px;
-    border:none;
-}
- /* coded */
-
-/* DOCS buttons */
-
-.docs-button {
-  display: inline-block;
-
-  margin: 8px 4px;
-  padding: 10px 18px;
-
-  border-radius: 9999px;
-
-  background: #d4d4d8;
-  color: #111;
-
-  text-decoration: none;
-  text-align: center;
-
-  font-weight: 600;
-
-  transition: 0.15s;
-
-  font-family: inherit;
-}
-
-.docs-button:hover {
-  transform: translateY(-1px);
-  background: #ffffff;
-}
-
-
-/* DOCS PDF */
-
-.docs-pdf {
-  width: 100%;
-  height: 600px;
-
-  border-radius: 8px;
-  border: none;
-}
-
-
-/* PDF dark theme */
-
-body.dark-theme .docs-pdf {
-  filter: invert(1) hue-rotate(180deg);
-}
-</style>
-</head>
-
-<body>
-
-<div id="viewer"></div>
-
-</body>
-
-<script>
-    const SCRIPT_URL =
-  "https://script.google.com/macros/s/AKfycbzIWFNsu6ugUZapOte41HXwSDOfC--TSdXTAWIIg7H19e3bm5svEapdwJHaOqkobFhkDg/exec";
-
-const params = new URLSearchParams(window.location.search);
-
-const docsId = params.get("id");
-
-const docsNode =
-  localStorage.getItem("DOCSnode");
-
-if (!docsId) {
-
-  document.body.innerHTML =
-    "<h2>Invalid DOCSid.</h2>";
-
-} else if (!docsNode) {
-
-  document.body.innerHTML =
-    "<h2>This browser has no DOCSlicense.</h2>";
-
-} else {
-
-  fetch(
-    SCRIPT_URL +
-      "?id=" +
-      encodeURIComponent(docsId) +
-      "&node=" +
-      encodeURIComponent(docsNode)
-  )
-
-    .then(r => r.json())
-
-    .then(data => {
-
-      if (!data.html) {
-
-        document.body.innerHTML =
-          "<h2>Access denied.</h2>";
-
-        return;
-
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
       }
 
-      document.body.innerHTML = data.html;
+      /* =========================
+   BODY
+   ========================= */
 
-    })
+      body {
+        font-family:
+          "Segoe UI", SegoeUI, "Helvetica Neue", Helvetica, Arial, sans-serif;
 
-    .catch(() => {
+        background: #f5f5f5;
+        color: #111;
 
-      document.body.innerHTML =
-        "<h2>Unable to contact DOCSviewer.</h2>";
+        transition:
+          background 0.25s,
+          color 0.25s;
+      }
 
-    });
+      /* =========================
+   PAGE SCROLLBAR
+   ========================= */
 
+      html {
+        scrollbar-width: auto;
+        scrollbar-color: #a8a8a8 #e5e5e5;
+      }
+
+      html::-webkit-scrollbar {
+        width: 12px;
+        height: 12px;
+      }
+
+      html::-webkit-scrollbar-track {
+        background: #e5e5e5;
+      }
+
+      html::-webkit-scrollbar-thumb {
+        background: #a8a8a8;
+        border: 3px solid #e5e5e5;
+        border-radius: 999px;
+      }
+
+      html::-webkit-scrollbar-thumb:hover {
+        background: #888;
+      }
+
+      /* =========================
+   DARK THEME PAGE SCROLLBAR
+   ========================= */
+
+      html.dark-theme {
+        scrollbar-color: #555 #111;
+      }
+
+      html.dark-theme::-webkit-scrollbar {
+        width: 12px;
+      }
+
+      html.dark-theme::-webkit-scrollbar-track {
+        background: #111;
+      }
+
+      html.dark-theme::-webkit-scrollbar-thumb {
+        background: #555;
+        border: 3px solid #111;
+        border-radius: 999px;
+      }
+
+      html.dark-theme::-webkit-scrollbar-thumb:hover {
+        background: #707070;
+      }
+
+      /* Firefox */
+
+      html {
+        scrollbar-width: auto;
+        scrollbar-color: #a8a8a8 #e5e5e5;
+      }
+
+      body.dark-theme {
+        scrollbar-color: #555 #111;
+      }
+
+      /* Firefox */
+
+      html {
+        scrollbar-color: #a8a8a8 #e5e5e5;
+        scrollbar-width: auto;
+      }
+
+      /* =========================
+   FLOATING ACRYLIC HEADER
+   ========================= */
+
+      header {
+        position: sticky;
+
+        top: 20px;
+
+        z-index: 1000;
+
+        margin: 20px 40px 0 40px;
+
+        height: 64px;
+
+        display: flex;
+
+        align-items: center;
+
+        justify-content: space-between;
+
+        padding: 0 18px;
+
+        border-radius: 16px;
+
+        background: rgba(212, 212, 212, 0.67);
+
+        color: #102847;
+
+        border: 0px solid rgba(255, 255, 255, 0.65);
+
+        backdrop-filter: blur(18px);
+        -webkit-backdrop-filter: blur(18px);
+
+        box-shadow: 0 0px 00px rgba(0, 0, 0, 0.12);
+
+        font-size: 26px;
+        font-weight: 400;
+
+        transition:
+          background 0.25s,
+          color 0.25s,
+          border-color 0.25s,
+          box-shadow 0.25s;
+      }
+
+      .header-title {
+        flex: 1;
+
+        text-align: center;
+
+        margin-left: 54px;
+
+        user-select: none;
+      }
+
+      /* =========================
+   THEME TOGGLE
+   ========================= */
+
+      .theme-switch {
+        position: relative;
+
+        width: 52px;
+        height: 28px;
+
+        flex-shrink: 0;
+      }
+
+      .theme-switch input {
+        opacity: 0;
+
+        width: 0;
+        height: 0;
+      }
+
+      .theme-slider {
+        position: absolute;
+
+        inset: 0;
+
+        cursor: pointer;
+
+        background: #1a73e8;
+
+        border-radius: 999px;
+
+        transition: 0.25s;
+
+        box-shadow: inset 0 0 0 1px rgba(0, 0, 0, 0.08);
+      }
+
+      .theme-slider::before {
+        content: "";
+
+        position: absolute;
+
+        width: 22px;
+        height: 22px;
+
+        left: 3px;
+        top: 3px;
+
+        border-radius: 50%;
+
+        background: white;
+
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.25);
+
+        transition: 0.25s;
+      }
+
+      .theme-switch input:checked + .theme-slider::before {
+        transform: translateX(24px);
+      }
+
+      /* =========================
+   SECTIONS
+   ========================= */
+
+      section {
+        margin: 20px;
+
+        border: 1px solid #ddd;
+
+        border-radius: 8px;
+
+        overflow: visible;
+
+        background: #fff;
+
+        transition:
+          background 0.25s,
+          border-color 0.25s;
+      }
+
+      /* =========================
+   SECTION HEADINGS
+   ========================= */
+
+      h2 {
+        position: sticky;
+
+        top: 104px;
+
+        z-index: 500;
+
+        padding: 15px 20px;
+
+        background: rgba(219, 219, 219, 0.689);
+
+        color: #102847;
+
+        border-left: 6px solid #0e2c55;
+
+        border-radius: 0px;
+
+        font-size: 28px;
+        font-weight: 400;
+
+        box-shadow: 0 0px 0px rgba(0, 0, 0, 0.08);
+
+        backdrop-filter: blur(18px);
+        -webkit-backdrop-filter: blur(18px);
+
+        transition:
+          background 0.25s,
+          color 0.25s,
+          border-color 0.25s;
+      }
+
+      /* =========================
+   GENERAL IFRAME
+   ========================= */
+
+     iframe {
+    width: 100%;
+    min-height: 600px;
+    height: auto;
+    border: none;
+    border-radius: 8px;
 }
-</script>
 
+      /* =========================
+   DOCS BUTTONS
+   ========================= */
+
+      .docs-button {
+        display: inline-block;
+
+        margin: 8px 4px;
+
+        padding: 10px 18px;
+
+        border-radius: 9999px;
+
+        background: #d4d4d8;
+
+        color: #111;
+
+        text-decoration: none;
+
+        text-align: center;
+
+        font-weight: 600;
+
+        transition:
+          background 0.15s,
+          transform 0.15s;
+
+        font-family: inherit;
+      }
+
+      .docs-button:hover {
+        transform: translateY(-1px);
+
+        background: #ffffff;
+      }
+
+      /* =========================
+   PDF
+   ========================= */
+
+      .docs-pdf {
+        width: 100%;
+
+        height: 600px;
+
+        border-radius: 8px;
+
+        border: none;
+
+        transition: filter 0.25s;
+      }
+
+      /* =========================
+   DARK THEME
+   ========================= */
+
+      body.dark-theme {
+        background: #111;
+
+        color: #fff;
+      }
+
+      /* Dark acrylic header */
+
+      body.dark-theme header {
+        background: rgba(55, 55, 55, 0.7);
+
+        color: #f5f5f5;
+
+        border-color: rgba(255, 255, 255, 0.12);
+
+        box-shadow: 0 8px 30px rgba(0, 0, 0, 0.35);
+      }
+
+      /* Dark sections */
+
+      body.dark-theme section {
+        background: #1a1a1a;
+
+        border-color: #333;
+      }
+
+      /* Dark sticky headings */
+
+      body.dark-theme h2 {
+        background: rgba(35, 35, 35, 0.685);
+
+        color: #e5e7eb;
+
+        border-left-color: #1a73e8;
+
+        box-shadow: 0 4px 14px rgba(0, 0, 0, 0.35);
+      }
+
+      /* Dark buttons */
+
+      body.dark-theme .docs-button {
+        background: #d4d4d8;
+
+        color: #111;
+      }
+
+      body.dark-theme .docs-button:hover {
+        background: #ffffff;
+      }
+
+      /* Invert PDFs */
+
+      body.dark-theme .docs-pdf {
+        filter: invert(1) hue-rotate(180deg);
+      }
+
+      .logo {
+        width: 100px;
+      }
+    </style>
+  </head>
+
+  <body>
+    <header>
+      <div class="header-title">
+        <img src="docs.png" alt="DOCS" class="logo" />
+      </div>
+
+      <label class="theme-switch">
+        <input type="checkbox" id="themeToggle" />
+
+        <span class="theme-slider"></span>
+      </label>
+    </header>
+
+    <div id="viewer"></div>
+
+    <script>
+      /* =========================
+   THEME
+   ========================= */
+
+      const themeToggle = document.getElementById("themeToggle");
+
+      function applyTheme(theme) {
+        if (theme === "dark") {
+          document.body.classList.add("dark-theme");
+          document.documentElement.classList.add("dark-theme");
+          themeToggle.checked = true;
+        } else {
+          document.body.classList.remove("dark-theme");
+
+          document.documentElement.classList.remove("dark-theme");
+
+          themeToggle.checked = false;
+        }
+      }
+
+      /* Load saved theme */
+
+      const savedTheme = localStorage.getItem("DOCS-theme");
+
+      if (savedTheme === "dark") {
+        applyTheme("dark");
+      } else {
+        applyTheme("light");
+      }
+
+      /* Theme switch */
+
+      themeToggle.addEventListener("change", function () {
+        const newTheme = this.checked ? "dark" : "light";
+
+        applyTheme(newTheme);
+
+        localStorage.setItem("DOCS-theme", newTheme);
+      });
+
+      /* =========================
+   DOCSviewer
+   ========================= */
+
+      const SCRIPT_URL =
+        "https://script.google.com/macros/s/AKfycbzIWFNsu6ugUZapOte41HXwSDOfC--TSdXTAWIIg7H19e3bm5svEapdwJHaOqkobFhkDg/exec";
+
+      const params = new URLSearchParams(window.location.search);
+
+      const docsId = params.get("id");
+
+      const docsNode = localStorage.getItem("DOCSnode");
+
+      const viewer = document.getElementById("viewer");
+
+      if (!docsId) {
+        viewer.innerHTML = "<h2>Invalid DOCSid.</h2>";
+      } else if (!docsNode) {
+        viewer.innerHTML = "<h2>This browser has no DOCSlicense.</h2>";
+      } else {
+        fetch(
+          SCRIPT_URL +
+            "?id=" +
+            encodeURIComponent(docsId) +
+            "&node=" +
+            encodeURIComponent(docsNode),
+        )
+          .then((r) => r.json())
+
+          .then((data) => {
+            if (!data.html) {
+              viewer.innerHTML = "<h2>Access denied.</h2>";
+
+              return;
+            }
+
+            viewer.innerHTML = data.html;
+          })
+
+          .catch(() => {
+            viewer.innerHTML = "<h2>Unable to contact DOCSviewer.</h2>";
+          });
+      }
+    </script>
+  </body>
 </html>
