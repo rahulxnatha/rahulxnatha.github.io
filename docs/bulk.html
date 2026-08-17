@@ -1,0 +1,200 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0"
+    />
+
+    <title>DOCScoupon</title>
+
+    <style>
+      * {
+        box-sizing: border-box;
+      }
+
+      html,
+      body {
+        margin: 0;
+        padding: 0;
+
+        width: 100%;
+        height: 100%;
+
+        background: #111;
+        color: #fff;
+      }
+
+      body {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+
+        font-family:
+          "Segoe UI",
+          SegoeUI,
+          "Helvetica Neue",
+          Helvetica,
+          Arial,
+          sans-serif;
+      }
+
+      #status {
+        font-size: 14px;
+        color: #aaa;
+      }
+    </style>
+  </head>
+
+  <body>
+
+    <div id="status">
+      Resolving license...
+    </div>
+
+
+    <script>
+
+      const SCRIPT_URL =
+        "https://script.google.com/macros/s/AKfycbwoI3oBNpF3A620fzNpjLcUMs7H9ONqiN-obJ9TaSbCBy5pbEizuVDeL_smPiIXu9GFfQ/exec";
+
+
+      const params =
+        new URLSearchParams(
+          window.location.search
+        );
+
+
+      const docsId =
+        params.get("id") || "";
+
+
+      const coupon =
+        params.get("coupon") || "";
+
+
+      // ------------------------------------------------
+      // Get persistent DOCSnode
+      // ------------------------------------------------
+
+      let docsNode =
+        localStorage.getItem(
+          "DOCSnode"
+        );
+
+
+      if (!docsNode) {
+
+        docsNode =
+          crypto.randomUUID();
+
+        localStorage.setItem(
+          "DOCSnode",
+          docsNode
+        );
+
+      }
+
+
+      const status =
+        document.getElementById(
+          "status"
+        );
+
+
+      // ------------------------------------------------
+      // Basic validation
+      // ------------------------------------------------
+
+      if (
+        docsId === "" ||
+        coupon === ""
+      ) {
+
+        status.textContent =
+          "Invalid DOCScoupon link.";
+
+      } else {
+
+        resolveCoupon();
+
+      }
+
+
+      // ------------------------------------------------
+      // Resolve coupon
+      // ------------------------------------------------
+
+      function resolveCoupon() {
+
+        const url =
+          SCRIPT_URL +
+          "?id=" +
+          encodeURIComponent(docsId) +
+          "&coupon=" +
+          encodeURIComponent(coupon) +
+          "&node=" +
+          encodeURIComponent(docsNode);
+
+
+        fetch(url)
+
+          .then(response => {
+
+            if (!response.ok) {
+
+              throw new Error(
+                "Request failed"
+              );
+
+            }
+
+            return response.json();
+
+          })
+
+          .then(data => {
+
+            if (
+              !data.success ||
+              !data.url
+            ) {
+
+              status.textContent =
+                "This coupon is invalid or unavailable.";
+
+              return;
+
+            }
+
+
+            // ------------------------------------------------
+            // Redirect
+            // ------------------------------------------------
+
+            window.location.replace(
+              data.url
+            );
+
+          })
+
+          .catch(error => {
+
+            console.error(
+              "DOCScoupon:",
+              error
+            );
+
+            status.textContent =
+              "Unable to contact DOCScoupon.";
+
+          });
+
+      }
+
+    </script>
+
+  </body>
+</html>
