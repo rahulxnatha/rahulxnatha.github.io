@@ -79,36 +79,18 @@
       }
 
       .spinner {
-        width: 60px;
-        height: 60px;
+ visibility: hidden;
+}
 
-        margin: 30px auto;
+@keyframes spin {
+  from {
+    transform: rotate(0deg);
+  }
 
-        border: 5px solid #444;
-        border-top-color: #fff;
-
-        border-radius: 50%;
-
-        animation: spin 1s linear infinite;
-
-        display: inline-block;
-
-        will-change: transform;
-
-        transform: translateZ(0);
-
-        backface-visibility: hidden;
-      }
-
-      @keyframes spin {
-        from {
-          transform: rotate(0deg);
-        }
-
-        to {
-          transform: rotate(360deg);
-        }
-      }
+  to {
+    transform: rotate(360deg);
+  }
+}
 
       #status {
         font-size: 1.1rem;
