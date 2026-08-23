@@ -1,0 +1,2869 @@
+/* =========================================================
+   ROOT
+   ========================================================= */
+
+:root {
+
+    color-scheme: light;
+
+    --page-bg:
+        #f6f6f7;
+
+    --surface:
+        #ffffff;
+
+    --surface-2:
+        #f1f1f3;
+
+    --surface-hover:
+        #e9e9eb;
+
+    --text:
+        #181818;
+
+    --text-secondary:
+        #68686f;
+
+    --text-muted:
+        #8b8b92;
+
+    --border:
+        #d5d5da;
+
+    --border-soft:
+        #e6e6e9;
+
+    --accent:
+        #222222;
+
+    --accent-text:
+        #ffffff;
+
+}
+
+
+/* =========================================================
+   DARK THEME
+   ========================================================= */
+
+@media (prefers-color-scheme: dark) {
+
+    :root {
+
+        color-scheme:
+            dark;
+
+        --page-bg:
+            #101010;
+
+        --surface:
+            #181818;
+
+        --surface-2:
+            #222222;
+
+        --surface-hover:
+            #2a2a2a;
+
+        --text:
+            #eeeeee;
+
+        --text-secondary:
+            #a5a5ad;
+
+        --text-muted:
+            #7d7d85;
+
+        --border:
+            #3b3b3b;
+
+        --border-soft:
+            #2b2b2b;
+
+        --accent:
+            #eeeeee;
+
+        --accent-text:
+            #111111;
+
+    }
+
+
+    .table-container {
+
+    scrollbar-color:
+        #555555
+        transparent;
+
+}
+
+
+.table-container::-webkit-scrollbar-thumb {
+
+    background:
+        #555555;
+
+}
+
+
+.table-container::-webkit-scrollbar-thumb:hover {
+
+    background:
+        #707070;
+
+}
+
+}
+
+
+/* =========================================================
+   RESET
+   ========================================================= */
+
+* {
+    box-sizing:
+        border-box;
+}
+
+
+html,
+body {
+
+    width:
+        100%;
+
+    height:
+        100%;
+
+    margin:
+        0;
+
+    padding:
+        0;
+
+    overflow:
+        hidden;
+
+}
+
+
+body {
+
+    background:
+        var(--page-bg);
+
+    color:
+        var(--text);
+
+    font-family:
+        "Segoe UI",
+        sans-serif;
+
+    font-size:
+        14px;
+
+}
+
+
+button,
+input {
+
+    font-family:
+        inherit;
+
+}
+
+
+button {
+
+    cursor:
+        pointer;
+
+}
+
+
+.hidden {
+
+    display:
+        none !important;
+
+}
+
+
+/* =========================================================
+   APP
+   ========================================================= */
+
+.app {
+
+    width:
+        100%;
+
+    height:
+        100vh;
+
+    display:
+        flex;
+
+    flex-direction:
+        column;
+
+    overflow:
+        hidden;
+
+}
+
+
+/* =========================================================
+   CONTROL BAR
+   ========================================================= */
+
+.control-bar {
+
+    position:
+        relative;
+
+    z-index:
+        1000;
+
+    flex:
+        0 0 auto;
+
+    width:
+        100%;
+
+    min-height:
+        56px;
+
+    padding:
+        8px 20px;
+
+    display:
+        flex;
+
+    align-items:
+        center;
+
+    gap:
+        7px;
+
+    background:
+        var(--surface);
+
+    border-bottom:
+        1px solid var(--border);
+
+}
+
+
+/* =========================================================
+   INDIVIDUAL CONTROL
+   ========================================================= */
+
+.control {
+
+    position:
+        relative;
+
+    flex:
+        0 0 auto;
+
+}
+
+
+
+/* =========================================================
+   HEADER CONTROLS
+   ========================================================= */
+
+/* ---------------------------------------------------------
+   FILTER PILLS
+   --------------------------------------------------------- */
+
+.control-button {
+
+    height:
+        38px;
+
+    min-width:
+        max-content;
+
+    padding:
+        0 15px;
+
+    display:
+        inline-flex;
+
+    align-items:
+        center;
+
+    justify-content:
+        center;
+
+    gap:
+        7px;
+
+    border:
+        1px solid var(--border);
+
+    border-radius:
+        999px;
+
+    background:
+        var(--surface);
+
+    color:
+        var(--text);
+
+    font-family:
+        "Segoe UI",
+        sans-serif;
+
+    font-size:
+        13px;
+
+    font-weight:
+        500;
+
+    line-height:
+        1;
+
+    white-space:
+        nowrap;
+
+    appearance:
+        none;
+
+    -webkit-appearance:
+        none;
+
+    box-shadow:
+        none;
+
+    outline:
+        none;
+
+    cursor:
+        pointer;
+
+    transition:
+        background 0.16s ease,
+        border-color 0.16s ease,
+        color 0.16s ease,
+        transform 0.12s ease;
+}
+
+
+.control-button:hover {
+
+    background:
+        var(--surface-hover);
+
+    border-color:
+        var(--text-muted);
+
+}
+
+
+.control-button:active {
+
+    transform:
+        translateY(1px);
+
+}
+
+
+/* ---------------------------------------------------------
+   RESET
+   --------------------------------------------------------- */
+
+#resetButton {
+
+    height:
+        36px;
+
+    min-width:
+        max-content;
+
+    margin-left:
+        auto;
+
+    padding:
+        0 15px;
+
+    display:
+        inline-flex;
+
+    align-items:
+        center;
+
+    justify-content:
+        center;
+
+    border:
+        1px solid var(--border);
+
+    border-radius:
+        999px;
+
+    background:
+        transparent;
+
+    color:
+        var(--text-secondary);
+
+    font-family:
+        "Segoe UI",
+        sans-serif;
+
+    font-size:
+        13px;
+
+    font-weight:
+        500;
+
+    line-height:
+        1;
+
+    white-space:
+        nowrap;
+
+    appearance:
+        none;
+
+    -webkit-appearance:
+        none;
+
+    box-shadow:
+        none;
+
+    outline:
+        none;
+
+    cursor:
+        pointer;
+
+    transition:
+        background 0.16s ease,
+        border-color 0.16s ease,
+        color 0.16s ease,
+        transform 0.12s ease;
+}
+
+
+#resetButton:hover {
+
+    background:
+        var(--surface-hover);
+
+    border-color:
+        var(--border);
+
+    color:
+        var(--text);
+
+}
+
+
+#resetButton:active {
+
+    transform:
+        translateY(1px);
+
+}
+
+
+/* ---------------------------------------------------------
+   PRINT
+   --------------------------------------------------------- */
+
+#printButton {
+
+    height:
+        36px;
+
+    min-width:
+        max-content;
+
+    margin-left:
+        0;
+
+    padding:
+        0 16px;
+
+    display:
+        inline-flex;
+
+    align-items:
+        center;
+
+    justify-content:
+        center;
+
+    border:
+        1px solid var(--accent);
+
+    border-radius:
+        999px;
+
+    background:
+        var(--accent);
+
+    color:
+        var(--accent-text);
+
+    font-family:
+        "Segoe UI",
+        sans-serif;
+
+    font-size:
+        13px;
+
+    font-weight:
+        600;
+
+    line-height:
+        1;
+
+    white-space:
+        nowrap;
+
+    appearance:
+        none;
+
+    -webkit-appearance:
+        none;
+
+    box-shadow:
+        none;
+
+    outline:
+        none;
+
+    cursor:
+        pointer;
+
+    transition:
+        background 0.16s ease,
+        border-color 0.16s ease,
+        color 0.16s ease,
+        transform 0.12s ease;
+}
+
+
+#printButton:hover {
+
+    background:
+        var(--text);
+
+    border-color:
+        var(--text);
+
+    color:
+        var(--accent-text);
+
+}
+
+
+#printButton:active {
+
+    transform:
+        translateY(1px);
+
+}
+
+
+/* ---------------------------------------------------------
+   FOCUS
+   --------------------------------------------------------- */
+
+.control-button:focus-visible,
+#resetButton:focus-visible,
+#printButton:focus-visible {
+
+    outline:
+        2px solid var(--text-muted);
+
+    outline-offset:
+        2px;
+
+}
+
+
+.control-button::-moz-focus-inner,
+#resetButton::-moz-focus-inner,
+#printButton::-moz-focus-inner {
+
+    border:
+        0;
+
+    padding:
+        0;
+
+}
+
+
+/* =========================================================
+   ARROW
+   ========================================================= */
+
+.arrow {
+
+    display:
+        inline-block;
+
+    color:
+        var(--text-muted);
+
+    font-size:
+        9px;
+
+    line-height:
+        1;
+
+    transition:
+        transform 0.16s ease;
+}
+
+
+.control.open .arrow {
+
+    transform:
+        rotate(180deg);
+
+}
+
+
+
+
+/* =========================================================
+   DROPDOWN
+   ========================================================= */
+
+.dropdown {
+
+    position:
+        absolute;
+
+    top:
+        calc(100% + 8px);
+
+    left:
+        0;
+
+    z-index:
+        3000;
+
+    min-width:
+        220px;
+
+    padding:
+        8px;
+
+    background:
+        var(--surface);
+
+    color:
+        var(--text);
+
+    border:
+        1px solid var(--border);
+
+    border-radius:
+        14px;
+
+    box-shadow:
+        0 14px 36px
+        rgba(0, 0, 0, 0.14);
+
+    opacity:
+        0;
+
+    visibility:
+        hidden;
+
+    pointer-events:
+        none;
+
+    transform:
+        translateY(-6px)
+        scale(0.985);
+
+    transform-origin:
+        top left;
+
+    transition:
+        opacity 0.16s ease,
+        transform 0.16s ease,
+        visibility 0.16s ease;
+
+}
+
+
+.control.open > .dropdown {
+
+    opacity:
+        1;
+
+    visibility:
+        visible;
+
+    pointer-events:
+        auto;
+
+    transform:
+        translateY(0)
+        scale(1);
+
+}
+
+
+/* =========================================================
+   DROPDOWN WIDTHS
+   ========================================================= */
+
+.columns-dropdown {
+
+    width:
+        320px;
+
+    overflow:
+        visible;
+
+}
+
+
+.filter-dropdown {
+
+    width:
+        245px;
+
+    overflow:
+        visible;
+
+}
+
+
+.demands-dropdown {
+
+    width:
+        290px;
+
+    overflow:
+        visible;
+
+}
+
+
+.chapter-dropdown {
+
+    width:
+        405px;
+
+    overflow:
+        visible;
+
+}
+
+
+/* =========================================================
+   DROPDOWN HEADING
+   ========================================================= */
+
+.dropdown-section {
+
+    padding:
+        5px 9px 8px;
+
+    color:
+        var(--text-secondary);
+
+    font-size:
+        11px;
+
+    font-weight:
+        700;
+
+    letter-spacing:
+        0.04em;
+
+}
+
+
+/* =========================================================
+   CHECKBOX OPTIONS
+   ========================================================= */
+
+.dropdown-option {
+
+    min-height:
+        34px;
+
+    padding:
+        5px 9px;
+
+    display:
+        flex;
+
+    align-items:
+        center;
+
+    gap:
+        9px;
+
+    border-radius:
+        8px;
+
+    color:
+        var(--text);
+
+    cursor:
+        pointer;
+
+    user-select:
+        none;
+
+    transition:
+        background 0.12s ease;
+
+}
+
+
+.dropdown-option:hover {
+
+    background:
+        var(--surface-hover);
+
+}
+
+
+.dropdown-option input {
+
+    width:
+        15px;
+
+    height:
+        15px;
+
+    margin:
+        0;
+
+    accent-color:
+        var(--accent);
+
+}
+
+
+/* =========================================================
+   DIVIDER
+   ========================================================= */
+
+.dropdown-divider {
+
+    height:
+        1px;
+
+    margin:
+        8px 2px;
+
+    background:
+        var(--border-soft);
+
+}
+
+
+/* =========================================================
+   ALL / DEFAULT
+   ========================================================= */
+
+.dropdown-actions {
+
+    display:
+        flex;
+
+    gap:
+        7px;
+
+}
+
+
+.dropdown-action {
+
+    min-width:
+        82px;
+
+    height:
+        31px;
+
+    padding:
+        0 13px;
+
+    flex:
+        0 0 auto;
+
+    border:
+        1px solid var(--border);
+
+    border-radius:
+        999px;
+
+    background:
+        var(--surface-2);
+
+    color:
+        var(--text);
+
+    font-size:
+        12px;
+
+    font-weight:
+        600;
+
+    transition:
+        background 0.12s ease,
+        border-color 0.12s ease;
+
+}
+
+
+.dropdown-action:hover {
+
+    background:
+        var(--surface-hover);
+
+    border-color:
+        var(--text-muted);
+
+}
+
+
+.dropdown-action.active {
+
+    background:
+        var(--accent);
+
+    color:
+        var(--accent-text);
+
+    border-color:
+        var(--accent);
+
+}
+
+
+/* =========================================================
+   MORE
+   ========================================================= */
+
+.more-control {
+
+    position:
+        relative;
+
+}
+
+
+.more-button {
+
+    width:
+        100%;
+
+    height:
+        34px;
+
+    padding:
+        0 9px;
+
+    display:
+        flex;
+
+    align-items:
+        center;
+
+    justify-content:
+        space-between;
+
+    border:
+        none;
+
+    border-radius:
+        8px;
+
+    background:
+        transparent;
+
+    color:
+        var(--text);
+
+    font-size:
+        13px;
+
+}
+
+
+.more-button:hover {
+
+    background:
+        var(--surface-hover);
+
+}
+
+
+.more-arrow {
+
+    color:
+        var(--text-muted);
+
+    font-size:
+        16px;
+
+}
+
+
+/* =========================================================
+   MORE SUBMENU
+   ========================================================= */
+
+.more-dropdown {
+
+    position:
+        absolute;
+
+    top:
+        -8px;
+
+    left:
+        calc(100% + 7px);
+
+    z-index:
+        5000;
+
+    width:
+        225px;
+
+    max-height:
+        calc(100vh - 80px);
+
+    overflow-y:
+        auto;
+
+    overflow-x:
+        hidden;
+
+    padding:
+        8px;
+
+    background:
+        var(--surface);
+
+    border:
+        1px solid var(--border);
+
+    border-radius:
+        14px;
+
+    box-shadow:
+        0 14px 36px
+        rgba(0, 0, 0, 0.16);
+
+    opacity:
+        0;
+
+    visibility:
+        hidden;
+
+    pointer-events:
+        none;
+
+    transform:
+        translateX(-6px);
+
+    transition:
+        opacity 0.15s ease,
+        transform 0.15s ease,
+        visibility 0.15s ease;
+
+}
+
+
+.more-control.open >
+.more-dropdown {
+
+    opacity:
+        1;
+
+    visibility:
+        visible;
+
+    pointer-events:
+        auto;
+
+    transform:
+        translateX(0);
+
+}
+
+
+/* =========================================================
+   PRÄSENS / PRÄTERITUM
+   ========================================================= */
+
+.mode-option {
+
+    position:
+        relative;
+
+}
+
+
+.mode-button {
+
+    width:
+        100%;
+
+    height:
+        35px;
+
+    padding:
+        0 9px;
+
+    display:
+        grid;
+
+    grid-template-columns:
+        1fr auto auto;
+
+    align-items:
+        center;
+
+    gap:
+        8px;
+
+    border:
+        none;
+
+    border-radius:
+        8px;
+
+    background:
+        transparent;
+
+    color:
+        var(--text);
+
+    font-size:
+        13px;
+
+    text-align:
+        left;
+
+}
+
+
+.mode-button:hover,
+.mode-option.open .mode-button {
+
+    background:
+        var(--surface-hover);
+
+}
+
+
+.mode-value {
+
+    color:
+        var(--text-secondary);
+
+    font-size:
+        12px;
+
+}
+
+
+.mode-arrow {
+
+    color:
+        var(--text-muted);
+
+    font-size:
+        16px;
+
+}
+
+
+/* =========================================================
+   TENSE SUBMENU
+   ========================================================= */
+
+.mode-submenu {
+
+    position:
+        absolute;
+
+    top:
+        0;
+
+    left:
+        calc(100% + 7px);
+
+    z-index:
+        5500;
+
+    width:
+        125px;
+
+    padding:
+        6px;
+
+    background:
+        var(--surface);
+
+    border:
+        1px solid var(--border);
+
+    border-radius:
+        11px;
+
+    box-shadow:
+        0 14px 36px
+        rgba(0, 0, 0, 0.16);
+
+    opacity:
+        0;
+
+    visibility:
+        hidden;
+
+    pointer-events:
+        none;
+
+    transform:
+        translateX(-5px);
+
+    transition:
+        opacity 0.14s ease,
+        transform 0.14s ease,
+        visibility 0.14s ease;
+
+}
+
+
+.mode-option.open >
+.mode-submenu {
+
+    opacity:
+        1;
+
+    visibility:
+        visible;
+
+    pointer-events:
+        auto;
+
+    transform:
+        translateX(0);
+
+}
+
+
+.mode-choice {
+
+    width:
+        100%;
+
+    height:
+        31px;
+
+    padding:
+        0 9px;
+
+    border:
+        none;
+
+    border-radius:
+        7px;
+
+    background:
+        transparent;
+
+    color:
+        var(--text);
+
+    font-size:
+        12px;
+
+    text-align:
+        left;
+
+}
+
+
+.mode-choice:hover {
+
+    background:
+        var(--surface-hover);
+
+}
+
+
+.mode-choice.selected {
+
+    background:
+        var(--accent);
+
+    color:
+        var(--accent-text);
+
+}
+
+
+/* =========================================================
+   KAPITEL GRID
+   ========================================================= */
+
+.chapter-grid {
+
+    display:
+        grid;
+
+    grid-template-columns:
+        42px repeat(
+            12,
+            minmax(24px, 1fr)
+        );
+
+    gap:
+        3px;
+
+    padding:
+        4px;
+
+}
+
+
+.chapter-grid-cell {
+
+    height:
+        28px;
+
+    display:
+        flex;
+
+    align-items:
+        center;
+
+    justify-content:
+        center;
+
+    font-size:
+        10px;
+
+}
+
+
+.chapter-grid-header {
+
+    color:
+        var(--text-muted);
+
+    font-weight:
+        600;
+
+}
+
+
+.chapter-level {
+
+    justify-content:
+        flex-start;
+
+    padding-left:
+        5px;
+
+    color:
+        var(--text-secondary);
+
+    font-weight:
+        600;
+
+}
+
+
+.chapter-button {
+
+    position:
+        relative;
+
+    width:
+        100%;
+
+    height:
+        28px;
+
+    padding:
+        0;
+
+    border:
+        none;
+
+    border-radius:
+        6px;
+
+    background:
+        transparent;
+
+}
+
+
+.chapter-button::before {
+
+    content:
+        "";
+
+    width:
+        14px;
+
+    height:
+        14px;
+
+    border:
+        1px solid var(--text-muted);
+
+    border-radius:
+        3px;
+
+    background:
+        transparent;
+
+}
+
+
+.chapter-button:hover {
+
+    background:
+        var(--surface-hover);
+
+}
+
+
+.chapter-button.selected::before {
+
+    border-color:
+        var(--accent);
+
+    background:
+        var(--accent);
+
+    box-shadow:
+        inset 0 0 0 3px
+        var(--surface);
+
+}
+
+
+.chapter-button:disabled {
+
+    visibility:
+        hidden;
+
+}
+
+
+/* =========================================================
+   MAIN
+   ========================================================= */
+
+.main-area {
+
+    flex:
+        1 1 auto;
+
+    min-height:
+        0;
+
+    display:
+        flex;
+
+    flex-direction:
+        column;
+
+    overflow:
+        hidden;
+
+}
+
+
+/* =========================================================
+   STATUS BAR
+   ========================================================= */
+
+.filter-status {
+
+    flex:
+        0 0 auto;
+
+    width:
+        fit-content;
+
+    max-width:
+        calc(100% - 40px);
+
+    margin:
+        20px 20px 0;
+
+    padding:
+        8px 16px;
+
+    border:
+        1px solid var(--border);
+
+    border-radius:
+        999px;
+
+    background:
+        var(--surface);
+
+    color:
+        var(--text-secondary);
+
+    font-size:
+        12px;
+
+    white-space:
+        nowrap;
+
+    overflow:
+        hidden;
+
+    text-overflow:
+        ellipsis;
+
+}
+
+
+.filter-status.hidden {
+
+    display:
+        none !important;
+
+}
+
+
+/* =========================================================
+   LOADING / ERROR
+   ========================================================= */
+
+.loading-state,
+.error-state {
+
+    flex:
+        0 0 auto;
+
+    min-height:
+        30px;
+
+    margin:
+        20px;
+
+    display:
+        flex;
+
+    align-items:
+        center;
+
+    color:
+        var(--text-secondary);
+
+}
+
+
+.error-state {
+
+    color:
+        #d45d5d;
+
+}
+
+
+/* =========================================================
+   TABLE
+   ========================================================= */
+
+.table-container {
+
+    flex:
+        1 1 auto;
+
+    min-width:
+        0;
+
+    min-height:
+        0;
+
+    width:
+        fit-content;
+
+    max-width:
+        calc(100vw - 40px);
+
+    margin:
+        20px 20px 20px;
+
+    overflow:
+        auto;
+
+    border:
+        1px solid var(--border);
+
+    border-radius:
+        11px;
+
+    background:
+        var(--surface);
+
+    scrollbar-width:
+        auto;
+
+    scrollbar-color:
+        var(--text-muted)
+        transparent;
+
+}
+
+
+/*
+ * Only when the table is genuinely wider than
+ * the viewport do we use the 5px side margin.
+ */
+
+.table-container.wide-table {
+
+    width:
+        calc(100vw - 10px);
+
+    max-width:
+        calc(100vw - 10px);
+
+    margin-left:
+        5px;
+
+    margin-right:
+        5px;
+
+}
+
+/* =========================================================
+   TABLE SCROLLBAR
+   ========================================================= */
+
+.table-container {
+
+    scrollbar-width:
+        thin;
+
+    scrollbar-color:
+        #aaaaaa
+        transparent;
+
+}
+
+
+.table-container::-webkit-scrollbar {
+
+    width:
+        10px;
+
+    height:
+        10px;
+
+}
+
+
+.table-container::-webkit-scrollbar-track {
+
+    background:
+        transparent;
+
+}
+
+
+.table-container::-webkit-scrollbar-thumb {
+
+    background:
+        #aaaaaa;
+
+    border-radius:
+        999px;
+
+}
+
+
+.table-container::-webkit-scrollbar-thumb:hover {
+
+    background:
+        #888888;
+
+}
+
+/* =========================================================
+   TABLE ITSELF
+   ========================================================= */
+
+#verbTable {
+
+    width:
+        max-content;
+
+    min-width:
+        max-content;
+
+    table-layout:
+        auto;
+
+    border-collapse:
+        separate;
+
+    border-spacing:
+        0;
+
+    font-family:
+        "Segoe UI",
+        sans-serif;
+
+    font-size:
+        14px;
+
+}
+
+/* =========================================================
+   STICKY TABLE HEADERS
+   ========================================================= */
+
+#verbTable thead {
+
+    position:
+        sticky;
+
+    top:
+        0;
+
+    z-index:
+        50;
+
+}
+
+
+#groupHeader th {
+
+    position:
+        sticky;
+
+    top:
+        0;
+
+    z-index:
+        52;
+
+    padding:
+        9px 14px 5px;
+
+    background:
+        var(--surface-2);
+
+    color:
+        var(--text-secondary);
+
+    font-size:
+        14px;
+
+    font-weight:
+        600;
+
+    line-height:
+        1.3;
+
+    text-align:
+        left;
+
+    white-space:
+        nowrap;
+
+    border:
+        none;
+
+    border-bottom:
+        1px solid var(--border-soft);
+
+}
+
+
+#columnHeader th {
+
+    position:
+        sticky;
+
+    top:
+        31px;
+
+    z-index:
+        51;
+
+    padding:
+        5px 14px 10px;
+
+    background:
+        var(--surface-2);
+
+    color:
+        var(--text);
+
+    font-size:
+        14px;
+
+    font-weight:
+        500;
+
+    line-height:
+        1.3;
+
+    text-align:
+        left;
+
+    white-space:
+        nowrap;
+
+    border:
+        none;
+
+    border-bottom:
+        1px solid var(--border);
+
+}
+
+/* =========================================================
+   TABLE BODY
+   ========================================================= */
+
+#verbTable td {
+
+    padding:
+        8px 14px;
+
+    text-align:
+        left;
+
+    white-space:
+        nowrap;
+
+    border:
+        none;
+
+    background:
+        var(--surface);
+
+    color:
+        var(--text);
+
+}
+
+
+#verbTable tbody tr,
+#verbTable tbody tr:nth-child(even),
+#verbTable tbody tr:nth-child(odd) {
+
+    background:
+        var(--surface);
+
+    animation:
+        rowAppear 0.16s ease both;
+
+}
+
+
+#verbTable tbody tr:hover,
+#verbTable tbody tr:hover td {
+
+    background:
+        var(--surface-hover);
+
+}
+
+
+#verbTable td.infinitiv-cell {
+
+    font-weight:
+        700;
+
+}
+
+
+@keyframes rowAppear {
+
+    from {
+
+        opacity:
+            0;
+
+        transform:
+            translateY(2px);
+
+    }
+
+    to {
+
+        opacity:
+            1;
+
+        transform:
+            translateY(0);
+
+    }
+
+}
+
+
+/* =========================================================
+   PRINT MODAL
+   ========================================================= */
+
+.print-modal {
+
+    position:
+        fixed;
+
+    inset:
+        0;
+
+    z-index:
+        6000;
+
+    display:
+        flex;
+
+    align-items:
+        center;
+
+    justify-content:
+        center;
+
+}
+
+
+.print-modal.hidden {
+
+    display:
+        none !important;
+
+}
+
+
+.print-modal-backdrop {
+
+    position:
+        absolute;
+
+    inset:
+        0;
+
+    background:
+        rgba(0, 0, 0, 0.45);
+
+    backdrop-filter:
+        blur(4px);
+
+}
+
+
+.print-dialog {
+
+    position:
+        relative;
+
+    z-index:
+        1;
+
+    width:
+        360px;
+
+    max-width:
+        calc(100vw - 40px);
+
+    background:
+        var(--surface);
+
+    color:
+        var(--text);
+
+    border:
+        1px solid var(--border);
+
+    border-radius:
+        15px;
+
+    box-shadow:
+        0 22px 65px
+        rgba(0, 0, 0, 0.28);
+
+    overflow:
+        hidden;
+
+}
+
+
+.print-dialog-header {
+
+    height:
+        52px;
+
+    padding:
+        0 15px;
+
+    display:
+        flex;
+
+    align-items:
+        center;
+
+    justify-content:
+        space-between;
+
+    border-bottom:
+        1px solid var(--border);
+
+    font-weight:
+        600;
+
+}
+
+
+.print-close {
+
+    width:
+        30px;
+
+    height:
+        30px;
+
+    border:
+        none;
+
+    border-radius:
+        50%;
+
+    background:
+        transparent;
+
+    color:
+        var(--text-secondary);
+
+    font-size:
+        19px;
+
+}
+
+
+.print-close:hover {
+
+    background:
+        var(--surface-hover);
+
+}
+
+
+.print-dialog-body {
+
+    padding:
+        17px;
+
+}
+
+
+.print-setting {
+
+    margin-bottom:
+        17px;
+
+}
+
+
+.print-setting-title {
+
+    margin-bottom:
+        7px;
+
+    color:
+        var(--text-secondary);
+
+    font-size:
+        11px;
+
+    font-weight:
+        600;
+
+    text-transform:
+        uppercase;
+
+}
+
+
+.print-radio {
+
+    min-height:
+        31px;
+
+    display:
+        flex;
+
+    align-items:
+        center;
+
+    gap:
+        8px;
+
+    color:
+        var(--text);
+
+    font-size:
+        13px;
+
+}
+
+
+.print-radio input {
+
+    accent-color:
+        var(--accent);
+
+}
+
+
+.print-summary {
+
+    padding:
+        9px 11px;
+
+    border:
+        1px solid var(--border);
+
+    border-radius:
+        8px;
+
+    background:
+        var(--surface-2);
+
+    color:
+        var(--text-secondary);
+
+    font-size:
+        11px;
+
+}
+
+
+.print-dialog-footer {
+
+    padding:
+        11px 15px;
+
+    display:
+        flex;
+
+    justify-content:
+        flex-end;
+
+    gap:
+        7px;
+
+    border-top:
+        1px solid var(--border);
+
+}
+
+
+.print-dialog-button {
+
+    height:
+        35px;
+
+    padding:
+        0 14px;
+
+    border:
+        1px solid var(--border);
+
+    border-radius:
+        999px;
+
+    background:
+        var(--surface);
+
+    color:
+        var(--text);
+
+    font-size:
+        12px;
+
+}
+
+
+.print-dialog-button.primary {
+
+    background:
+        var(--accent);
+
+    border-color:
+        var(--accent);
+
+    color:
+        var(--accent-text);
+
+}
+
+
+/* =========================================================
+   SCREEN FOOTER
+   ========================================================= */
+
+.print-footer {
+
+    display:
+        none;
+
+}
+
+
+/* =========================================================
+   RESPONSIVE
+   ========================================================= */
+
+@media (max-width: 850px) {
+
+    .control-bar {
+
+        padding-left:
+            12px;
+
+        padding-right:
+            12px;
+
+    }
+
+
+    .filter-status {
+
+        max-width:
+            calc(100% - 24px);
+
+        margin-left:
+            12px;
+
+        margin-right:
+            12px;
+
+    }
+
+
+    .table-container {
+
+        max-width:
+            calc(100vw - 24px);
+
+        margin-left:
+            12px;
+
+        margin-right:
+            12px;
+
+    }
+
+
+    .reset-button {
+
+        margin-left:
+            0;
+
+    }
+
+
+    .more-dropdown,
+    .mode-submenu {
+
+        left:
+            auto;
+
+        right:
+            calc(100% + 7px);
+
+    }
+
+}
+
+
+/* =========================================================
+   PRINT
+   ========================================================= */
+
+@media print {
+
+    @page {
+
+        margin:
+            10mm;
+
+    }
+
+
+    /* =====================================================
+       PRINT BASE
+       ===================================================== */
+
+    html,
+    body {
+
+        width:
+            auto;
+
+        height:
+            auto;
+
+        margin:
+            0;
+
+        padding:
+            0;
+
+        overflow:
+            visible !important;
+
+        background:
+            #ffffff !important;
+
+        color:
+            #000000 !important;
+
+        font-family:
+            "Segoe UI",
+            sans-serif !important;
+
+        font-size:
+            14px !important;
+
+        line-height:
+            1.35 !important;
+
+    }
+
+
+    /* =====================================================
+       APPLICATION
+       ===================================================== */
+
+    .app {
+
+        width:
+            auto;
+
+        height:
+            auto;
+
+        display:
+            block;
+
+        overflow:
+            visible !important;
+
+    }
+
+
+    /* =====================================================
+       HIDE SCREEN UI
+       ===================================================== */
+
+    .control-bar,
+    .filter-status,
+    .loading-state,
+    .error-state,
+    .print-modal {
+
+        display:
+            none !important;
+
+    }
+
+
+    /* =====================================================
+       MAIN
+       ===================================================== */
+
+    .main-area {
+
+        display:
+            block !important;
+
+        width:
+            auto !important;
+
+        height:
+            auto !important;
+
+        margin:
+            0 !important;
+
+        padding:
+            0 !important;
+
+        overflow:
+            visible !important;
+
+    }
+
+
+    /* =====================================================
+       TABLE CONTAINER
+       =====================================================
+
+       The table determines its own natural width.
+
+       It is NOT 100% of the printable page.
+       */
+
+    .table-container {
+
+        display:
+            block !important;
+
+        width:
+            fit-content !important;
+
+        min-width:
+            0 !important;
+
+        max-width:
+            none !important;
+
+        height:
+            auto !important;
+
+        min-height:
+            0 !important;
+
+        margin:
+            0 !important;
+
+        padding:
+            0 !important;
+
+        overflow:
+            visible !important;
+
+        border:
+            none !important;
+
+        border-radius:
+            0 !important;
+
+        box-shadow:
+            none !important;
+
+        background:
+            #ffffff !important;
+
+    }
+
+
+    /* =====================================================
+       TABLE
+       ===================================================== */
+
+    #verbTable {
+
+        display:
+            table !important;
+
+        width:
+            max-content !important;
+
+        min-width:
+            0 !important;
+
+        max-width:
+            none !important;
+
+        margin:
+            0 !important;
+
+        padding:
+            0 !important;
+
+        table-layout:
+            auto !important;
+
+        border-collapse:
+            separate !important;
+
+        border-spacing:
+            0 !important;
+
+        font-family:
+            "Segoe UI",
+            sans-serif !important;
+
+        font-size:
+            14px !important;
+
+        line-height:
+            1.35 !important;
+
+    }
+
+
+    /* =====================================================
+       TABLE HEAD
+       ===================================================== */
+
+    #verbTable thead {
+
+        position:
+            static !important;
+
+        display:
+            table-header-group !important;
+
+    }
+
+
+    #groupHeader th {
+
+        position:
+            static !important;
+
+        height:
+            auto !important;
+
+        padding:
+            6px 11px !important;
+
+        background:
+            #f1f1f1 !important;
+
+        color:
+            #000000 !important;
+
+        border:
+            none !important;
+
+        font-family:
+            "Segoe UI",
+            sans-serif !important;
+
+        font-size:
+            14px !important;
+
+        font-weight:
+            600 !important;
+
+        line-height:
+            1.35 !important;
+
+        text-align:
+            left !important;
+
+        white-space:
+            nowrap !important;
+
+    }
+
+
+    #columnHeader th {
+
+        position:
+            static !important;
+
+        height:
+            auto !important;
+
+        padding:
+            7px 11px !important;
+
+        background:
+            #f7f7f7 !important;
+
+        color:
+            #000000 !important;
+
+        border:
+            none !important;
+
+        font-family:
+            "Segoe UI",
+            sans-serif !important;
+
+        font-size:
+            14px !important;
+
+        font-weight:
+            400 !important;
+
+        line-height:
+            1.35 !important;
+
+        text-align:
+            left !important;
+
+        white-space:
+            nowrap !important;
+
+    }
+
+
+    /* =====================================================
+       TABLE BODY
+       ===================================================== */
+
+    #verbTable tbody {
+
+        display:
+            table-row-group !important;
+
+    }
+
+
+    #verbTable tbody tr {
+
+        display:
+            table-row !important;
+
+        break-inside:
+            avoid !important;
+
+        page-break-inside:
+            avoid !important;
+
+        animation:
+            none !important;
+
+        background:
+            #ffffff !important;
+
+    }
+
+
+    #verbTable tbody tr:nth-child(even),
+    #verbTable tbody tr:nth-child(odd) {
+
+        background:
+            #ffffff !important;
+
+    }
+
+
+    #verbTable tbody tr:hover,
+    #verbTable tbody tr:hover td {
+
+        background:
+            #ffffff !important;
+
+    }
+
+
+    #verbTable td {
+
+        padding:
+            8px 11px !important;
+
+        background:
+            #ffffff !important;
+
+        color:
+            #000000 !important;
+
+        border:
+            none !important;
+
+        font-family:
+            "Segoe UI",
+            sans-serif !important;
+
+        font-size:
+            14px !important;
+
+        font-weight:
+            400 !important;
+
+        line-height:
+            1.35 !important;
+
+        text-align:
+            left !important;
+
+        white-space:
+            nowrap !important;
+
+    }
+
+
+    #verbTable td.infinitiv-cell {
+
+        font-weight:
+            700 !important;
+
+    }
+
+
+    /* =====================================================
+       FINAL DOCUMENT FOOTER
+       =====================================================
+
+       This is OUTSIDE the table container.
+
+       It therefore:
+       • does not affect table width
+       • gets the full printable width
+       • wraps naturally
+       • appears once at the end
+       */
+
+    .print-footer {
+
+        display:
+            block !important;
+
+        width:
+            100% !important;
+
+        max-width:
+            100% !important;
+
+        margin:
+            7mm 0 0 0 !important;
+
+        padding:
+            3mm 0 0 0 !important;
+
+        border-top:
+            0.75pt solid #888888 !important;
+
+        background:
+            transparent !important;
+
+        color:
+            #333333 !important;
+
+        font-family:
+            "Segoe UI",
+            sans-serif !important;
+
+        font-size:
+            14px !important;
+
+        font-weight:
+            400 !important;
+
+        line-height:
+            1.35 !important;
+
+        white-space:
+            normal !important;
+
+        overflow:
+            visible !important;
+
+        break-inside:
+            avoid !important;
+
+        page-break-inside:
+            avoid !important;
+
+    }
+
+
+    /* =====================================================
+       FOOTER NOTE
+       ===================================================== */
+
+    .print-footer .print-note {
+
+        display:
+            block !important;
+
+        width:
+            100% !important;
+
+        max-width:
+            100% !important;
+
+        margin:
+            0 0 1.5mm 0 !important;
+
+        padding:
+            0 !important;
+
+        font-family:
+            inherit !important;
+
+        font-size:
+            inherit !important;
+
+        font-weight:
+            400 !important;
+
+        line-height:
+            inherit !important;
+
+        color:
+            #333333 !important;
+
+        white-space:
+            normal !important;
+
+        overflow:
+            visible !important;
+
+    }
+
+
+    /* =====================================================
+       FOOTER CREDIT
+       ===================================================== */
+
+    .print-footer .print-credit {
+
+        display:
+            block !important;
+
+        width:
+            100% !important;
+
+        max-width:
+            100% !important;
+
+        margin:
+            0 !important;
+
+        padding:
+            0 !important;
+
+        font-family:
+            inherit !important;
+
+        font-size:
+            inherit !important;
+
+        font-weight:
+            400 !important;
+
+        line-height:
+            inherit !important;
+
+        color:
+            #666666 !important;
+
+        white-space:
+            normal !important;
+
+        overflow:
+            visible !important;
+
+    }
+
+}
