@@ -27,6 +27,10 @@ const COLUMN_DEFINITIONS = {
         label: '#'
     },
 
+      level: {
+        label: 'level'
+    },
+
     type: {
         label: 'type'
     },
@@ -99,6 +103,16 @@ const FILTER_VALUES = {
 
 };
 
+
+/* =========================================================
+   LUCKY MODE
+   ========================================================= */
+
+let luckyMode =
+    false;
+
+let luckyRows =
+    [];
 
 /* =========================================================
    DEFAULT COLUMN STATE
@@ -780,15 +794,16 @@ function buildColumnDropdown() {
     );
 
 
-    [
-        'number',
-        'type',
-        'chapter',
-        'importance',
-        'demands',
-        'trennbar',
-        'auxiliary'
-    ].forEach(
+   [
+    'number',
+    'level',
+    'type',
+    'chapter',
+    'importance',
+    'demands',
+    'trennbar',
+    'auxiliary'
+].forEach(
         id => {
 
             createColumnCheckbox(
@@ -1391,10 +1406,13 @@ function buildChapterGrid() {
    CHAPTER ACTIONS
    ========================================================= */
 
-function toggleChapter(
+   function toggleChapter(
     level,
     chapter
 ) {
+
+    exitLuckyMode();
+
 
     const key =
         level +
@@ -1430,6 +1448,9 @@ function toggleChapter(
 
 function setAllChapters() {
 
+    exitLuckyMode();
+
+
     selectedChapters.clear();
 
 
@@ -1449,6 +1470,9 @@ function setAllChapters() {
 
 
 function setDefaultChapters() {
+
+    exitLuckyMode();
+
 
     selectedChapters.clear();
 
@@ -1497,11 +1521,13 @@ function syncChapterGrid() {
 /* =========================================================
    FILTER ACTIONS
    ========================================================= */
-
 function toggleFilter(
     filter,
     value
 ) {
+
+    exitLuckyMode();
+
 
     if (
         filter ===
@@ -1640,14 +1666,16 @@ function toggleFilter(
 
 }
 
-
 /* =========================================================
    ALL FILTER
    ========================================================= */
 
-function setAllFilter(
+   function setAllFilter(
     filter
 ) {
+
+    exitLuckyMode();
+
 
     if (
         filter ===
@@ -1723,9 +1751,12 @@ function setAllFilter(
    DEFAULT FILTER
    ========================================================= */
 
-function setDefaultFilter(
+   function setDefaultFilter(
     filter
 ) {
+
+    exitLuckyMode();
+
 
     if (
         filter ===
@@ -2201,6 +2232,21 @@ function getVisibleColumnKeys() {
 
     }
 
+    if (
+    selectedColumns.has(
+        'level'
+    ) &&
+    validIndex(
+        columnMap.level
+    )
+) {
+
+    keys.push(
+        columnMap.level
+    );
+
+}
+
 
     if (
         selectedColumns.has(
@@ -2446,6 +2492,14 @@ function getColumnLabel(
 
     }
 
+    if (
+    index ===
+    columnMap.level
+) {
+
+    return 'level';
+
+}
 
     if (
         index ===
@@ -2680,6 +2734,129 @@ function getColumnGroup(
 
 }
 
+/* =========================================================
+   LUCKY MODE
+   ========================================================= */
+
+function pickLuckyRows() {
+
+    const shuffled =
+        [...rows];
+
+
+    /*
+     * Fisher-Yates shuffle.
+     *
+     * The original rows array is never modified.
+     */
+
+    for (
+        let i = shuffled.length - 1;
+        i > 0;
+        i--
+    ) {
+
+        const j =
+            Math.floor(
+                Math.random() *
+                (i + 1)
+            );
+
+
+        [
+            shuffled[i],
+            shuffled[j]
+        ] = [
+            shuffled[j],
+            shuffled[i]
+        ];
+
+    }
+
+
+    return shuffled.slice(
+        0,
+        Math.min(
+            10,
+            shuffled.length
+        )
+    );
+
+}
+
+
+function exitLuckyMode() {
+
+    luckyMode =
+        false;
+
+    luckyRows =
+        [];
+
+
+    const button =
+        document.getElementById(
+            'luckyButton'
+        );
+
+
+    if (button) {
+
+        button.classList.remove(
+            'lucky-active'
+        );
+
+    }
+
+}
+
+
+function activateLuckyMode() {
+
+    luckyMode =
+        true;
+
+    luckyRows =
+        pickLuckyRows();
+
+
+    const button =
+        document.getElementById(
+            'luckyButton'
+        );
+
+
+    if (button) {
+
+        button.classList.add(
+            'lucky-active'
+        );
+
+    }
+
+
+    closeAllMenus();
+
+    renderTable();
+
+}
+
+
+function getDisplayedRows() {
+
+    if (
+        luckyMode
+    ) {
+
+        return luckyRows;
+
+    }
+
+
+    return getFilteredRows();
+
+}
+
 
 /* =========================================================
    RENDER TABLE
@@ -2871,8 +3048,11 @@ function renderTable() {
      * Rows.
      */
 
-    const filteredRows =
-        getFilteredRows();
+    // const filteredRows =
+    //     getFilteredRows();
+
+        const filteredRows =
+    getDisplayedRows();
 
 
     filteredRows.forEach(
@@ -3033,6 +3213,32 @@ function updateStatus(
     }
 
 
+    /*
+     * Lucky mode has its own status.
+     *
+     * Normal row filters are intentionally
+     * not mentioned here because they are
+     * not controlling the displayed rows.
+     */
+
+    if (
+        luckyMode
+    ) {
+
+        status.textContent =
+            'Lucky selection, ' +
+            count +
+            ' random verbs';
+
+        status.classList.remove(
+            'hidden'
+        );
+
+        return;
+
+    }
+
+
     const parts =
         [];
 
@@ -3134,10 +3340,6 @@ function updateStatus(
 
     }
 
-
-    /*
-     * Level / chapter.
-     */
 
     if (
         selectedChapters.size > 0
@@ -3302,18 +3504,19 @@ function resetColumns() {
 
 function showAllColumns() {
 
-    selectedColumns =
-        new Set([
-            'number',
-            'type',
-            'chapter',
-            'importance',
-            'demands',
-            'trennbar',
-            'auxiliary',
-            'english',
-            'partizip'
-        ]);
+ selectedColumns =
+    new Set([
+        'number',
+        'level',
+        'type',
+        'chapter',
+        'importance',
+        'demands',
+        'trennbar',
+        'auxiliary',
+        'english',
+        'partizip'
+    ]);
 
 
     presentMode =
@@ -3336,6 +3539,9 @@ function showAllColumns() {
    ========================================================= */
 
 function resetEverything() {
+
+    exitLuckyMode();
+
 
     selectedColumns =
         new Set(
@@ -3858,6 +4064,9 @@ function closeAllMenus() {
         );
 
 
+
+
+
     /*
      * =====================================================
      * RESET
@@ -3881,6 +4090,29 @@ function closeAllMenus() {
             }
         );
 
+
+            /*
+     * =====================================================
+     * I'M FEELING LUCKY
+     * =====================================================
+     */
+
+    document
+        .getElementById(
+            'luckyButton'
+        )
+        .addEventListener(
+            'click',
+            event => {
+
+                event.stopPropagation();
+
+                closeAllMenus();
+
+                activateLuckyMode();
+
+            }
+        );
 
     /*
      * =====================================================
@@ -4105,8 +4337,11 @@ function closePrintSettings() {
 
 function updatePrintSummary() {
 
-    const rowCount =
-        getFilteredRows().length;
+    // const rowCount =
+    //     getFilteredRows().length;
+
+        const rowCount =
+    getDisplayedRows().length;
 
 
     const columnCount =

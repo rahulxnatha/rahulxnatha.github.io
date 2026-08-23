@@ -372,6 +372,134 @@ button {
 
 }
 
+/* ---------------------------------------------------------
+   I'M FEELING LUCKY
+   --------------------------------------------------------- */
+
+#luckyButton {
+
+    height:
+        36px;
+
+    min-width:
+        max-content;
+
+    margin-left:
+        auto;
+
+    padding:
+        0 15px;
+
+    display:
+        inline-flex;
+
+    align-items:
+        center;
+
+    justify-content:
+        center;
+
+    border:
+        1px solid var(--border);
+
+    border-radius:
+        999px;
+
+    background:
+        transparent;
+
+    color:
+        var(--text-secondary);
+
+    font-family:
+        "Segoe UI",
+        sans-serif;
+
+    font-size:
+        13px;
+
+    font-weight:
+        500;
+
+    line-height:
+        1;
+
+    white-space:
+        nowrap;
+
+    appearance:
+        none;
+
+    -webkit-appearance:
+        none;
+
+    box-shadow:
+        none;
+
+    outline:
+        none;
+
+    cursor:
+        pointer;
+
+    transition:
+        background 0.16s ease,
+        border-color 0.16s ease,
+        color 0.16s ease,
+        transform 0.12s ease;
+}
+
+
+#luckyButton:hover {
+
+    background:
+        var(--surface-hover);
+
+    border-color:
+        var(--border);
+
+    color:
+        var(--text);
+
+}
+
+
+#luckyButton:active {
+
+    transform:
+        translateY(1px);
+
+}
+
+
+#luckyButton.lucky-active {
+
+    background:
+        var(--accent);
+
+    border-color:
+        var(--accent);
+
+    color:
+        var(--accent-text);
+
+}
+
+
+#luckyButton.lucky-active:hover {
+
+    background:
+        var(--text);
+
+    border-color:
+        var(--text);
+
+    color:
+        var(--accent-text);
+
+}
+
+
 
 /* ---------------------------------------------------------
    RESET
@@ -577,7 +705,10 @@ button {
    FOCUS
    --------------------------------------------------------- */
 
+
+
 .control-button:focus-visible,
+#luckyButton:focus-visible,
 #resetButton:focus-visible,
 #printButton:focus-visible {
 
@@ -590,7 +721,10 @@ button {
 }
 
 
+
+
 .control-button::-moz-focus-inner,
+#luckyButton::-moz-focus-inner,
 #resetButton::-moz-focus-inner,
 #printButton::-moz-focus-inner {
 
@@ -2379,16 +2513,60 @@ button {
        HIDE SCREEN UI
        ===================================================== */
 
+    
+
+
     .control-bar,
-    .filter-status,
-    .loading-state,
-    .error-state,
-    .print-modal {
+.loading-state,
+.error-state,
+.print-modal {
 
-        display:
-            none !important;
+    display:
+        none !important;
 
-    }
+}
+
+.filter-status {
+
+    display:
+        flex !important;
+
+    width:
+        auto !important;
+
+    max-width:
+        none !important;
+
+    margin:
+        0 0 6mm 0 !important;
+
+    padding:
+        0 !important;
+
+    border:
+        none !important;
+
+    border-radius:
+        0 !important;
+
+    background:
+        transparent !important;
+
+    box-shadow:
+        none !important;
+
+    color:
+        #000000 !important;
+
+    font-size:
+        10pt !important;
+
+    font-weight:
+        500 !important;
+
+    white-space:
+        normal !important;
+}
 
 
     /* =====================================================
