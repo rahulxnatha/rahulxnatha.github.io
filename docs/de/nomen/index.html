@@ -1,0 +1,691 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>German Nouns</title>
+
+    <link
+        rel="stylesheet"
+        href="nouns.css"
+    >
+<link
+    href="https://fonts.googleapis.com/css2?family=Roboto+Condensed:wght@400;500;600&display=swap"
+    rel="stylesheet"
+>
+</head>
+
+
+<body>
+
+<div class="app">
+
+
+    <!-- =================================================
+         CONTROL BAR
+         ================================================= -->
+
+    <header class="control-bar">
+
+
+        <!-- =================================================
+             COLUMNS
+             ================================================= -->
+
+        <div
+            class="control"
+            id="columnsControl"
+        >
+
+            <button
+                type="button"
+                class="control-button"
+            >
+                <span>columns</span>
+                <span class="arrow">▼</span>
+            </button>
+
+
+            <div
+                class="dropdown columns-dropdown"
+            >
+
+                <div class="dropdown-section">
+                    columns
+                </div>
+
+
+                <div id="mainColumnOptions"></div>
+
+
+                <div class="more-control">
+
+                    <button
+                        type="button"
+                        class="more-button"
+                        id="moreButton"
+                    >
+                        <span>more</span>
+                        <span class="more-arrow">›</span>
+                    </button>
+
+
+                    <div
+                        class="more-dropdown"
+                        id="moreColumnOptions"
+                    ></div>
+
+                </div>
+
+
+                <div class="dropdown-divider"></div>
+
+
+                <div class="dropdown-actions">
+
+                    <button
+                        type="button"
+                        class="dropdown-action"
+                        id="showAllColumns"
+                    >
+                        all
+                    </button>
+
+
+                    <button
+                        type="button"
+                        class="dropdown-action"
+                        id="defaultColumns"
+                    >
+                        default
+                    </button>
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+
+        <!-- =================================================
+             LEVEL
+             ================================================= -->
+
+        <div class="control">
+
+            <button
+                type="button"
+                class="control-button"
+            >
+                <span>level</span>
+                <span class="arrow">▼</span>
+            </button>
+
+
+            <div
+                class="dropdown filter-dropdown"
+                id="levelDropdown"
+            >
+
+                <div class="dropdown-section">
+                    level
+                </div>
+
+
+                <div id="levelOptions"></div>
+
+
+                <div class="dropdown-divider"></div>
+
+
+                <div class="dropdown-actions">
+
+                    <button
+                        type="button"
+                        class="dropdown-action"
+                        data-all-filter="level"
+                    >
+                        all
+                    </button>
+
+
+                    <button
+                        type="button"
+                        class="dropdown-action"
+                        data-default-filter="level"
+                    >
+                        default
+                    </button>
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+
+        <!-- =================================================
+             KAPITEL
+             ================================================= -->
+
+        <div class="control">
+
+            <button
+                type="button"
+                class="control-button"
+            >
+                <span>Kapitel</span>
+                <span class="arrow">▼</span>
+            </button>
+
+
+            <div
+                class="dropdown filter-dropdown"
+                id="chapterDropdown"
+            >
+
+                <div class="dropdown-section">
+                    Kapitel
+                </div>
+
+
+                <div id="chapterOptions"></div>
+
+
+                <div class="dropdown-divider"></div>
+
+
+                <div class="dropdown-actions">
+
+                    <button
+                        type="button"
+                        class="dropdown-action"
+                        data-all-filter="chapter"
+                    >
+                        all
+                    </button>
+
+
+                    <button
+                        type="button"
+                        class="dropdown-action"
+                        data-default-filter="chapter"
+                    >
+                        default
+                    </button>
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+
+        <!-- =================================================
+             THEMA
+             ================================================= -->
+
+        <div class="control">
+
+            <button
+                type="button"
+                class="control-button"
+            >
+                <span>Thema</span>
+                <span class="arrow">▼</span>
+            </button>
+
+
+            <div
+                class="dropdown filter-dropdown"
+                id="themeDropdown"
+            >
+
+                <div class="dropdown-section">
+                    Thema
+                </div>
+
+
+                <div id="themeOptions"></div>
+
+
+                <div class="dropdown-divider"></div>
+
+
+                <div class="dropdown-actions">
+
+                    <button
+                        type="button"
+                        class="dropdown-action"
+                        data-all-filter="theme"
+                    >
+                        all
+                    </button>
+
+
+                    <button
+                        type="button"
+                        class="dropdown-action"
+                        data-default-filter="theme"
+                    >
+                        default
+                    </button>
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+
+        <!-- =================================================
+             IMPORTANCE
+             ================================================= -->
+
+        <div class="control">
+
+            <button
+                type="button"
+                class="control-button"
+            >
+                <span>importance</span>
+                <span class="arrow">▼</span>
+            </button>
+
+
+            <div
+                class="dropdown filter-dropdown"
+            >
+
+                <div class="dropdown-section">
+                    importance
+                </div>
+
+
+                <label class="dropdown-option">
+
+                    <input
+                        type="checkbox"
+                        value="must know"
+                        data-filter="importance"
+                    >
+
+                    <span>must know</span>
+
+                </label>
+
+
+                <label class="dropdown-option">
+
+                    <input
+                        type="checkbox"
+                        value="good to know"
+                        data-filter="importance"
+                    >
+
+                    <span>good to know</span>
+
+                </label>
+
+
+                <label class="dropdown-option">
+
+                    <input
+                        type="checkbox"
+                        value="ignore"
+                        data-filter="importance"
+                    >
+
+                    <span>ignore</span>
+
+                </label>
+
+
+                <div class="dropdown-divider"></div>
+
+
+                <div class="dropdown-actions">
+
+                    <button
+                        type="button"
+                        class="dropdown-action"
+                        data-all-filter="importance"
+                    >
+                        all
+                    </button>
+
+
+                    <button
+                        type="button"
+                        class="dropdown-action"
+                        data-default-filter="importance"
+                    >
+                        default
+                    </button>
+
+                </div>
+
+            </div>
+
+        </div>
+
+<button
+    type="button"
+    class="header-action"
+    id="grammarReferenceButton"
+>
+    grammar reference
+</button>
+
+        <!-- =================================================
+             RESET / PRINT
+             ================================================= -->
+
+        <button
+            type="button"
+            class="header-action"
+            id="resetButton"
+        >
+            reset
+        </button>
+
+
+        <button
+            type="button"
+            class="header-action print-header-button"
+            id="printButton"
+        >
+            print
+        </button>
+
+
+    </header>
+
+
+
+    <!-- =====================================================
+         MAIN
+         ===================================================== -->
+
+    <main class="main-area">
+
+
+        <!-- =================================================
+             STATUS
+             ================================================= -->
+
+        <div
+            id="filterStatus"
+            class="filter-status hidden"
+        ></div>
+
+
+        <!-- =================================================
+             LOADING
+             ================================================= -->
+
+        <div
+            id="loading"
+            class="loading-state"
+        >
+            Loading…
+        </div>
+
+
+        <!-- =================================================
+             ERROR
+             ================================================= -->
+
+        <div
+            id="error"
+            class="error-state hidden"
+        ></div>
+
+
+
+        <!-- =====================================================
+     GRAMMAR REFERENCE
+     ===================================================== -->
+
+<div
+    id="grammarReferenceContainer"
+    class="grammar-reference-container hidden"
+>
+    <table
+        id="grammarReferenceTable"
+        class="grammar-reference-table"
+    ></table>
+</div>
+       
+
+        <!-- =================================================
+             TABLE
+             ================================================= -->
+
+        <div
+            id="tableContainer"
+            class="table-container hidden"
+        >
+
+
+ 
+       
+
+
+
+
+            <table id="nounTable">
+
+                <thead>
+
+                    <tr id="groupHeader"></tr>
+
+                    <tr id="columnHeader"></tr>
+
+                </thead>
+
+
+                <tbody id="tableBody"></tbody>
+
+            </table>
+
+        </div>
+
+
+        <!-- =================================================
+             PRINT FOOTER
+             ================================================= -->
+
+        <div class="print-footer">
+
+            <div class="print-note">
+
+                <strong>Note:</strong>
+                Gender is indicated by the
+                <i>Maskulin</i>,
+                <i>Feminin</i>,
+                and
+                <i>Neuter</i>
+                columns. Articles are omitted.
+
+            </div>
+
+
+            <div class="print-credit">
+
+                This document is prepared by
+                <strong>Rahul Natha</strong>
+                and issued under
+                <strong>DOCS from Rahul</strong>.
+
+            </div>
+
+        </div>
+
+
+    </main>
+
+
+
+    <!-- =====================================================
+         PRINT MODAL
+         ===================================================== -->
+
+    <div
+        class="print-modal hidden"
+        id="printModal"
+    >
+
+        <div class="print-modal-backdrop"></div>
+
+
+        <div class="print-dialog">
+
+
+            <div class="print-dialog-header">
+
+                <span>
+                    Print
+                </span>
+
+
+                <button
+                    type="button"
+                    class="print-close"
+                    id="printClose"
+                >
+                    ×
+                </button>
+
+            </div>
+
+
+            <div class="print-dialog-body">
+
+
+                <div class="print-setting">
+
+                    <div class="print-setting-title">
+                        Paper
+                    </div>
+
+
+                    <label class="print-radio">
+
+                        <input
+                            type="radio"
+                            name="printPaper"
+                            value="A4"
+                            checked
+                        >
+
+                        <span>A4</span>
+
+                    </label>
+
+
+                    <label class="print-radio">
+
+                        <input
+                            type="radio"
+                            name="printPaper"
+                            value="A3"
+                        >
+
+                        <span>A3</span>
+
+                    </label>
+
+                </div>
+
+
+
+                <div class="print-setting">
+
+                    <div class="print-setting-title">
+                        Orientation
+                    </div>
+
+
+                    <label class="print-radio">
+
+                        <input
+                            type="radio"
+                            name="printOrientation"
+                            value="portrait"
+                        >
+
+                        <span>Portrait</span>
+
+                    </label>
+
+
+                    <label class="print-radio">
+
+                        <input
+                            type="radio"
+                            name="printOrientation"
+                            value="landscape"
+                            checked
+                        >
+
+                        <span>Landscape</span>
+
+                    </label>
+
+                </div>
+
+
+                <div
+                    id="printSummary"
+                    class="print-summary"
+                ></div>
+
+            </div>
+
+
+            <div class="print-dialog-footer">
+
+                <button
+                    type="button"
+                    class="print-dialog-button"
+                    id="printCancel"
+                >
+                    Cancel
+                </button>
+
+
+                <button
+                    type="button"
+                    class="print-dialog-button primary"
+                    id="printConfirm"
+                >
+                    Print
+                </button>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+</div>
+
+
+<script src="nouns.js"></script>
+
+</body>
+
+</html>

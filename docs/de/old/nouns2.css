@@ -1,0 +1,1980 @@
+/* =========================================================
+   ROOT
+   ========================================================= */
+
+:root {
+
+    color-scheme:
+        light;
+
+    --page-bg:
+        #f6f6f7;
+
+    --surface:
+        #ffffff;
+
+    --surface-2:
+        #f1f1f3;
+
+    --surface-hover:
+        #e9e9eb;
+
+    --text:
+        #181818;
+
+    --text-secondary:
+        #68686f;
+
+    --text-muted:
+        #8b8b92;
+
+    --border:
+        #d5d5da;
+
+    --border-soft:
+        #e6e6e9;
+
+    --accent:
+        #222222;
+
+    --accent-text:
+        #ffffff;
+
+}
+
+
+/* =========================================================
+   DARK THEME
+   ========================================================= */
+
+@media (prefers-color-scheme: dark) {
+
+    :root {
+
+        color-scheme:
+            dark;
+
+        --page-bg:
+            #101010;
+
+        --surface:
+            #181818;
+
+        --surface-2:
+            #222222;
+
+        --surface-hover:
+            #2a2a2a;
+
+        --text:
+            #eeeeee;
+
+        --text-secondary:
+            #a5a5ad;
+
+        --text-muted:
+            #7d7d85;
+
+        --border:
+            #3b3b3b;
+
+        --border-soft:
+            #2b2b2b;
+
+        --accent:
+            #eeeeee;
+
+        --accent-text:
+            #111111;
+
+    }
+
+}
+
+
+/* =========================================================
+   RESET
+   ========================================================= */
+
+* {
+
+    box-sizing:
+        border-box;
+
+}
+
+
+html,
+body {
+
+    width:
+        100%;
+
+    height:
+        100%;
+
+    margin:
+        0;
+
+    padding:
+        0;
+
+    overflow:
+        hidden;
+
+}
+
+
+body {
+
+    background:
+        var(--page-bg);
+
+    color:
+        var(--text);
+
+    font-family:
+        "Segoe UI",
+        sans-serif;
+
+    font-size:
+        14px;
+
+}
+
+
+button,
+input {
+
+    font-family:
+        inherit;
+
+}
+
+
+button {
+
+    cursor:
+        pointer;
+
+}
+
+
+.hidden {
+
+    display:
+        none !important;
+
+}
+
+
+/* =========================================================
+   APP
+   ========================================================= */
+
+.app {
+
+    width:
+        100%;
+
+    height:
+        100vh;
+
+    display:
+        flex;
+
+    flex-direction:
+        column;
+
+    overflow:
+        hidden;
+
+}
+
+
+/* =========================================================
+   CONTROL BAR
+   ========================================================= */
+
+.control-bar {
+
+    position:
+        relative;
+
+    z-index:
+        1000;
+
+    flex:
+        0 0 auto;
+
+    width:
+        100%;
+
+    min-height:
+        56px;
+
+    padding:
+        8px 20px;
+
+    display:
+        flex;
+
+    align-items:
+        center;
+
+    gap:
+        7px;
+
+    background:
+        var(--surface);
+
+    border-bottom:
+        1px solid var(--border);
+
+}
+
+
+/* =========================================================
+   CONTROLS
+   ========================================================= */
+
+.control {
+
+    position:
+        relative;
+
+    flex:
+        0 0 auto;
+
+}
+
+
+.control-button,
+.header-action {
+
+    height:
+        38px;
+
+    min-width:
+        max-content;
+
+    padding:
+        0 15px;
+
+    display:
+        inline-flex;
+
+    align-items:
+        center;
+
+    justify-content:
+        center;
+
+    gap:
+        7px;
+
+    border:
+        1px solid var(--border);
+
+    border-radius:
+        999px;
+
+    background:
+        var(--surface);
+
+    color:
+        var(--text);
+
+    font-size:
+        13px;
+
+    font-weight:
+        500;
+
+    line-height:
+        1;
+
+    white-space:
+        nowrap;
+
+    appearance:
+        none;
+
+    -webkit-appearance:
+        none;
+
+    outline:
+        none;
+
+    transition:
+        background 0.16s ease,
+        border-color 0.16s ease,
+        color 0.16s ease,
+        transform 0.12s ease;
+
+}
+
+
+.control-button:hover,
+.header-action:hover {
+
+    background:
+        var(--surface-hover);
+
+    border-color:
+        var(--text-muted);
+
+}
+
+
+.control-button:active,
+.header-action:active {
+
+    transform:
+        translateY(1px);
+
+}
+
+
+/* ---------------------------------------------------------
+   RESET / PRINT
+   --------------------------------------------------------- */
+
+#resetButton {
+
+    margin-left:
+        auto;
+
+}
+
+
+#printButton {
+
+    background:
+        var(--accent);
+
+    border-color:
+        var(--accent);
+
+    color:
+        var(--accent-text);
+
+    font-weight:
+        600;
+
+}
+
+
+#printButton:hover {
+
+    background:
+        var(--text);
+
+    border-color:
+        var(--text);
+
+    color:
+        var(--accent-text);
+
+}
+
+
+/* ---------------------------------------------------------
+   ARROW
+   --------------------------------------------------------- */
+
+.arrow {
+
+    display:
+        inline-block;
+
+    color:
+        var(--text-muted);
+
+    font-size:
+        9px;
+
+    line-height:
+        1;
+
+    transition:
+        transform 0.16s ease;
+
+}
+
+
+.control.open .arrow {
+
+    transform:
+        rotate(180deg);
+
+}
+
+
+/* =========================================================
+   DROPDOWN
+   ========================================================= */
+
+.dropdown {
+
+    position:
+        absolute;
+
+    top:
+        calc(100% + 8px);
+
+    left:
+        0;
+
+    z-index:
+        3000;
+
+    min-width:
+        220px;
+
+    padding:
+        8px;
+
+    background:
+        var(--surface);
+
+    color:
+        var(--text);
+
+    border:
+        1px solid var(--border);
+
+    border-radius:
+        14px;
+
+    box-shadow:
+        0 14px 36px
+        rgba(0, 0, 0, 0.14);
+
+    opacity:
+        0;
+
+    visibility:
+        hidden;
+
+    pointer-events:
+        none;
+
+    transform:
+        translateY(-6px)
+        scale(0.985);
+
+    transform-origin:
+        top left;
+
+    transition:
+        opacity 0.16s ease,
+        transform 0.16s ease,
+        visibility 0.16s ease;
+
+}
+
+
+.control.open > .dropdown {
+
+    opacity:
+        1;
+
+    visibility:
+        visible;
+
+    pointer-events:
+        auto;
+
+    transform:
+        translateY(0)
+        scale(1);
+
+}
+
+
+.columns-dropdown {
+
+    width:
+        320px;
+
+}
+
+
+.filter-dropdown {
+
+    width:
+        245px;
+
+}
+
+
+/* =========================================================
+   DROPDOWN HEADING
+   ========================================================= */
+
+.dropdown-section {
+
+    padding:
+        5px 9px 8px;
+
+    color:
+        var(--text-secondary);
+
+    font-size:
+        11px;
+
+    font-weight:
+        700;
+
+    letter-spacing:
+        0.04em;
+
+}
+
+
+/* =========================================================
+   OPTIONS
+   ========================================================= */
+
+.dropdown-option {
+
+    min-height:
+        34px;
+
+    padding:
+        5px 9px;
+
+    display:
+        flex;
+
+    align-items:
+        center;
+
+    gap:
+        9px;
+
+    border-radius:
+        8px;
+
+    color:
+        var(--text);
+
+    cursor:
+        pointer;
+
+    user-select:
+        none;
+
+    transition:
+        background 0.12s ease;
+
+}
+
+
+.dropdown-option:hover {
+
+    background:
+        var(--surface-hover);
+
+}
+
+
+.dropdown-option input {
+
+    width:
+        15px;
+
+    height:
+        15px;
+
+    margin:
+        0;
+
+    accent-color:
+        var(--accent);
+
+}
+
+
+/* =========================================================
+   DIVIDER
+   ========================================================= */
+
+.dropdown-divider {
+
+    height:
+        1px;
+
+    margin:
+        8px 2px;
+
+    background:
+        var(--border-soft);
+
+}
+
+
+/* =========================================================
+   ALL / DEFAULT
+   ========================================================= */
+
+.dropdown-actions {
+
+    display:
+        flex;
+
+    gap:
+        7px;
+
+}
+
+
+.dropdown-action {
+
+    min-width:
+        82px;
+
+    height:
+        31px;
+
+    padding:
+        0 13px;
+
+    border:
+        1px solid var(--border);
+
+    border-radius:
+        999px;
+
+    background:
+        var(--surface-2);
+
+    color:
+        var(--text);
+
+    font-size:
+        12px;
+
+    font-weight:
+        600;
+
+    transition:
+        background 0.12s ease,
+        border-color 0.12s ease;
+
+}
+
+
+.dropdown-action:hover {
+
+    background:
+        var(--surface-hover);
+
+    border-color:
+        var(--text-muted);
+
+}
+
+
+.dropdown-action.active {
+
+    background:
+        var(--accent);
+
+    border-color:
+        var(--accent);
+
+    color:
+        var(--accent-text);
+
+}
+
+
+/* =========================================================
+   MORE
+   ========================================================= */
+
+.more-control {
+
+    position:
+        relative;
+
+}
+
+
+.more-button {
+
+    width:
+        100%;
+
+    height:
+        34px;
+
+    padding:
+        0 9px;
+
+    display:
+        flex;
+
+    align-items:
+        center;
+
+    justify-content:
+        space-between;
+
+    border:
+        none;
+
+    border-radius:
+        8px;
+
+    background:
+        transparent;
+
+    color:
+        var(--text);
+
+    font-size:
+        13px;
+
+}
+
+
+.more-button:hover {
+
+    background:
+        var(--surface-hover);
+
+}
+
+
+.more-arrow {
+
+    color:
+        var(--text-muted);
+
+    font-size:
+        16px;
+
+}
+
+
+.more-dropdown {
+
+    position:
+        absolute;
+
+    top:
+        -8px;
+
+    left:
+        calc(100% + 7px);
+
+    z-index:
+        5000;
+
+    width:
+        225px;
+
+    max-height:
+        calc(100vh - 80px);
+
+    overflow-y:
+        auto;
+
+    overflow-x:
+        hidden;
+
+    padding:
+        8px;
+
+    background:
+        var(--surface);
+
+    border:
+        1px solid var(--border);
+
+    border-radius:
+        14px;
+
+    box-shadow:
+        0 14px 36px
+        rgba(0, 0, 0, 0.16);
+
+    opacity:
+        0;
+
+    visibility:
+        hidden;
+
+    pointer-events:
+        none;
+
+    transform:
+        translateX(-6px);
+
+    transition:
+        opacity 0.15s ease,
+        transform 0.15s ease,
+        visibility 0.15s ease;
+
+}
+
+
+.more-control.open >
+.more-dropdown {
+
+    opacity:
+        1;
+
+    visibility:
+        visible;
+
+    pointer-events:
+        auto;
+
+    transform:
+        translateX(0);
+
+}
+
+
+/* =========================================================
+   MAIN
+   ========================================================= */
+
+.main-area {
+
+    flex:
+        1 1 auto;
+
+    min-height:
+        0;
+
+    width:
+        100%;
+
+    padding:
+        20px;
+
+    display:
+        flex;
+
+    flex-direction:
+        column;
+
+    overflow:
+        hidden;
+
+}
+
+
+/* =========================================================
+   STATUS
+   ========================================================= */
+
+.filter-status {
+
+    flex:
+        0 0 auto;
+
+    width:
+        max-content;
+
+    max-width:
+        calc(100vw - 40px);
+
+    margin:
+        0 0 20px 0;
+
+    padding:
+        10px 16px;
+
+    border:
+        1px solid var(--border);
+
+    border-radius:
+        999px;
+
+    background:
+        transparent;
+
+    color:
+        var(--text-secondary);
+
+    font-size:
+        13px;
+
+    line-height:
+        1.3;
+
+}
+
+
+/* =========================================================
+   LOADING / ERROR
+   ========================================================= */
+
+.loading-state,
+.error-state {
+
+    margin:
+        auto;
+
+    color:
+        var(--text-secondary);
+
+    text-align:
+        center;
+
+}
+
+
+.error-state {
+
+    color:
+        #c43a3a;
+
+}
+
+
+/* =========================================================
+   TABLE CONTAINER
+   ========================================================= */
+
+.table-container {
+
+    flex:
+        1 1 auto;
+
+    min-height:
+        0;
+
+    width:
+        max-content;
+
+    max-width:
+        100%;
+
+    overflow:
+        auto;
+
+    border:
+        1px solid var(--border);
+
+    border-radius:
+        14px;
+
+    scrollbar-width:
+        auto;
+
+    scrollbar-color:
+        #888888
+        transparent;
+
+}
+
+
+.table-container::-webkit-scrollbar {
+
+    width:
+        12px;
+
+    height:
+        12px;
+
+}
+
+
+.table-container::-webkit-scrollbar-track {
+
+    background:
+        transparent;
+
+}
+
+
+.table-container::-webkit-scrollbar-thumb {
+
+    background:
+        #888888;
+
+    border-radius:
+        999px;
+
+    border:
+        3px solid transparent;
+
+    background-clip:
+        padding-box;
+
+}
+
+
+.table-container::-webkit-scrollbar-thumb:hover {
+
+    background:
+        #666666;
+
+    border:
+        3px solid transparent;
+
+    background-clip:
+        padding-box;
+
+}
+
+
+@media (prefers-color-scheme: dark) {
+
+    .table-container {
+
+        scrollbar-color:
+            #555555
+            transparent;
+
+    }
+
+
+    .table-container::-webkit-scrollbar-thumb {
+
+        background:
+            #555555;
+
+    }
+
+
+    .table-container::-webkit-scrollbar-thumb:hover {
+
+        background:
+            #707070;
+
+    }
+
+}
+
+
+/* =========================================================
+   TABLE
+   ========================================================= */
+
+#nounTable {
+
+    width:
+        max-content;
+
+    min-width:
+        100%;
+
+    border-collapse:
+        separate;
+
+    border-spacing:
+        0;
+
+    color:
+        var(--text);
+
+}
+
+
+#nounTable th,
+#nounTable td {
+
+    padding:
+        10px 14px;
+
+    text-align:
+        left;
+
+    white-space:
+        nowrap;
+
+    border-bottom:
+        1px solid var(--border-soft);
+
+}
+
+
+#nounTable thead {
+
+    position:
+        sticky;
+
+    top:
+        0;
+
+    z-index:
+        10;
+
+}
+
+
+#nounTable thead tr {
+
+    background:
+        var(--surface-2);
+
+}
+
+
+#nounTable th {
+
+    font-size:
+        13px;
+
+    font-weight:
+        600;
+
+}
+
+
+#nounTable tbody tr {
+
+    background:
+        var(--surface);
+
+}
+
+
+#nounTable tbody tr:hover {
+
+    background:
+        var(--surface-hover);
+
+}
+
+
+#nounTable td {
+
+    font-size:
+        14px;
+
+}
+
+
+/* =========================================================
+   NOUN CELLS
+   ========================================================= */
+
+.noun-cell {
+
+    font-weight:
+        600;
+
+}
+
+
+/* =========================================================
+   PRINT FOOTER
+   ========================================================= */
+
+.print-footer {
+
+    display:
+        none;
+
+}
+
+
+/* =========================================================
+   PRINT MODAL
+   ========================================================= */
+
+.print-modal {
+
+    position:
+        fixed;
+
+    inset:
+        0;
+
+    z-index:
+        9000;
+
+    display:
+        flex;
+
+    align-items:
+        center;
+
+    justify-content:
+        center;
+
+}
+
+
+.print-modal.hidden {
+
+    display:
+        none;
+
+}
+
+
+.print-modal-backdrop {
+
+    position:
+        absolute;
+
+    inset:
+        0;
+
+    background:
+        rgba(0, 0, 0, 0.45);
+
+}
+
+
+.print-dialog {
+
+    position:
+        relative;
+
+    z-index:
+        1;
+
+    width:
+        min(420px, calc(100vw - 40px));
+
+    background:
+        var(--surface);
+
+    border:
+        1px solid var(--border);
+
+    border-radius:
+        16px;
+
+    box-shadow:
+        0 24px 60px
+        rgba(0, 0, 0, 0.25);
+
+    overflow:
+        hidden;
+
+}
+
+
+.print-dialog-header,
+.print-dialog-footer {
+
+    padding:
+        14px 18px;
+
+}
+
+
+.print-dialog-header {
+
+    display:
+        flex;
+
+    align-items:
+        center;
+
+    justify-content:
+        space-between;
+
+    border-bottom:
+        1px solid var(--border-soft);
+
+    font-weight:
+        700;
+
+}
+
+
+.print-close {
+
+    width:
+        30px;
+
+    height:
+        30px;
+
+    border:
+        none;
+
+    border-radius:
+        50%;
+
+    background:
+        transparent;
+
+    color:
+        var(--text-secondary);
+
+    font-size:
+        20px;
+
+}
+
+
+.print-close:hover {
+
+    background:
+        var(--surface-hover);
+
+}
+
+
+.print-dialog-body {
+
+    padding:
+        18px;
+
+}
+
+
+.print-setting {
+
+    margin-bottom:
+        18px;
+
+}
+
+
+.print-setting-title {
+
+    margin-bottom:
+        8px;
+
+    color:
+        var(--text-secondary);
+
+    font-size:
+        12px;
+
+    font-weight:
+        700;
+
+}
+
+
+.print-radio {
+
+    display:
+        inline-flex;
+
+    align-items:
+        center;
+
+    gap:
+        7px;
+
+    margin-right:
+        16px;
+
+}
+
+
+.print-summary {
+
+    margin-top:
+        20px;
+
+    padding:
+        10px 12px;
+
+    border-radius:
+        10px;
+
+    background:
+        var(--surface-2);
+
+    color:
+        var(--text-secondary);
+
+    font-size:
+        12px;
+
+}
+
+
+.print-dialog-footer {
+
+    display:
+        flex;
+
+    justify-content:
+        flex-end;
+
+    gap:
+        8px;
+
+    border-top:
+        1px solid var(--border-soft);
+
+}
+
+
+.print-dialog-button {
+
+    height:
+        34px;
+
+    padding:
+        0 14px;
+
+    border:
+        1px solid var(--border);
+
+    border-radius:
+        999px;
+
+    background:
+        var(--surface);
+
+    color:
+        var(--text);
+
+}
+
+
+.print-dialog-button.primary {
+
+    background:
+        var(--accent);
+
+    color:
+        var(--accent-text);
+
+    border-color:
+        var(--accent);
+
+}
+
+
+/* =========================================================
+   PRINT
+   ========================================================= */
+
+@media print {
+
+    @page {
+
+        margin:
+            10mm;
+
+    }
+
+
+    html,
+    body {
+
+        overflow:
+            visible !important;
+
+        background:
+            #ffffff !important;
+
+        color:
+            #000000 !important;
+
+    }
+
+
+    .control-bar,
+    .loading-state,
+    .error-state,
+    .print-modal {
+
+        display:
+            none !important;
+
+    }
+
+
+    .main-area {
+
+        width:
+            auto !important;
+
+        height:
+            auto !important;
+
+        padding:
+            0 !important;
+
+        margin:
+            0 !important;
+
+        overflow:
+            visible !important;
+
+        display:
+            block !important;
+
+    }
+
+
+    .filter-status {
+
+        display:
+            block !important;
+
+        width:
+            auto !important;
+
+        max-width:
+            none !important;
+
+        margin:
+            0 0 5mm 0 !important;
+
+        padding:
+            0 !important;
+
+        border:
+            none !important;
+
+        background:
+            transparent !important;
+
+        color:
+            #000000 !important;
+
+        font-size:
+            10pt !important;
+
+        white-space:
+            normal !important;
+
+    }
+
+
+    .table-container {
+
+        width:
+            max-content !important;
+
+        max-width:
+            none !important;
+
+        height:
+            auto !important;
+
+        max-height:
+            none !important;
+
+        overflow:
+            visible !important;
+
+        border:
+            none !important;
+
+    }
+
+
+    #nounTable {
+
+        width:
+            max-content !important;
+
+        min-width:
+            0 !important;
+
+    }
+
+
+    #nounTable th,
+    #nounTable td {
+
+        border-color:
+            #dddddd !important;
+
+        color:
+            #000000 !important;
+
+    }
+
+
+    #nounTable thead {
+
+        position:
+            static !important;
+
+    }
+
+
+    .print-footer {
+
+        display:
+            block !important;
+
+        margin-top:
+            6mm;
+
+        color:
+            #000000;
+
+        font-size:
+            9pt;
+
+        line-height:
+            1.35;
+
+    }
+
+
+    .print-note {
+
+        margin-bottom:
+            3mm;
+
+    }
+
+
+    .print-credit {
+
+        font-weight:
+            400;
+
+    }
+
+}
+
+
+/* kkjbjk */
+
+/* =========================================================
+   GRAMMAR REFERENCE TABLE
+   ========================================================= */
+/* =========================================================
+   GRAMMAR REFERENCE FINAL LAYOUT
+   ========================================================= */
+
+#grammarReferenceContainer {
+    overflow:
+        visible;
+}
+
+#grammarReferenceTable {
+    width:
+        100%;
+
+    table-layout:
+        fixed;
+
+    border-collapse:
+        collapse;
+
+    overflow:
+        visible;
+}
+
+#grammarReferenceTable th,
+#grammarReferenceTable td {
+    box-sizing:
+        border-box;
+
+    white-space:
+        nowrap;
+
+    overflow:
+        hidden;
+
+    text-overflow:
+        clip;
+
+    padding:
+        10px 14px;
+}
+
+#grammarReferenceTable tbody tr {
+    cursor:
+        pointer;
+}
+
+#grammarReferenceTable tbody
+.grammar-group-child {
+    cursor:
+        default;
+}
+
+/* Grammar reference: normalise the first data row */
+
+#grammarReferenceTable tbody tr:first-child td {
+    font-weight:
+        normal;
+
+    background:
+        var(--surface);
+
+    border-bottom:
+        1px solid var(--border-soft);
+}
+
+#grammarReferenceTable tbody tr:first-child td:first-child {
+    font-weight:
+        normal;
+}
+
+/* =========================================================
+   GRAMMAR REFERENCE
+   ========================================================= */
+
+#grammarReferenceContainer {
+    height:
+        auto;
+
+    max-height:
+        none;
+
+    overflow:
+        visible;
+
+    margin-bottom:
+        20px;
+}
+
+
+#grammarReferenceTable {
+    width:
+        100%;
+
+    height:
+        auto;
+
+    border-collapse:
+        collapse;
+
+    border-spacing:
+        0;
+
+    table-layout:
+        fixed;
+
+    overflow:
+        visible;
+}
+
+
+#grammarReferenceTable th,
+#grammarReferenceTable td {
+    box-sizing:
+        border-box;
+
+    padding:
+        10px 14px;
+
+    text-align:
+        left;
+
+    white-space:
+        nowrap;
+
+    overflow:
+        hidden;
+
+    border-bottom:
+        1px solid var(--border-soft);
+
+    font-weight:
+        400;
+}
+
+
+/*
+ * No header styling.
+ *
+ * The top row is ordinary grammar data.
+ */
+
+#grammarReferenceTable thead th {
+    font-weight:
+        400;
+
+    background:
+        var(--surface);
+
+    color:
+        var(--text);
+}
+
+
+/*
+ * First row of every group is clickable.
+ */
+
+#grammarReferenceTable
+.grammar-group-first {
+    cursor:
+        pointer;
+}
+
+
+#grammarReferenceTable
+.grammar-group-child {
+    cursor:
+        default;
+}
+
+
+/*
+ * No scrollbar on the grammar table.
+ */
+
+#grammarReferenceContainer {
+    scrollbar-width:
+        none;
+}
+
+#grammarReferenceContainer::-webkit-scrollbar {
+    display:
+        none;
+}
+
+/* =========================================================
+   GRAMMAR REFERENCE CONTAINER
+   ========================================================= */
+
+#grammarReferenceContainer {
+    position:
+        relative;
+
+    z-index:
+        10;
+
+    width:
+        100%;
+
+    height:
+        auto;
+
+    max-height:
+        none;
+
+    overflow:
+        visible;
+
+    margin-bottom:
+        20px;
+
+    box-sizing:
+        border-box;
+}
+
+
+/* =========================================================
+   GRAMMAR REFERENCE TABLE
+   ========================================================= */
+
+#grammarReferenceTable {
+    position:
+        relative;
+
+    z-index:
+        10;
+
+    width:
+        100%;
+
+    height:
+        auto;
+
+    min-height:
+        0;
+
+    border-collapse:
+        collapse;
+
+    border-spacing:
+        0;
+
+    table-layout:
+        fixed;
+
+    overflow:
+        visible;
+}
+
+
+#grammarReferenceTable thead,
+#grammarReferenceTable tbody {
+    overflow:
+        visible;
+}
+
+
+#grammarReferenceTable th,
+#grammarReferenceTable td {
+    box-sizing:
+        border-box;
+
+    padding:
+        10px 14px;
+
+    text-align:
+        left;
+
+    white-space:
+        nowrap;
+
+    border-bottom:
+        1px solid var(--border-soft);
+
+    overflow:
+        hidden;
+
+    text-overflow:
+        clip;
+
+    font-weight:
+        400;
+}
+
+
+/* =========================================================
+   GRAMMAR REFERENCE HEADER
+   ========================================================= */
+
+#grammarReferenceTable thead th {
+    background:
+        var(--surface-2);
+
+    font-weight:
+        600;
+
+    color:
+        var(--text);
+}
+
+
+/* =========================================================
+   GRAMMAR REFERENCE BODY
+   ========================================================= */
+
+#grammarReferenceTable tbody tr {
+    background:
+        var(--surface);
+}
+
+
+#grammarReferenceTable
+.grammar-group-first {
+    cursor:
+        pointer;
+}
+
+
+#grammarReferenceTable
+.grammar-group-child {
+    cursor:
+        default;
+}
+
+
+/* =========================================================
+   KEEP NOUN TABLE BELOW IT
+   ========================================================= */
+
+#tableContainer {
+    position:
+        relative;
+
+    z-index:
+        1;
+}
