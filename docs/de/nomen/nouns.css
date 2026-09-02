@@ -1850,28 +1850,51 @@ td {
 }
 
 /* =========================================================
+   /* =========================================================
    GRAMMAR REFERENCE THEME FIX
    ========================================================= */
 
 .grammar-reference-container {
-    background: var(--surface) !important;
-    color: var(--text) !important;
-    border-color: var(--border) !important;
+    background: var(--surface);
+    color: var(--text);
+    border-color: var(--border);
 }
 
 .grammar-reference-container table {
-    background: var(--surface) !important;
-    color: var(--text) !important;
+    background: var(--surface);
+    color: var(--text);
 }
 
 .grammar-reference-container th {
-    background: var(--surface-2) !important;
-    color: var(--text) !important;
-    border-color: var(--border-soft) !important;
+    background: var(--surface-2);
+    color: var(--text);
+    border-color: var(--border-soft);
 }
 
 .grammar-reference-container td {
-    background: var(--surface) !important;
-    color: var(--text) !important;
-    border-color: var(--border-soft) !important;
+    background: var(--surface);
+    color: var(--text);
+    border-color: var(--border-soft);
+}
+
+
+/* DARK THEME ONLY */
+@media (prefers-color-scheme: dark) {
+
+    .grammar-reference-container th {
+        background: #292929;
+    }
+
+    .grammar-reference-container .grammar-group-row {
+        background: #1e1e1e;
+    }
+
+    .grammar-reference-container tbody tr:not(.grammar-group-row) {
+        background: #181818;
+    }
+
+    .grammar-reference-container .grammar-group-row:hover {
+        background: #262626;
+    }
+
 }
