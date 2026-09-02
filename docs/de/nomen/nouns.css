@@ -1848,3 +1848,30 @@ td {
 .grammar-reference-table .grammar-group-row:hover {
     background: #262626;
 }
+
+/* =========================================================
+   GRAMMAR REFERENCE THEME FIX
+   ========================================================= */
+
+.grammar-reference-container {
+    background: var(--surface) !important;
+    color: var(--text) !important;
+    border-color: var(--border) !important;
+}
+
+.grammar-reference-container table {
+    background: var(--surface) !important;
+    color: var(--text) !important;
+}
+
+.grammar-reference-container th {
+    background: var(--surface-2) !important;
+    color: var(--text) !important;
+    border-color: var(--border-soft) !important;
+}
+
+.grammar-reference-container td {
+    background: var(--surface) !important;
+    color: var(--text) !important;
+    border-color: var(--border-soft) !important;
+}
