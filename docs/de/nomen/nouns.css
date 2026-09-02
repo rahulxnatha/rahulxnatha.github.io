@@ -1885,16 +1885,33 @@ td {
         background: #292929;
     }
 
+.grammar-reference-table th {
+    background: #292929;}
+
     .grammar-reference-container .grammar-group-row {
         background: #1e1e1e;
     }
+
+/* GROUP START: Verbindung, Bestimmter, ich Possessiv, etc. */
+.grammar-reference-table .grammar-group-row {
+    background: #1e1e1e;
+}
 
     .grammar-reference-container tbody tr:not(.grammar-group-row) {
         background: #181818;
     }
 
+/* NORMAL ROWS */
+.grammar-reference-table tbody tr:not(.grammar-group-row) {
+    background: #181818;
+}
+
     .grammar-reference-container .grammar-group-row:hover {
         background: #262626;
     }
+
+.grammar-reference-table .grammar-group-row:hover {
+    background: #262626;
+}
 
 }
