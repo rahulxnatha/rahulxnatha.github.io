@@ -157,15 +157,15 @@ let selectedTypes =
 
 
 let selectedTrennbar =
-    new Set([
-        'non-separable'
-    ]);
+    new Set(
+        FILTER_VALUES.trennbar
+    );
 
 
 let selectedImportance =
-    new Set([
-        'must know'
-    ]);
+    new Set(
+        FILTER_VALUES.importance
+    );
 
 
 let selectedDemands =
@@ -185,9 +185,7 @@ let selectedAuxiliaries =
    ========================================================= */
 
 let selectedLevels =
-    new Set([
-        'A1'
-    ]);
+    new Set();
 
 
 let selectedChapters =
@@ -3235,41 +3233,39 @@ function getVerbInfinitive(row) {
 /*
  * Check whether a verb matches the search.
  *
- * Search matches:
+ * Search is performed across every column that is
+ * currently visible in the table.
  *
- * 1. Infinitive
- * 2. Set name
- *
- * Therefore searching "machen" finds the
- * entire machen set.
+ * This means changing the visible columns automatically
+ * changes the search scope.
  */
-
 function verbMatchesSearch(row) {
 
     const query =
-        verbSearch.trim().toLowerCase();
-
+        verbSearch
+            .trim()
+            .toLowerCase();
 
     if (!query) {
         return true;
     }
 
+    const visibleColumns =
+        getVisibleColumnKeys();
 
-    const infinitive =
-        getVerbInfinitive(row)
-            .toLowerCase();
+    return visibleColumns.some(
+        columnIndex => {
 
+            const value =
+                normalise(
+                    row[columnIndex]
+                );
 
-    const set =
-        getVerbSet(row)
-            .toLowerCase();
-
-
-    return (
-        infinitive.includes(query) ||
-        set.includes(query)
+            return value.includes(
+                query
+            );
+        }
     );
-
 }
 
 
@@ -3719,34 +3715,52 @@ function applySetsAndSearch() {
 
 
                 item.rows.forEach(
-                    dataRow => {
+    (
+        dataRow,
+        rowIndex
+    ) => {
 
-                        const domRow =
-                            rowMap.get(
-                                dataRow
-                            );
+        const domRow =
+            rowMap.get(
+                dataRow
+            );
 
+        if (!domRow) {
+            return;
+        }
 
-                        if (!domRow) {
-                            return;
-                        }
+        /*
+         * Remove any previous set-end marker.
+         */
+        domRow.classList.remove(
+            'set-last-row'
+        );
 
+        /*
+         * Mark the final visible row
+         * of this set.
+         */
+        if (
+            rowIndex ===
+            item.rows.length - 1
+        ) {
+            domRow.classList.add(
+                'set-last-row'
+            );
+        }
 
-                        updateDisplayedRowNumber(
-                            domRow,
-                            visibleNumber
-                        );
+        updateDisplayedRowNumber(
+            domRow,
+            visibleNumber
+        );
 
+        visibleNumber++;
 
-                        visibleNumber++;
-
-
-                        tableBody.appendChild(
-                            domRow
-                        );
-
-                    }
-                );
+        tableBody.appendChild(
+            domRow
+        );
+    }
+);
 
 
                 return;
@@ -4421,34 +4435,30 @@ function resetEverything() {
             FILTER_VALUES.type
         );
 
-
-    selectedTrennbar =
-        new Set([
-            'non-separable'
-        ]);
-
-
-    selectedImportance =
-        new Set([
-            'must know'
-        ]);
+selectedTrennbar =
+    new Set(
+        FILTER_VALUES.trennbar
+    );
 
 
-    selectedDemands =
-        null;
+selectedImportance =
+    new Set(
+        FILTER_VALUES.importance
+    );
 
 
-    selectedAuxiliaries =
-        new Set(
-            FILTER_VALUES.auxiliary
-        );
+selectedDemands =
+    null;
 
 
-    selectedLevels =
-        new Set([
-            'A1'
-        ]);
+selectedAuxiliaries =
+    new Set(
+        FILTER_VALUES.auxiliary
+    );
 
+
+selectedLevels =
+    new Set();
 
     selectedChapters.clear();
 

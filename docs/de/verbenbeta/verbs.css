@@ -3375,8 +3375,8 @@ button {
     border-top:
         1px solid var(--border-soft);
 
-    border-bottom:
-        1px solid var(--border-soft);
+    /* border-bottom: */
+        /* 1px solid var(--border-soft); */
 }
 
 
@@ -3396,4 +3396,13 @@ button {
 
     text-align:
         left;
+}
+
+/* ---------------------------------------------------------
+   END OF SET
+   --------------------------------------------------------- */
+
+#verbTable tbody tr.set-last-row td {
+    border-bottom:
+        1px solid var(--border-soft);
 }
