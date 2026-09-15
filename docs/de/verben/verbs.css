@@ -3224,12 +3224,13 @@ button {
         var(--text);
 }
 
-
 /* ---------------------------------------------------------
-   SETS BUTTON
+   SETS + REFLEXIVE BUTTONS
    --------------------------------------------------------- */
 
-#setsButton {
+#setsButton,
+#reflexiveButton {
+
     height:
         36px;
 
@@ -3296,22 +3297,30 @@ button {
 }
 
 
-#setsButton:hover {
+#setsButton:hover,
+#reflexiveButton:hover {
+
     background:
         var(--surface-hover);
 
     border-color:
         var(--text-muted);
+
 }
 
 
-#setsButton:active {
+#setsButton:active,
+#reflexiveButton:active {
+
     transform:
         translateY(1px);
+
 }
 
 
-#setsButton.sets-active {
+#setsButton.sets-active,
+#reflexiveButton.reflexive-active {
+
     background:
         var(--accent);
 
@@ -3320,17 +3329,20 @@ button {
 
     color:
         var(--accent-text);
+
 }
 
 
-#setsButton.sets-active:hover {
+#setsButton.sets-active:hover,
+#reflexiveButton.reflexive-active:hover {
+
     background:
         var(--text);
 
     border-color:
         var(--text);
-}
 
+}
 
 /* ---------------------------------------------------------
    SET HEADING ROW

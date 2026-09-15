@@ -203,6 +203,17 @@ let presentMode =
 let pastMode =
     'none';
 
+    /* =========================================================
+   REFLEXIVITY
+   ========================================================= */
+
+let selectedReflexivities =
+    new Set([
+        'either',
+        'always',
+        'low'
+    ]);
+
 
 /* =========================================================
    BASIC HELPERS
@@ -400,6 +411,8 @@ async function loadData() {
         buildColumnDropdown();
 
         buildChapterGrid();
+
+        setupReflexivityFilter();
 
         setupControls();
 
@@ -613,6 +626,18 @@ function detectColumnMap() {
                 return;
 
             }
+
+            if (
+    name ===
+    'reflexivity'
+) {
+
+    columnMap.reflexivity =
+        index;
+
+    return;
+
+}
 
 
             if (
@@ -2023,6 +2048,30 @@ function getFilteredRows() {
 
     return rows.filter(
         row => {
+
+
+/*
+ * REFLEXIVITY
+ */
+
+const reflexivity =
+    normalise(
+        row[
+            columnMap.reflexivity
+        ]
+    );
+
+if (
+    !selectedReflexivities.has(
+        reflexivity
+    )
+) {
+    return false;
+}
+
+
+
+            // ------------------------------------------
 
             /*
              * TYPE
@@ -3886,6 +3935,7 @@ function toggleSetsMode() {
 }
 
 
+
 /*
  * Search input.
  */
@@ -4373,6 +4423,8 @@ function resetEverything() {
     setsMode =
         false;
 
+    
+
     verbSearch =
         '';
 
@@ -4389,6 +4441,15 @@ function resetEverything() {
         );
 
     }
+
+    selectedReflexivities =
+    new Set([
+        'either',
+        'always',
+        'low'
+    ]);
+
+    
 
 
     const searchInput =
@@ -4424,10 +4485,7 @@ function resetEverything() {
         );
 
 
-    selectedColumns =
-        new Set(
-            DEFAULT_COLUMNS
-        );
+  
 
 
     selectedTypes =
@@ -4472,6 +4530,8 @@ selectedLevels =
 
 
     syncUI();
+
+    syncReflexivityUI();
 
     renderTable();
 
@@ -4642,6 +4702,147 @@ function closeAllMenus() {
     closeAllSubmenus();
 
 }
+
+/* =========================================================
+   REFLEXIVITY FILTER
+   ========================================================= */
+
+function setupReflexivityFilter() {
+
+    const checkboxes =
+        document.querySelectorAll(
+            '[data-reflexivity]'
+        );
+
+
+    checkboxes.forEach(
+        checkbox => {
+
+            checkbox.addEventListener(
+                'change',
+                () => {
+
+                    if (
+                        checkbox.checked
+                    ) {
+
+                        selectedReflexivities.add(
+                            checkbox.value
+                        );
+
+                    } else {
+
+                        selectedReflexivities.delete(
+                            checkbox.value
+                        );
+
+                    }
+
+                    renderTable();
+
+                }
+            );
+
+        }
+    );
+
+
+    const allButton =
+        document.getElementById(
+            'reflexivityAllButton'
+        );
+
+
+    if (allButton) {
+
+        allButton.addEventListener(
+    'click',
+    event => {
+
+        event.stopPropagation();
+
+        selectedReflexivities =
+            new Set([
+                'either',
+                'always',
+                'low'
+            ]);
+
+        syncReflexivityUI();
+
+        renderTable();
+
+    }
+);
+
+    }
+
+
+    const defaultButton =
+        document.getElementById(
+            'reflexivityDefaultButton'
+        );
+
+
+    if (defaultButton) {
+
+      defaultButton.addEventListener(
+    'click',
+    event => {
+
+        event.stopPropagation();
+
+        selectedReflexivities =
+            new Set([
+                'either',
+                'always',
+                'low'
+            ]);
+
+        syncReflexivityUI();
+
+        renderTable();
+
+    }
+);
+
+    }
+
+
+    syncReflexivityUI();
+
+}
+
+
+/* =========================================================
+   REFLEXIVITY UI
+   ========================================================= */
+
+function syncReflexivityUI() {
+
+    document
+        .querySelectorAll(
+            '[data-reflexivity]'
+        )
+        .forEach(
+            checkbox => {
+
+                checkbox.checked =
+                    selectedReflexivities.has(
+                        checkbox.value
+                    );
+
+            }
+        );
+
+}
+
+
+
+
+
+
+
 
    function setupControls() {
 
@@ -4992,6 +5193,9 @@ document
 
         }
     );
+
+
+
 
 
 /*
