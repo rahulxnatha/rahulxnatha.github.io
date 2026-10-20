@@ -1,0 +1,387 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
+<meta name="theme-color" content="#f4f7fb">
+<title>Where's the Ball? · 3D Spatial Lab</title>
+<style>
+:root{--ink:#17253d;--muted:#68758b;--line:#dce4ef;--panel:rgba(255,255,255,.88);--blue:#4778f5;--blue2:#2456d8;--mint:#dff8ee;--shadow:0 18px 55px rgba(36,55,89,.10)}
+*{box-sizing:border-box}
+html,body{margin:0;width:100%;height:100%;font-family:Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;color:var(--ink);background:#f4f7fb}
+body{overflow:hidden;background:radial-gradient(ellipse at 12% 0%,#e8f0ff 0,transparent 35%),radial-gradient(ellipse at 95% 90%,#e5faf1 0,transparent 32%),#f4f7fb}
+button{font:inherit;cursor:pointer;touch-action:manipulation}
+button:focus-visible{outline:3px solid #86a8ff;outline-offset:3px}
+#app{height:100%;min-height:0;display:flex;flex-direction:column}
+header{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:15px clamp(14px,3vw,34px);border-bottom:1px solid rgba(207,218,233,.8);background:rgba(255,255,255,.68);backdrop-filter:blur(18px);z-index:2}
+.brand{display:flex;align-items:center;gap:11px;min-width:0}.brandmark{width:42px;height:42px;border-radius:14px;background:linear-gradient(145deg,#5c8bff,#315de0);display:grid;place-items:center;color:white;box-shadow:0 8px 20px #4778f544;flex-shrink:0}.brandmark svg{width:25px;height:25px}
+.brand h1{font-size:clamp(15px,2vw,20px);letter-spacing:-.04em;margin:0;font-weight:850}.brand p{font-size:11px;color:var(--muted);margin:3px 0 0;letter-spacing:.11em;text-transform:uppercase;font-weight:750}
+.header-right{display:flex;align-items:center;gap:9px}.status-pill{display:flex;align-items:center;gap:7px;border:1px solid var(--line);border-radius:99px;background:#fff;padding:8px 12px;font-size:12px;font-weight:700;color:#526078;white-space:nowrap}.dot{width:7px;height:7px;border-radius:50%;background:#20b981}
+main{flex:1;min-height:0;display:grid;grid-template-columns:minmax(0,1fr) 300px;gap:16px;padding:16px clamp(12px,2.4vw,28px) 18px}
+.workspace{min-width:0;min-height:0;display:flex;flex-direction:column;gap:10px}
+.scene-head{display:flex;align-items:center;justify-content:space-between;gap:10px}.eyebrow{font-size:10px;font-weight:850;letter-spacing:.16em;text-transform:uppercase;color:#7b89a0}.scene-title{font-size:clamp(18px,2.4vw,25px);font-weight:850;letter-spacing:-.045em;margin:4px 0 0}.scene-title span{color:var(--blue)}
+.toolbar{display:flex;gap:6px;align-items:center;flex-wrap:wrap}.tool-btn{border:1px solid var(--line);background:rgba(255,255,255,.82);border-radius:11px;padding:8px 10px;color:#526078;font-size:12px;font-weight:750;display:flex;gap:6px;align-items:center}.tool-btn:hover{border-color:#a9bdf2;color:var(--blue2)}.tool-btn svg{width:15px;height:15px}
+.viewport{position:relative;flex:1;min-height:280px;border:1px solid #dbe4f0;border-radius:22px;overflow:hidden;background:linear-gradient(155deg,#fcfdff 0%,#edf3fb 70%,#e8f0f8 100%);box-shadow:var(--shadow);isolation:isolate}
+.viewport:before{content:"";position:absolute;inset:0;pointer-events:none;background:radial-gradient(ellipse at 50% 43%,rgba(255,255,255,.92),transparent 48%);z-index:0}
+#scene{position:absolute;inset:0;width:100%;height:100%;display:block;touch-action:none;outline:none}
+.axis-legend{position:absolute;left:14px;top:14px;display:flex;gap:7px;flex-wrap:wrap;pointer-events:none}.axis-tag{display:flex;align-items:center;gap:6px;border:1px solid rgba(212,222,237,.9);background:rgba(255,255,255,.78);backdrop-filter:blur(10px);padding:6px 9px;border-radius:8px;font-size:10px;font-weight:800;color:#627088}.axis-dot{width:7px;height:7px;border-radius:2px}.legend-right{position:absolute;right:14px;top:14px;display:flex;flex-direction:column;gap:7px;align-items:flex-end;pointer-events:none}.hint-chip{background:#fff;border:1px solid var(--line);border-radius:10px;padding:7px 10px;font-size:11px;color:#68758b;box-shadow:0 4px 15px #30415b0b}.hint-chip b{color:#35445d}
+.scene-bottom{display:flex;justify-content:space-between;align-items:center;gap:10px;color:#77849a;font-size:11px;padding:0 3px}.scene-bottom strong{color:#4e5d74}
+.side{min-height:0;display:flex;flex-direction:column;gap:12px;overflow:auto;padding-right:1px}
+.card{border:1px solid rgba(216,226,239,.95);background:var(--panel);backdrop-filter:blur(16px);border-radius:18px;padding:16px;box-shadow:0 8px 30px rgba(36,55,89,.045)}
+.card-top{display:flex;justify-content:space-between;align-items:center;gap:8px}.card h2{font-size:14px;margin:0;letter-spacing:-.02em}.tiny-tag{font-size:9px;font-weight:850;letter-spacing:.1em;text-transform:uppercase;color:#6f7f98;background:#eef3fb;padding:5px 7px;border-radius:6px}
+.relationship{margin-top:13px;padding:15px;border-radius:14px;background:linear-gradient(135deg,#eff4ff,#f8fbff);border:1px solid #dce7ff}.relation-label{font-size:10px;color:#6d7b94;font-weight:850;letter-spacing:.12em;text-transform:uppercase}.relation-word{font-size:clamp(25px,2.4vw,33px);font-weight:900;letter-spacing:-.055em;color:#2857d9;margin:4px 0 3px;line-height:1.05}.relation-de{font-size:14px;font-weight:750;color:#52678e}.relation-sentence{font-size:12px;line-height:1.5;color:#68758b;margin-top:10px}
+.object-list{display:flex;flex-direction:column;gap:8px;margin-top:13px}.object-row{display:flex;align-items:center;gap:10px;padding:10px;border:1px solid #e5ebf3;border-radius:12px;background:#fff}.object-icon{width:35px;height:35px;border-radius:10px;display:grid;place-items:center;flex-shrink:0}.object-icon svg{width:23px;height:23px}.object-copy{flex:1;min-width:0}.object-copy b{display:block;font-size:12px}.object-copy small{display:block;font-size:10px;color:#8591a5;margin-top:2px}.object-row .mini-status{font-size:9px;font-weight:850;color:#5274c8;background:#eef3ff;padding:5px 6px;border-radius:6px;white-space:nowrap}
+.controls{display:flex;flex-direction:column;gap:12px;margin-top:13px}.control-block label{display:flex;justify-content:space-between;gap:8px;align-items:center;font-size:11px;font-weight:800;color:#596982;margin-bottom:8px}.control-block label span{font-weight:600;color:#8a96a8}
+.face-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:6px}.face-btn{min-height:44px;border:1px solid #dfe7f1;border-radius:10px;background:#fff;color:#627088;font-size:10px;font-weight:800;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;padding:5px 2px}.face-btn span{font-size:13px;line-height:1}.face-btn.active{background:#edf2ff;border-color:#9fb7ff;color:#2857d9;box-shadow:inset 0 0 0 1px #d8e3ff}
+.facing-note{font-size:10px;line-height:1.45;color:#7b879b;background:#f5f7fb;border-radius:9px;padding:9px 10px}
+.actions{display:grid;grid-template-columns:1fr 1fr;gap:8px}.primary,.secondary{border:0;border-radius:11px;padding:11px 10px;font-size:12px;font-weight:850}.primary{color:white;background:linear-gradient(135deg,#4f80ff,#315dde);box-shadow:0 8px 18px #4778f52b}.secondary{color:#526078;background:#edf1f7;border:1px solid #e0e6ef}.primary:hover{filter:brightness(1.04)}.secondary:hover{background:#e5ebf4}
+.tip{font-size:11px;line-height:1.55;color:#77849a;margin:0}.tip strong{color:#53637b}
+
+@media(max-width:900px){main{grid-template-columns:minmax(0,1fr) 270px;gap:11px;padding:12px}.card{padding:13px}.viewport{border-radius:18px}}
+@media(max-width:700px){body{overflow:auto}#app{min-height:100%;height:auto;min-height:100dvh}header{padding:10px 13px}.brandmark{width:36px;height:36px;border-radius:12px}.brand p{font-size:9px}.status-pill{padding:7px 9px;font-size:10px}main{display:flex;flex-direction:column;padding:11px;gap:11px}.workspace{height:min(57dvh,540px);min-height:340px}.scene-head{align-items:flex-start}.toolbar{max-width:46%;justify-content:flex-end}.tool-btn{padding:7px 8px;font-size:10px}.viewport{min-height:0}.axis-legend{left:9px;top:9px}.legend-right{right:9px;top:9px}.hint-chip{font-size:9px;padding:6px 7px}.scene-bottom{font-size:10px}.side{overflow:visible;display:grid;grid-template-columns:1fr;gap:10px}.card{border-radius:16px}.relationship{margin-top:10px}.relation-word{font-size:29px}.object-list{display:grid;grid-template-columns:1fr 1fr}.object-row{padding:8px;gap:7px}.object-icon{width:30px;height:30px}.object-row .mini-status{display:none}.controls{gap:10px}.face-btn{min-height:48px;font-size:11px}.facing-note{font-size:11px}.tip{font-size:11px}}
+@media(max-width:390px){.brand p{letter-spacing:.06em}.status-pill{max-width:108px;white-space:normal}.scene-title{font-size:18px}.toolbar{gap:4px}.tool-btn{padding:6px}.workspace{height:54dvh;min-height:320px}.object-list{grid-template-columns:1fr}.object-row .mini-status{display:block}}
+</style>
+<script type="importmap">
+{"imports":{"three":"https://cdn.jsdelivr.net/npm/three@0.164.1/build/three.module.js"}}
+</script>
+</head>
+<body>
+<div id="app">
+<header>
+  <div class="brand">
+    <div class="brandmark"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="m12 2.8 8 4.6v9.2l-8 4.6-8-4.6V7.4z"/><path d="m4.2 7.5 7.8 4.6 7.8-4.6M12 12.1v9"/></svg></div>
+    <div><h1>Spatial Lab <span style="color:#4778f5">/ 3D</span></h1><p>German prepositions playground</p></div>
+  </div>
+  <div class="header-right"><div class="status-pill"><span class="dot"></span> Test mode · no licence check</div></div>
+</header>
+<main>
+  <section class="workspace">
+    <div class="scene-head">
+      <div><div class="eyebrow">Interactive scene · 01</div><div class="scene-title">Where is the <span>ball?</span></div></div>
+      <div class="toolbar">
+        <button id="resetView" class="tool-btn" title="Reset camera"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M3 11a9 9 0 1 1 2.6 6.4"/><path d="M3 4v7h7"/></svg>Reset view</button>
+        <button id="toggleGrid" class="tool-btn" title="Toggle construction grid"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="m12 3 9 5-9 5-9-5z"/><path d="m3 12 9 5 9-5M3 16l9 5 9-5"/></svg>Grid</button>
+      </div>
+    </div>
+    <div class="viewport" id="viewport">
+      <canvas id="scene" aria-label="Interactive 3D scene. Drag the cube view to rotate. Use the position controls to move the dog and ball."></canvas>
+      <div class="axis-legend">
+        <div class="axis-tag"><span class="axis-dot" style="background:#ed6a72"></span>X axis</div>
+        <div class="axis-tag"><span class="axis-dot" style="background:#36b887"></span>Y axis</div>
+        <div class="axis-tag"><span class="axis-dot" style="background:#5c83f6"></span>Z axis</div>
+      </div>
+      <div class="legend-right"><div class="hint-chip"><b>Drag empty space</b> to orbit</div><div class="hint-chip"><b>Drag ball / dog</b> to reposition</div></div>
+    </div>
+    <div class="scene-bottom"><span><strong>CAD VIEWPORT</strong> · orthographic projection</span><span>Mouse + touch enabled</span></div>
+  </section>
+  <aside class="side">
+    <section class="card">
+      <div class="card-top"><h2>Live relationship</h2><span class="tiny-tag">Auto-detected</span></div>
+      <div class="relationship">
+        <div class="relation-label">The ball is…</div>
+        <div class="relation-word" id="relationWord">behind</div>
+        <div class="relation-de" id="relationGerman">hinter dem Würfel</div>
+        <div class="relation-sentence" id="relationSentence">The dog is facing the cube. The ball is on the opposite side.</div>
+      </div>
+      <div class="object-list">
+        <div class="object-row"><div class="object-icon" style="background:#fff0d9;color:#d88921"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><circle cx="12" cy="12" r="8.5" fill="#ffb84f" stroke="#e69a30"/><path d="M7 8c2 1 3 1 5 0" stroke="#ffe4b4"/></svg></div><div class="object-copy"><b>Ball</b><small id="ballPositionText">Opposite side</small></div><span class="mini-status">MOVABLE</span></div>
+        <div class="object-row"><div class="object-icon" style="background:#e8f8f0;color:#2a9b6d"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M4 15c0-3 2-5 5-5h4c3 0 5 2 5 5v3H5z" fill="#83d8b0" stroke="#45aa80"/><circle cx="8" cy="8" r="3.2" fill="#83d8b0" stroke="#45aa80"/><path d="M17 11 21 9v5l-4 1z" fill="#83d8b0" stroke="#45aa80"/></svg></div><div class="object-copy"><b>Dog</b><small id="dogPositionText">Front side · faces cube</small></div><span class="mini-status">MOVABLE</span></div>
+      </div>
+    </section>
+    <section class="card">
+      <div class="card-top"><h2>Move the objects</h2><span class="tiny-tag">6 positions</span></div>
+      <div class="controls">
+        <div class="control-block"><label>Move the ball <span>Choose a face</span></label><div id="ballControls" class="face-grid"></div></div>
+        <div class="control-block"><label>Move the dog <span>Always faces cube</span></label><div id="dogControls" class="face-grid"></div></div>
+        <div class="facing-note">The dog automatically turns toward the cube. Move the ball to another face and watch the English and German labels change.</div>
+        <div class="actions"><button id="swap" class="primary">Swap positions</button><button id="resetObjects" class="secondary">Reset scene</button></div>
+      </div>
+    </section>
+    <section class="card">
+      <div class="card-top"><h2>How to explore</h2><span class="tiny-tag">Quick guide</span></div>
+      <p class="tip" style="margin-top:10px"><strong>1.</strong> Drag the empty viewport to orbit around the cube.<br><strong>2.</strong> Drag the ball or dog to snap it to another face position, or use the controls above.<br><strong>3.</strong> The label is calculated from the dog's position, not from your camera angle.</p>
+    </section>
+  </aside>
+</main>
+</div>
+<script type="module">
+import * as THREE from 'three';
+
+const $ = id => document.getElementById(id);
+
+function initScene(){
+  const canvas = $('scene');
+  const viewport = $('viewport');
+  const scene = new THREE.Scene();
+  scene.background = new THREE.Color('#edf3fb');
+  const camera = new THREE.OrthographicCamera(-5,5,3.5,-3.5,.1,100);
+  const defaultCameraPos = new THREE.Vector3(7.8,6.5,8.6);
+  camera.position.copy(defaultCameraPos);
+  camera.lookAt(0,0,0);
+  const renderer = new THREE.WebGLRenderer({canvas,antialias:true,alpha:false,powerPreference:'high-performance'});
+  renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 2));
+  renderer.outputColorSpace = THREE.SRGBColorSpace;
+  renderer.shadowMap.enabled = true;
+  renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+  renderer.setClearColor('#edf3fb',1);
+  const hemi = new THREE.HemisphereLight(0xffffff,0x8799b5,2.0); scene.add(hemi);
+  const key = new THREE.DirectionalLight(0xffffff,2.6); key.position.set(5,9,7); key.castShadow=true; key.shadow.mapSize.set(1024,1024); scene.add(key);
+  const fill = new THREE.DirectionalLight(0xc9d9ff,1.15); fill.position.set(-7,4,-5); scene.add(fill);
+
+  const grid = new THREE.GridHelper(16,32,0xc3d1e4,0xdbe4f0);
+  grid.position.y=-1.54; scene.add(grid);
+  const floor = new THREE.Mesh(new THREE.PlaneGeometry(200,200),new THREE.ShadowMaterial({opacity:.11}));
+  floor.rotation.x=-Math.PI/2; floor.position.y=-1.56; floor.receiveShadow=true; scene.add(floor);
+
+  const cubeGroup = new THREE.Group(); scene.add(cubeGroup);
+  const cubeMat = new THREE.MeshStandardMaterial({color:0xdde6f4,roughness:.46,metalness:.08,transparent:true,opacity:.88});
+  const cube = new THREE.Mesh(new THREE.BoxGeometry(2.35,2.35,2.35),cubeMat);
+  cube.castShadow=true; cube.receiveShadow=true; cubeGroup.add(cube);
+  const edges = new THREE.LineSegments(new THREE.EdgesGeometry(new THREE.BoxGeometry(2.37,2.37,2.37)),new THREE.LineBasicMaterial({color:0x526b8f,transparent:true,opacity:.92}));
+  cubeGroup.add(edges);
+  // Subtle face accents and center marker make the object feel like a CAD model.
+  const center = new THREE.Mesh(new THREE.SphereGeometry(.045,16,12),new THREE.MeshBasicMaterial({color:0x4778f5}));
+  cubeGroup.add(center);
+
+  const axis = new THREE.AxesHelper(1.9); axis.position.set(-1.42,-1.48,-1.42); scene.add(axis);
+
+  const ballGroup = new THREE.Group(); scene.add(ballGroup);
+  const ball = new THREE.Mesh(new THREE.SphereGeometry(.28,32,24),new THREE.MeshStandardMaterial({color:0xffb64d,roughness:.25,metalness:.05}));
+  ball.castShadow=true; ball.receiveShadow=true; ballGroup.add(ball);
+  const ballHighlight = new THREE.Mesh(new THREE.SphereGeometry(.085,16,12),new THREE.MeshBasicMaterial({color:0xffe6a9}));
+  ballHighlight.position.set(-.08,.12,.2); ballGroup.add(ballHighlight);
+  const ballRing = new THREE.Mesh(new THREE.TorusGeometry(.34,.018,8,48),new THREE.MeshBasicMaterial({color:0xffa52e}));
+  ballRing.rotation.x=Math.PI/2; ballGroup.add(ballRing);
+
+  // A small stylised dog built from primitive 3D meshes, no external model asset needed.
+  const dogGroup = new THREE.Group(); scene.add(dogGroup);
+  const dogMat = new THREE.MeshStandardMaterial({color:0x9a6b43,roughness:.74});
+  const creamMat = new THREE.MeshStandardMaterial({color:0xf0d5ac,roughness:.8});
+  const darkMat = new THREE.MeshStandardMaterial({color:0x3d2a20,roughness:.65});
+  const eyeMat = new THREE.MeshStandardMaterial({color:0x1c2736,roughness:.25});
+  function ellipsoid(parent,mat,pos,scale){const m=new THREE.Mesh(new THREE.SphereGeometry(1,20,16),mat);m.position.set(...pos);m.scale.set(...scale);m.castShadow=true;m.receiveShadow=true;parent.add(m);return m;}
+  ellipsoid(dogGroup,dogMat,[0,.22,0],[.48,.35,.34]); // torso
+  ellipsoid(dogGroup,dogMat,[.32,.48,.03],[.29,.3,.27]); // head
+  ellipsoid(dogGroup,creamMat,[.51,.38,.16],[.18,.12,.17]); // muzzle
+  ellipsoid(dogGroup,darkMat,[.62,.4,.19],[.055,.045,.06]); // nose
+  ellipsoid(dogGroup,dogMat,[.17,.02,-.2],[.12,.24,.12]);
+  ellipsoid(dogGroup,dogMat,[.17,.02,.2],[.12,.24,.12]);
+  ellipsoid(dogGroup,dogMat,[-.22,.02,-.2],[.12,.24,.12]);
+  ellipsoid(dogGroup,dogMat,[-.22,.02,.2],[.12,.24,.12]);
+  ellipsoid(dogGroup,dogMat,[.22,.67,-.15],[.12,.26,.1]);
+  ellipsoid(dogGroup,dogMat,[.22,.67,.2],[.12,.26,.1]);
+  ellipsoid(dogGroup,creamMat,[.57,.46,.23],[.07,.055,.035]);
+  // Eyes face +X, so the dog nose points along +X in its local coordinates.
+  ellipsoid(dogGroup,eyeMat,[.43,.58,.205],[.035,.045,.027]);
+  ellipsoid(dogGroup,eyeMat,[.43,.58,-.12],[.035,.045,.027]);
+  // collar
+  const collar = new THREE.Mesh(new THREE.TorusGeometry(.27,.035,8,32),new THREE.MeshStandardMaterial({color:0x4778f5,roughness:.4}));
+  collar.rotation.x=Math.PI/2; collar.position.set(.22,.39,.02); dogGroup.add(collar);
+
+  // Each object is constrained to one of six face-aligned stations.
+  const stations = [
+    {id:'front',label:'Front',german:'vor',pos:new THREE.Vector3(0,0,2.15),icon:'↑'},
+    {id:'back',label:'Back',german:'hinter',pos:new THREE.Vector3(0,0,-2.15),icon:'↓'},
+    {id:'left',label:'Left',german:'links',pos:new THREE.Vector3(-2.15,0,0),icon:'←'},
+    {id:'right',label:'Right',german:'rechts',pos:new THREE.Vector3(2.15,0,0),icon:'→'},
+    {id:'above',label:'Above',german:'über',pos:new THREE.Vector3(0,2.55,0),icon:'↑'},
+    {id:'below',label:'Below',german:'unter',pos:new THREE.Vector3(0,-2.25,0),icon:'↓'}
+  ];
+  let ballStation='back', dogStation='front', gridOn=true;
+  const labelSprites = [];
+  function makeLabel(text,color,bg){
+    const c=document.createElement('canvas'); c.width=512;c.height=128;
+    const ctx=c.getContext('2d');ctx.clearRect(0,0,c.width,c.height);
+    const r=25;ctx.beginPath();ctx.roundRect(8,8,496,112,r);ctx.fillStyle=bg;ctx.fill();
+    ctx.strokeStyle=color;ctx.lineWidth=4;ctx.stroke();
+    ctx.fillStyle=color;ctx.font='bold 42px Inter, system-ui, sans-serif';ctx.textAlign='center';ctx.textBaseline='middle';ctx.fillText(text,256,64,455);
+    const tex=new THREE.CanvasTexture(c);tex.colorSpace=THREE.SRGBColorSpace;
+    const sprite=new THREE.Sprite(new THREE.SpriteMaterial({map:tex,transparent:true,depthTest:false}));
+    sprite.scale.set(1.55,.39,1);sprite.renderOrder=20;scene.add(sprite);return sprite;
+  }
+  const ballLabel=makeLabel('BEHIND','#244fbf','#ffffff');
+  const dogLabel=makeLabel('DOG · FACES CUBE','#246c51','#ffffff');
+  labelSprites.push(ballLabel,dogLabel);
+  const stationsMeshes = new THREE.Group();scene.add(stationsMeshes);
+  const stationMeshes = {};
+  stations.forEach(s=>{
+    const g=new THREE.Group();g.position.copy(s.pos);scene.add(g);
+    const ring=new THREE.Mesh(new THREE.TorusGeometry(.37,.018,8,36),new THREE.MeshBasicMaterial({color:0x93a9ca,transparent:true,opacity:.6}));
+    ring.rotation.x=Math.PI/2;g.add(ring);
+    const dot=new THREE.Mesh(new THREE.SphereGeometry(.075,12,10),new THREE.MeshBasicMaterial({color:0x9aaac1}));g.add(dot);
+    stationMeshes[s.id]=g;
+  });
+
+  function getStation(id){return stations.find(s=>s.id===id);}
+  function placeObjects(){
+    const bs=getStation(ballStation), ds=getStation(dogStation);
+    ballGroup.position.copy(bs.pos);
+    // Dog stations are farther from the cube; same six directions.
+    dogGroup.position.copy(ds.pos.clone().multiplyScalar(1.26));
+    // Dog model's local forward is +X; rotate it to point from its station toward origin.
+    const towardCenter=dogGroup.position.clone().multiplyScalar(-1).normalize();
+    dogGroup.rotation.y=Math.atan2(-towardCenter.z,towardCenter.x);
+    ballLabel.position.copy(ballGroup.position).add(new THREE.Vector3(0,.58,0));
+    dogLabel.position.copy(dogGroup.position).add(new THREE.Vector3(0,1.1,0));
+    updateLabel();
+    updateControls();
+  }
+  function updateLabel(){
+    const bs=getStation(ballStation), ds=getStation(dogStation);
+    let word='next to', german='neben dem Würfel', sentence='The ball is beside the cube from the dog’s viewpoint.';
+    const map={front:['in front of','vor dem Würfel','The ball is on the side the dog faces.'],back:['behind','hinter dem Würfel','The cube is between the dog and the ball.'],left:['to the left of','links neben dem Würfel','The ball is to the left of the cube from the dog’s viewpoint.'],right:['to the right of','rechts neben dem Würfel','The ball is to the right of the cube from the dog’s viewpoint.'],above:['on top of','auf dem Würfel','The ball is on top of the cube.'],below:['under','unter dem Würfel','The ball is underneath the cube.']};
+    // Vertical relations override side relations. Otherwise compare the ball station to the dog's facing direction.
+    if(bs.id==='above'){[word,german,sentence]=map.above;}
+    else if(bs.id==='below'){[word,german,sentence]=map.below;}
+    else if(ds.id==='above' || ds.id==='below'){
+      // From an elevated/low dog station, describe the ball as being in front of the dog/cube in its viewing direction.
+      if(ds.id==='above'){word='below';german='unter dem Würfel';sentence='From above, the ball is lower than the dog’s position.';}
+      else {word='above';german='über dem Würfel';sentence='From below, the ball is higher than the dog’s position.';}
+    } else {
+      // If dog and ball are on opposite horizontal stations, cube lies between them.
+      const opposite={front:'back',back:'front',left:'right',right:'left'};
+      if(opposite[ds.id]===bs.id){[word,german,sentence]=map.back;}
+      else if(ds.id===bs.id){[word,german,sentence]=map.front;}
+      else {
+        // Convert the ball direction into the dog's local left/right. Dog faces toward cube.
+        const dogVec=getStation(ds.id).pos.clone().setY(0).normalize();
+        const ballVec=bs.pos.clone().setY(0).normalize();
+        const forward=dogVec.clone().negate();
+        const cross=forward.x*ballVec.z-forward.z*ballVec.x;
+        if(Math.abs(cross)<.1){[word,german,sentence]=map.front;}
+        else if(cross>0){[word,german,sentence]=map.right;}
+        else {[word,german,sentence]=map.left;}
+      }
+    }
+    $('relationWord').textContent=word;
+    $('relationGerman').textContent=german;
+    $('relationSentence').textContent=sentence;
+    $('ballPositionText').textContent=bs.label+' station';
+    $('dogPositionText').textContent=ds.label+' side · faces cube';
+    ballLabel.material.map.dispose();
+    ballLabel.material.map=makeTextTexture(word.toUpperCase());
+    ballLabel.material.needsUpdate=true;
+  }
+  function makeTextTexture(text){
+    const c=document.createElement('canvas');c.width=512;c.height=128;const ctx=c.getContext('2d');
+    ctx.beginPath();ctx.roundRect(8,8,496,112,25);ctx.fillStyle='#ffffff';ctx.fill();ctx.strokeStyle='#4778f5';ctx.lineWidth=4;ctx.stroke();
+    ctx.fillStyle='#244fbf';ctx.font='bold 42px Inter, system-ui, sans-serif';ctx.textAlign='center';ctx.textBaseline='middle';ctx.fillText(text,256,64,455);
+    const t=new THREE.CanvasTexture(c);t.colorSpace=THREE.SRGBColorSpace;return t;
+  }
+  function updateControls(){
+    for(const [type,current] of [['ball',ballStation],['dog',dogStation]]){
+      const root=$(type+'Controls');root.innerHTML='';
+      stations.forEach(s=>{
+        const b=document.createElement('button');b.className='face-btn'+(current===s.id?' active':'');
+        b.innerHTML='<span>'+s.icon+'</span>'+s.label;
+        b.setAttribute('aria-pressed',String(current===s.id));
+        b.addEventListener('click',()=>{if(type==='ball')ballStation=s.id;else dogStation=s.id;placeObjects();});
+        root.appendChild(b);
+      });
+    }
+    Object.entries(stationMeshes).forEach(([id,g])=>{
+      const chosen=id===ballStation||id===dogStation;
+      g.children[0].material.color.set(chosen?0x4778f5:0x93a9ca);
+      g.children[0].material.opacity=chosen?.9:.45;
+      g.children[1].material.color.set(chosen?0x4778f5:0x9aaac1);
+    });
+  }
+  // The scene labels are re-created with fresh textures only when relation changes.
+  // Keep an original texture reference for safe disposal.
+  function syncBallLabel(){
+    const word=$('relationWord').textContent.toUpperCase();
+    if(ballLabel.userData.lastText===word)return;
+    if(ballLabel.material.map)ballLabel.material.map.dispose();
+    ballLabel.material.map=makeTextTexture(word);ballLabel.material.needsUpdate=true;ballLabel.userData.lastText=word;
+  }
+  const oldUpdateLabel=updateLabel;
+  // Wrap the label update to refresh its rendered sprite after DOM content changes.
+  // Use a small observer-free call here to keep the scene self-contained.
+  function updateSceneLabel(){oldUpdateLabel();syncBallLabel();}
+  // Replace the place function's label updater by synchronizing after every placement.
+  const originalPlaceObjects=placeObjects;
+  // Initialize objects, then patch the placement function used by all controls.
+  placeObjects();
+  // Correct the initial tooltip texture after first render.
+  syncBallLabel();
+
+  const raycaster=new THREE.Raycaster();const pointer=new THREE.Vector2();
+  let activePointer=null, dragMode=null, dragObject=null, startX=0,startY=0,lastX=0,lastY=0, moved=false;
+  let theta=Math.atan2(camera.position.x,camera.position.z), phi=Math.acos(camera.position.y/camera.position.length()), radius=camera.position.length();
+  function setCamera(){phi=Math.max(.22,Math.min(Math.PI-.22,phi));camera.position.set(radius*Math.sin(phi)*Math.sin(theta),radius*Math.cos(phi),radius*Math.sin(phi)*Math.cos(theta));camera.lookAt(0,0,0);}
+  function eventPointer(e){const rect=canvas.getBoundingClientRect();pointer.x=((e.clientX-rect.left)/rect.width)*2-1;pointer.y=-((e.clientY-rect.top)/rect.height)*2+1;raycaster.setFromCamera(pointer,camera);}
+  function chooseDragTarget(e){
+    eventPointer(e);
+    const hits=raycaster.intersectObjects([ballGroup,dogGroup],true);
+    if(!hits.length)return null;
+    let obj=hits[0].object;
+    while(obj.parent && obj.parent!==scene && obj!==ballGroup && obj!==dogGroup)obj=obj.parent;
+    return obj===ballGroup?'ball':obj===dogGroup?'dog':null;
+  }
+  function snapStationFromScreen(e,type){
+    eventPointer(e);
+    // Project each of the six valid stations to the screen; snap to nearest projected station.
+    let best=null,bestDist=Infinity;
+    stations.forEach(s=>{
+      const p=s.pos.clone().multiplyScalar(type==='dog'?1.26:1).project(camera);
+      const rect=canvas.getBoundingClientRect();
+      const sx=(p.x+1)*.5*rect.width, sy=(1-p.y)*.5*rect.height;
+      const dx=e.clientX-rect.left-sx,dy=e.clientY-rect.top-sy,d=dx*dx+dy*dy;
+      if(d<bestDist){bestDist=d;best=s;}
+    });
+    return best?best.id:null;
+  }
+  canvas.addEventListener('pointerdown',e=>{
+    if(e.button!==undefined&&e.button!==0)return;
+    activePointer=e.pointerId;startX=lastX=e.clientX;startY=lastY=e.clientY;moved=false;
+    dragMode=chooseDragTarget(e)?'object':'orbit';dragObject=dragMode==='object'?chooseDragTarget(e):null;
+    canvas.setPointerCapture(e.pointerId);canvas.style.cursor=dragMode==='object'?'grabbing':'grabbing';
+    e.preventDefault();
+  });
+  canvas.addEventListener('pointermove',e=>{
+    if(activePointer!==e.pointerId){eventPointer(e);const target=chooseDragTarget(e);canvas.style.cursor=target?'grab':'grab';return;}
+    const dx=e.clientX-lastX,dy=e.clientY-lastY;
+    if(Math.abs(e.clientX-startX)+Math.abs(e.clientY-startY)>4)moved=true;
+    if(dragMode==='orbit'&&moved){
+      theta-=dx*.008;phi-=dy*.008;setCamera();
+    } else if(dragMode==='object'&&moved&&dragObject){
+      // Snap continuously to the nearest of the six permitted stations while dragging.
+      const stationId=snapStationFromScreen(e,dragObject);
+      if(stationId){
+        if(dragObject==='ball'&&stationId!==ballStation){ballStation=stationId;placeObjects();}
+        if(dragObject==='dog'&&stationId!==dogStation){dogStation=stationId;placeObjects();}
+      }
+    }
+    lastX=e.clientX;lastY=e.clientY;
+  });
+  canvas.addEventListener('pointerup',e=>{
+    if(activePointer!==e.pointerId)return;
+    if(dragMode==='object'&&dragObject&&moved){
+      const id=snapStationFromScreen(e,dragObject);
+      if(dragObject==='ball')ballStation=id;else dogStation=id;
+      placeObjects();
+    }
+    activePointer=null;dragMode=null;dragObject=null;canvas.style.cursor='grab';
+  });
+  canvas.addEventListener('pointercancel',()=>{activePointer=null;dragMode=null;dragObject=null;});
+  canvas.addEventListener('wheel',e=>{e.preventDefault();radius=Math.max(6.5,Math.min(15,radius+e.deltaY*.008));setCamera();},{passive:false});
+
+  $('resetView').addEventListener('click',()=>{theta=Math.atan2(defaultCameraPos.x,defaultCameraPos.z);phi=Math.acos(defaultCameraPos.y/defaultCameraPos.length());radius=defaultCameraPos.length();setCamera();});
+  $('toggleGrid').addEventListener('click',()=>{gridOn=!gridOn;grid.visible=gridOn;$('toggleGrid').style.background=gridOn?'#fff':'#e9eef7';});
+  $('resetObjects').addEventListener('click',()=>{ballStation='back';dogStation='front';placeObjects();});
+  $('swap').addEventListener('click',()=>{const t=ballStation;ballStation=dogStation;dogStation=t;placeObjects();});
+
+  const resize=()=>{
+    const w=Math.max(1,viewport.clientWidth),h=Math.max(1,viewport.clientHeight),aspect=w/h,frustum=3.9;
+    camera.left=-frustum*aspect/2;camera.right=frustum*aspect/2;camera.top=frustum/2;camera.bottom=-frustum/2;camera.updateProjectionMatrix();renderer.setSize(w,h,false);
+  };
+  const observer=new ResizeObserver(resize);observer.observe(viewport);resize();
+  canvas.style.cursor='grab';
+  function animate(){requestAnimationFrame(animate);ballGroup.rotation.y+=.004;ballRing.rotation.z+=.006;ballLabel.quaternion.copy(camera.quaternion);dogLabel.quaternion.copy(camera.quaternion);renderer.render(scene,camera);}
+  animate();
+}
+
+initScene();
+</script>
+</body>
+</html>

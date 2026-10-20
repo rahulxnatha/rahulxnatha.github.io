@@ -1,0 +1,237 @@
+
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Wo ist der Ball?</title>
+<style>
+*{box-sizing:border-box}
+body{margin:0;background:#f3f6fc;color:#243653;font-family:system-ui,Arial,sans-serif}
+header{text-align:center;padding:14px;background:white;font-size:25px;font-weight:850}
+main{width:min(900px,100%);margin:auto;padding:10px}
+#scene{height:clamp(320px,56vh,540px);border-radius:20px;overflow:hidden;background:linear-gradient(#dce9f9,#f5f0e8);border:1px solid #d7e2f1;position:relative}
+canvas{display:block;width:100%;height:100%;touch-action:pan-y}
+#sentence{margin-top:12px;background:white;border:1px solid #dce5f4;border-radius:15px;padding:13px 8px;text-align:center}
+#de{font-size:clamp(18px,4.5vw,27px);font-weight:850;color:#315ed0;line-height:1.3}
+#en{font-size:13px;color:#73819a;margin-top:4px}
+.prompt{text-align:center;color:#687892;font-size:14px;margin:16px 0 10px}
+.choices{display:flex;flex-wrap:wrap;justify-content:center;gap:8px}
+button{border:1px solid #d8e2f2;background:white;color:#344663;border-radius:24px;padding:10px 15px;font-size:14px;font-weight:750}
+button.active{background:#e5edff;border-color:#9db6f5;color:#2452c5}
+#status{text-align:center;min-height:22px;margin:12px;color:#398166;font-size:14px}
+</style>
+</head>
+<body>
+<header>Wo ist der Ball?</header>
+<main>
+<div id="scene"></div>
+<section id="sentence" aria-live="polite">
+ <div id="de">Der Ball ist hinter der Hundehütte.</div>
+ <div id="en">The ball is behind the doghouse.</div>
+</section>
+<p class="prompt">Wo ist der Ball? Wähle eine Position.</p>
+<div class="choices">
+ <button data-pos="hinter">Hinter</button>
+ <button data-pos="vor">Vor</button>
+ <button data-pos="neben">Neben</button>
+ <button data-pos="auf">Auf</button>
+ <button data-pos="unter">Unter</button>
+ <button data-pos="zwischen">Zwischen</button>
+</div>
+<div id="status">Die Szene bewegt sich langsam.</div>
+</main>
+
+<script type="importmap">
+{"imports":{"three":"https://cdn.jsdelivr.net/npm/three@0.164.1/build/three.module.js","three/addons/":"https://cdn.jsdelivr.net/npm/three@0.164.1/examples/jsm/"}}
+</script>
+<script type="module">
+import * as THREE from "three";
+import {GLTFLoader} from "three/addons/loaders/GLTFLoader.js";
+
+const host=document.querySelector("#scene");
+const scene=new THREE.Scene();
+scene.background=new THREE.Color("#e8eff8");
+scene.fog=new THREE.Fog("#e8eff8",10,22);
+
+const camera=new THREE.PerspectiveCamera(34,1,.1,100);
+camera.position.set(5,4.1,7);
+camera.lookAt(0,1,0);
+
+const renderer=new THREE.WebGLRenderer({antialias:true,alpha:false});
+renderer.setPixelRatio(Math.min(devicePixelRatio,2));
+renderer.outputColorSpace=THREE.SRGBColorSpace;
+renderer.toneMapping=THREE.ACESFilmicToneMapping;
+renderer.toneMappingExposure=1.15;
+host.appendChild(renderer.domElement);
+
+scene.add(new THREE.HemisphereLight(0xe5efff,0x78624c,2.1));
+const sun=new THREE.DirectionalLight(0xffe7ca,3.2);
+sun.position.set(-4,8,5);scene.add(sun);
+const fill=new THREE.DirectionalLight(0xb8d3ff,1.2);
+fill.position.set(5,4,-5);scene.add(fill);
+
+const mat=(color,roughness=.75,metalness=0)=>new THREE.MeshStandardMaterial({color,roughness,metalness});
+const ground=new THREE.Mesh(new THREE.PlaneGeometry(40,40),mat("#c5d0bd"));
+ground.rotation.x=-Math.PI/2;ground.position.y=-.04;scene.add(ground);
+
+// Soft ground shadow catcher
+const shadowMat=new THREE.MeshBasicMaterial({color:"#71809a",transparent:true,opacity:.13});
+const shadow=new THREE.Mesh(new THREE.CircleGeometry(2.4,64),shadowMat);
+shadow.rotation.x=-Math.PI/2;shadow.position.y=-.025;scene.add(shadow);
+
+// Doghouse: detailed timber body and gabled roof.
+const house=new THREE.Group();scene.add(house);
+function box(parent,w,h,d,material,x,y,z){
+ const m=new THREE.Mesh(new THREE.BoxGeometry(w,h,d),material);
+ m.position.set(x,y,z);parent.add(m);return m;
+}
+const wood=mat("#b87943"),woodLight=mat("#d69a5c"),woodDark=mat("#80502f");
+const roofMat=mat("#713c32"),roofEdge=mat("#4d302a");
+box(house,1.8,1.15,1.45,wood,0,.62,0);
+box(house,1.84,.08,1.49,woodDark,0,.08,0);
+
+// Front faces toward camera at z positive. Door opening is a dark arch-like recess.
+box(house,.46,.65,.04,woodDark,0,.43,.755);
+const doorArch=new THREE.Mesh(new THREE.CylinderGeometry(.25,.25,.42,32,1,false,0,Math.PI),woodDark);
+doorArch.rotation.z=Math.PI;doorArch.position.set(0,.77,.77);house.add(doorArch);
+box(house,.54,.06,.05,woodLight,0,.09,.78);
+
+// Gable roof as two sloping roof panels.
+function roofPanel(points,material){
+ const g=new THREE.BufferGeometry();
+ const verts=new Float32Array(points.flat());
+ g.setAttribute("position",new THREE.BufferAttribute(verts,3));
+ g.setIndex([0,1,2,0,2,3]);g.computeVertexNormals();
+ const mesh=new THREE.Mesh(g,material);house.add(mesh);
+}
+roofPanel([[-1.08,1.18,-.88],[0,1.95,-.88],[0,1.95,.88],[-1.08,1.18,.88]],roofMat);
+roofPanel([[0,1.95,-.88],[1.08,1.18,-.88],[1.08,1.18,.88],[0,1.95,.88]],mat("#8a4a3c"));
+box(house,2.2,.09,.1,roofEdge,0,1.18,.9);
+// Small roof boards
+for(let i=0;i<7;i++){
+ const z=-.72+i*.24;
+ const b=box(house,2.05,.035,.025,mat(i%2?"#9a5543":"#814638"),0,1.22,z);
+ b.rotation.z=0;
+}
+house.position.set(.6,0,0);
+
+// Dog, built as a smooth 3D character with fur-like warm materials.
+const dog=new THREE.Group();scene.add(dog);
+const fur=mat("#b97b45",.9),furLight=mat("#d8a16b",.9),cream=mat("#ead0a5",.95);
+const earMat=mat("#75452f",.95),eyeMat=mat("#171b22",.2),noseMat=mat("#24232a",.25);
+function ell(parent,scale,pos,material){
+ const m=new THREE.Mesh(new THREE.SphereGeometry(1,32,24),material);
+ m.scale.set(...scale);m.position.set(...pos);parent.add(m);return m;
+}
+// Body, chest, head and muzzle
+ell(dog,[.58,.38,.3],[0,.52,0],fur);
+ell(dog,[.29,.38,.29],[.36,.61,.02],furLight);
+ell(dog,[.27,.28,.25],[.47,.99,.02],furLight);
+ell(dog,[.23,.14,.19],[.64,.88,.1],cream);
+ell(dog,[.07,.055,.06],[.81,.91,.12],noseMat);
+ell(dog,[.035,.04,.025],[.58,1.02,.19],eyeMat);
+ell(dog,[.035,.04,.025],[.72,1.02,.19],eyeMat);
+// floppy ears
+const ear1=ell(dog,[.12,.25,.09],[.34,.94,.19],earMat);ear1.rotation.z=-.4;
+const ear2=ell(dog,[.12,.25,.09],[.53,.94,-.14],earMat);ear2.rotation.z=.3;
+// Four legs
+for(const x of [-.36,-.12,.28,.48]){
+ const leg=ell(dog,[.105,.29,.105],[x,.24,x>.2?-.13:.13],fur);
+ leg.rotation.z=x<0?-.08:.08;
+ ell(dog,[.12,.08,.12],[x,.07,x>.2?-.13:.13],furLight);
+}
+// Curved tail
+const tailCurve=new THREE.CatmullRomCurve3([
+ new THREE.Vector3(-.48,.62,0),new THREE.Vector3(-.68,.78,0),
+ new THREE.Vector3(-.78,.94,.02),new THREE.Vector3(-.69,1.03,.02)
+]);
+dog.add(new THREE.Mesh(new THREE.TubeGeometry(tailCurve,24,.055,10,false),fur));
+dog.position.set(-1.65,0,.75);
+dog.rotation.y=.35;
+
+// Glossy red ball
+const ballMat=new THREE.MeshPhysicalMaterial({
+ color:"#ed263e",roughness:.19,metalness:.02,clearcoat:1,clearcoatRoughness:.1
+});
+const ball=new THREE.Mesh(new THREE.SphereGeometry(.23,48,36),ballMat);
+scene.add(ball);
+const ballShadow=new THREE.Mesh(new THREE.CircleGeometry(.3,40),new THREE.MeshBasicMaterial({color:"#53627a",transparent:true,opacity:.18}));
+ballShadow.rotation.x=-Math.PI/2;ballShadow.position.y=-.018;scene.add(ballShadow);
+
+const spots={
+ hinter:{p:[2.0,.23,-1.45],de:"Der Ball ist hinter der Hundehütte.",en:"The ball is behind the doghouse."},
+ vor:{p:[-.8,.23,2.0],de:"Der Ball ist vor der Hundehütte.",en:"The ball is in front of the doghouse."},
+ neben:{p:[2.1,.23,.8],de:"Der Ball ist neben der Hundehütte.",en:"The ball is next to the doghouse."},
+ auf:{p:[.6,2.18,0],de:"Der Ball ist auf der Hundehütte.",en:"The ball is on the doghouse."},
+ unter:{p:[.6,.23,0],de:"Der Ball ist unter der Hundehütte.",en:"The ball is under the doghouse."},
+ zwischen:{p:[-.55,.23,.55],de:"Der Ball ist zwischen dem Hund und der Hundehütte.",en:"The ball is between the dog and the doghouse."}
+};
+let active="hinter";
+function setBall(key){
+ active=key;const s=spots[key];
+ ball.position.set(...s.p);
+ ballShadow.position.x=s.p[0];ballShadow.position.z=s.p[2];
+ document.querySelector("#de").textContent=s.de;
+ document.querySelector("#en").textContent=s.en;
+ document.querySelectorAll("button[data-pos]").forEach(b=>b.classList.toggle("active",b.dataset.pos===key));
+}
+document.querySelectorAll("button[data-pos]").forEach(b=>b.addEventListener("click",()=>setBall(b.dataset.pos)));
+setBall("hinter");
+
+// Gentle camera drift: only a small cone, no full orbit.
+let t=0;
+function resize(){
+ const w=host.clientWidth,h=host.clientHeight;
+ renderer.setSize(w,h,false);camera.aspect=w/h;camera.updateProjectionMatrix();
+}
+window.addEventListener("resize",resize);resize();
+
+const target=new THREE.Vector3(.15,.85,0);
+function animate(){
+ requestAnimationFrame(animate);
+ t+=.006;
+ camera.position.x=5+Math.sin(t)*.22;
+ camera.position.y=4.1+Math.sin(t*.7)*.07;
+ camera.position.z=7+Math.cos(t)*.16;
+ camera.lookAt(target);
+ // subtle idle movement
+ dog.rotation.y=.35+Math.sin(t*.6)*.025;
+ renderer.render(scene,camera);
+}
+animate();
+
+// Drag the ball on desktop or touch screens. Drop snaps to the nearest learning position.
+const raycaster=new THREE.Raycaster(),pointer=new THREE.Vector2();
+let dragging=false;
+const plane=new THREE.Plane(new THREE.Vector3(0,1,0),-.23);
+const hit=new THREE.Vector3();
+renderer.domElement.addEventListener("pointerdown",e=>{
+ const r=renderer.domElement.getBoundingClientRect();
+ pointer.x=((e.clientX-r.left)/r.width)*2-1;
+ pointer.y=-((e.clientY-r.top)/r.height)*2+1;
+ raycaster.setFromCamera(pointer,camera);
+ if(raycaster.intersectObject(ball).length){dragging=true;renderer.domElement.setPointerCapture(e.pointerId);}
+});
+renderer.domElement.addEventListener("pointermove",e=>{
+ if(!dragging)return;
+ const r=renderer.domElement.getBoundingClientRect();
+ pointer.x=((e.clientX-r.left)/r.width)*2-1;
+ pointer.y=-((e.clientY-r.top)/r.height)*2+1;
+ raycaster.setFromCamera(pointer,camera);
+ if(raycaster.ray.intersectPlane(plane,hit)){
+   ball.position.set(hit.x,.23,hit.z);
+ }
+});
+renderer.domElement.addEventListener("pointerup",()=>{
+ if(!dragging)return;dragging=false;
+ let nearest="hinter",dist=Infinity;
+ for(const [key,s] of Object.entries(spots)){
+  const d=ball.position.distanceTo(new THREE.Vector3(...s.p));
+  if(d<dist){dist=d;nearest=key;}
+ }
+ setBall(nearest);
+});
+</script>
+</body>
+</html>

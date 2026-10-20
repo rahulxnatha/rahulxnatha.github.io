@@ -1,0 +1,1236 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#101827">
+  <title>Quiz Room</title>
+  <style>
+    :root {
+      color-scheme: dark;
+      --bg: #101827;
+      --panel: #192438;
+      --panel-2: #223149;
+      --text: #f3f6fc;
+      --muted: #aab6ca;
+      --accent: #8bafff;
+      --accent-text: #101827;
+      --border: #34445d;
+      --danger: #ff9696;
+      --success: #8de0b0;
+      --radius: 18px;
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      background: var(--bg);
+      color: var(--text);
+      font: 16px/1.5 system-ui, -apple-system, BlinkMacSystemFont,
+        "Segoe UI", sans-serif;
+    }
+
+    button, input, textarea { font: inherit; }
+
+    button {
+      min-height: 48px;
+      padding: 12px 16px;
+      border: 1px solid var(--border);
+      border-radius: 13px;
+      background: var(--panel-2);
+      color: var(--text);
+      cursor: pointer;
+      touch-action: manipulation;
+    }
+
+    button:disabled {
+      opacity: .5;
+      cursor: not-allowed;
+    }
+
+    button:focus-visible, input:focus-visible {
+      outline: 3px solid var(--accent);
+      outline-offset: 2px;
+    }
+
+    button.primary {
+      background: var(--accent);
+      border-color: var(--accent);
+      color: var(--accent-text);
+      font-weight: 750;
+    }
+
+    button.subtle { background: transparent; }
+
+    input {
+      width: 100%;
+      min-height: 49px;
+      padding: 12px 14px;
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      background: var(--bg);
+      color: var(--text);
+    }
+
+    .app {
+      width: min(100% - 28px, 680px);
+      margin: 0 auto;
+      padding: 24px 0 44px;
+    }
+
+    header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      margin-bottom: 26px;
+    }
+
+    .brand { font-size: 20px; font-weight: 850; letter-spacing: -.5px; }
+    .brand span { color: var(--accent); }
+    .muted { color: var(--muted); }
+    .small { font-size: 13px; }
+    .hidden { display: none !important; }
+
+    .panel {
+      background: var(--panel);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 22px;
+      margin-bottom: 16px;
+    }
+
+    h1 { font-size: clamp(29px, 7vw, 42px); line-height: 1.12; margin: 0 0 12px; }
+    h2 { font-size: 22px; margin: 0 0 12px; }
+    h3 { font-size: 17px; margin: 0 0 10px; }
+    p { margin: 8px 0 16px; }
+    .stack { display: grid; gap: 12px; }
+    .row { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
+    .row > * { min-width: 0; }
+    .grow { flex: 1; }
+    .actions { display: grid; gap: 10px; margin-top: 18px; }
+    .actions button { width: 100%; }
+    .divider { border: 0; border-top: 1px solid var(--border); margin: 20px 0; }
+
+    .pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 5px 10px;
+      border: 1px solid var(--border);
+      border-radius: 999px;
+      color: var(--muted);
+      font-size: 13px;
+    }
+
+    .notice {
+      padding: 12px 14px;
+      border-radius: 12px;
+      background: var(--panel-2);
+      color: var(--muted);
+      overflow-wrap: anywhere;
+    }
+
+    .notice.error { color: var(--danger); }
+    .notice.success { color: var(--success); }
+
+    .player-list { display: grid; gap: 8px; padding: 0; list-style: none; }
+    .player-list li {
+      display: flex;
+      justify-content: space-between;
+      gap: 12px;
+      padding: 12px;
+      border-radius: 12px;
+      background: var(--panel-2);
+    }
+
+    .game-code {
+      font-size: clamp(29px, 9vw, 42px);
+      font-weight: 850;
+      letter-spacing: 5px;
+      overflow-wrap: anywhere;
+    }
+
+    .timer-track {
+      height: 8px;
+      border-radius: 99px;
+      background: var(--panel-2);
+      overflow: hidden;
+      margin: 14px 0;
+    }
+
+    .timer-fill {
+      height: 100%;
+      width: 100%;
+      background: var(--accent);
+      transition: width .2s linear;
+    }
+
+    .options { display: grid; gap: 10px; margin-top: 20px; }
+    .answer-option { text-align: left; min-height: 58px; }
+    .answer-option.selected {
+      border-color: var(--accent);
+      background: #304568;
+    }
+
+    .word-bank, .match-list {
+      display: flex;
+      flex-wrap: wrap;
+      align-content: flex-start;
+      gap: 9px;
+      min-height: 50px;
+      margin: 12px 0;
+    }
+
+    .word-tile {
+      min-height: 44px;
+      padding: 9px 13px;
+    }
+
+    .word-tile.selected, .match-item.selected {
+      border-color: var(--accent);
+      background: #304568;
+    }
+
+    .match-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+    }
+
+    .match-item {
+      width: 100%;
+      min-height: 56px;
+      padding: 10px;
+      overflow-wrap: anywhere;
+    }
+
+    .match-item.paired {
+      border-color: var(--success);
+      opacity: .8;
+    }
+
+    .pair-summary {
+      padding: 10px 12px;
+      border-radius: 10px;
+      background: var(--panel-2);
+      margin: 6px 0;
+      overflow-wrap: anywhere;
+    }
+
+    .score { font-size: 28px; font-weight: 850; }
+    .answer-option:disabled, .word-tile:disabled, .match-item:disabled { opacity: .68; }
+    .question-meta { display:flex; flex-wrap:wrap; gap:8px; margin: 8px 0 14px; }
+    .footer { text-align: center; margin-top: 25px; color: var(--muted); font-size: 12px; }
+
+    @media (max-width: 420px) {
+      .app { width: min(100% - 20px, 680px); padding-top: 15px; }
+      .panel { padding: 17px; }
+      .match-grid { gap: 8px; }
+      .match-item { font-size: 14px; padding: 8px; }
+    }
+  </style>
+</head>
+<body>
+  <main class="app">
+    <header>
+      <div class="brand">QUIZ<span>ROOM</span></div>
+      <span class="pill" id="connectionStatus">Connecting</span>
+    </header>
+
+    <div id="message" class="notice hidden" role="status" aria-live="polite"></div>
+
+    <!-- HOME -->
+    <section id="homeScreen">
+      <div class="panel">
+        <p class="pill">LIVE MULTIPLAYER QUIZ</p>
+        <h1>Learn together.<br>Play together.</h1>
+        <p class="muted">Create a room, invite your friends, and compete in real time.</p>
+
+        <div class="stack">
+          <label for="username">Your username</label>
+          <input id="username" maxlength="24" minlength="2"
+                 autocomplete="nickname" placeholder="Enter a username">
+          <button class="primary" id="saveUsernameBtn">Continue</button>
+        </div>
+      </div>
+
+      <div id="gameActions" class="panel hidden">
+        <h2>Ready to play?</h2>
+        <div class="actions">
+          <button class="primary" id="createGameBtn">Start a new game</button>
+          <hr class="divider">
+          <label for="gameCodeInput">Join a friend's game</label>
+          <input id="gameCodeInput" maxlength="6" autocomplete="off"
+                 placeholder="Enter 6-character code">
+          <button id="joinGameBtn">Join game</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- LOBBY -->
+    <section id="lobbyScreen" class="hidden">
+      <div class="panel">
+        <p class="pill">WAITING ROOM</p>
+        <h1>Bring everyone in.</h1>
+        <p class="muted">Share the invitation. The host can start when everyone is ready.</p>
+        <div class="game-code" id="lobbyCode">------</div>
+        <div class="actions">
+          <button class="primary" id="shareInviteBtn">Share invitation link</button>
+          <button id="copyInviteBtn">Copy invitation link</button>
+        </div>
+        <hr class="divider">
+        <div class="row">
+          <h2 class="grow">Players</h2>
+          <span class="pill" id="playerCount">0 players</span>
+        </div>
+        <ul class="player-list" id="lobbyPlayers"></ul>
+        <p id="hostMessage" class="muted small"></p>
+        <button class="primary hidden" id="startGameBtn">Start game</button>
+        <button class="subtle" id="leaveLobbyBtn">Leave room</button>
+      </div>
+    </section>
+
+    <!-- QUIZ -->
+    <section id="quizScreen" class="hidden">
+      <div class="row" style="justify-content:space-between;margin-bottom:10px">
+        <span class="pill" id="questionCounter">Question 1</span>
+        <span class="pill" id="questionType">Choose</span>
+        <span class="pill" id="answerProgress">0 answered</span>
+      </div>
+
+      <div class="panel">
+        <div class="row" style="justify-content:space-between">
+          <span class="muted small">TIME LEFT</span>
+          <strong id="timerText">20s</strong>
+        </div>
+        <div class="timer-track"><div class="timer-fill" id="timerFill"></div></div>
+
+        <h2 id="questionText">Loading question...</h2>
+        <div id="answerArea"></div>
+        <div id="answerFeedback" class="notice hidden" aria-live="polite"></div>
+        <button id="submitAnswerBtn" class="primary" style="width:100%;margin-top:18px">
+          Submit answer
+        </button>
+      </div>
+
+      <div class="panel">
+        <div class="row">
+          <h3 class="grow">Live scoreboard</h3>
+          <span class="pill" id="livePlayerCount"></span>
+        </div>
+        <ul class="player-list" id="livePlayers"></ul>
+      </div>
+    </section>
+
+    <!-- RESULTS -->
+    <section id="resultsScreen" class="hidden">
+      <div class="panel">
+        <p class="pill">GAME COMPLETE</p>
+        <h1>Final results</h1>
+        <p class="muted">Here is how everyone finished.</p>
+        <ul class="player-list" id="finalPlayers"></ul>
+        <div class="actions">
+          <button class="primary" id="backHomeBtn">Back to home</button>
+        </div>
+      </div>
+    </section>
+
+    <div class="footer">Quiz Room · Multiplayer learning</div>
+  </main>
+
+  <script>
+    "use strict";
+
+    // Replace this URL if you deploy a new Apps Script web app.
+    const API_URL =
+      "https://script.google.com/macros/s/AKfycbyB5s0e2veN_nbMvzk86cpRFDqgOSjQL6--Ta7qOloAwXOR_kealhqfx1mAeeDXoSXtCQ/exec";
+
+    
+
+    const POLL_MS = 900;
+    const CLOCK_TICK_MS = 200;
+
+    const $ = id => document.getElementById(id);
+
+    const app = {
+      node: "",
+      username: "",
+      gameCode: "",
+      isHost: false,
+      status: "",
+      questionIndex: -1,
+      questionKey: "",
+      question: null,
+      hasAnswered: false,
+      selectedChoice: "",
+      fillValue: "",
+      arrangeTiles: [],
+      arrangeAnswer: [],
+      matchPairs: {},
+      matchSelectedLeft: null,
+      matchSelectedRight: null,
+      revealed: false,
+      remainingMs: 0,
+      lastState: null,
+      pollTimer: null,
+      clockTimer: null,
+      timerAnchorAt: 0,
+      timerAnchorRemaining: 0,
+      timerTotalMs: 20000,
+      serverOffsetMs: 0,
+      deadlineAt: 0,
+      busy: false
+    };
+
+    function showMessage(text, type = "") {
+      const el = $("message");
+      el.textContent = text;
+      el.className = "notice" + (type ? " " + type : "");
+      el.classList.remove("hidden");
+    }
+
+    function clearMessage() {
+      $("message").classList.add("hidden");
+      $("message").textContent = "";
+    }
+
+    function setConnection(text) {
+      $("connectionStatus").textContent = text;
+    }
+
+    function showScreen(name) {
+      ["home", "lobby", "quiz", "results"].forEach(screen => {
+        $(screen + "Screen").classList.toggle("hidden", screen !== name);
+      });
+    }
+
+    function setBusy(value) {
+      app.busy = value;
+      [
+        "saveUsernameBtn", "createGameBtn", "joinGameBtn",
+        "startGameBtn", "submitAnswerBtn"
+      ].forEach(id => {
+        const el = $(id);
+        if (el) el.disabled = value;
+      });
+    }
+
+    function requireNode() {
+      // Preserve the DOCSnode created by the existing DOCS system.
+      const node = localStorage.getItem("DOCSnode");
+      if (!node) {
+        throw new Error(
+          "DOCSnode was not found. Open this page through your existing DOCS-enabled website."
+        );
+      }
+      app.node = node;
+      return node;
+    }
+
+    async function api(action, data = {}, method = "POST") {
+      const node = requireNode();
+
+      let url = API_URL;
+      const payload = Object.assign({ action, node }, data);
+
+      const options = {
+        method,
+        redirect: "follow",
+        credentials: "omit"
+      };
+
+      if (method === "GET") {
+        const params = new URLSearchParams(payload);
+        url += (url.includes("?") ? "&" : "?") + params.toString();
+      } else {
+        // text/plain avoids a JSON preflight in many browser deployments.
+        options.headers = { "Content-Type": "text/plain;charset=utf-8" };
+        options.body = JSON.stringify(payload);
+      }
+
+      const response = await fetch(url, options);
+      if (!response.ok) throw new Error("Server request failed (" + response.status + ").");
+
+      const result = await response.json();
+      if (!result || result.ok === false) {
+        throw new Error(result && result.error ? result.error : "The server returned an unexpected response.");
+      }
+      return result;
+    }
+
+    function handleError(error) {
+      console.error(error);
+      showMessage(error && error.message ? error.message : "Something went wrong.", "error");
+      setConnection("Connection issue");
+    }
+
+    function stopPolling() {
+      if (app.pollTimer) clearTimeout(app.pollTimer);
+      app.pollTimer = null;
+    }
+
+    function startPolling() {
+      stopPolling();
+      pollState();
+    }
+
+    async function pollState() {
+      if (!app.gameCode) return;
+
+      const requestStartedAt = Date.now();
+      try {
+        const state = await api("state", { gameCode: app.gameCode }, "GET");
+        const requestEndedAt = Date.now();
+        if (Number.isFinite(Number(state.serverNow))) {
+          // Estimate server/client clock offset using the request midpoint.
+          app.serverOffsetMs = Number(state.serverNow) - ((requestStartedAt + requestEndedAt) / 2);
+        }
+        app.lastState = state;
+        setConnection("Connected");
+        renderState(state);
+      } catch (error) {
+        handleError(error);
+      } finally {
+        if (app.gameCode && app.status !== "FINISHED") {
+          app.pollTimer = setTimeout(pollState, POLL_MS);
+        }
+      }
+    }
+
+    async function saveUsername() {
+      clearMessage();
+      const name = $("username").value.trim();
+
+      if (name.length < 2 || name.length > 24) {
+        showMessage("Choose a username between 2 and 24 characters.", "error");
+        return;
+      }
+
+      setBusy(true);
+      try {
+        await api("setUsername", { username: name });
+        
+        app.username = name;
+localStorage.setItem("quizUsername", name);
+
+const inviteCode = new URLSearchParams(window.location.search).get("game");
+
+if (inviteCode) {
+  await resumeOrJoinGame(inviteCode);
+  return;
+}
+
+$("gameActions").classList.remove("hidden");
+showMessage("Username saved. You can create or join a game.", "success");
+
+      } catch (error) {
+        handleError(error);
+      } finally {
+        setBusy(false);
+      }
+    }
+
+    async function resumeOrJoinGame(code) {
+      code = String(code || "").trim().toUpperCase();
+      if (!/^[A-Z2-9]{6}$/.test(code)) throw new Error("This invitation code is invalid.");
+      // Refresh/reopen should resume the existing participant, not try to join
+      // an already-started game as if it were a new player.
+      try {
+        const state = await api("state", { gameCode: code }, "GET");
+        app.gameCode = state.gameCode || code;
+        updateInviteUrl();
+        showScreen(state.status === "FINISHED" ? "results" : state.status === "ACTIVE" ? "quiz" : "lobby");
+        renderState(state);
+        startPolling();
+        return;
+      } catch (error) {
+        if (!String(error.message || "").toLowerCase().includes("not joined")) throw error;
+      }
+      // A genuinely new invitee can join only while the room is in the lobby.
+      await joinGame(code);
+    }
+
+    async function createGame() {
+      clearMessage();
+      setBusy(true);
+      try {
+        const result = await api("createGame", {});
+        app.gameCode = result.gameCode;
+        updateInviteUrl();
+        showScreen("lobby");
+        startPolling();
+      } catch (error) {
+        handleError(error);
+      } finally {
+        setBusy(false);
+      }
+    }
+
+    async function joinGame(code) {
+      clearMessage();
+      code = String(code || "").trim().toUpperCase();
+
+      if (!/^[A-Z2-9]{6}$/.test(code)) {
+        showMessage("Enter a valid six-character game code.", "error");
+        return;
+      }
+
+      setBusy(true);
+      try {
+        const result = await api("joinGame", { gameCode: code });
+        app.gameCode = result.gameCode || code;
+        updateInviteUrl();
+        showScreen("lobby");
+        startPolling();
+      } catch (error) {
+        handleError(error);
+      } finally {
+        setBusy(false);
+      }
+    }
+
+    function updateInviteUrl() {
+      if (!app.gameCode) return;
+      const url = new URL(window.location.href);
+      url.searchParams.set("game", app.gameCode);
+      $("lobbyCode").textContent = app.gameCode;
+      history.replaceState({}, "", url);
+    }
+
+    function inviteUrl() {
+      const url = new URL(window.location.href);
+      url.searchParams.set("game", app.gameCode);
+      return url.toString();
+    }
+
+    async function shareInvite() {
+      const data = {
+        title: "Join my quiz",
+        text: "Join my Quiz Room game. Game code: " + app.gameCode,
+        url: inviteUrl()
+      };
+
+      try {
+        if (navigator.share) {
+          await navigator.share(data);
+        } else {
+          await copyInvite();
+        }
+      } catch (error) {
+        if (error.name !== "AbortError") handleError(error);
+      }
+    }
+
+    async function copyInvite() {
+      try {
+        await navigator.clipboard.writeText(inviteUrl());
+        showMessage("Invitation link copied.", "success");
+      } catch (error) {
+        showMessage("Copy this invitation link: " + inviteUrl(), "success");
+      }
+    }
+
+    async function startGame() {
+      clearMessage();
+      setBusy(true);
+      try {
+        await api("startGame", { gameCode: app.gameCode });
+        await pollState();
+      } catch (error) {
+        handleError(error);
+      } finally {
+        setBusy(false);
+      }
+    }
+
+    async function leaveGame() {
+      stopPolling();
+      if (app.gameCode) {
+        try {
+          await api("leaveGame", { gameCode: app.gameCode });
+        } catch (error) {
+          console.warn("Leave request failed:", error);
+        }
+      }
+      resetGame();
+      showScreen("home");
+    }
+
+    function resetGame() {
+      stopPolling();
+      if (app.clockTimer) clearInterval(app.clockTimer);
+      app.clockTimer = null;
+      app.gameCode = "";
+      app.isHost = false;
+      app.status = "";
+      app.questionIndex = -1;
+      app.questionKey = "";
+      app.question = null;
+      app.hasAnswered = false;
+      app.revealed = false;
+      app.lastState = null;
+      app.matchPairs = {};
+      app.arrangeAnswer = [];
+      const url = new URL(window.location.href);
+      url.searchParams.delete("game");
+      history.replaceState({}, "", url);
+    }
+
+    function renderState(state) {
+      app.status = state.status;
+      app.isHost = Boolean(state.host);
+
+      if (state.status === "LOBBY") {
+        showScreen("lobby");
+        renderLobby(state);
+        return;
+      }
+
+      if (state.status === "ACTIVE") {
+        showScreen("quiz");
+        renderQuizState(state);
+        return;
+      }
+
+      if (state.status === "FINISHED") {
+        stopPolling();
+        showScreen("results");
+        renderLeaderboard($("finalPlayers"), state.finalLeaderboard || state.players || []);
+        return;
+      }
+    }
+
+    function renderLobby(state) {
+      $("lobbyCode").textContent = state.gameCode || app.gameCode;
+      $("playerCount").textContent = state.playerCount + " player" + (state.playerCount === 1 ? "" : "s");
+      renderLeaderboard($("lobbyPlayers"), state.players || []);
+
+      $("startGameBtn").classList.toggle("hidden", !state.host);
+      $("hostMessage").textContent = state.host
+        ? "You are the host. Start when at least two players have joined."
+        : "Waiting for the host to start the game.";
+    }
+
+    function renderLeaderboard(list, players) {
+      list.replaceChildren();
+
+      if (!players.length) {
+        const li = document.createElement("li");
+        li.textContent = "Waiting for players...";
+        list.appendChild(li);
+        return;
+      }
+
+      players.forEach((player, index) => {
+        const li = document.createElement("li");
+        const name = document.createElement("span");
+        const score = document.createElement("strong");
+        name.textContent = (index + 1) + ". " + player.username;
+        score.textContent = String(player.score || 0) + " pts";
+        li.append(name, score);
+        list.appendChild(li);
+      });
+    }
+
+    function renderQuizState(state) {
+
+        app.questionIndex = Number(state.questionIndex);
+      renderLeaderboard($("livePlayers"), state.players || []);
+      $("livePlayerCount").textContent = state.playerCount + " players";
+
+      $("questionCounter").textContent =
+        "Question " + (Number(state.questionIndex) + 1) + " of " + state.questionCount;
+
+      const q = state.question;
+      if (!q) return;
+
+      const key = String(state.questionIndex) + ":" + String(q.id);
+      if (key !== app.questionKey) {
+        app.questionKey = key;
+        app.question = q;
+        app.hasAnswered = false;
+        app.selectedChoice = "";
+        app.fillValue = "";
+        app.matchPairs = {};
+        app.matchSelectedLeft = null;
+        app.matchSelectedRight = null;
+        app.arrangeAnswer = [];
+        app.revealed = false;
+        renderQuestion(q);
+      }
+
+      app.hasAnswered = Boolean(state.hasAnswered);
+      app.revealed = Boolean(state.revealed);
+      app.remainingMs = Number(state.remainingMs) || 0;
+      $("answerProgress").textContent = (state.answeredCount || 0) + " of " +
+        (state.playerCount || 0) + " answered";
+      app.timerAnchorAt = performance.now();
+      app.deadlineAt = Number(state.deadlineAt || 0);
+      app.timerAnchorRemaining = app.revealed ? 0 : Math.max(0,
+        app.deadlineAt ? app.deadlineAt - (Date.now() + app.serverOffsetMs) : Number(state.remainingMs) || 0);
+      app.timerTotalMs = Math.max(1, Number(q.seconds || 20) * 1000);
+
+      $("submitAnswerBtn").classList.toggle("hidden", app.hasAnswered || app.revealed);
+      $("submitAnswerBtn").disabled = app.hasAnswered || app.revealed;
+
+      if (app.hasAnswered && !app.revealed) {
+        $("answerFeedback").textContent = "Answer locked in. Waiting for everyone else...";
+        $("answerFeedback").classList.remove("hidden");
+      } else if (app.revealed) {
+        $("answerFeedback").classList.remove("hidden");
+        const mine = (state.answerSummary || []).find(a => a.username === app.username);
+        const earned = mine ? Number(mine.score || 0) : 0;
+        const resultText = mine ? (earned > 0 ? "Your score: +" + earned.toFixed(2).replace(/\.00$/, "") + " point(s). " : "No points this round. ") : "No answer recorded. ";
+        $("answerFeedback").textContent = resultText + formatCorrectAnswer(state.correctAnswer);
+        $("submitAnswerBtn").classList.add("hidden");
+      } else {
+        $("answerFeedback").classList.add("hidden");
+      }
+
+      updateTimer(app.timerAnchorRemaining, q.seconds);
+    }
+
+    function formatCorrectAnswer(answer) {
+      if (!answer) return "Answers revealed.";
+      if (answer.text !== undefined) {
+        return "Correct answer: " + answer.text;
+      }
+      if (answer.acceptedAnswers) {
+        return "Accepted answer(s): " + answer.acceptedAnswers.join(" / ");
+      }
+      if (answer.acceptedSentences) {
+        return "Accepted sentence(s): " + answer.acceptedSentences.join(" / ");
+      }
+      if (answer.pairs) {
+        return "Correct pairs: " + answer.pairs.map(p => p.left + " = " + p.right).join("; ");
+      }
+      return "Answers revealed.";
+    }
+
+    function renderQuestion(q) {
+      $("questionType").textContent = q.type;
+      $("questionText").textContent = q.type === "Arrange"
+        ? "Arrange the words into the correct sentence."
+        : q.type === "Match" ? (q.question || "Match each item with its pair.") : (q.question || "");
+      const area = $("answerArea");
+      area.replaceChildren();
+
+      if (q.type === "Choose" || q.type === "TrueFalse") {
+        const options = q.options || {};
+        const keys = Object.keys(options);
+        const wrapper = document.createElement("div");
+        wrapper.className = "options";
+
+        keys.forEach(letter => {
+          const button = document.createElement("button");
+          button.className = "answer-option";
+          button.textContent = letter + ". " + options[letter];
+          button.addEventListener("click", () => {
+            if (app.hasAnswered || app.revealed) return;
+            app.selectedChoice = letter;
+            wrapper.querySelectorAll("button").forEach(b => b.classList.remove("selected"));
+            button.classList.add("selected");
+          });
+          wrapper.appendChild(button);
+        });
+
+        area.appendChild(wrapper);
+      } else if (q.type === "Fill") {
+        const input = document.createElement("input");
+        input.id = "fillAnswer";
+        input.placeholder = "Type your answer";
+        input.autocomplete = "off";
+        input.addEventListener("input", () => app.fillValue = input.value);
+        area.appendChild(input);
+      } else if (q.type === "Arrange") {
+        renderArrange(q, area);
+      } else if (q.type === "Match") {
+        renderMatch(q, area);
+      } else {
+        area.textContent = "Unsupported question type: " + q.type;
+      }
+    }
+
+    function renderArrange(q, area) {
+      const instruction = document.createElement("p");
+      instruction.className = "muted small";
+      instruction.textContent = "Tap a word to add it. Tap a word in your sentence to remove it. You can also drag words into the sentence and drag them to reorder.";
+      area.appendChild(instruction);
+
+      const answerTitle = document.createElement("h3");
+      answerTitle.textContent = "Your sentence";
+      area.appendChild(answerTitle);
+
+      const answerBank = document.createElement("div");
+      answerBank.className = "word-bank";
+      answerBank.id = "arrangeAnswer";
+      area.appendChild(answerBank);
+
+      const sourceTitle = document.createElement("h3");
+      sourceTitle.textContent = "Available words";
+      area.appendChild(sourceTitle);
+
+      const sourceBank = document.createElement("div");
+      sourceBank.className = "word-bank";
+      area.appendChild(sourceBank);
+
+      app.arrangeTiles = (q.pills || []).map((p, i) => ({
+        id: p.id === undefined ? i : p.id,
+        text: p.text,
+        used: false
+      }));
+      app.arrangeAnswer = [];
+
+      function draw() {
+        answerBank.replaceChildren();
+        sourceBank.replaceChildren();
+
+        app.arrangeAnswer.forEach((tile, index) => {
+          const button = makeWordButton(tile);
+          button.title = "Tap to remove this word";
+          button.dataset.tileId = String(tile.id);
+          button.draggable = !app.hasAnswered && !app.revealed;
+          button.addEventListener("click", () => {
+            if (app.hasAnswered || app.revealed) return;
+            app.arrangeAnswer.splice(index, 1);
+            const original = app.arrangeTiles.find(t => String(t.id) === String(tile.id));
+            if (original) original.used = false;
+            draw();
+          });
+          addTileDrag(button, tile);
+          answerBank.appendChild(button);
+        });
+
+        app.arrangeTiles.filter(t => !t.used).forEach(tile => {
+          const button = makeWordButton(tile);
+          button.dataset.tileId = String(tile.id);
+          button.draggable = !app.hasAnswered && !app.revealed;
+          button.addEventListener("click", () => {
+            if (app.hasAnswered || app.revealed) return;
+            tile.used = true;
+            app.arrangeAnswer.push(tile);
+            draw();
+          });
+          addTileDrag(button, tile);
+          sourceBank.appendChild(button);
+        });
+      }
+
+      function makeWordButton(tile) {
+        const b = document.createElement("button");
+        b.className = "word-tile";
+        b.textContent = tile.text;
+        return b;
+      }
+
+      function addTileDrag(button, tile) {
+        button.addEventListener("dragstart", event => {
+          if (app.hasAnswered || app.revealed) {
+            event.preventDefault();
+            return;
+          }
+          event.dataTransfer.setData("text/plain", String(tile.id));
+          event.dataTransfer.effectAllowed = "move";
+        });
+      }
+
+      function tileFromId(id) {
+        return app.arrangeTiles.find(t => String(t.id) === String(id));
+      }
+
+      function allowDrop(zone) {
+        zone.addEventListener("dragover", event => {
+          if (!app.hasAnswered && !app.revealed) {
+            event.preventDefault();
+            event.dataTransfer.dropEffect = "move";
+          }
+        });
+      }
+
+      allowDrop(answerBank);
+      answerBank.addEventListener("drop", event => {
+        event.preventDefault();
+        if (app.hasAnswered || app.revealed) return;
+
+        const id = event.dataTransfer.getData("text/plain");
+        const tile = tileFromId(id);
+        if (!tile) return;
+
+        const targetButton = event.target.closest("button[data-tile-id]");
+        const targetId = targetButton ? targetButton.dataset.tileId : null;
+        const currentIndex = app.arrangeAnswer.findIndex(t => String(t.id) === String(id));
+
+        if (currentIndex >= 0) {
+          const moved = app.arrangeAnswer.splice(currentIndex, 1)[0];
+          let targetIndex = targetId
+            ? app.arrangeAnswer.findIndex(t => String(t.id) === String(targetId))
+            : app.arrangeAnswer.length;
+          if (targetIndex < 0) targetIndex = app.arrangeAnswer.length;
+          app.arrangeAnswer.splice(targetIndex, 0, moved);
+        } else if (!tile.used) {
+          tile.used = true;
+          let targetIndex = targetId
+            ? app.arrangeAnswer.findIndex(t => String(t.id) === String(targetId))
+            : app.arrangeAnswer.length;
+          if (targetIndex < 0) targetIndex = app.arrangeAnswer.length;
+          app.arrangeAnswer.splice(targetIndex, 0, tile);
+        }
+        draw();
+      });
+
+      allowDrop(sourceBank);
+      sourceBank.addEventListener("drop", event => {
+        event.preventDefault();
+        if (app.hasAnswered || app.revealed) return;
+
+        const id = event.dataTransfer.getData("text/plain");
+        const index = app.arrangeAnswer.findIndex(t => String(t.id) === String(id));
+        if (index >= 0) {
+          app.arrangeAnswer.splice(index, 1);
+          const original = tileFromId(id);
+          if (original) original.used = false;
+          draw();
+        }
+      });
+
+      draw();
+    }
+
+    function renderMatch(q, area) {
+      const instruction = document.createElement("p");
+      instruction.className = "muted small";
+      instruction.textContent = "Tap a word on the left, then its translation on the right.";
+      area.appendChild(instruction);
+
+      const grid = document.createElement("div");
+      grid.className = "match-grid";
+
+      const leftColumn = document.createElement("div");
+      const rightColumn = document.createElement("div");
+
+      const leftTitle = document.createElement("h3");
+      leftTitle.textContent = "Words";
+      const rightTitle = document.createElement("h3");
+      rightTitle.textContent = "Translations";
+
+      leftColumn.appendChild(leftTitle);
+      rightColumn.appendChild(rightTitle);
+
+      const leftList = document.createElement("div");
+      leftList.className = "match-list";
+      leftList.style.display = "grid";
+
+      const rightList = document.createElement("div");
+      rightList.className = "match-list";
+      rightList.style.display = "grid";
+
+      leftColumn.appendChild(leftList);
+      rightColumn.appendChild(rightList);
+      grid.append(leftColumn, rightColumn);
+      area.appendChild(grid);
+
+      // These are display indexes only. The server no longer sends source
+      // indexes, because source indexes reveal the correct pairing.
+      const leftItems = (q.leftItems || []).map((item, index) => ({
+        displayIndex: index, text: item.text
+      }));
+      const rightItems = (q.rightItems || []).map((item, index) => ({
+        displayIndex: index, text: item.text
+      }));
+
+      function pairedLeft(index) {
+        return Object.prototype.hasOwnProperty.call(app.matchPairs, String(index));
+      }
+
+      function pairedRight(index) {
+        return Object.values(app.matchPairs).some(v => Number(v) === Number(index));
+      }
+
+      function draw() {
+        leftList.replaceChildren();
+        rightList.replaceChildren();
+
+        leftItems.forEach(item => {
+          const button = document.createElement("button");
+          button.className = "match-item";
+          button.textContent = item.text;
+          if (pairedLeft(item.displayIndex)) button.classList.add("paired");
+          if (Number(app.matchSelectedLeft) === Number(item.displayIndex)) button.classList.add("selected");
+          button.disabled = app.hasAnswered || app.revealed || pairedLeft(item.displayIndex);
+
+          button.addEventListener("click", () => {
+            if (app.hasAnswered || app.revealed) return;
+            app.matchSelectedLeft = item.displayIndex;
+            if (app.matchSelectedRight !== null) {
+              app.matchPairs[String(app.matchSelectedLeft)] = app.matchSelectedRight;
+              app.matchSelectedLeft = null;
+              app.matchSelectedRight = null;
+            }
+            draw();
+          });
+
+          leftList.appendChild(button);
+        });
+
+        rightItems.forEach(item => {
+          const button = document.createElement("button");
+          button.className = "match-item";
+          button.textContent = item.text;
+          if (pairedRight(item.displayIndex)) button.classList.add("paired");
+          if (Number(app.matchSelectedRight) === Number(item.displayIndex)) button.classList.add("selected");
+          button.disabled = app.hasAnswered || app.revealed || pairedRight(item.displayIndex);
+
+          button.addEventListener("click", () => {
+            if (app.hasAnswered || app.revealed) return;
+            app.matchSelectedRight = item.displayIndex;
+            if (app.matchSelectedLeft !== null) {
+              app.matchPairs[String(app.matchSelectedLeft)] = app.matchSelectedRight;
+              app.matchSelectedLeft = null;
+              app.matchSelectedRight = null;
+            }
+            draw();
+          });
+
+          rightList.appendChild(button);
+        });
+      }
+
+      draw();
+    }
+
+    async function submitAnswer() {
+      if (app.busy || app.hasAnswered || app.revealed || !app.question) return;
+
+      let answer;
+      const type = app.question.type;
+
+      if (type === "Choose" || type === "TrueFalse") {
+        answer = app.selectedChoice;
+        if (!answer) {
+          showMessage("Select an option first.", "error");
+          return;
+        }
+      } else if (type === "Fill") {
+        const input = $("fillAnswer");
+        answer = input ? input.value.trim() : app.fillValue.trim();
+        if (!answer) {
+          showMessage("Enter your answer first.", "error");
+          return;
+        }
+      } else if (type === "Arrange") {
+        answer = app.arrangeAnswer.map(tile => tile.text);
+        if (!answer.length) {
+          showMessage("Arrange the words before submitting.", "error");
+          return;
+        }
+      } else if (type === "Match") {
+        const count = (app.question.leftItems || []).length;
+        if (Object.keys(app.matchPairs).length !== count) {
+          showMessage("Match every word before submitting.", "error");
+          return;
+        }
+        const leftItems = app.question.leftItems || [];
+        const rightItems = app.question.rightItems || [];
+        answer = Object.keys(app.matchPairs).map(leftDisplayIndex => ({
+          left: leftItems[Number(leftDisplayIndex)].text,
+          right: rightItems[Number(app.matchPairs[leftDisplayIndex])].text
+        }));
+      } else {
+        showMessage("Unsupported question type.", "error");
+        return;
+      }
+
+      setBusy(true);
+      try {
+        await api("submitAnswer", {
+          gameCode: app.gameCode,
+          questionIndex: app.questionIndex,
+          answer
+        });
+
+        app.hasAnswered = true;
+        $("submitAnswerBtn").classList.add("hidden");
+        $("answerFeedback").textContent = "Answer locked in. Waiting for everyone else...";
+        $("answerFeedback").classList.remove("hidden");
+      } catch (error) {
+        handleError(error);
+      } finally {
+        setBusy(false);
+      }
+    }
+
+    function updateTimer(remainingMs, totalSeconds) {
+      const seconds = Math.max(0, Math.ceil(Number(remainingMs || 0) / 1000));
+      $("timerText").textContent = seconds + "s";
+      const totalMs = Math.max(1, Number(totalSeconds || 20) * 1000);
+      $("timerFill").style.width = Math.max(0, Math.min(100, Number(remainingMs || 0) / totalMs * 100)) + "%";
+      $("timerText").style.color = seconds <= 5 ? "var(--danger)" : "var(--text)";
+    }
+
+    function tickClock() {
+      if (app.status !== "ACTIVE" || !app.question || app.revealed) return;
+      const remaining = app.deadlineAt
+        ? Math.max(0, app.deadlineAt - (Date.now() + app.serverOffsetMs))
+        : Math.max(0, app.timerAnchorRemaining - (performance.now() - app.timerAnchorAt));
+      updateTimer(remaining, app.question.seconds);
+    }
+
+    function init() {
+      setConnection("Checking licence");
+      $("username").value = localStorage.getItem("quizUsername") || "";
+
+      try {
+        requireNode();
+        setConnection("Ready");
+      } catch (error) {
+        setConnection("DOCS required");
+        showMessage(error.message, "error");
+      }
+
+      $("saveUsernameBtn").addEventListener("click", saveUsername);
+      $("createGameBtn").addEventListener("click", createGame);
+      $("joinGameBtn").addEventListener("click", () => joinGame($("gameCodeInput").value));
+      $("startGameBtn").addEventListener("click", startGame);
+      $("shareInviteBtn").addEventListener("click", shareInvite);
+      $("copyInviteBtn").addEventListener("click", copyInvite);
+      $("leaveLobbyBtn").addEventListener("click", leaveGame);
+      $("submitAnswerBtn").addEventListener("click", submitAnswer);
+      $("backHomeBtn").addEventListener("click", () => {
+        resetGame();
+        showScreen("home");
+      });
+
+      $("gameCodeInput").addEventListener("input", event => {
+        event.target.value = event.target.value.toUpperCase().replace(/[^A-Z2-9]/g, "").slice(0, 6);
+      });
+
+      $("username").addEventListener("keydown", event => {
+        if (event.key === "Enter") saveUsername();
+      });
+
+      const params = new URLSearchParams(window.location.search);
+      const inviteCode = params.get("game");
+
+      if (inviteCode) {
+        $("gameCodeInput").value = inviteCode.toUpperCase();
+        if ($("username").value.trim().length >= 2) {
+          // Automatically restore this participant after refresh.
+          saveUsername();
+        } else {
+          showMessage("You've opened a game invitation. Enter your username to continue.");
+        }
+      } else if ($("username").value.trim().length >= 2) {
+        $("gameActions").classList.remove("hidden");
+      }
+
+      app.clockTimer = setInterval(tickClock, CLOCK_TICK_MS);
+    }
+
+    init();
+  </script>
+</body>
+</html>
