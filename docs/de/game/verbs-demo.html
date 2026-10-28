@@ -1,0 +1,705 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>German Verb Dialogue Trainer</title>
+
+<style>
+* { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  padding: 28px;
+  font-family: Arial, sans-serif;
+  background: #f1f5fb;
+  color: #1e293b;
+}
+
+.page-header {
+  margin-bottom: 28px;
+}
+
+.page-header h1 {
+  margin: 0 0 8px;
+  font-size: 30px;
+}
+
+.page-header p {
+  margin: 0;
+  color: #64748b;
+  line-height: 1.5;
+}
+
+.workspace {
+  display: grid;
+  grid-template-columns: minmax(0, 1.1fr) minmax(0, 1fr);
+  gap: 24px;
+  max-width: 1450px;
+  margin: auto;
+  align-items: start;
+}
+
+.panel {
+  min-width: 0;
+  background: white;
+  border: 1px solid #e2e8f0;
+  border-radius: 18px;
+  overflow: hidden;
+  box-shadow: 0 5px 25px #00000008;
+}
+
+.panel-header {
+  padding: 22px 24px;
+  border-bottom: 1px solid #e2e8f0;
+}
+
+.panel-header h2 {
+  margin: 0 0 6px;
+  font-size: 21px;
+}
+
+.panel-header p {
+  margin: 0;
+  color: #64748b;
+  font-size: 14px;
+  line-height: 1.5;
+}
+
+.table-scroll {
+  overflow-x: auto;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+th, td {
+  padding: 15px 12px;
+  text-align: left;
+  border-bottom: 1px solid #edf1f7;
+  white-space: nowrap;
+}
+
+th {
+  background: #f8faff;
+  color: #64748b;
+  font-size: 12px;
+  text-transform: uppercase;
+  letter-spacing: .04em;
+}
+
+.verb {
+  border: 0;
+  background: transparent;
+  color: #2563c9;
+  border-radius: 7px;
+  padding: 7px 8px;
+  font: inherit;
+  cursor: pointer;
+}
+
+.verb:hover {
+  background: #eaf1ff;
+}
+
+.verb.selected {
+  background: #dbeafe;
+  color: #1d4ed8;
+  font-weight: bold;
+  box-shadow: inset 0 0 0 1px #b8d2ff;
+}
+
+.table-note {
+  padding: 15px 20px;
+  color: #64748b;
+  font-size: 13px;
+  line-height: 1.5;
+}
+
+/* Dialogue panel */
+
+.dialogue-panel {
+  position: sticky;
+  top: 20px;
+}
+
+.dialogue-heading {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.word-title {
+  margin: 0;
+  font-size: 32px;
+  letter-spacing: -.7px;
+  overflow-wrap: anywhere;
+}
+
+.meaning {
+  margin-top: 6px;
+  color: #64748b;
+}
+
+.level {
+  display: inline-block;
+  vertical-align: middle;
+  margin-left: 5px;
+  padding: 5px 9px;
+  border-radius: 20px;
+  background: #dcfce7;
+  color: #15803d;
+  font-size: 11px;
+  letter-spacing: 0;
+}
+
+.selected-form {
+  display: inline-block;
+  margin-top: 12px;
+  padding: 6px 10px;
+  border-radius: 8px;
+  background: #eff6ff;
+  color: #2458b8;
+  font-size: 13px;
+}
+
+.settings {
+  display: flex;
+  gap: 6px;
+  padding: 16px 22px;
+  border-bottom: 1px solid #edf1f7;
+}
+
+.settings button {
+  flex: 1;
+  min-width: 0;
+  border: 0;
+  border-radius: 9px;
+  padding: 10px 7px;
+  background: #f1f5f9;
+  color: #64748b;
+  font-weight: bold;
+  font-size: 13px;
+  cursor: pointer;
+}
+
+.settings button.active {
+  background: #dbeafe;
+  color: #1d4ed8;
+}
+
+.conversation {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  padding: 24px 22px;
+}
+
+.message {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+}
+
+.message.reply {
+  flex-direction: row-reverse;
+}
+
+.avatar {
+  flex: 0 0 56px;
+  width: 56px;
+  height: 56px;
+  display: grid;
+  place-items: center;
+  border-radius: 17px;
+  background: #fff0d6;
+  font-size: 32px;
+}
+
+.reply .avatar {
+  background: #fce7f3;
+}
+
+.bubble {
+  flex: 1;
+  min-width: 0;
+  padding: 15px;
+  border-radius: 17px;
+  background: #eaf2ff;
+}
+
+.reply .bubble {
+  background: #fff0f5;
+}
+
+.speaker {
+  margin-bottom: 8px;
+  color: #64748b;
+  font-size: 11px;
+  font-weight: bold;
+  text-transform: uppercase;
+  letter-spacing: .5px;
+}
+
+.german {
+  font-size: 16px;
+  font-weight: bold;
+  line-height: 1.65;
+  overflow-wrap: anywhere;
+}
+
+.english {
+  margin-top: 8px;
+  color: #64748b;
+  font-size: 13px;
+  line-height: 1.55;
+}
+
+.audio-area {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 12px;
+  padding: 18px 22px;
+  border-top: 1px solid #e2e8f0;
+}
+
+.audio-button {
+  border: 0;
+  border-radius: 11px;
+  padding: 12px 16px;
+  background: #2563eb;
+  color: white;
+  font-size: 14px;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+.audio-button:hover { background: #1d4ed8; }
+
+.audio-button:disabled {
+  opacity: .65;
+  cursor: wait;
+}
+
+.audio-status {
+  flex: 1;
+  min-width: 100px;
+  color: #64748b;
+  font-size: 12px;
+  line-height: 1.5;
+}
+
+@media (max-width: 900px) {
+  body { padding: 18px; }
+
+  .workspace {
+    grid-template-columns: 1fr;
+  }
+
+  .dialogue-panel {
+    position: static;
+  }
+}
+
+@media (max-width: 480px) {
+  body { padding: 12px; }
+
+  .page-header h1 { font-size: 25px; }
+
+  .panel-header { padding: 18px; }
+
+  .conversation { padding: 18px 12px; gap: 15px; }
+
+  .avatar {
+    flex-basis: 42px;
+    width: 42px;
+    height: 42px;
+    font-size: 25px;
+    border-radius: 13px;
+  }
+
+  .bubble { padding: 12px; }
+
+  .german { font-size: 15px; }
+
+  .settings { padding: 12px; }
+
+  th, td { padding: 12px 8px; }
+}
+</style>
+</head>
+
+<body>
+
+<header class="page-header">
+  <h1>German Verb Dialogue Trainer</h1>
+  <p>Click any verb or conjugation on the left to explore it in a conversation.</p>
+</header>
+
+<main class="workspace">
+
+  <!-- LEFT: VERB TABLE -->
+  <section class="panel">
+    <div class="panel-header">
+      <h2>Verb Conjugations</h2>
+      <p>Select an infinitive or conjugated form to update the dialogue.</p>
+    </div>
+
+    <div class="table-scroll">
+      <table>
+        <thead>
+          <tr>
+            <th>Infinitiv</th>
+            <th>ich</th>
+            <th>du</th>
+          </tr>
+        </thead>
+
+        <tbody id="verb-table">
+          <tr>
+            <td><button class="verb selected" data-verb="spielen" data-form="spielen">spielen</button></td>
+            <td><button class="verb" data-verb="spielen" data-form="ich spiele">ich spiele</button></td>
+            <td><button class="verb" data-verb="spielen" data-form="du spielst">du spielst</button></td>
+          </tr>
+          <tr>
+            <td><button class="verb" data-verb="machen" data-form="machen">machen</button></td>
+            <td><button class="verb" data-verb="machen" data-form="ich mache">ich mache</button></td>
+            <td><button class="verb" data-verb="machen" data-form="du machst">du machst</button></td>
+          </tr>
+          <tr>
+            <td><button class="verb" data-verb="lernen" data-form="lernen">lernen</button></td>
+            <td><button class="verb" data-verb="lernen" data-form="ich lerne">ich lerne</button></td>
+            <td><button class="verb" data-verb="lernen" data-form="du lernst">du lernst</button></td>
+          </tr>
+          <tr>
+            <td><button class="verb" data-verb="lesen" data-form="lesen">lesen</button></td>
+            <td><button class="verb" data-verb="lesen" data-form="ich lese">ich lese</button></td>
+            <td><button class="verb" data-verb="lesen" data-form="du liest">du liest</button></td>
+          </tr>
+
+          <tr>
+  <td><button class="verb" data-verb="versuchen" data-form="versuchen">versuchen</button></td>
+  <td><button class="verb" data-verb="versuchen" data-form="ich versuche">ich versuche</button></td>
+  <td><button class="verb" data-verb="versuchen" data-form="du versuchst">du versuchst</button></td>
+</tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="table-note">
+      Sample data for demonstration. The production page can use your existing Google Sheets data.
+    </div>
+  </section>
+
+  <!-- RIGHT: DIALOGUE PANEL -->
+  <section class="panel dialogue-panel">
+
+    <div class="panel-header">
+      <div class="dialogue-heading">
+        <div>
+          <h2 class="word-title" id="dialogue-title">
+            spielen <span class="level">A1</span>
+          </h2>
+          <div class="meaning" id="dialogue-meaning">to play</div>
+          <div class="selected-form" id="selected-form">Selected: spielen</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="settings">
+      <button type="button" id="animals" class="active">🐶 Dog &amp; Cat</button>
+      <button type="button" id="humans">👨 Man &amp; Woman</button>
+    </div>
+
+    <div class="conversation" id="conversation" aria-live="polite"></div>
+
+    <div class="audio-area">
+      <button type="button" class="audio-button" id="play-audio">
+        🔊 Play dialogue
+      </button>
+      <span class="audio-status" id="audio-status">
+        Listen to both characters speak German.
+      </span>
+    </div>
+
+  </section>
+
+</main>
+
+<script>
+(function () {
+  "use strict";
+
+  const table = document.getElementById("verb-table");
+  const title = document.getElementById("dialogue-title");
+  const meaning = document.getElementById("dialogue-meaning");
+  const selectedForm = document.getElementById("selected-form");
+  const conversation = document.getElementById("conversation");
+  const playButton = document.getElementById("play-audio");
+  const audioStatus = document.getElementById("audio-status");
+  const animalButton = document.getElementById("animals");
+  const humanButton = document.getElementById("humans");
+
+  let currentVerb = "spielen";
+  let currentForm = "spielen";
+  let characterStyle = "animals";
+  let speechRun = 0;
+
+  const meanings = {
+    spielen: "to play",
+    machen: "to do / make",
+    lernen: "to learn",
+    lesen: "to read",
+    versuchen: "to try"
+  };
+
+  const dialogues = {
+    spielen: [
+      {
+        character: 0,
+        german: "Ich spiele gern Fußball. Spielst du auch?",
+        english: "I like playing football. Do you play too?"
+      },
+      {
+        character: 1,
+        german: "Nein, ich spiele lieber Tennis. Du spielst aber gut Fußball!",
+        english: "No, I prefer playing tennis. But you play football well!"
+      }
+    ],
+
+    machen: [
+      {
+        character: 0,
+        german: "Ich mache heute einen Kuchen. Machst du auch einen?",
+        english: "I'm making a cake today. Are you making one too?"
+      },
+      {
+        character: 1,
+        german: "Nein, ich mache heute Pizza. Du machst aber leckeren Kuchen!",
+        english: "No, I'm making pizza today. But you make delicious cake!"
+      }
+    ],
+
+    lernen: [
+      {
+        character: 0,
+        german: "Ich lerne Deutsch. Lernst du auch Deutsch?",
+        english: "I'm learning German. Are you learning German too?"
+      },
+      {
+        character: 1,
+        german: "Ja, ich lerne jeden Tag. Du lernst sehr schnell!",
+        english: "Yes, I study every day. You learn very quickly!"
+      }
+    ],
+
+    lesen: [
+      {
+        character: 0,
+        german: "Ich lese gern Bücher. Liest du auch gern?",
+        english: "I like reading books. Do you like reading too?"
+      },
+      {
+        character: 1,
+        german: "Ja, ich lese gern Romane. Du liest sehr schnell!",
+        english: "Yes, I like reading novels. You read very quickly!"
+      }
+    ],
+    versuchen: [
+  {
+    character: 0,
+    german: "Ich versuche, früh aufzustehen. Versuchst du das auch?",
+    english: "I try to get up early. Do you try that too?"
+  },
+  {
+    character: 1,
+    german: "Ja, ich versuche es jeden Tag. Du stehst aber sehr früh auf!",
+    english: "Yes, I try every day. But you get up very early!"
+  }
+]
+  };
+
+  function getCharacter(character) {
+    if (characterStyle === "animals") {
+      return character === 0
+        ? { name: "Hund (Dog)", emoji: "🐶" }
+        : { name: "Katze (Cat)", emoji: "🐱" };
+    }
+
+    return character === 0
+      ? { name: "Mann (Man)", emoji: "👨🏻" }
+      : { name: "Frau (Woman)", emoji: "👩🏻" };
+  }
+
+  function renderDialogue() {
+    conversation.replaceChildren();
+
+    const lines = dialogues[currentVerb] || dialogues.spielen;
+
+    lines.forEach(function (line) {
+      const character = getCharacter(line.character);
+
+      const message = document.createElement("div");
+      message.className =
+        "message" + (line.character === 1 ? " reply" : "");
+
+      const avatar = document.createElement("div");
+      avatar.className = "avatar";
+      avatar.textContent = character.emoji;
+      avatar.setAttribute("aria-hidden", "true");
+
+      const bubble = document.createElement("div");
+      bubble.className = "bubble";
+
+      const speaker = document.createElement("div");
+      speaker.className = "speaker";
+      speaker.textContent = character.name;
+
+      const german = document.createElement("div");
+      german.className = "german";
+      german.textContent = line.german;
+
+      const english = document.createElement("div");
+      english.className = "english";
+      english.textContent = line.english;
+
+      bubble.append(speaker, german, english);
+      message.append(avatar, bubble);
+      conversation.appendChild(message);
+    });
+  }
+
+  function updateDialogue(verb, form) {
+    currentVerb = dialogues[verb] ? verb : "spielen";
+    currentForm = form;
+
+    title.replaceChildren();
+    title.appendChild(document.createTextNode(currentVerb + " "));
+
+    const level = document.createElement("span");
+    level.className = "level";
+    level.textContent = "A1";
+    title.appendChild(level);
+
+    meaning.textContent = meanings[currentVerb] || "";
+    selectedForm.textContent = "Selected: " + currentForm;
+
+    document.querySelectorAll(".verb").forEach(function (button) {
+      button.classList.toggle(
+        "selected",
+        button.dataset.verb === verb && button.dataset.form === form
+      );
+    });
+
+    stopAudio();
+    renderDialogue();
+  }
+
+  // Event delegation: clicks on any verb button update the right panel.
+  table.addEventListener("click", function (event) {
+    const button = event.target.closest("button[data-verb][data-form]");
+    if (!button) return;
+
+    updateDialogue(button.dataset.verb, button.dataset.form);
+  });
+
+  function stopAudio() {
+    speechRun++;
+
+    if ("speechSynthesis" in window) {
+      window.speechSynthesis.cancel();
+    }
+
+    playButton.disabled = false;
+    playButton.textContent = "🔊 Play dialogue";
+    audioStatus.textContent = "Listen to both characters speak German.";
+  }
+
+  function findGermanVoice(character) {
+    const voices = window.speechSynthesis.getVoices().filter(function (voice) {
+      return voice.lang.toLowerCase().startsWith("de");
+    });
+
+    if (!voices.length) return null;
+
+    const male = /male|mann|hans|markus|stefan|daniel|conrad|david/i;
+    const female = /female|frau|anna|petra|katja|hedda|helena|vicki|eva/i;
+    const pattern = character === 0 ? male : female;
+
+    return voices.find(function (voice) {
+      return pattern.test(voice.name);
+    }) || voices[character] || voices[0];
+  }
+
+  playButton.addEventListener("click", function () {
+    if (!("speechSynthesis" in window)) {
+      audioStatus.textContent = "Audio is not supported in this browser.";
+      return;
+    }
+
+    window.speechSynthesis.cancel();
+
+    const run = ++speechRun;
+    const lines = dialogues[currentVerb] || dialogues.spielen;
+    let index = 0;
+
+    playButton.disabled = true;
+    playButton.textContent = "⏸ Playing…";
+    audioStatus.textContent = "Playing German dialogue…";
+
+    function speakNext() {
+      if (run !== speechRun) return;
+
+      if (index >= lines.length) {
+        playButton.disabled = false;
+        playButton.textContent = "🔊 Play dialogue";
+        audioStatus.textContent = "Dialogue finished.";
+        return;
+      }
+
+      const line = lines[index++];
+      const utterance = new SpeechSynthesisUtterance(line.german);
+      utterance.lang = "de-DE";
+      utterance.rate = 0.88;
+
+      const voice = findGermanVoice(line.character);
+      if (voice) utterance.voice = voice;
+
+      utterance.onend = speakNext;
+      utterance.onerror = speakNext;
+
+      window.speechSynthesis.speak(utterance);
+    }
+
+    speakNext();
+  });
+
+  animalButton.addEventListener("click", function () {
+    characterStyle = "animals";
+    animalButton.classList.add("active");
+    humanButton.classList.remove("active");
+    stopAudio();
+    renderDialogue();
+  });
+
+  humanButton.addEventListener("click", function () {
+    characterStyle = "humans";
+    humanButton.classList.add("active");
+    animalButton.classList.remove("active");
+    stopAudio();
+    renderDialogue();
+  });
+
+  // Initial state
+  updateDialogue("spielen", "spielen");
+
+})();
+</script>
+
+</body>
+</html>
